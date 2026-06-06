@@ -1,0 +1,1090 @@
+<?php
+/* =========================================================================
+   Blockcraft — feuille de style (template PHP servi par NeoFrag)
+   Mode jour « biome » par défaut (:root / [data-theme="light"])
+   Mode nuit « grotte » via [data-theme="dark"]
+   ======================================================================== */
+
+/* === Defaults (servent à détecter une customisation admin) === */
+$accent_default = '#6aa84f';   /* vert herbe */
+$bg_default     = '#eef3f7';   /* ciel pâle */
+$text_default   = '#2e2a25';   /* terre foncée */
+
+/* === Valeurs admin (priorité admin > thème) === */
+$bg_image    = ($this->config->blockcraft_background && ($f = NeoFrag()->model2('file', $this->config->blockcraft_background)->path())) ? $f : '';
+$header_img  = ($this->config->blockcraft_header     && ($f = NeoFrag()->model2('file', $this->config->blockcraft_header)->path()))     ? $f : '';
+$accent      = $this->config->blockcraft_theme_color      ?: $accent_default;
+$bg_color    = $this->config->blockcraft_background_color ?: $bg_default;
+$text_color  = $this->config->blockcraft_text_color       ?: $text_default;
+$bg_repeat   = $this->config->blockcraft_background_repeat     ?: 'repeat';
+$bg_attach   = $this->config->blockcraft_background_attachment ?: 'scroll';
+$bg_pos      = $this->config->blockcraft_background_position   ?: 'center top';
+$header_color  = $this->config->blockcraft_header_color      ?: '#6aa84f';
+$header_repeat = $this->config->blockcraft_header_repeat     ?: 'no-repeat';
+$header_attach = $this->config->blockcraft_header_attachment ?: 'scroll';
+$header_pos    = $this->config->blockcraft_header_position   ?: 'center top';
+
+$accent_is_custom = ($accent !== $accent_default);
+$bg_is_custom     = ($bg_color !== $bg_default);
+$text_is_custom   = ($text_color !== $text_default);
+?>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* =========================================================================
+   §1 — Tokens — Mode JOUR (biome) — défaut
+   ======================================================================== */
+
+:root,
+[data-theme="light"] {
+	/* Tokens admin-configurables (priorité absolue) */
+	--bc-bg:             <?php echo $bg_color ?>;
+	--bc-text:           <?php echo $text_color ?>;
+	--bc-accent:         <?php echo $accent ?>;
+
+	/* Accent dérivé — assombri pour rester lisible sur fond clair */
+	--bc-accent-strong:  color-mix(in srgb, <?php echo $accent ?> 82%, #000 18%);
+	--bc-accent-soft:    color-mix(in srgb, <?php echo $accent ?> 14%, transparent);
+	--bc-accent-text:    color-mix(in srgb, <?php echo $accent ?> 68%, #000 32%);
+	--bc-on-accent:      #14181d;
+
+	--bc-link:           var(--bc-accent-text);
+	--bc-link-hover:     color-mix(in srgb, <?php echo $accent ?> 55%, #000 45%);
+
+	/* Surfaces — blanc + teintes herbe très légères */
+	--bc-surface:        #ffffff;
+	--bc-surface-2:      #f1f4ee;
+	--bc-surface-3:      #e7ece1;
+
+	/* Bordures */
+	--bc-border:         #dde3d6;
+	--bc-border-strong:  #c6cebb;
+
+	/* Texte */
+	--bc-text-strong:    #1c1a16;
+	--bc-muted:          #6f7468;
+	--bc-muted-2:        #9aa091;
+
+	/* Sémantiques — jour (foncés pour contraste sur clair) */
+	--bc-success:        #2e9e4f;
+	--bc-success-soft:   #e3f5e8;
+	--bc-danger:         #d64545;
+	--bc-danger-soft:    #fbe5e5;
+	--bc-warning:        #c97f1a;
+	--bc-warning-soft:   #fbf0db;
+	--bc-info:           #2b86c5;
+	--bc-info-soft:      #e1f0fb;
+
+	/* Ombres — légères sur fond clair */
+	--bc-shadow-sm:      0 1px 2px rgba(40, 44, 32, 0.06);
+	--bc-shadow:         0 6px 20px -8px rgba(40, 44, 32, 0.16), 0 2px 5px -2px rgba(40, 44, 32, 0.08);
+	--bc-shadow-md:      0 12px 32px -12px rgba(40, 44, 32, 0.22), 0 3px 8px -2px rgba(40, 44, 32, 0.12);
+
+	/* Géométrie — coins carrés = identité « blocs » */
+	--bc-radius:         4px;
+	--bc-radius-sm:      3px;
+	--bc-radius-xs:      2px;
+
+	/* Typographie */
+	--bc-font:           "Inter", "Segoe UI", system-ui, sans-serif;
+	--bc-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+	/* Dégradé de bannière par défaut — herbe → terre */
+	--bc-banner-gradient: linear-gradient(135deg, #7cba5d 0%, #5d9544 52%, #8a6d4b 100%);
+
+	/* Pont --nf-* : voir explication dans le thème granite. Mappe les tokens
+	   génériques des CSS partagés sur l'identité du thème (jour + nuit). */
+	--nf-accent:        var(--bc-accent);
+	--nf-accent-soft:   var(--bc-accent-soft);
+	--nf-accent-text:   var(--bc-accent-text);
+	--nf-accent-strong: var(--bc-accent-strong);
+	--nf-on-accent:     var(--bc-on-accent);
+	--nf-bg:            var(--bc-bg);
+	--nf-bg-elevated:   var(--bc-surface);
+	--nf-surface:       var(--bc-surface);
+	--nf-surface-2:     var(--bc-surface-2);
+	--nf-surface-3:     var(--bc-surface-3);
+	--nf-border:        var(--bc-border);
+	--nf-border-strong: var(--bc-border-strong);
+	--nf-text:          var(--bc-text);
+	--nf-text-strong:   var(--bc-text-strong);
+	--nf-text-muted:    var(--bc-muted);
+	--nf-text-soft:     var(--bc-muted);
+	--nf-muted:         var(--bc-muted);
+	--nf-hover:         var(--bc-surface-2);
+	--nf-danger:        var(--bc-danger);
+	--nf-success:       var(--bc-success);
+	--nf-warning:       var(--bc-warning);
+	--nf-info:          var(--bc-info);
+	--nf-radius:        var(--bc-radius);
+	--nf-radius-sm:     var(--bc-radius-sm);
+}
+
+/* =========================================================================
+   §2 — Tokens — Mode NUIT (grotte)
+   Surfaces/sémantiques toujours overridées ; bg/text/accent respectent
+   la customisation admin (priorité admin).
+   ======================================================================== */
+
+[data-theme="dark"] {
+	--bc-surface:        #1f242b;
+	--bc-surface-2:      #262c34;
+	--bc-surface-3:      #2f3640;
+	--bc-border:         rgba(255, 255, 255, 0.08);
+	--bc-border-strong:  rgba(255, 255, 255, 0.16);
+	--bc-text-strong:    #f1f5f0;
+	--bc-muted:          #8a9486;
+	--bc-muted-2:        #5d6657;
+
+	--bc-success:        #34d058;
+	--bc-success-soft:   rgba(52, 208, 88, 0.12);
+	--bc-danger:         #f06d6d;
+	--bc-danger-soft:    rgba(240, 109, 109, 0.12);
+	--bc-warning:        #f0b341;
+	--bc-warning-soft:   rgba(240, 179, 65, 0.12);
+	--bc-info:           #45b3e8;
+	--bc-info-soft:      rgba(69, 179, 232, 0.12);
+
+	--bc-shadow-sm:      0 1px 3px rgba(0, 0, 0, 0.40);
+	--bc-shadow:         0 6px 20px -8px rgba(0, 0, 0, 0.60), 0 2px 6px -2px rgba(0, 0, 0, 0.40);
+	--bc-shadow-md:      0 12px 32px -12px rgba(0, 0, 0, 0.70), 0 3px 8px -2px rgba(0, 0, 0, 0.50);
+
+	--bc-banner-gradient: linear-gradient(135deg, #26331f 0%, #181d24 58%, #3a2f22 100%);
+
+	<?php if (!$bg_is_custom): ?>
+	--bc-bg:             #14181d;
+	<?php endif ?>
+	<?php if (!$text_is_custom): ?>
+	--bc-text:           #c9d1d9;
+	<?php endif ?>
+	<?php if (!$accent_is_custom): ?>
+	--bc-accent:         #4caf6a;
+	<?php endif ?>
+
+	/* Dérivés recalculés depuis l'accent courant — éclaircis pour fond sombre */
+	--bc-accent-strong:  color-mix(in srgb, var(--bc-accent) 80%, #fff 20%);
+	--bc-accent-soft:    color-mix(in srgb, var(--bc-accent) 16%, transparent);
+	--bc-accent-text:    color-mix(in srgb, var(--bc-accent) 72%, #fff 28%);
+	--bc-link:           var(--bc-accent-text);
+	--bc-link-hover:     color-mix(in srgb, var(--bc-accent) 80%, #fff 20%);
+}
+
+/* =========================================================================
+   §3 — Base / Reset
+   ======================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+	background-color:      var(--bc-bg);
+<?php if ($bg_image): ?>
+	background-image:      url('<?php echo $bg_image ?>');
+	background-position:   <?php echo $bg_pos ?>;
+	background-repeat:     <?php echo $bg_repeat ?>;
+	background-attachment: <?php echo $bg_attach ?>;
+<?php endif ?>
+	color:                 var(--bc-text);
+	font-family:           var(--bc-font);
+	font-size:             13.5px;
+	line-height:           1.55;
+	font-feature-settings: "kern", "liga";
+}
+
+h1 { font-size: 22px; letter-spacing: -0.01em; }
+h2 { font-size: 18px; letter-spacing: -0.01em; }
+h3 { font-size: 16px; }
+h4 { font-size: 14.5px; }
+h5 { font-size: 13.5px; }
+h6 { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+h1, h2, h3, h4, h5, h6 {
+	color:       var(--bc-text-strong);
+	font-family: var(--bc-font);
+	font-weight: 800;
+	line-height: 1.25;
+	margin-top:  0;
+}
+
+h4, h5, h6 { font-weight: 700; line-height: 1.4; }
+
+a {
+	color:           var(--bc-link);
+	text-decoration: none;
+	transition:      color 140ms ease;
+}
+
+a:hover, a:focus { color: var(--bc-link-hover); text-decoration: none; }
+
+.card a:hover, .card a:focus,
+.btn:hover, .btn:focus,
+.dropdown-item:hover, .dropdown-item:focus,
+.nav-link:hover, .nav-link:focus,
+.list-group-item:hover, .list-group-item:focus { text-decoration: none !important; }
+
+code, pre, kbd, samp, .text-mono { font-family: var(--bc-font-mono); font-size: 0.92em; }
+
+code, pre {
+	background:    var(--bc-surface-2);
+	border:        1px solid var(--bc-border);
+	border-radius: var(--bc-radius-xs);
+	padding:       2px 6px;
+	color:         var(--bc-accent-text);
+}
+
+pre { padding: 12px 14px; overflow-x: auto; font-size: 13px; }
+pre code { background: transparent; border: none; padding: 0; }
+
+::selection { background: var(--bc-accent-soft); color: var(--bc-text-strong); }
+
+hr { border: 0; border-top: 1px solid var(--bc-border); margin: 1rem 0; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bc-border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--bc-muted-2); }
+* { scrollbar-width: thin; scrollbar-color: var(--bc-border-strong) transparent; }
+
+/* Coupe les transitions pendant la bascule jour/nuit */
+.no-transitions * { transition: none !important; }
+
+/* §4 — Icônes (icon() émet <i class="icon"> sans espace) */
+i.icon:first-child:not(:only-child),
+i.fa:first-child:not(:only-child),
+i.fas:first-child:not(:only-child),
+i.far:first-child:not(:only-child),
+i.fab:first-child:not(:only-child) { margin-right: 6px; }
+i.icon:last-child:not(:only-child),
+i.fa:last-child:not(:only-child),
+i.fas:last-child:not(:only-child),
+i.far:last-child:not(:only-child),
+i.fab:last-child:not(:only-child) { margin-left: 6px; }
+i.icon:only-child { margin: 0; }
+
+/* =========================================================================
+   §5 — Layout
+   ======================================================================== */
+
+.bc-header { position: relative; z-index: 10; }
+.bc-section { padding: 28px 0; }
+.bc-section + .bc-section { padding-top: 0; }
+.module h1, .module h2, .module h3, .module h4 { color: var(--bc-text-strong); }
+.widget { color: var(--bc-text); }
+
+/* =========================================================================
+   §6 — Header banner
+   ======================================================================== */
+
+.bc-header-banner {
+<?php if ($header_img): ?>
+	background-image:      url('<?php echo $header_img ?>');
+	background-position:   <?php echo $header_pos ?>;
+	background-repeat:     <?php echo $header_repeat ?>;
+	background-attachment: <?php echo $header_attach ?>;
+<?php else: ?>
+	background-image:      var(--bc-banner-gradient);
+	background-size:       cover;
+	background-position:   center;
+<?php endif ?>
+	background-color:      <?php echo $header_color ?>;
+	padding:               46px 0 54px;
+	margin-top:            <?php echo $this->config->blockcraft_navbar_display ? '53px' : '0' ?>;
+	position:              relative;
+}
+
+.bc-header-banner::before {
+	content:  "";
+	position: absolute;
+	inset:    0;
+	background: linear-gradient(
+		to bottom,
+		color-mix(in srgb, var(--bc-bg) 25%, transparent) 0%,
+		transparent 42%,
+		color-mix(in srgb, var(--bc-bg) 72%, transparent) 100%
+	);
+	pointer-events: none;
+}
+
+.bc-header-banner > * { position: relative; z-index: 1; }
+
+/* =========================================================================
+   §7 — Footer
+   ======================================================================== */
+
+.bc-footer {
+	background: var(--bc-surface);
+	border-top: 3px solid var(--bc-accent);
+	color:      var(--bc-muted);
+	padding:    18px 0 16px;
+	margin-top: 32px;
+}
+
+.bc-footer-bar {
+	display:         flex;
+	flex-wrap:       wrap;
+	gap:             14px;
+	align-items:     center;
+	justify-content: space-between;
+	font-size:       12px;
+}
+
+.bc-copy a       { color: var(--bc-text); font-weight: 600; }
+.bc-copy a:hover { color: var(--bc-accent-text); }
+.bc-site-name    { color: var(--bc-text); font-weight: 600; }
+
+.bc-socials { display: inline-flex; gap: 6px; }
+
+.bc-social {
+	width:           32px;
+	height:          32px;
+	display:         inline-flex;
+	align-items:     center;
+	justify-content: center;
+	border-radius:   var(--bc-radius-xs);
+	background:      var(--bc-surface-2);
+	color:           var(--bc-text);
+	font-size:       13px;
+	transition:      background-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.bc-social:hover { background: var(--bc-accent); color: var(--bc-on-accent); transform: translateY(-1px); }
+
+.bc-lang .btn-light {
+	background:   var(--bc-surface-2);
+	border-color: var(--bc-border);
+	color:        var(--bc-text);
+	font-weight:  600;
+}
+.bc-lang .btn-light:hover { background: var(--bc-surface-3); color: var(--bc-text-strong); }
+
+/* =========================================================================
+   §8 — Userbar
+   ======================================================================== */
+
+.navbar-user {
+	background:     var(--bc-surface);
+	border-bottom:  1px solid var(--bc-border);
+	padding:        6px 0;
+	min-height:     48px;
+}
+
+.navbar-user .container-fluid { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+
+.navbar-user .navbar-brand {
+	color:        var(--bc-muted);
+	font-size:    18px;
+	padding:      6px 14px;
+	margin-right: 10px;
+	border-right: 1px solid var(--bc-border);
+	line-height:  1;
+	display:      inline-flex;
+	align-items:  center;
+	transition:   color 140ms ease;
+}
+.navbar-user .navbar-brand:hover { color: var(--bc-accent-text); }
+
+.navbar-user .navbar-text {
+	color:         var(--bc-muted);
+	font-weight:   500;
+	font-size:     13px;
+	flex:          1 1 auto;
+	min-width:     0;
+	overflow:      hidden;
+	text-overflow: ellipsis;
+	white-space:   nowrap;
+}
+.navbar-user .navbar-text a { color: var(--bc-accent-text); font-weight: 600; }
+
+.navbar-user .navbar-collapse { display: flex !important; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; flex-basis: auto; }
+/* Userbar mobile compacte : le menu est déjà visible (collapse forcé) donc le hamburger est
+   redondant ; sur téléphone on masque les libellés pour une barre d'icônes nette (pas de wrap). */
+@media (max-width: 991.98px) {
+	.navbar-user .navbar-toggler { display: none; }
+	.navbar-user .navbar-account { flex-direction: row; align-items: center; }
+}
+@media (max-width: 767.98px) {
+	.navbar-user .navbar-text { display: none; }
+	.navbar-user .navbar-account .dropdown-toggle .ml-2 { display: none; }
+}
+.navbar-user .navbar-account { display: flex !important; flex-wrap: nowrap; align-items: center; gap: 4px; margin: 0 0 0 auto; padding: 0; list-style: none; flex: 0 0 auto; }
+
+.navbar-user .nav-link {
+	display:       inline-flex;
+	align-items:   center;
+	gap:           6px;
+	color:         var(--bc-text);
+	font-weight:   500;
+	font-size:     13px;
+	padding:       6px 10px;
+	border-radius: var(--bc-radius-sm);
+	white-space:   nowrap;
+	transition:    background-color 140ms ease, color 140ms ease;
+}
+.navbar-user .nav-link:hover { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+
+.navbar-user .dropdown-toggle::after {
+	margin-left: 6px;
+	vertical-align: middle;
+	border-top-color: currentColor;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	font-size: 9px;
+}
+
+.navbar-user .dropdown-menu {
+	min-width:     200px;
+	background:    var(--bc-surface);
+	border:        1px solid var(--bc-border);
+	border-radius: var(--bc-radius-sm);
+	padding:       4px;
+	margin-top:    6px;
+	box-shadow:    var(--bc-shadow-md);
+	font-size:     13px;
+}
+
+.navbar-user .dropdown-item {
+	color:         var(--bc-text);
+	border-radius: var(--bc-radius-xs);
+	padding:       7px 10px;
+	font-size:     13px;
+	font-weight:   500;
+	transition:    background-color 120ms ease, color 120ms ease;
+}
+.navbar-user .dropdown-item:hover,
+.navbar-user .dropdown-item:focus { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+.navbar-user .dropdown-item i.icon,
+.navbar-user .dropdown-item i.fas { color: var(--bc-muted); font-size: 12px; transition: color 120ms ease; }
+.navbar-user .dropdown-item:hover i.icon,
+.navbar-user .dropdown-item:hover i.fas { color: var(--bc-accent); }
+.navbar-user .dropdown-divider { border-color: var(--bc-border); margin: 3px 0; }
+
+/* =========================================================================
+   §9 — Cards + panels (Live Editor)
+   ======================================================================== */
+
+.card {
+	background:    var(--bc-surface);
+	border:        1px solid var(--bc-border);
+	border-radius: var(--bc-radius);
+	box-shadow:    var(--bc-shadow-sm);
+	color:         var(--bc-text);
+}
+
+.card + .card, .widget + .widget { margin-top: 14px; }
+
+.card .card-header {
+	background:     transparent;
+	border-bottom:  1px solid var(--bc-border);
+	padding:        12px 16px;
+	font-weight:    700;
+	color:          var(--bc-text-strong);
+	font-size:      14px;
+	display:        flex;
+	align-items:    center;
+	gap:            8px;
+	margin:         0;
+	text-transform: none;
+}
+.card .card-header i.icon,
+.card .card-header i.fas,
+.card .card-header i.far,
+.card .card-header i.fab { color: var(--bc-muted); font-size: 13px; }
+
+.card .card-body { padding: 14px 16px; font-size: 13.5px; }
+.card .card-footer { background: var(--bc-surface-2); border-top: 1px solid var(--bc-border); padding: 10px 16px; font-size: 12px; color: var(--bc-muted); }
+
+.card.card-transparent { background: transparent; border: none; box-shadow: none; }
+.card.card-transparent .card-header { border-bottom: none; padding-left: 0; padding-right: 0; }
+
+/* panel-default = alias card */
+/* panel-header = bandeau header accent */
+.card.panel-header > .card-header {
+	background:    var(--bc-accent);
+	border-bottom: 1px solid var(--bc-accent-strong);
+	color:         var(--bc-on-accent);
+	font-weight:   700;
+	border-top-left-radius:  calc(var(--bc-radius) - 1px);
+	border-top-right-radius: calc(var(--bc-radius) - 1px);
+}
+.card.panel-header > .card-header,
+.card.panel-header > .card-header h1, .card.panel-header > .card-header h2,
+.card.panel-header > .card-header h3, .card.panel-header > .card-header h4,
+.card.panel-header > .card-header h5, .card.panel-header > .card-header h6,
+.card.panel-header > .card-header a,  .card.panel-header > .card-header i,
+.card.panel-header > .card-header .icon { color: var(--bc-on-accent); }
+.card.panel-header > .card-header a:hover { opacity: 0.8; }
+
+/* panel-color = card entière accent */
+.card.panel-color { background: var(--bc-accent); border-color: var(--bc-accent-strong); color: var(--bc-on-accent); }
+.card.panel-color > .card-header { background: transparent; border-bottom: 1px solid color-mix(in srgb, var(--bc-on-accent) 18%, transparent); color: var(--bc-on-accent); font-weight: 700; }
+.card.panel-color > .card-body,
+.card.panel-color > .card-footer { background: transparent; color: var(--bc-on-accent); }
+.card.panel-color,
+.card.panel-color a,
+.card.panel-color h1, .card.panel-color h2, .card.panel-color h3,
+.card.panel-color h4, .card.panel-color h5, .card.panel-color h6,
+.card.panel-color i, .card.panel-color .icon,
+.card.panel-color .text-muted,
+.card.panel-color .list-group-item { color: var(--bc-on-accent); }
+.card.panel-color a:hover { opacity: 0.75; }
+.card.panel-color .list-group-item { background: transparent; border-color: color-mix(in srgb, var(--bc-on-accent) 15%, transparent); }
+.card.panel-color .badge { background: rgba(20, 24, 29, 0.82); color: #fff; border: 0; }
+.card.panel-color .btn-primary { background: var(--bc-on-accent); border-color: var(--bc-on-accent); color: var(--bc-accent); }
+.card.panel-color .btn-primary:hover { background: #000; border-color: #000; color: var(--bc-accent-strong); }
+
+/* =========================================================================
+   §10 — Rows + gutters
+   ======================================================================== */
+
+.row.row-default { margin-top: 14px; margin-bottom: 14px; }
+.row.row-dark {
+	background:    var(--bc-surface);
+	border:        1px solid var(--bc-border);
+	border-radius: var(--bc-radius);
+	margin-top:    12px;
+	margin-bottom: 12px;
+	padding:       10px 14px;
+}
+/* Bandeau header : le logo (col simple) et la navbar (carte row-dark + col)
+   cumulaient 2 paddings → liens décalés de 15px vs logo. On annule la gouttière
+   du col dans le bandeau pour aligner les liens sur le logo et le contenu. */
+.bc-header-banner .row-dark > [class*="col-"] { padding-left: 0; padding-right: 0; }
+.row.row-space { margin-top: 24px; }
+
+.row > [class*="col-"] > .card,
+.row > .col > .card,
+.row > [class*="col-"] > .widget,
+.row > .col > .widget { margin-bottom: 16px; }
+
+.row { margin-right: -15px; margin-left: -15px; }
+.row > [class*="col-"], .row > .col { padding-right: 15px; padding-left: 15px; }
+.card .row { margin-right: 0; margin-left: 0; }
+.card .row > [class*="col-"], .card .row > .col { padding-right: 8px; padding-left: 8px; }
+
+/* =========================================================================
+   §11 — Buttons
+   ======================================================================== */
+
+.btn {
+	font-family:     var(--bc-font);
+	font-weight:     600;
+	font-size:       13px;
+	text-transform:  none;
+	text-decoration: none;
+	padding:         7px 14px;
+	border-radius:   var(--bc-radius-sm);
+	border:          1px solid transparent;
+	transition:      background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+.btn:focus, .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--bc-accent-soft); }
+.btn:active:not(:disabled) { transform: translateY(1px); transition: transform 60ms ease; }
+.btn:disabled, .btn.disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-sm { padding: 5px 10px; }
+.btn-lg { padding: 11px 20px; }
+
+.btn-primary { background: var(--bc-accent); border-color: var(--bc-accent); color: var(--bc-on-accent); }
+.btn-primary:hover { background: var(--bc-accent-strong); border-color: var(--bc-accent-strong); color: var(--bc-on-accent); transform: translateY(-1px); }
+
+.btn-secondary { background: var(--bc-surface-2); border-color: var(--bc-border); color: var(--bc-text); }
+.btn-secondary:hover { background: var(--bc-surface-3); border-color: var(--bc-border-strong); color: var(--bc-text-strong); }
+
+.btn-outline-primary { background: transparent; border-color: var(--bc-accent); color: var(--bc-accent-text); }
+.btn-outline-primary:hover { background: var(--bc-accent); border-color: var(--bc-accent); color: var(--bc-on-accent); }
+
+.btn-link { background: transparent; border-color: transparent; color: var(--bc-accent-text); }
+.btn-link:hover { color: var(--bc-link-hover); }
+
+.btn-light { background: var(--bc-surface-2); border-color: var(--bc-border); color: var(--bc-text); }
+.btn-light:hover { background: var(--bc-surface-3); color: var(--bc-text-strong); }
+
+.btn-danger  { background: var(--bc-danger);  border-color: var(--bc-danger);  color: #fff; }
+.btn-danger:hover { filter: brightness(0.92); color: #fff; }
+.btn-success { background: var(--bc-success); border-color: var(--bc-success); color: #fff; }
+.btn-success:hover { filter: brightness(0.95); color: #fff; }
+.btn-warning { background: var(--bc-warning); border-color: var(--bc-warning); color: #fff; }
+.btn-info    { background: var(--bc-info);    border-color: var(--bc-info);    color: #fff; }
+
+/* =========================================================================
+   §12 — Forms
+   ======================================================================== */
+
+.form-control, .custom-select, textarea.form-control {
+	background:    var(--bc-surface-2);
+	border:        1px solid var(--bc-border);
+	border-radius: var(--bc-radius-sm);
+	padding:       8px 12px;
+	font-size:     13.5px;
+	color:         var(--bc-text);
+	transition:    border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+}
+.form-control::placeholder { color: var(--bc-muted); }
+.form-control:focus, .form-control:focus-visible,
+.custom-select:focus {
+	outline: none;
+	border-color: var(--bc-accent);
+	background: var(--bc-surface);
+	color: var(--bc-text-strong);
+	box-shadow: 0 0 0 3px var(--bc-accent-soft);
+}
+.form-control.is-valid   { border-color: var(--bc-success); }
+.form-control.is-valid:focus   { box-shadow: 0 0 0 3px var(--bc-success-soft); }
+.form-control.is-invalid { border-color: var(--bc-danger); }
+.form-control.is-invalid:focus { box-shadow: 0 0 0 3px var(--bc-danger-soft); }
+.form-control:disabled, .form-control[readonly] { background: var(--bc-surface-3); opacity: 0.6; cursor: not-allowed; }
+
+.col-form-label, .form-label, label { color: var(--bc-text-strong); font-size: 13.5px; font-weight: 600; }
+.form-text, .text-muted { color: var(--bc-muted); }
+
+.input-group-text { background: var(--bc-surface-2); border: 1px solid var(--bc-border); color: var(--bc-muted); }
+/* Soude l'addon (icône) au champ : ce build BS ne gère pas le radius des
+   input-group (cf. .widget-search plus bas), d'où le décrochage icône/texte. */
+.input-group > .input-group-prepend > .input-group-text { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }
+.input-group > .input-group-append  > .input-group-text { border-top-left-radius: 0;  border-bottom-left-radius: 0;  border-left: 0; }
+.input-group > .form-control:not(:first-child), .input-group > .custom-select:not(:first-child) { border-top-left-radius: 0;  border-bottom-left-radius: 0; }
+.input-group > .form-control:not(:last-child),  .input-group > .custom-select:not(:last-child)  { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+/* BS4 fixe une height sur .form-control → empêche le stretch et le champ reste
+   plus court que l'addon. height:auto le laisse s'étirer à la hauteur du groupe. */
+.input-group > .form-control, .input-group > .custom-select { height: auto; }
+
+.custom-control-input:checked ~ .custom-control-label::before { background: var(--bc-accent); border-color: var(--bc-accent); }
+
+/* =========================================================================
+   §13 — Nav tabs / pills
+   ======================================================================== */
+
+.nav-tabs { border-bottom: 1px solid var(--bc-border); }
+.nav-tabs .nav-link {
+	border: none;
+	background: transparent;
+	color: var(--bc-muted);
+	font-size: 13.5px;
+	font-weight: 500;
+	padding: 10px 16px;
+	border-radius: var(--bc-radius-sm) var(--bc-radius-sm) 0 0;
+	position: relative;
+	transition: color 120ms ease, background-color 120ms ease;
+}
+.nav-tabs .nav-link:hover { color: var(--bc-text); background: var(--bc-surface-2); border: none; }
+.nav-tabs .nav-link.active {
+	color: var(--bc-accent-text);
+	background: transparent;
+	border: none;
+	font-weight: 600;
+}
+.nav-tabs .nav-link.active::after {
+	content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--bc-accent);
+}
+
+.nav-pills .nav-link {
+	display: flex; align-items: center; gap: 8px;
+	padding: 8px 12px;
+	border-radius: var(--bc-radius-sm);
+	font-size: 13px; font-weight: 500;
+	color: var(--bc-text);
+	transition: background-color 120ms ease, color 120ms ease;
+}
+.nav-pills .nav-link i.icon, .nav-pills .nav-link i.fas { color: var(--bc-muted); font-size: 14px; transition: color 120ms ease; }
+.nav-pills .nav-link:hover { background: var(--bc-surface-2); color: var(--bc-text); }
+.nav-pills .nav-link.active { background: var(--bc-accent-soft); color: var(--bc-accent-text); font-weight: 600; }
+.nav-pills .nav-link.active i.icon, .nav-pills .nav-link.active i.fas { color: var(--bc-accent); }
+
+/* Widget navigation (header) */
+.widget-navigation .nav, .widget-navigation ul.nav { flex-wrap: wrap; gap: 4px; }
+.widget-navigation .nav-link {
+	color: var(--bc-text);
+	font-weight: 700;
+	font-size: 13.5px;
+	padding: 8px 14px;
+	border-radius: var(--bc-radius-sm);
+	transition: background-color 140ms ease, color 140ms ease;
+}
+.widget-navigation .nav-link:hover, .widget-navigation .nav-link.active { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+.row-dark .widget-navigation .nav-link { color: var(--bc-text-strong); }
+.row-dark .widget-navigation .nav-link:hover,
+.row-dark .widget-navigation .nav-link.active { background: var(--bc-accent); color: var(--bc-on-accent); }
+
+/* =========================================================================
+   §14 — List group
+   ======================================================================== */
+
+.list-group { border-radius: var(--bc-radius-sm); overflow: hidden; }
+.list-group-item {
+	background: transparent;
+	border-color: var(--bc-border);
+	padding: 9px 14px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--bc-text);
+	transition: background-color 120ms ease, color 120ms ease;
+}
+.list-group-item i.icon, .list-group-item i.fas { color: var(--bc-muted); font-size: 12px; }
+.list-group-item-action:hover, .list-group-item-action:focus { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+.list-group-item-action:hover i.icon, .list-group-item-action:hover i.fas { color: var(--bc-accent); }
+.list-group-item.active { background: var(--bc-accent); border-color: var(--bc-accent); color: var(--bc-on-accent); }
+
+/* =========================================================================
+   §15 — Tables
+   ======================================================================== */
+
+.table { color: var(--bc-text); margin-bottom: 0; }
+.table thead th {
+	background: var(--bc-surface-2);
+	border-bottom: 1px solid var(--bc-border);
+	color: var(--bc-muted);
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 10px 14px;
+}
+.table tbody td { border-top: 1px solid var(--bc-border); padding: 12px 14px; vertical-align: middle; font-size: 13px; }
+.table tbody tr:first-child td { border-top: none; }
+.table-hover tbody tr:hover { background: var(--bc-accent-soft); }
+
+/* =========================================================================
+   §16 — Badges
+   ======================================================================== */
+
+.badge { font-family: var(--bc-font); font-size: 11.5px; font-weight: 700; padding: 3px 7px; border-radius: 999px; display: inline-flex; align-items: center; vertical-align: middle; line-height: 1; }
+.badge-primary, .badge.badge-primary { background: var(--bc-accent); color: var(--bc-on-accent); }
+.badge-secondary { background: var(--bc-surface-2); color: var(--bc-text); border: 1px solid var(--bc-border); }
+.badge-success { background: var(--bc-success-soft); color: var(--bc-success); border: 1px solid color-mix(in srgb, var(--bc-success) 30%, transparent); }
+.badge-danger  { background: var(--bc-danger-soft);  color: var(--bc-danger);  border: 1px solid color-mix(in srgb, var(--bc-danger) 30%, transparent); }
+.badge-warning { background: var(--bc-warning-soft); color: var(--bc-warning); border: 1px solid color-mix(in srgb, var(--bc-warning) 30%, transparent); }
+.badge-info    { background: var(--bc-info-soft);    color: var(--bc-info);    border: 1px solid color-mix(in srgb, var(--bc-info) 30%, transparent); }
+
+/* =========================================================================
+   §17 — Alerts
+   ======================================================================== */
+
+.alert { border-radius: var(--bc-radius-sm); border: 1px solid; font-size: 13.5px; padding: 12px 14px; }
+.alert i.icon:first-child, .alert i.fas:first-child { margin-right: 8px; font-size: 14px; vertical-align: middle; }
+.alert-success { background: var(--bc-success-soft); color: var(--bc-success); border-color: color-mix(in srgb, var(--bc-success) 30%, transparent); }
+.alert-danger  { background: var(--bc-danger-soft);  color: var(--bc-danger);  border-color: color-mix(in srgb, var(--bc-danger) 30%, transparent); }
+.alert-warning { background: var(--bc-warning-soft); color: var(--bc-warning); border-color: color-mix(in srgb, var(--bc-warning) 30%, transparent); }
+.alert-info    { background: var(--bc-info-soft);    color: var(--bc-info);    border-color: color-mix(in srgb, var(--bc-info) 30%, transparent); }
+
+/* =========================================================================
+   §18 — Dropdowns / modals / pagination / breadcrumb
+   ======================================================================== */
+
+.dropdown-menu {
+	background: var(--bc-surface);
+	border: 1px solid var(--bc-border);
+	border-radius: var(--bc-radius-sm);
+	padding: 4px;
+	box-shadow: var(--bc-shadow-md);
+	font-size: 13px;
+	z-index: 1020;
+}
+.dropdown-item { color: var(--bc-text); border-radius: var(--bc-radius-xs); padding: 7px 10px; font-weight: 500; transition: background-color 120ms ease, color 120ms ease; }
+.dropdown-item:hover, .dropdown-item:focus { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+.dropdown-item.active { background: var(--bc-accent); color: var(--bc-on-accent); }
+.dropdown-divider { border-color: var(--bc-border); }
+
+.modal-content { background: var(--bc-surface); border: 1px solid var(--bc-border); border-radius: var(--bc-radius); box-shadow: var(--bc-shadow-md); color: var(--bc-text); }
+.modal-header { border-bottom: 1px solid var(--bc-border); padding: 14px 18px; }
+.modal-title { font-size: 15px; font-weight: 800; color: var(--bc-text-strong); line-height: 1.4; }
+.modal-body { padding: 18px; }
+.modal-footer { background: var(--bc-surface-2); border-top: 1px solid var(--bc-border); padding: 12px 18px; gap: 6px; }
+.modal-header .close, .modal-header button.close {
+	width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
+	font-size: 24px; padding: 0; margin: -8px -8px -8px auto;
+	border-radius: var(--bc-radius-xs); color: var(--bc-muted); background: transparent; border: 0;
+	transition: background-color 120ms ease, color 120ms ease;
+}
+.modal-header .close:hover { background: var(--bc-surface-2); color: var(--bc-text-strong); }
+
+.page-link { background: var(--bc-surface); border: 1px solid var(--bc-border); color: var(--bc-text); border-radius: var(--bc-radius-xs); margin: 0 2px; padding: 6px 12px; font-size: 13px; font-weight: 600; transition: background-color 140ms ease, color 140ms ease; }
+.page-link:hover { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+.page-item.active .page-link { background: var(--bc-accent); border-color: var(--bc-accent); color: var(--bc-on-accent); }
+.page-item.disabled .page-link { opacity: 0.4; }
+
+.breadcrumb { background: var(--bc-surface); border: 1px solid var(--bc-border); border-radius: var(--bc-radius-sm); padding: 10px 14px; font-size: 13px; box-shadow: var(--bc-shadow-sm); }
+.breadcrumb-item, .breadcrumb-item a { color: var(--bc-muted); }
+.breadcrumb-item a:hover { color: var(--bc-accent-text); }
+.breadcrumb-item.active { color: var(--bc-text-strong); font-weight: 600; }
+
+/* =========================================================================
+   §19 — Avatars
+   ======================================================================== */
+
+.avatar {
+	display: inline-block;
+	position: relative;
+	width: 40px;
+	height: 40px;
+	flex: 0 0 auto;
+	border-radius: 999px;
+	background: var(--bc-surface-3);
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+.avatar figure { margin: 0; padding: 0; width: 100%; height: 100%; border-radius: 999px; overflow: hidden; }
+.avatar figure a { display: block; width: 100%; height: 100%; line-height: 0; }
+.avatar img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 999px; }
+.avatar .inner-ring { display: none; }
+
+.avatar.online::after, .avatar.offline::after, .avatar.away::after {
+	content: ""; position: absolute; right: 4%; bottom: 4%; width: 26%; height: 26%;
+	min-width: 9px; min-height: 9px; border-radius: 999px;
+	border: 2px solid var(--bc-surface); box-sizing: border-box; z-index: 2;
+}
+.avatar.online::after  { background: var(--bc-success); }
+.avatar.offline::after { background: var(--bc-muted); }
+.avatar.away::after    { background: var(--bc-warning); }
+
+/* Tailles par contexte */
+.navbar-user .avatar,
+.navbar-user .nav-link > .avatar { width: 28px; height: 28px; }
+.module-forum .avatar { width: 28px; height: 28px; }
+body .widget-user .avatar, body .widget-user img.avatar {
+	width: 76px !important; height: 76px !important; margin: 0 auto 10px !important;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--bc-on-accent) 28%, transparent);
+}
+.module-user .user-profile .avatar, .module-user .user-profile img.avatar {
+	width: 132px; height: 132px; margin: 0 auto 12px;
+	box-shadow: 0 0 0 3px var(--bc-bg), 0 0 0 6px var(--bc-accent);
+}
+.module-members .card .avatar, .module-members .user-profile .avatar { width: 104px; height: 104px; }
+
+/* =========================================================================
+   §20 — Widget Espace membre
+   ======================================================================== */
+
+.widget-user { text-align: center; }
+.widget-user .card-body { padding: 16px; text-align: center; }
+.widget-user .user-name, .widget-user .username { font-size: 15px; font-weight: 800; color: var(--bc-text-strong); margin-bottom: 2px; }
+.widget-user .user-handle, .widget-user .user-role { font-size: 12px; color: var(--bc-muted); margin-bottom: 0; }
+.widget-user .list-group { text-align: left; margin-top: 4px; }
+.widget-user .card-footer { background: transparent; border-top: 1px solid var(--bc-border); padding: 10px 14px; text-align: center; }
+.widget-user .card-footer a {
+	display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+	border-radius: var(--bc-radius-sm); font-size: 12.5px; font-weight: 600;
+	color: var(--bc-muted); background: transparent;
+	border: 1px solid var(--bc-border);
+	transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.widget-user .card-footer a:hover { background: var(--bc-surface-2); border-color: var(--bc-border-strong); color: var(--bc-text-strong); }
+.widget-user .card-footer a i.icon { color: inherit; }
+
+/* panel-color widget user — footer lisible sur accent */
+.widget-user.panel-color .card-footer,
+.card.panel-color .widget-user .card-footer { border-top-color: color-mix(in srgb, var(--bc-on-accent) 18%, transparent); }
+
+/* =========================================================================
+   §21 — Widget Slider
+   ======================================================================== */
+
+.widget-slider { border-radius: var(--bc-radius); overflow: hidden; box-shadow: var(--bc-shadow); }
+.widget-slider .carousel-caption { background: linear-gradient(180deg, transparent, rgba(0,0,0,0.65)); position: absolute; bottom: 0; left: 0; right: 0; padding: 36px 24px 18px; text-align: left; }
+.widget-slider .carousel-caption h3, .widget-slider .carousel-caption h5 { color: #fff; font-size: 18px; font-weight: 800; margin-bottom: 4px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+.widget-slider .carousel-caption p { color: rgba(255,255,255,0.85); font-size: 13px; margin-bottom: 0; }
+
+/* =========================================================================
+   §22 — Widget Recherche + Shoutbox
+   ======================================================================== */
+
+.widget-search .form-control { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.widget-search .btn { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+.widget-shoutbox .shoutbox-messages { max-height: 240px; overflow-y: auto; padding: 8px 0; }
+.widget-shoutbox .shoutbox-message { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; border-bottom: 1px solid var(--bc-border); }
+.widget-shoutbox .shoutbox-message:last-child { border-bottom: none; }
+.widget-shoutbox .shoutbox-author { font-weight: 700; color: var(--bc-accent-text); flex: 0 0 auto; font-size: 12px; }
+.widget-shoutbox .shoutbox-form { display: flex; gap: 6px; padding: 8px 0 0; margin-top: 8px; border-top: 1px solid var(--bc-border); }
+.widget-shoutbox .shoutbox-form .form-control { flex: 1; }
+
+/* =========================================================================
+   §23 — Module Forum (touches légères, hérite des tables/cards)
+   ======================================================================== */
+
+.module-forum .subforums > li, .module-forum .forum-groups > a {
+	background: var(--bc-surface-2);
+	border: 1px solid var(--bc-border);
+	border-radius: 999px;
+	padding: 2px 10px;
+	font-size: 11px;
+	font-weight: 600;
+	transition: background-color 120ms ease, color 120ms ease;
+}
+.module-forum .subforums > li:hover, .module-forum .forum-groups > a:hover { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
+
+/* Members grid hover */
+.module-members .card.list-group-item-action:hover,
+.module-members a.card:hover { box-shadow: var(--bc-shadow-md); transform: translateY(-2px); }
+
+/* =========================================================================
+   §24 — Utilities
+   ======================================================================== */
+
+.text-muted     { color: var(--bc-muted) !important; }
+.text-accent    { color: var(--bc-accent-text) !important; }
+.bg-accent      { background: var(--bc-accent) !important; color: var(--bc-on-accent) !important; }
+.bg-accent-soft { background: var(--bc-accent-soft) !important; }
+
+/* Bouton retour-en-haut (injecté par blockcraft.js) */
+.bc-to-top {
+	position: fixed;
+	right: 18px;
+	bottom: 18px;
+	width: 42px;
+	height: 42px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--bc-accent);
+	color: var(--bc-on-accent);
+	border: none;
+	border-radius: var(--bc-radius);
+	box-shadow: var(--bc-shadow-md);
+	font-size: 16px;
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(8px);
+	transition: opacity 160ms ease, transform 160ms ease, background-color 140ms ease;
+	z-index: 1030;
+}
+.bc-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.bc-to-top:hover { background: var(--bc-accent-strong); }
+
+/* =========================================================================
+   §25 — Responsive
+   ======================================================================== */
+
+@media (max-width: 991.98px) {
+	.bc-header-banner { padding: 28px 0 32px; }
+}
+
+@media (max-width: 767.98px) {
+	.card .card-body   { padding: 12px; }
+	.card .card-header { padding: 10px 12px; }
+	.card .card-footer { padding: 8px 12px; }
+	.nav-tabs { flex-wrap: nowrap; overflow-x: auto; }
+	.bc-to-top { right: 12px; bottom: 12px; width: 38px; height: 38px; }
+}
+
+/* =========================================================================
+   §26 — Identité « blocs » (signature visuelle, distincte de dungeon/granite)
+   ======================================================================== */
+
+/* Bannière : trame de blocs subtile par-dessus le dégradé */
+.bc-header-banner::after {
+	content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+	background-image:
+		repeating-linear-gradient(0deg,  rgba(0,0,0,0.05) 0 2px, transparent 2px 44px),
+		repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 44px);
+}
+
+/* Cartes : bords francs + ombre « bloc » décalée nette (pas de flou) */
+.card { border-width: 2px; box-shadow: 3px 3px 0 color-mix(in srgb, var(--bc-text-strong) 9%, transparent); }
+[data-theme="dark"] .card { box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.38); }
+.card.panel-color { box-shadow: 3px 3px 0 color-mix(in srgb, var(--bc-accent) 40%, transparent); }
+.row.row-dark { border-width: 2px; }
+
+/* Entête de widget classique : capuchon bloc accent en haut */
+.card.panel-default > .card-header { box-shadow: inset 0 3px 0 var(--bc-accent); }
+
+/* Navigation : items en blocs pleins, majuscules */
+.widget-navigation .nav-link {
+	border: 2px solid var(--bc-border);
+	background: var(--bc-surface);
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	font-size: 12.5px;
+}
+.widget-navigation .nav-link:hover,
+.widget-navigation .nav-link.active {
+	background: var(--bc-accent);
+	color: var(--bc-on-accent);
+	border-color: var(--bc-accent-strong);
+}
+.row-dark .widget-navigation .nav-link { background: var(--bc-surface-2); }
+
+/* Boutons primaires : effet « bloc pressé » */
+.btn-primary:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--bc-accent-strong); }
+.btn-primary:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: none; }
+
+/* Titres bien carrés */
+h1, h2, h3, h4 { letter-spacing: 0; }
+
+/* Utilitaires contextuels Bootstrap → tokens du thème (sinon couleurs BS brutes) */
+.border-primary   { border-color: var(--bc-accent) !important; }
+.border-secondary { border-color: var(--bc-border) !important; }
+.border-info      { border-color: color-mix(in srgb, var(--bc-info) 45%, var(--bc-border)) !important; }
+.border-success   { border-color: color-mix(in srgb, var(--bc-success) 45%, var(--bc-border)) !important; }
+.border-danger    { border-color: color-mix(in srgb, var(--bc-danger) 45%, var(--bc-border)) !important; }
+.border-warning   { border-color: color-mix(in srgb, var(--bc-warning) 45%, var(--bc-border)) !important; }
+.text-primary { color: var(--bc-accent-text) !important; }
+.text-info    { color: var(--bc-info) !important; }
+.text-success { color: var(--bc-success) !important; }
+.text-danger  { color: var(--bc-danger) !important; }
+.text-warning { color: var(--bc-warning) !important; }
+.bg-info    { background-color: var(--bc-info) !important; }
+.bg-success { background-color: var(--bc-success) !important; }
+.bg-danger  { background-color: var(--bc-danger) !important; }
+.bg-warning { background-color: var(--bc-warning) !important; }
+
+/* =========================================================================
+   §UX — Corrections audit visuel (lisibilité, hamburger, focus, responsive)
+   ======================================================================== */
+
+/* Hamburger mobile : sans .navbar-light/.navbar-dark, Bootstrap ne dessine pas
+   l'icône → bouton vide. On la fournit (sombre en jour, claire en nuit). */
+.navbar-user .navbar-toggler { border: 1px solid var(--bc-border); padding: 4px 9px; border-radius: var(--bc-radius-sm); }
+.navbar-user .navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='%231c1a16' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+[data-theme="dark"] .navbar-user .navbar-toggler-icon { filter: invert(1) brightness(1.8); }
+
+/* "Se déconnecter" / liens du footer du widget login : bouton plein inversé, toujours lisible sur panneau coloré. */
+.widget-user .card.panel-color .card-footer a { background: var(--bc-on-accent); color: var(--bc-accent); border-color: var(--bc-on-accent); font-weight: 700; }
+.widget-user .card.panel-color .card-footer a:hover { background: color-mix(in srgb, var(--bc-on-accent) 88%, #000); color: var(--bc-accent-strong); border-color: color-mix(in srgb, var(--bc-on-accent) 88%, #000); }
+.widget-user .card.panel-color .card-footer a i.icon { color: inherit; }
+/* Liens "btn-link" (ex. Mot de passe oublié) lisibles sur panneau coloré. */
+.card.panel-color .btn-link { color: var(--bc-on-accent); }
+.card.panel-color .btn-link:hover { color: var(--bc-on-accent); opacity: 0.82; }
+/* Espacement entre "Mot de passe oublié" et "Se connecter". */
+.widget-user .card-footer .btn + .btn { margin-left: 8px; }
+
+/* Focus clavier visible (WCAG 2.4.7). */
+.theme-toggle:focus-visible,
+.navbar-user .nav-link:focus-visible,
+.btn:focus-visible,
+.bc-social:focus-visible { outline: 2px solid var(--bc-accent); outline-offset: 2px; }
+
+/* Footer : empilement vertical sous 576px. */
+@media (max-width: 575.98px) {
+	.bc-footer-bar { flex-direction: column; justify-content: center; text-align: center; gap: 10px; }
+}
+
+/* Cibles tactiles ≥ 44px sur mobile (WCAG 2.5.5). */
+@media (max-width: 767.98px) {
+	.bc-social { width: 44px; height: 44px; }
+}
+
+/* Contraste des boutons pleins (WCAG AA), jour + nuit. warning (gold) = texte sombre
+   (le blanc échoue sur du doré) ; en jour son fond est assombri. info/success/danger =
+   fond assombri + texte blanc (les teintes vives échouaient avec du blanc, surtout en nuit). */
+.btn-warning { color: #1a1612; }
+[data-theme="light"] .btn-warning { background: color-mix(in srgb, var(--bc-warning) 74%, #000); border-color: color-mix(in srgb, var(--bc-warning) 74%, #000); color: #fff; }
+.btn-info, .btn-success, .btn-danger { color: #fff; }
+.btn-info    { background: color-mix(in srgb, var(--bc-info) 80%, #000);    border-color: color-mix(in srgb, var(--bc-info) 80%, #000); }
+.btn-success { background: color-mix(in srgb, var(--bc-success) 74%, #000); border-color: color-mix(in srgb, var(--bc-success) 74%, #000); }
+.btn-danger  { background: color-mix(in srgb, var(--bc-danger) 80%, #000);  border-color: color-mix(in srgb, var(--bc-danger) 80%, #000); }
+
+/* Navbar : recentrage vertical de l'icône de marque (tachymètre admin) qui dépassait. */
+.navbar-user .navbar-brand { display: inline-flex; align-items: center; }
+.navbar-user .navbar-brand i { line-height: 1; display: block; }
+
+/* Footer collé en bas (sticky) même quand le contenu est court. */
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.bc-footer { margin-top: auto; }
+
+/* Carte profil (.user-profile) : centrage + organisation (était tout aligné à gauche). */
+.user-profile { text-align: center; }
+.user-profile > .avatar, .user-profile img.avatar { margin-left: auto; margin-right: auto; }
+.user-profile-karma, .user-profile-groups, .user-profile-status, .user-profile-actions, .user-profile .socials { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; }
+.user-profile-meta { display: inline-grid; grid-template-columns: auto auto; gap: 3px 12px; text-align: left; margin-top: 10px; }
+.user-profile-meta dt { margin: 0; font-weight: 600; color: var(--bc-text-strong); }
+.user-profile-meta dd { margin: 0; color: var(--bc-muted); }

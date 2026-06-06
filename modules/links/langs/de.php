@@ -1,0 +1,48 @@
+<?php
+/**
+ * https://translate.neofr.ag
+ * @author: NeoFrag — module links (de)
+ */
+
+return [
+	'12622c56' => 'Link veröffentlicht',
+	'32795d48' => 'Entwurf',
+	'3eb668b0' => 'Titel',
+	'420249ec' => 'Keine Links.',
+	'52324908' => 'Kategorie gelöscht.',
+	'397e5819' => 'Kategorie bearbeiten',
+	'52a3d2eb' => 'Linkverzeichnis',
+	'57d9f20e' => 'Noch keine Links.',
+	'596654cf' => 'veröffentlicht|veröffentlicht',
+	'59e005ad' => 'Neuer Link',
+	'5adc90c9' => 'Link aktualisiert.',
+	'616195b8' => 'Links',
+	'62d10724' => 'URL',
+	'632385a3' => 'Links und Kategorien verwalten',
+	'685b7572' => 'Klicks',
+	'6da47fb7' => 'Link erstellt.',
+	'7760702c' => 'Neue Kategorie',
+	'7f8fa943' => 'Veröffentlicht',
+	'86c33902' => 'Bearbeiten',
+	'881485c2' => 'Bearbeiten: %s',
+	'8b8988ac' => 'Löschen?',
+	'8d9ef7a4' => 'Löschen',
+	'8fd9c7ef' => 'Speichern',
+	'96d3b970' => 'Veröffentlichen',
+	'a026ae67' => 'Kategorie',
+	'a7d19178' => 'Nicht möglich: %d Link(s) in dieser Kategorie.',
+	'a90db1d4' => 'Kategorie aktualisiert.',
+	'afccc23b' => 'Erstellen',
+	'b0133eae' => 'Neu',
+	'bb3bdfae' => 'Sortierreihenfolge',
+	'bb3fa9e9' => '%d Klick|%d Klicks',
+	'c8781d5e' => 'Kategorien',
+	'caf5c873' => 'Aktionen',
+	'e279b57f' => 'Link gelöscht.',
+	'e2c8f589' => 'Status',
+	'eb78cff1' => 'Beschreibung',
+	'ef99d01b' => 'Kategorie erstellt.',
+	'f126e15d' => 'Entwurf|Entwürfe',
+	'fb9e1051' => 'Keine Kategorie.',
+	'e37acc6d' => 'Verzeichnis kategorisierter externer Links mit Tracking-Weiterleitung und Klickzähler.',
+];

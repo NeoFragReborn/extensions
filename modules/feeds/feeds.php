@@ -1,0 +1,34 @@
+<?php
+/**
+ * https://neofr.ag
+ * Module Flux — génère des flux RSS 2.0 du contenu (news, articles).
+ *   /feeds          → page listant les flux
+ *   /feeds/news     → RSS des actualités publiées
+ *   /feeds/articles → RSS des articles publiés
+ */
+
+namespace NF\Modules\Feeds;
+
+use NF\NeoFrag\Addons\Module;
+
+class Feeds extends Module
+{
+	protected function __info()
+	{
+		return [
+			'title'       => $this->lang('Flux RSS'),
+			'description' => $this->lang('Flux RSS 2.0 des actualités et articles.'),
+			'icon'        => 'fas fa-rss',
+			'link'        => 'https://neofr.ag',
+			'author'      => 'NeoFrag Reborn',
+			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'version'     => '1.0',
+			'depends'     => ['neofrag' => '1.0.0'],
+			'routes'      => [
+				''         => 'index',
+				'news'     => '_news',
+				'articles' => '_articles',
+			]
+		];
+	}
+}

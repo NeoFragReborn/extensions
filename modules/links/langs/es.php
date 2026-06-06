@@ -1,0 +1,48 @@
+<?php
+/**
+ * https://translate.neofr.ag
+ * @author: NeoFrag — module links (es)
+ */
+
+return [
+	'12622c56' => 'Enlace publicado',
+	'32795d48' => 'Borrador',
+	'3eb668b0' => 'Título',
+	'420249ec' => 'Sin enlaces.',
+	'52324908' => 'Categoría eliminada.',
+	'397e5819' => 'Editar categoría',
+	'52a3d2eb' => 'Directorio de enlaces',
+	'57d9f20e' => 'Aún no hay enlaces.',
+	'596654cf' => 'publicado|publicados',
+	'59e005ad' => 'Nuevo enlace',
+	'5adc90c9' => 'Enlace modificado.',
+	'616195b8' => 'Enlaces',
+	'62d10724' => 'URL',
+	'632385a3' => 'Gestionar enlaces y categorías',
+	'685b7572' => 'Clics',
+	'6da47fb7' => 'Enlace creado.',
+	'7760702c' => 'Nueva categoría',
+	'7f8fa943' => 'Publicado',
+	'86c33902' => 'Editar',
+	'881485c2' => 'Editar: %s',
+	'8b8988ac' => '¿Eliminar?',
+	'8d9ef7a4' => 'Eliminar',
+	'8fd9c7ef' => 'Guardar',
+	'96d3b970' => 'Publicar',
+	'a026ae67' => 'Categoría',
+	'a7d19178' => 'Imposible: %d enlace(s) en esta categoría.',
+	'a90db1d4' => 'Categoría modificada.',
+	'afccc23b' => 'Crear',
+	'b0133eae' => 'Nueva',
+	'bb3bdfae' => 'Orden de clasificación',
+	'bb3fa9e9' => '%d clic|%d clics',
+	'c8781d5e' => 'Categorías',
+	'caf5c873' => 'Acciones',
+	'e279b57f' => 'Enlace eliminado.',
+	'e2c8f589' => 'Estado',
+	'eb78cff1' => 'Descripción',
+	'ef99d01b' => 'Categoría creada.',
+	'f126e15d' => 'borrador|borradores',
+	'fb9e1051' => 'Sin categoría.',
+	'e37acc6d' => 'Directorio de enlaces externos categorizados con redirección rastreada y contador de clics.',
+];

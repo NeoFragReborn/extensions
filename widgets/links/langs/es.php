@@ -1,0 +1,12 @@
+<?php
+/**
+ * https://translate.neofr.ag
+ */
+
+return [
+	'04a2586c' => 'Enlaces populares',
+	'2a580e11' => 'Enlaces populares del directorio.',
+	'616195b8' => 'Enlaces',
+	'bfbbf021' => 'Sin enlace',
+	'cc19ada2' => 'Todos los enlaces'
+];

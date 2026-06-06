@@ -1,0 +1,132 @@
+<?php
+/**
+ * https://neofr.ag
+ */
+
+namespace NF\Modules\Articles\Controllers;
+
+use NF\NeoFrag\Loadables\Controllers\Module_Checker;
+
+class Admin_Checker extends Module_Checker
+{
+	public function index($page = '')
+	{
+		$categories = [];
+		foreach ($this->model()->get_categories() as $c)
+		{
+			$categories[(int)$c['category_id']] = $c['title'];
+		}
+
+		$filters = [
+			'q'        => isset($_GET['q']) ? trim((string)$_GET['q']) : '',
+			'category' => isset($_GET['category']) && isset($categories[(int)$_GET['category']]) ? (int)$_GET['category'] : 0,
+			'status'   => isset($_GET['status']) && in_array($_GET['status'], ['published', 'draft'], TRUE) ? $_GET['status'] : ''
+		];
+
+		$articles = array_values(array_filter($this->model()->get_articles(), function($a) use ($filters)
+		{
+			if ($filters['q'] !== '' && stripos((string)$a['title'], $filters['q']) === FALSE && stripos((string)$a['excerpt'], $filters['q']) === FALSE)
+			{
+				return FALSE;
+			}
+			if ($filters['category'] && (int)$a['category_id'] !== $filters['category'])
+			{
+				return FALSE;
+			}
+			if ($filters['status'] === 'published' && empty($a['published']))
+			{
+				return FALSE;
+			}
+			if ($filters['status'] === 'draft' && !empty($a['published']))
+			{
+				return FALSE;
+			}
+			return TRUE;
+		}));
+
+		$published = 0;
+		foreach ($articles as $a)
+		{
+			if (!empty($a['published'])) $published++;
+		}
+
+		$filters['categories'] = $categories;
+		$filters['matched']    = count($articles);
+		$filters['published']  = $published;
+		$filters['drafts']     = count($articles) - $published;
+		$filters['active']     = $filters['q'] !== '' || $filters['category'] || $filters['status'] !== '';
+
+		return [
+			$this->module->pagination->fix_items_per_page($this->config->articles_per_page ?: 10)->get_data($articles, $page),
+			$filters
+		];
+	}
+
+	public function _add()
+	{
+		return [];
+	}
+
+	public function _delete($article_id, $title)
+	{
+		if (($article = $this->model()->get_article($article_id)) && !empty($article))
+		{
+			return [$article];
+		}
+	}
+
+	public function _edit($article_id, $title)
+	{
+		if (($article = $this->model()->get_article($article_id)) && !empty($article))
+		{
+			return [$article];
+		}
+	}
+
+	public function _history($article_id, $title)
+	{
+		if (($article = $this->model()->get_article($article_id)) && !empty($article))
+		{
+			return [$article];
+		}
+	}
+
+	public function _revision_restore($article_id, $title, $revision_id)
+	{
+		if (($article = $this->model()->get_article($article_id)) && !empty($article))
+		{
+			return [$article, (int)$revision_id];
+		}
+	}
+
+	public function _categories_add()
+	{
+		return ['add'];
+	}
+
+	public function _categories_edit($category_id, $title)
+	{
+		if (($category = NeoFrag()->db	->select('c.*', 'cl.title')
+										->from('nf_articles_categories c')
+										->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+										->where('c.category_id', $category_id)
+										->where('cl.lang', $this->config->lang->info()->name)
+										->row()))
+		{
+			return [$category];
+		}
+	}
+
+	public function _categories_delete($category_id, $title)
+	{
+		if (($category = NeoFrag()->db	->select('c.*', 'cl.title')
+										->from('nf_articles_categories c')
+										->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+										->where('c.category_id', $category_id)
+										->where('cl.lang', $this->config->lang->info()->name)
+										->row()))
+		{
+			return [$category];
+		}
+	}
+}

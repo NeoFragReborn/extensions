@@ -1,0 +1,16 @@
+.shop-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 18px;
+}
+
+.shop-balance { font-weight: 600; font-size: 15px; }
+
+.shop-item { transition: transform 140ms ease, box-shadow 140ms ease; }
+.shop-item:hover { transform: translateY(-2px); }
+
+.shop-item-icon { font-size: 34px; margin-bottom: 8px; opacity: 0.85; }
+.shop-item-price { font-weight: 700; font-size: 16px; margin-top: 6px; }
