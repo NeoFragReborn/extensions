@@ -55,11 +55,11 @@ class Bugtracker extends Module
 	{
 		$L = NeoFrag();
 		return [
-			'open'        => '<span class="badge badge-info"><span class="dot"></span> '.$L->lang('Ouvert').'</span>',
-			'in_progress' => '<span class="badge badge-warning"><span class="dot"></span> '.$L->lang('En cours').'</span>',
-			'resolved'    => '<span class="badge badge-success"><span class="dot"></span> '.$L->lang('Résolu').'</span>',
-			'closed'      => '<span class="badge badge-secondary"><span class="dot"></span> '.$L->lang('Fermé').'</span>',
-			'wont_fix'    => '<span class="badge badge-light"><span class="dot"></span> '.$L->lang('Wont fix').'</span>'
+			'open'        => '<span class="badge text-bg-info"><span class="dot"></span> '.$L->lang('Ouvert').'</span>',
+			'in_progress' => '<span class="badge text-bg-warning"><span class="dot"></span> '.$L->lang('En cours').'</span>',
+			'resolved'    => '<span class="badge text-bg-success"><span class="dot"></span> '.$L->lang('Résolu').'</span>',
+			'closed'      => '<span class="badge text-bg-secondary"><span class="dot"></span> '.$L->lang('Fermé').'</span>',
+			'wont_fix'    => '<span class="badge text-bg-light"><span class="dot"></span> '.$L->lang('Wont fix').'</span>'
 		][$status] ?? $status;
 	}
 
@@ -67,10 +67,10 @@ class Bugtracker extends Module
 	{
 		$L = NeoFrag();
 		return [
-			'low'      => '<span class="badge badge-light"><i class="fas fa-arrow-down"></i> '.$L->lang('Faible').'</span>',
-			'normal'   => '<span class="badge badge-secondary"><span class="dot"></span> '.$L->lang('Normale').'</span>',
-			'high'     => '<span class="badge badge-warning"><i class="fas fa-arrow-up"></i> '.$L->lang('Haute').'</span>',
-			'critical' => '<span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> '.$L->lang('Critique').'</span>'
+			'low'      => '<span class="badge text-bg-light"><i class="fas fa-arrow-down"></i> '.$L->lang('Faible').'</span>',
+			'normal'   => '<span class="badge text-bg-secondary"><span class="dot"></span> '.$L->lang('Normale').'</span>',
+			'high'     => '<span class="badge text-bg-warning"><i class="fas fa-arrow-up"></i> '.$L->lang('Haute').'</span>',
+			'critical' => '<span class="badge text-bg-danger"><i class="fas fa-exclamation-triangle"></i> '.$L->lang('Critique').'</span>'
 		][$priority] ?? $priority;
 	}
 
@@ -78,10 +78,10 @@ class Bugtracker extends Module
 	{
 		$L = NeoFrag();
 		return [
-			'bug'      => '<span class="badge badge-danger"><i class="fas fa-bug"></i> '.$L->lang('Bug').'</span>',
-			'feature'  => '<span class="badge badge-info"><i class="fas fa-star"></i> '.$L->lang('Feature').'</span>',
-			'question' => '<span class="badge badge-warning"><i class="far fa-question-circle"></i> '.$L->lang('Question').'</span>',
-			'other'    => '<span class="badge badge-secondary"><i class="fas fa-tag"></i> '.$L->lang('Autre').'</span>'
+			'bug'      => '<span class="badge text-bg-danger"><i class="fas fa-bug"></i> '.$L->lang('Bug').'</span>',
+			'feature'  => '<span class="badge text-bg-info"><i class="fas fa-star"></i> '.$L->lang('Feature').'</span>',
+			'question' => '<span class="badge text-bg-warning"><i class="far fa-question-circle"></i> '.$L->lang('Question').'</span>',
+			'other'    => '<span class="badge text-bg-secondary"><i class="fas fa-tag"></i> '.$L->lang('Autre').'</span>'
 		][$type] ?? $type;
 	}
 }

@@ -3,6 +3,7 @@
 -- Régénérer : docker compose exec -T web php tools/extract-module-sql.php
 
 SET FOREIGN_KEY_CHECKS = 0;
+SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `nf_surveys` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `nf_surveys` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `idx_published` (`published`,`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_surveys_options` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -25,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `nf_surveys_options` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `idx_survey` (`survey_id`,`sort_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_surveys_votes` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -37,6 +38,6 @@ CREATE TABLE IF NOT EXISTS `nf_surveys_votes` (
   PRIMARY KEY (`id`),
   KEY `idx_survey_user` (`survey_id`,`user_id`),
   KEY `idx_survey_ip` (`survey_id`,`ip_hash`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

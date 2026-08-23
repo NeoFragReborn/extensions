@@ -4,6 +4,11 @@ use NF\NeoFrag\Loadables\Controllers\Widget as Controller_Widget;
 
 class Index extends Controller_Widget
 {
+	public function index($config = [])
+	{
+		return $this->popular($config);
+	}
+
 	public function popular($config = [])
 	{
 		$count = max(1, min(20, (int)($config['count'] ?? 5)));
@@ -25,7 +30,7 @@ class Index extends Controller_Widget
 			$body = '<ul class="list-unstyled mb-0">';
 			foreach ($links as $l)
 			{
-				$body .= '<li class="py-1"><a href="'.url('links/go/'.$l['id']).'" target="_blank" rel="noopener"><i class="fas fa-external-link-alt mr-1"></i>'.htmlspecialchars($l['title']).'</a> <small class="text-muted">('.(int)$l['clicks'].')</small></li>';
+				$body .= '<li class="py-1"><a href="'.url('links/go/'.$l['id']).'" target="_blank" rel="noopener"><i class="fas fa-external-link-alt me-1"></i>'.htmlspecialchars($l['title']).'</a> <small class="text-muted">('.(int)$l['clicks'].')</small></li>';
 			}
 			$body .= '</ul>';
 		}

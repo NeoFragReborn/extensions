@@ -14,12 +14,15 @@ class Block extends Controller_Module
 		return [
 			'downloads.popular' => [
 				'title'  => $this->lang('Téléchargements populaires'),
-				'render' => function(){
+				'fields' => [
+					'count' => ['type' => 'int', 'default' => 5, 'min' => 1, 'max' => 20],
+				],
+				'render' => function($settings = []){
 					$rows = $this->db	->select('id', 'title')
 										->from('nf_downloads')
 										->where('published', '1')
 										->order_by('downloads_count DESC, title ASC')
-										->limit(5)
+										->limit((int) ($settings['count'] ?? 5))
 										->get();
 
 					if (!$rows)

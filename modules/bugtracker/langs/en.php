@@ -59,4 +59,6 @@ return [
 	'fa6c2309' => 'Ticket deleted.',
 	'fd9c21ab' => 'Create ticket',
 	'caf5c873' => 'Actions',
+	// i18n 2026-06-11 (code strings)
+	'76f47454' => 'Ticket #%s — %s',
 ];

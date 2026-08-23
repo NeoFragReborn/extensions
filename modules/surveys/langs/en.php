@@ -60,4 +60,6 @@ return [
 	'dc275fe4' => 'Filter',
 	'599dba10' => 'Reset',
 	'8a7e7178' => '%d result|%d results',
+	// i18n 2026-06-11 (code strings)
+	'f9c3c87a' => 'Edit the survey',
 ];

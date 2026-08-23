@@ -62,7 +62,8 @@ class Payments extends Module
 
 	private function abs_url($path)
 	{
-		return ($this->url->https ? 'https' : 'http').'://'.$this->url->host.$this->url->base.$path;
+		// site_origin() : les URLs de retour Stripe ne doivent pas dériver d'un Host forgeable.
+		return site_origin().$this->url->base.$path;
 	}
 
 	/** Crée une session Stripe Checkout (API directe). @return string|null URL de paiement */

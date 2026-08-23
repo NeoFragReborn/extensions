@@ -39,7 +39,7 @@ class Admin extends Controller_Module
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				$body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/bugtracker/'.$t['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/bugtracker/delete/'.$t['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/bugtracker/delete/'.$t['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -93,6 +93,8 @@ class Admin extends Controller_Module
 
 	public function _delete($t)
 	{
+		$this->check_csrf('admin/bugtracker');
+
 		NeoFrag()->db->where('id', $t['id'])->delete('nf_bug_tickets');
 		NeoFrag()->db->where('ticket_id', $t['id'])->delete('nf_bug_comments');
 		notify($this->lang('Ticket supprimé.'));

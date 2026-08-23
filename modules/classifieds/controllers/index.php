@@ -39,7 +39,7 @@ class Index extends Controller_Module
 
 		$body .= '<div class="d-flex flex-wrap align-items-center mb-2" style="gap:8px;">';
 		$body .= Classifieds::type_label($ad['ad_type']);
-		$body .= '<span class="ml-auto" style="font-size:1.25rem;">'.Classifieds::format_price($ad['price'], $this).'</span>';
+		$body .= '<span class="ms-auto" style="font-size:1.25rem;">'.Classifieds::format_price($ad['price'], $this).'</span>';
 		$body .= '</div>';
 
 		$body .= '<div class="text-muted small mb-3">';
@@ -173,7 +173,7 @@ class Index extends Controller_Module
 
 		if ($message === '')
 		{
-			notify($this->lang('Message vide.'), 'error');
+			notify($this->lang('Message vide.'), 'danger');
 			redirect('classifieds/'.$ad['id'].'/'.$slug);
 		}
 
@@ -209,7 +209,7 @@ class Index extends Controller_Module
 		foreach ($categories as $c)
 		{
 			$out .= '<a class="list-group-item list-group-item-action'.($active === (int)$c['id'] ? ' active' : '').'" href="'.url('classifieds/category/'.$c['id'].'/'.url_title($c['title'])).'">'
-				.htmlspecialchars($c['title']).' <span class="badge badge-light">'.(int)$c['nb'].'</span></a>';
+				.htmlspecialchars($c['title']).' <span class="badge text-bg-light">'.(int)$c['nb'].'</span></a>';
 		}
 		$out .= '</div></div>';
 		return $out;

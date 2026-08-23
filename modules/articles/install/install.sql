@@ -3,13 +3,16 @@
 -- Régénérer : docker compose exec -T web php tools/extract-module-sql.php
 
 SET FOREIGN_KEY_CHECKS = 0;
+SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `nf_articles` (
   `article_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `category_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
   `image_id` int(10) unsigned DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  -- datetime : une `date` future programme/masque la publication (cf. models/articles.php). TIMESTAMP
+  -- plafonne au 19/01/2038 → rejet en mode strict. `announced_at` reste TIMESTAMP (posé à la parution réelle).
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
   `published` enum('0','1') NOT NULL DEFAULT '0',
   `announced_at` timestamp NULL DEFAULT NULL,
   `views` int(10) unsigned NOT NULL DEFAULT 0,
@@ -21,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `nf_articles` (
   KEY `idx_image` (`image_id`),
   KEY `idx_deleted_at` (`deleted_at`),
   KEY `idx_schedule` (`published`,`announced_at`,`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_articles_lang` (
   `article_id` int(10) unsigned NOT NULL,
@@ -31,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `nf_articles_lang` (
   `content` mediumtext NOT NULL,
   `tags` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`article_id`,`lang`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_articles_categories` (
   `category_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -41,13 +44,13 @@ CREATE TABLE IF NOT EXISTS `nf_articles_categories` (
   PRIMARY KEY (`category_id`),
   KEY `idx_image` (`image_id`),
   KEY `idx_icon` (`icon_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_articles_categories_lang` (
   `category_id` int(10) unsigned NOT NULL,
   `lang` varchar(5) NOT NULL,
   `title` varchar(100) NOT NULL,
   PRIMARY KEY (`category_id`,`lang`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

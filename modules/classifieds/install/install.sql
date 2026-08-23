@@ -3,6 +3,7 @@
 -- Régénérer : docker compose exec -T web php tools/extract-module-sql.php
 
 SET FOREIGN_KEY_CHECKS = 0;
+SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `nf_classifieds` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

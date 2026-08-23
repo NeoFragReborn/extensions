@@ -1,0 +1,28 @@
+<?php
+
+return [
+	'db571b56' => 'Katalog',
+	'4678bb10' => 'Neuer Artikel',
+	'58545e02' => 'Shop',
+	'4d63b6b6' => 'Kein Artikel. Erstelle den ersten!',
+	'1379fa98' => 'Diesen Artikel löschen?',
+	'bf298a20' => 'Artikel',
+	'57dd4560' => 'Preis',
+	'8af77964' => 'Bestand',
+	'4a818505' => 'Artikel|Artikel',
+	'd0f90974' => 'Artikel bearbeiten',
+	'687a534c' => 'Symbol (FontAwesome-Klasse)',
+	'e7a37274' => 'Preis (Punkte)',
+	'8d915389' => 'Payload',
+	'9589f05c' => 'Rang: Gruppen-ID · VIP: Anzahl der Tage · Perk/Kosmetik: freier Schlüssel',
+	'9a3c88f1' => 'Bestand (-1 = unbegrenzt)',
+	'd74492b4' => 'Ein Kauf pro Mitglied',
+	'b66f201b' => 'Aktiv (im Shop sichtbar)',
+	'20cfd509' => 'Artikel gelöscht',
+	'7b3f7257' => 'Shop-Kauf: %s',
+	'9958352e' => 'Shop für virtuelle Güter (Ränge, Kosmetik, VIP…) mit Punkten bezahlbar, und Merch.',
+	'53736aaf' => 'Im Besitz',
+	'0bc215de' => 'Nicht genügend Punkte',
+	'a1b3a884' => 'Kaufen',
+	'88722b7f' => 'Der Shop ist derzeit leer.',
+];

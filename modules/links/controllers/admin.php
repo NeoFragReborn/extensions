@@ -12,15 +12,15 @@ class Admin extends Controller_Module
 		if (empty($cats)) {
 			$cats_body = $this->admin_empty('far fa-folder', $this->lang('Aucune catégorie.'));
 		} else {
-			$cats_body = '<table class="table table-hover" style="margin:0;"><thead><tr><th>'.$this->lang('Titre').'</th><th class="text-right">'.$this->lang('Liens').'</th><th class="text-right"></th></tr></thead><tbody>';
+			$cats_body = '<table class="table table-hover" style="margin:0;"><thead><tr><th>'.$this->lang('Titre').'</th><th class="text-end">'.$this->lang('Liens').'</th><th class="text-end"></th></tr></thead><tbody>';
 			foreach ($cats as $c) {
 				$slug = url_title($c['title']);
 				$cats_body .= '<tr>'
 					.'<td><strong>'.htmlspecialchars($c['title']).'</strong></td>'
-					.'<td class="text-right">'.(int)$c['nb'].'</td>'
-					.'<td class="text-right" style="white-space:nowrap;">'
+					.'<td class="text-end">'.(int)$c['nb'].'</td>'
+					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/links/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 			$cats_body .= '</tbody></table>';
@@ -56,7 +56,7 @@ class Admin extends Controller_Module
 				$ls_body .= '<div class="nf-content-card-foot">';
 				$ls_body .= '<span class="nf-content-card-spacer"></span>';
 				$ls_body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/links/link/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$ls_body .= '</div>';
 				$ls_body .= '</div>';
 			}
@@ -80,6 +80,7 @@ class Admin extends Controller_Module
 			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
 		}
 		$toolbar .= '</select>';
+		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
 		$toolbar .= '<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> '.$this->lang('Filtrer').'</button>';
 		if (!empty($filters['active']))
 		{
@@ -112,6 +113,8 @@ class Admin extends Controller_Module
 	public function _link_edit($l) { return $this->_link_form($l); }
 	public function _link_delete($l)
 	{
+		$this->check_csrf('admin/links');
+
 		NeoFrag()->db->where('id', $l['id'])->delete('nf_links');
 		notify($this->lang('Lien supprimé.'));
 		redirect('admin/links');
@@ -162,6 +165,8 @@ class Admin extends Controller_Module
 	public function _cat_edit($c) { return $this->_cat_form($c); }
 	public function _cat_delete($c)
 	{
+		$this->check_csrf('admin/links');
+
 		$nb = (int)NeoFrag()->db->select('COUNT(*)')->from('nf_links')->where('category_id', $c['id'])->row();
 		if ($nb > 0)
 		{

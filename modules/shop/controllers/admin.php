@@ -30,18 +30,18 @@ class Admin extends Controller_Module
 			$rows .= '<tr>'
 				.'<td><i class="'.htmlspecialchars($it['icon'] ?: 'fas fa-gift').'"></i> '.htmlspecialchars($it['title']).'</td>'
 				.'<td>'.$type.'</td>'
-				.'<td class="text-right"><i class="fas fa-coins"></i> '.(int)$it['price'].'</td>'
+				.'<td class="text-end"><i class="fas fa-coins"></i> '.(int)$it['price'].'</td>'
 				.'<td class="text-center">'.((int)$it['stock'] < 0 ? '∞' : (int)$it['stock']).'</td>'
-				.'<td class="text-center">'.(!empty($it['active']) ? '<span class="badge badge-success">'.$this->lang('Actif').'</span>' : '<span class="badge badge-secondary">'.$this->lang('Inactif').'</span>').'</td>'
-				.'<td class="text-right">'
+				.'<td class="text-center">'.(!empty($it['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
+				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/shop/edit/'.(int)$it['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cet item ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cet item ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}
 
 		$body = '<div class="table-responsive"><table class="table table-hover"><thead><tr>'
-			.'<th>'.$this->lang('Item').'</th><th>'.$this->lang('Type').'</th><th class="text-right">'.$this->lang('Prix').'</th>'
+			.'<th>'.$this->lang('Item').'</th><th>'.$this->lang('Type').'</th><th class="text-end">'.$this->lang('Prix').'</th>'
 			.'<th class="text-center">'.$this->lang('Stock').'</th><th class="text-center">'.$this->lang('Statut').'</th><th></th>'
 			.'</tr></thead><tbody>'.$rows.'</tbody></table></div>';
 
@@ -126,6 +126,8 @@ class Admin extends Controller_Module
 
 	public function _delete($id)
 	{
+		$this->check_csrf('admin/shop');
+
 		$this->db->where('id', (int)$id)->delete('nf_shop_items');
 		notify($this->lang('Item supprimé'));
 		redirect('admin/shop');

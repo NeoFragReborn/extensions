@@ -35,7 +35,7 @@
 		<div class="article-tags">
 			<i class="fas fa-tags"></i>
 			<?php foreach (array_filter(array_map('trim', explode(',', $article['tags']))) as $tag): ?>
-				<a href="<?php echo url('articles/tag/'.url_title($tag)) ?>" class="badge badge-secondary mr-1">#<?php echo htmlspecialchars($tag) ?></a>
+				<a href="<?php echo url('articles/tag/'.url_title($tag)) ?>" class="badge text-bg-secondary me-1">#<?php echo htmlspecialchars($tag) ?></a>
 			<?php endforeach ?>
 		</div>
 	</footer>

@@ -29,18 +29,18 @@ class Admin extends Controller_Module
 				.'<td>'.htmlspecialchars($a['title']).'</td>'
 				.'<td><code>'.htmlspecialchars($a['placement']).'</code></td>'
 				.'<td>'.htmlspecialchars($a['format']).'</td>'
-				.'<td class="text-center">'.(!empty($a['active']) ? '<span class="badge badge-success">'.$this->lang('Active').'</span>' : '<span class="badge badge-secondary">'.$this->lang('Inactive').'</span>').'</td>'
-				.'<td class="text-right">'.(int)$a['impressions'].' / '.(int)$a['clicks'].'</td>'
-				.'<td class="text-right">'
+				.'<td class="text-center">'.(!empty($a['active']) ? '<span class="badge text-bg-success">'.$this->lang('Active').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactive').'</span>').'</td>'
+				.'<td class="text-end">'.(int)$a['impressions'].' / '.(int)$a['clicks'].'</td>'
+				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/ads/edit/'.(int)$a['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.url('admin/ads/delete/'.(int)$a['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cette annonce ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/ads/delete/'.(int)$a['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cette annonce ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}
 
 		$body = '<div class="table-responsive"><table class="table table-hover"><thead><tr>'
 			.'<th>'.$this->lang('Titre').'</th><th>'.$this->lang('Emplacement').'</th><th>'.$this->lang('Format').'</th>'
-			.'<th class="text-center">'.$this->lang('Statut').'</th><th class="text-right">'.$this->lang('Vues / Clics').'</th><th></th>'
+			.'<th class="text-center">'.$this->lang('Statut').'</th><th class="text-end">'.$this->lang('Vues / Clics').'</th><th></th>'
 			.'</tr></thead><tbody>'.$rows.'</tbody></table></div>';
 
 		return $this->admin_card('fas fa-rectangle-ad', $this->lang('Régie publicitaire'), $body, count($ads).' '.$this->lang('annonce|annonces', count($ads)));
@@ -118,6 +118,8 @@ class Admin extends Controller_Module
 
 	public function _delete($id)
 	{
+		$this->check_csrf('admin/ads');
+
 		$this->db->where('id', (int)$id)->delete('nf_ads');
 		notify($this->lang('Annonce supprimée'));
 		redirect('admin/ads');

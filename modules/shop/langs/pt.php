@@ -1,0 +1,28 @@
+<?php
+
+return [
+	'db571b56' => 'Catálogo',
+	'4678bb10' => 'Novo item',
+	'58545e02' => 'Loja',
+	'4d63b6b6' => 'Nenhum item. Cria o primeiro!',
+	'1379fa98' => 'Eliminar este item?',
+	'bf298a20' => 'Item',
+	'57dd4560' => 'Preço',
+	'8af77964' => 'Stock',
+	'4a818505' => 'item|itens',
+	'd0f90974' => 'Editar o item',
+	'687a534c' => 'Ícone (classe FontAwesome)',
+	'e7a37274' => 'Preço (pontos)',
+	'8d915389' => 'Payload',
+	'9589f05c' => 'Grau: ID do grupo · VIP: número de dias · perk/cosmético: chave livre',
+	'9a3c88f1' => 'Stock (-1 = ilimitado)',
+	'd74492b4' => 'Uma compra por membro',
+	'b66f201b' => 'Ativo (visível na loja)',
+	'20cfd509' => 'Item eliminado',
+	'7b3f7257' => 'Compra na loja: %s',
+	'9958352e' => 'Loja de bens virtuais (graus, cosméticos, VIP…) pagáveis em pontos, e merch.',
+	'53736aaf' => 'Adquirido',
+	'0bc215de' => 'Pontos insuficientes',
+	'a1b3a884' => 'Comprar',
+	'88722b7f' => 'A loja está vazia de momento.',
+];

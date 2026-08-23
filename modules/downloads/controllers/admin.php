@@ -13,15 +13,15 @@ class Admin extends Controller_Module
 		if (empty($cats)) {
 			$cats_body = $this->admin_empty('far fa-folder', $this->lang('Aucune catégorie.'));
 		} else {
-			$cats_body = '<table class="table table-hover" style="margin:0;"><thead><tr><th>'.$this->lang('Titre').'</th><th class="text-right">'.$this->lang('Fichiers').'</th><th class="text-right"></th></tr></thead><tbody>';
+			$cats_body = '<table class="table table-hover" style="margin:0;"><thead><tr><th>'.$this->lang('Titre').'</th><th class="text-end">'.$this->lang('Fichiers').'</th><th class="text-end"></th></tr></thead><tbody>';
 			foreach ($cats as $c) {
 				$slug = url_title($c['title']);
 				$cats_body .= '<tr>'
 					.'<td><strong>'.htmlspecialchars($c['title']).'</strong></td>'
-					.'<td class="text-right">'.(int)$c['nb'].'</td>'
-					.'<td class="text-right" style="white-space:nowrap;">'
+					.'<td class="text-end">'.(int)$c['nb'].'</td>'
+					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/downloads/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.url('admin/downloads/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/downloads/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 			$cats_body .= '</tbody></table>';
@@ -57,7 +57,7 @@ class Admin extends Controller_Module
 				$fs_body .= '<div class="nf-content-card-foot">';
 				$fs_body .= '<span class="nf-content-card-spacer"></span>';
 				$fs_body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/downloads/file/'.$f['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$fs_body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/downloads/file/delete/'.$f['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$fs_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/downloads/file/delete/'.$f['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$fs_body .= '</div>';
 				$fs_body .= '</div>';
 			}
@@ -81,6 +81,7 @@ class Admin extends Controller_Module
 			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
 		}
 		$toolbar .= '</select>';
+		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
 		$toolbar .= '<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> '.$this->lang('Filtrer').'</button>';
 		if (!empty($filters['active']))
 		{
@@ -111,6 +112,8 @@ class Admin extends Controller_Module
 	public function _file_edit($f) { return $this->_file_form($f); }
 	public function _file_delete($f)
 	{
+		$this->check_csrf('admin/downloads');
+
 		NeoFrag()->db->where('id', $f['id'])->delete('nf_downloads');
 		notify($this->lang('Fichier supprimé.'));
 		redirect('admin/downloads');
@@ -167,6 +170,8 @@ class Admin extends Controller_Module
 	public function _cat_edit($c) { return $this->_cat_form($c); }
 	public function _cat_delete($c)
 	{
+		$this->check_csrf('admin/downloads');
+
 		$nb = (int)NeoFrag()->db->select('COUNT(*)')->from('nf_downloads')->where('category_id', $c['id'])->row();
 		if ($nb > 0)
 		{

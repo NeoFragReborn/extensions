@@ -3,6 +3,7 @@
 -- Régénérer : docker compose exec -T web php tools/extract-module-sql.php
 
 SET FOREIGN_KEY_CHECKS = 0;
+SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `nf_shop_items` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `nf_shop_items` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `idx_active` (`active`,`position`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_shop_purchases` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -32,6 +33,6 @@ CREATE TABLE IF NOT EXISTS `nf_shop_purchases` (
   KEY `idx_item` (`item_id`),
   CONSTRAINT `fk_shop_purchase_item` FOREIGN KEY (`item_id`) REFERENCES `nf_shop_items` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_shop_purchase_user` FOREIGN KEY (`user_id`) REFERENCES `nf_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

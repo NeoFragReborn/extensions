@@ -30,16 +30,16 @@ class Admin extends Controller_Module
 		}
 		else
 		{
-			$cats_body = '<table class="table table-hover" style="margin:0;"><thead><tr><th>'.$this->lang('Titre').'</th><th class="text-right">'.$this->lang('Annonces').'</th><th class="text-right"></th></tr></thead><tbody>';
+			$cats_body = '<table class="table table-hover" style="margin:0;"><thead><tr><th>'.$this->lang('Titre').'</th><th class="text-end">'.$this->lang('Annonces').'</th><th class="text-end"></th></tr></thead><tbody>';
 			foreach ($cats as $c)
 			{
 				$slug = url_title($c['title']);
 				$cats_body .= '<tr>'
 					.'<td><strong>'.htmlspecialchars($c['title']).'</strong></td>'
-					.'<td class="text-right">'.(int)$c['nb'].'</td>'
-					.'<td class="text-right" style="white-space:nowrap;">'
+					.'<td class="text-end">'.(int)$c['nb'].'</td>'
+					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/classifieds/cat/'.$c['id'].'/'.$slug).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.url('admin/classifieds/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 			$cats_body .= '</tbody></table>';
@@ -77,10 +77,10 @@ class Admin extends Controller_Module
 				$ads_body .= '<span class="nf-content-card-spacer"></span>';
 				if ($a['status'] === 'pending')
 				{
-					$ads_body .= '<a class="btn btn-sm btn-outline-success" href="'.url('admin/classifieds/'.$a['id'].'/'.$slug.'/approve').'" title="'.$this->lang('Valider').'"><i class="fas fa-check"></i></a> ';
-					$ads_body .= '<a class="btn btn-sm btn-outline-warning" href="'.url('admin/classifieds/'.$a['id'].'/'.$slug.'/reject').'" title="'.$this->lang('Refuser').'"><i class="fas fa-ban"></i></a> ';
+					$ads_body .= '<a class="btn btn-sm btn-outline-success" href="'.$this->csrf_url('admin/classifieds/'.$a['id'].'/'.$slug.'/approve').'" title="'.$this->lang('Valider').'"><i class="fas fa-check"></i></a> ';
+					$ads_body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/classifieds/'.$a['id'].'/'.$slug.'/reject').'" title="'.$this->lang('Refuser').'"><i class="fas fa-ban"></i></a> ';
 				}
-				$ads_body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/classifieds/delete/'.$a['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>';
+				$ads_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/delete/'.$a['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>';
 				$ads_body .= '</div>';
 				$ads_body .= '</div>';
 			}
@@ -104,6 +104,7 @@ class Admin extends Controller_Module
 			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
 		}
 		$toolbar .= '</select>';
+		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
 		$toolbar .= '<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> '.$this->lang('Filtrer').'</button>';
 		if (!empty($filters['active']))
 		{
@@ -120,7 +121,7 @@ class Admin extends Controller_Module
 
 		$ads_body = $toolbar.$ads_body.$pagination;
 
-		$ads_subtitle = $filters['pending'] > 0 ? '<span class="badge badge-warning">'.(int)$filters['pending'].' '.$this->lang('en attente').'</span>' : '';
+		$ads_subtitle = $filters['pending'] > 0 ? '<span class="badge text-bg-warning">'.(int)$filters['pending'].' '.$this->lang('en attente').'</span>' : '';
 		$cats_actions = '<a class="btn btn-sm btn-primary" href="'.url('admin/classifieds/cat/add').'"><i class="fas fa-plus"></i> '.$this->lang('Nouvelle').'</a>';
 
 		return $this->admin_card('fas fa-cog', $this->lang('Réglages'), $this->form()->display())
@@ -134,10 +135,12 @@ class Admin extends Controller_Module
 	public function _cat_edit($c) { return $this->_cat_form($c); }
 	public function _cat_delete($c)
 	{
+		$this->check_csrf('admin/classifieds');
+
 		$nb = (int)NeoFrag()->db->select('COUNT(*)')->from('nf_classifieds')->where('category_id', $c['id'])->row();
 		if ($nb > 0)
 		{
-			notify($this->lang('Impossible : %d annonce(s) dans cette catégorie.', $nb), 'error');
+			notify($this->lang('Impossible : %d annonce(s) dans cette catégorie.', $nb), 'danger');
 			redirect('admin/classifieds');
 		}
 		NeoFrag()->db->where('id', $c['id'])->delete('nf_classifieds_categories');
@@ -172,6 +175,8 @@ class Admin extends Controller_Module
 
 	public function _approve($ad)
 	{
+		$this->check_csrf('admin/classifieds');
+
 		NeoFrag()->db->where('id', $ad['id'])->update('nf_classifieds', ['status' => 'published']);
 		$this->_notify_author($ad, $this->lang('Ton annonce « %s » a été validée.', $ad['title']));
 		notify($this->lang('Annonce validée.'));
@@ -180,6 +185,8 @@ class Admin extends Controller_Module
 
 	public function _reject($ad)
 	{
+		$this->check_csrf('admin/classifieds');
+
 		NeoFrag()->db->where('id', $ad['id'])->update('nf_classifieds', ['status' => 'rejected']);
 		$this->_notify_author($ad, $this->lang('Ton annonce « %s » a été refusée.', $ad['title']));
 		notify($this->lang('Annonce refusée.'));
@@ -188,6 +195,8 @@ class Admin extends Controller_Module
 
 	public function _delete($ad)
 	{
+		$this->check_csrf('admin/classifieds');
+
 		NeoFrag()->db->where('id', $ad['id'])->delete('nf_classifieds');
 		notify($this->lang('Annonce supprimée.'));
 		redirect('admin/classifieds');

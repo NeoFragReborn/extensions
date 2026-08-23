@@ -84,6 +84,7 @@ class Admin extends Controller_Module
 			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
 		}
 		$toolbar .= '</select>';
+		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
 		$toolbar .= '<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> '.$this->lang('Filtrer').'</button>';
 		if (!empty($filters['active']))
 		{

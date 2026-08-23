@@ -29,13 +29,10 @@ class Forge extends Theme
 
 	public function __init()
 	{
-		$this	->css('bootstrap.min')
+		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
 				->css('style')
-				->js('jquery-3.7.1.min')
-				->js('popper.min')
-				->js('bootstrap.min')
-				->js('bootstrap-notify.min')
+				->js('bootstrap.bundle.min')
 				->js('modal')
 				->js('notify')
 				->js('confirm')
@@ -80,7 +77,7 @@ class Forge extends Theme
 							'type'     => 'index',
 							'settings' => serialize([
 								'display'           => 'logo',
-								'align'             => 'text-left',
+								'align'             => 'text-start',
 								'title'             => '',
 								'description'       => '',
 								'color_title'       => '#ffffff',

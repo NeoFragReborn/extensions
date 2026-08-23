@@ -4,6 +4,11 @@ use NF\NeoFrag\Loadables\Controllers\Widget as Controller_Widget;
 
 class Index extends Controller_Widget
 {
+	public function index($config = [])
+	{
+		return $this->recent($config);
+	}
+
 	public function recent($config = [])
 	{
 		$count = max(1, min(20, (int)($config['count'] ?? 3)));

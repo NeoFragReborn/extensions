@@ -8,5 +8,8 @@ return [
 	'2a580e11' => 'Beliebte Links aus dem Verzeichnis.',
 	'616195b8' => 'Links',
 	'bfbbf021' => 'Kein Link',
-	'cc19ada2' => 'Alle Links'
+	'cc19ada2' => 'Alle Links',
+	// i18n 2026-06-11 (code strings)
+	'58d430b6' => 'Anzahl der Links',
+	'042e2c3d' => 'In einem Panel anzeigen',
 ];

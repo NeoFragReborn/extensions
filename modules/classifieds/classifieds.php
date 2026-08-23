@@ -63,8 +63,8 @@ class Classifieds extends Module
 	{
 		$L = NeoFrag();
 		return [
-			'offer'   => '<span class="badge badge-success"><i class="fas fa-tag"></i> '.$L->lang('Offre').'</span>',
-			'request' => '<span class="badge badge-info"><i class="fas fa-search"></i> '.$L->lang('Recherche').'</span>'
+			'offer'   => '<span class="badge text-bg-success"><i class="fas fa-tag"></i> '.$L->lang('Offre').'</span>',
+			'request' => '<span class="badge text-bg-info"><i class="fas fa-search"></i> '.$L->lang('Recherche').'</span>'
 		][$type] ?? $type;
 	}
 
@@ -72,10 +72,10 @@ class Classifieds extends Module
 	{
 		$L = NeoFrag();
 		return [
-			'pending'   => '<span class="badge badge-warning"><span class="dot"></span> '.$L->lang('En attente').'</span>',
-			'published' => '<span class="badge badge-success"><span class="dot"></span> '.$L->lang('Publiée').'</span>',
-			'closed'    => '<span class="badge badge-secondary"><span class="dot"></span> '.$L->lang('Clôturée').'</span>',
-			'rejected'  => '<span class="badge badge-danger"><span class="dot"></span> '.$L->lang('Refusée').'</span>'
+			'pending'   => '<span class="badge text-bg-warning"><span class="dot"></span> '.$L->lang('En attente').'</span>',
+			'published' => '<span class="badge text-bg-success"><span class="dot"></span> '.$L->lang('Publiée').'</span>',
+			'closed'    => '<span class="badge text-bg-secondary"><span class="dot"></span> '.$L->lang('Clôturée').'</span>',
+			'rejected'  => '<span class="badge text-bg-danger"><span class="dot"></span> '.$L->lang('Refusée').'</span>'
 		][$status] ?? $status;
 	}
 
@@ -88,7 +88,7 @@ class Classifieds extends Module
 		$p = (float)$price;
 		if ($p <= 0)
 		{
-			return '<span class="badge badge-success">'.$lang->lang('Gratuit').'</span>';
+			return '<span class="badge text-bg-success">'.$lang->lang('Gratuit').'</span>';
 		}
 		return '<strong>'.number_format($p, 2, ',', ' ').' €</strong>';
 	}

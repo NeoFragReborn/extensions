@@ -12,7 +12,7 @@
 	function setStored(v) { try { localStorage.setItem(STORAGE_KEY, v); } catch (e) {} }
 	function sysDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
 
-	function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
+	function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); document.documentElement.setAttribute('data-bs-theme', t === 'dark' ? 'dark' : 'light'); }
 
 	function syncButton(t) {
 		document.querySelectorAll('.theme-toggle').forEach(function(btn) {

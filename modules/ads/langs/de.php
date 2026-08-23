@@ -1,0 +1,24 @@
+<?php
+
+return [
+	'c69f6198' => 'Werbeverwaltung',
+	'c4878383' => 'Banner und HTML-Blöcke pro Platzierung, ausgeblendet für werbefreie / VIP-Mitglieder.',
+	'2573a234' => 'Neue Anzeige',
+	'72a56cb6' => 'Inaktiv',
+	'd86e6b6d' => 'Diese Anzeige löschen?',
+	'd91677e9' => 'Format',
+	'b0505b6c' => 'Aufrufe / Klicks',
+	'3dac3ccb' => 'Anzeige|Anzeigen',
+	'c4203526' => 'Anzeige bearbeiten',
+	'b46b61ea' => 'Platzierung (Widget-Slot)',
+	'e3d470a3' => 'Muss mit dem Feld „Platzierung" des Werbe-Widgets übereinstimmen (z. B. Sidebar, Footer, Header).',
+	'644d3ad7' => 'Bild (Banner)',
+	'8a440446' => 'HTML / AdSense',
+	'3d376e37' => 'Bildformat: Banner-URL.',
+	'6ab7e531' => 'Ziel-URL',
+	'226002b0' => 'Bildformat: Klick-Link.',
+	'f13128f5' => 'HTML-Format: Code des Werbenetzwerks (AdSense…).',
+	'0944c42d' => 'Beginn (optional)',
+	'eae6f46e' => 'Ende (optional)',
+	'e060760c' => 'Anzeige gelöscht',
+];

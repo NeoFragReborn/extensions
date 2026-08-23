@@ -52,17 +52,17 @@ class Admin extends Controller_Module
 			$rows .= '<tr>'
 				.'<td>'.htmlspecialchars($p['label']).'</td>'
 				.'<td>'.($p['kind'] === 'vip' ? $this->lang('VIP (%d j)', (int)$p['units']) : $this->lang('%d points', (int)$p['units'])).'</td>'
-				.'<td class="text-right">'.number_format((int)$p['price_cents'] / 100, 2).' '.strtoupper($p['currency']).'</td>'
-				.'<td class="text-center">'.(!empty($p['active']) ? '<span class="badge badge-success">'.$this->lang('Actif').'</span>' : '<span class="badge badge-secondary">'.$this->lang('Inactif').'</span>').'</td>'
-				.'<td class="text-right">'
+				.'<td class="text-end">'.number_format((int)$p['price_cents'] / 100, 2).' '.strtoupper($p['currency']).'</td>'
+				.'<td class="text-center">'.(!empty($p['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
+				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/payments/packs/edit/'.(int)$p['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.url('admin/payments/packs/delete/'.(int)$p['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ce pack ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/payments/packs/delete/'.(int)$p['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ce pack ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}
 
 		$packs_body = $packs
-			? '<div class="table-responsive"><table class="table table-hover"><thead><tr><th>'.$this->lang('Pack').'</th><th>'.$this->lang('Contenu').'</th><th class="text-right">'.$this->lang('Prix').'</th><th class="text-center">'.$this->lang('Statut').'</th><th></th></tr></thead><tbody>'.$rows.'</tbody></table></div>'
+			? '<div class="table-responsive"><table class="table table-hover"><thead><tr><th>'.$this->lang('Pack').'</th><th>'.$this->lang('Contenu').'</th><th class="text-end">'.$this->lang('Prix').'</th><th class="text-center">'.$this->lang('Statut').'</th><th></th></tr></thead><tbody>'.$rows.'</tbody></table></div>'
 			: $this->admin_empty('fas fa-box', $this->lang('Aucun pack.'));
 
 		return $this->admin_card('fas fa-credit-card', $this->lang('Réglages Stripe'), $form->display())
@@ -135,6 +135,8 @@ class Admin extends Controller_Module
 
 	public function _pack_delete($id)
 	{
+		$this->check_csrf('admin/payments');
+
 		$this->db->where('id', (int)$id)->delete('nf_payment_packs');
 		notify($this->lang('Pack supprimé'));
 		redirect('admin/payments');

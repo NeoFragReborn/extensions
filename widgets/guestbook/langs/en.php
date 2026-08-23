@@ -8,5 +8,8 @@ return [
 	'7a841f3e' => 'All messages',
 	'bc0c9fa8' => 'Latest messages from the guestbook.',
 	'cad40716' => 'Guestbook',
-	'f3530fd8' => 'Latest messages'
+	'f3530fd8' => 'Latest messages',
+	// i18n 2026-06-11 (code strings)
+	'40915e5c' => 'Number of messages',
+	'042e2c3d' => 'Display in a panel',
 ];

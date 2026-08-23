@@ -9,6 +9,22 @@ use NF\NeoFrag\Loadables\Model;
 
 class Articles extends Model
 {
+	// Back-end de parution programmée partagé avec le module news (announce / publish_scheduled /
+	// increment_views). La présentation reste propre à articles (blog long : sommaire, temps de lecture).
+	use \NF\NeoFrag\Traits\Publishable_Content;
+
+	protected function publishable_config(): array
+	{
+		return [
+			'table'         => 'nf_articles',
+			'id'            => 'article_id',
+			'lang_table'    => 'nf_articles_lang',
+			'type'          => 'article',
+			'url_prefix'    => 'articles',
+			'notif_message' => 'Nouvel article : %s',
+		];
+	}
+
 	public function get_articles($filter = '', $filter_data = '')
 	{
 		$this->db	->select('a.*', 'al.title', 'al.excerpt', 'al.content', 'al.tags',
@@ -72,93 +88,6 @@ class Articles extends Model
 		}
 
 		return $article;
-	}
-
-	public function increment_views($article_id)
-	{
-		$this->db->execute('UPDATE nf_articles SET views = views + 1 WHERE article_id = '.(int)$article_id);
-	}
-
-	/**
-	 * Parution effective d'un article : émet event + webhook + gamification + notifications
-	 * UNE SEULE FOIS, au moment réel de parution. Idempotent via announced_at. Appelée à
-	 * l'enregistrement (parution immédiate) ET par l'endpoint de parution (cron) pour le
-	 * contenu programmé arrivé à échéance.
-	 *
-	 * @return bool TRUE si l'annonce vient d'être émise.
-	 */
-	public function announce($article_id)
-	{
-		$article_id = (int)$article_id;
-
-		$row = $this->db	->select('a.user_id', 'a.category_id', 'a.date', 'a.published', 'a.announced_at', 'al.title')
-							->from('nf_articles a')
-							->join('nf_articles_lang al', 'a.article_id = al.article_id')
-							->where('a.article_id', $article_id)
-							->where('al.lang', $this->config->lang->info()->name)
-							->where('a.deleted_at', NULL)
-							->row();
-
-		if (!$row || $row['published'] != '1' || !empty($row['announced_at']) || strtotime($row['date']) > time())
-		{
-			return FALSE;
-		}
-
-		// Marque AVANT d'émettre : empêche toute double émission (ré-entrance / passages cron concurrents).
-		$this->db->where('article_id', $article_id)->update('nf_articles', ['announced_at' => date('Y-m-d H:i:s')]);
-
-		$title = (string)$row['title'];
-		$url   = 'articles/'.$article_id.'/'.url_title($title);
-		$owner = (int)$row['user_id'];
-
-		$this->events->fire('article.published', ['article_id' => $article_id, 'title' => $title]);
-
-		if ($gam = $this->module('gamification'))
-		{
-			// Barème 'news' = « news / article publié » (clé partagée, cf. admin gamification).
-			if ($gam_owner = $gam->content_owner('article', $article_id))
-			{
-				$gam->earn($gam_owner, 'news');
-				$gam->recompute($gam_owner);
-			}
-		}
-
-		if ($wh = $this->module('webhooks'))
-		{
-			$wh->trigger('article.published', ['article_id' => $article_id, 'title' => $title, 'url' => url($url)]);
-		}
-
-		if ($notifications = $this->module('notifications'))
-		{
-			foreach ($notifications->subscribers('article-category', (int)$row['category_id'], $owner) as $uid)
-			{
-				$notifications->push($uid, 'article', $this->lang('Nouvel article : %s', $title), $url, $owner);
-			}
-		}
-
-		return TRUE;
-	}
-
-	/** Parution des articles programmés arrivés à échéance (appelée par l'endpoint cron). @return int annoncés */
-	public function publish_scheduled()
-	{
-		$count = 0;
-
-		foreach ($this->db	->select('article_id')
-							->from('nf_articles')
-							->where('published', '1')
-							->where('announced_at', NULL)
-							->where('date <=', date('Y-m-d H:i:s'))
-							->where('deleted_at', NULL)
-							->get() as $article_id)
-		{
-			if ($this->announce($article_id))
-			{
-				$count++;
-			}
-		}
-
-		return $count;
 	}
 
 	public function restore_article($article_id)

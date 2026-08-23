@@ -45,4 +45,14 @@ return [
 	'f126e15d' => 'rascunho|rascunhos',
 	'fb9e1051' => 'Sem categoria.',
 	'e37acc6d' => 'Diretório de links externos categorizados com redirecionamento rastreado e contador de cliques.',
+	// i18n 2026-06-11
+	'697431fe' => 'Nenhum link corresponde a estes critérios.',
+	'918913b6' => 'Procurar um título ou um URL…',
+	'db1a293b' => 'Todas as categorias',
+	'17a7d347' => 'Todos os estados',
+	'f4a45088' => 'Publicados',
+	'633b7ff4' => 'Rascunhos',
+	'dc275fe4' => 'Filtrar',
+	'599dba10' => 'Repor',
+	'8a7e7178' => '%d resultado|%d resultados',
 ];

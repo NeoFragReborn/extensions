@@ -56,6 +56,18 @@ class Admin_Checker extends Module_Checker
 		$filters['drafts']     = count($articles) - $published;
 		$filters['active']     = $filters['q'] !== '' || $filters['category'] || $filters['status'] !== '';
 
+		// Tri (collection complète, AVANT pagination) — colonnes en allowlist.
+		$filters['sort_cols'] = [
+			'date'  => $this->lang('Date'),
+			'title' => $this->lang('Titre'),
+			'views' => $this->lang('Vues'),
+		];
+		list($articles, $filters['sort']) = $this->sort_items($articles, [
+			'date'  => 'date',
+			'title' => 'title',
+			'views' => 'views',
+		], 'date', 'desc');
+
 		return [
 			$this->module->pagination->fix_items_per_page($this->config->articles_per_page ?: 10)->get_data($articles, $page),
 			$filters

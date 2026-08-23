@@ -1,0 +1,28 @@
+<?php
+
+return [
+	'db571b56' => 'Catalog',
+	'4678bb10' => 'New item',
+	'58545e02' => 'Shop',
+	'4d63b6b6' => 'No item. Create the first one!',
+	'1379fa98' => 'Delete this item?',
+	'bf298a20' => 'Item',
+	'57dd4560' => 'Price',
+	'8af77964' => 'Stock',
+	'4a818505' => 'item|items',
+	'd0f90974' => 'Edit the item',
+	'687a534c' => 'Icon (FontAwesome class)',
+	'e7a37274' => 'Price (points)',
+	'8d915389' => 'Payload',
+	'9589f05c' => 'Grade: group ID · VIP: number of days · perk/cosmetic: free key',
+	'9a3c88f1' => 'Stock (-1 = unlimited)',
+	'd74492b4' => 'One purchase per member',
+	'b66f201b' => 'Active (visible in the shop)',
+	'20cfd509' => 'Item deleted',
+	'7b3f7257' => 'Shop purchase: %s',
+	'9958352e' => 'Shop of virtual goods (grades, cosmetics, VIP…) payable in points, and merch.',
+	'53736aaf' => 'Owned',
+	'0bc215de' => 'Not enough points',
+	'a1b3a884' => 'Buy',
+	'88722b7f' => 'The shop is empty for now.',
+];

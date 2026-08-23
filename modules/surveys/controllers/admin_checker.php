@@ -58,6 +58,19 @@ class Admin_Checker extends Module_Checker
 		$filters['drafts']  = $drafts;
 		$filters['active']  = $filters['q'] !== '' || $filters['status'] !== '';
 
+		$filters['sort_cols'] = [
+			'date'    => $this->lang('Date'),
+			'title'   => $this->lang('Titre'),
+			'votes'   => $this->lang('Votes'),
+			'options' => $this->lang('Options'),
+		];
+		list($surveys, $filters['sort']) = $this->sort_items($surveys, [
+			'date'    => 'created_at',
+			'title'   => 'title',
+			'votes'   => 'total_votes',
+			'options' => 'nb_options',
+		], 'date', 'desc');
+
 		return [$this->module->pagination->fix_items_per_page(20)->get_data($surveys, $page), $filters];
 	}
 

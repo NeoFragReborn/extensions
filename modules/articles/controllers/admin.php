@@ -73,7 +73,7 @@ class Admin extends Controller_Module
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				$body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/articles/'.$a['article_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/articles/delete/'.$a['article_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cet article ? Action irréversible.'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/delete/'.$a['article_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cet article ? Action irréversible.'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -97,6 +97,7 @@ class Admin extends Controller_Module
 			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
 		}
 		$toolbar .= '</select>';
+		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
 		$toolbar .= '<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> '.$this->lang('Filtrer').'</button>';
 		if (!empty($filters['active']))
 		{
@@ -144,6 +145,8 @@ class Admin extends Controller_Module
 
 	public function _delete($article)
 	{
+		$this->check_csrf('admin/articles');
+
 		// Soft-delete : l'article part à la corbeille (restaurable).
 		NeoFrag()->db	->where('article_id', $article['article_id'])
 						->update('nf_articles', [

@@ -54,4 +54,13 @@ return [
 	'f5e4b7e2' => '%d voto|%d voti',
 	'f7f51f4a' => 'Chiuso',
 	'7f838b1b' => 'Sondaggi pubblici a scelta singola o multipla con risultati configurabili.',
+	// i18n 2026-06-11
+	'07c3b036' => 'Nessun sondaggio corrisponde a questi criteri.',
+	'bcdfd64c' => 'Cerca un sondaggio…',
+	'17a7d347' => 'Tutti gli stati',
+	'dc275fe4' => 'Filtra',
+	'599dba10' => 'Reimposta',
+	'8a7e7178' => '%d risultato|%d risultati',
+	// i18n 2026-06-11 (code strings)
+	'f9c3c87a' => 'Modifica il sondaggio',
 ];

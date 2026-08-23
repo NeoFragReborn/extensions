@@ -55,4 +55,14 @@ return [
 	'f126e15d' => 'rascunho|rascunhos',
 	'fb9e1051' => 'Sem categoria.',
 	'b9392ae8' => 'Biblioteca de arquivos para download com categorias, versão e contador.',
+	// i18n 2026-06-11
+	'a0dbcbc7' => 'Nenhum ficheiro corresponde a estes critérios.',
+	'48bdcf79' => 'Procurar um título…',
+	'db1a293b' => 'Todas as categorias',
+	'17a7d347' => 'Todos os estados',
+	'f4a45088' => 'Publicados',
+	'633b7ff4' => 'Rascunhos',
+	'dc275fe4' => 'Filtrar',
+	'599dba10' => 'Repor',
+	'8a7e7178' => '%d resultado|%d resultados',
 ];

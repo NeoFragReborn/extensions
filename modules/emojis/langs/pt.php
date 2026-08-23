@@ -1,0 +1,25 @@
+<?php
+
+return [
+	'd4c3d04b' => 'Emojis',
+	'5672d04f' => 'Emojis personalizados (`:nome:`) carregados no admin, renderizados em todo o conteúdo.',
+	'5b90eb89' => 'Gerir emojis',
+	'f3bf3229' => 'Nenhum emoji. Adiciona um: utilizável em todo o lado via <code>:nome:</code>.',
+	'd7279fa6' => 'Código',
+	'1cac01d2' => 'Eliminar este emoji?',
+	'8d9ef7a4' => 'Eliminar',
+	'51aab8ab' => 'Novo emoji',
+	'ada7c9b6' => 'Emojis personalizados',
+	'3f04279e' => 'emoji|emojis',
+	'54231355' => 'Nome',
+	'4742b1c3' => 'Apenas minúsculas, dígitos e _. Utilizável via :nome:',
+	'04fc2b5b' => 'Imagem',
+	'c00cf454' => ' de imagem (máx. %d MB)',
+	'5ce1832c' => 'Escolhe um ficheiro de imagem',
+	'afccc23b' => 'Criar',
+	'387955fa' => 'Nome inválido: apenas minúsculas, dígitos e _.',
+	'1ade9dc4' => 'Imagem obrigatória.',
+	'd9d4af6e' => 'Já existe um emoji com esse nome.',
+	'3570bea4' => 'Emoji adicionado.',
+	'1722445b' => 'Emoji eliminado.',
+];

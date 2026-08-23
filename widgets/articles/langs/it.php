@@ -8,5 +8,8 @@ return [
 	'46ab533e' => 'Articoli',
 	'6ee4ae4c' => 'Elenco degli ultimi articoli pubblicati.',
 	'f851afd5' => 'Nessun articolo',
-	'fae034a2' => 'Ultimi articoli'
+	'fae034a2' => 'Ultimi articoli',
+	// i18n 2026-06-11 (code strings)
+	'b9030268' => 'Numero di articoli',
+	'042e2c3d' => 'Mostra in un pannello',
 ];

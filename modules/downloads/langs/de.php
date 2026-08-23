@@ -55,4 +55,14 @@ return [
 	'f126e15d' => 'Entwurf|Entwürfe',
 	'fb9e1051' => 'Keine Kategorie.',
 	'b9392ae8' => 'Bibliothek herunterladbarer Dateien mit Kategorien, Version und Zähler.',
+	// i18n 2026-06-11
+	'a0dbcbc7' => 'Keine Datei entspricht diesen Kriterien.',
+	'48bdcf79' => 'Titel suchen…',
+	'db1a293b' => 'Alle Kategorien',
+	'17a7d347' => 'Alle Status',
+	'f4a45088' => 'Veröffentlicht',
+	'633b7ff4' => 'Entwürfe',
+	'dc275fe4' => 'Filtern',
+	'599dba10' => 'Zurücksetzen',
+	'8a7e7178' => '%d Ergebnis|%d Ergebnisse',
 ];

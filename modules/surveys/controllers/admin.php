@@ -43,9 +43,9 @@ class Admin extends Controller_Module
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				$body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/surveys/'.$s['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
 				if (!$is_closed && $published) {
-					$body .= '<a class="btn btn-sm btn-outline-warning" href="'.url('admin/surveys/close/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Fermer ce sondage ?'), ENT_QUOTES).'" title="'.$this->lang('Fermer').'"><i class="fas fa-lock"></i></a>';
+					$body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/surveys/close/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Fermer ce sondage ?'), ENT_QUOTES).'" title="'.$this->lang('Fermer').'"><i class="fas fa-lock"></i></a>';
 				}
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/surveys/delete/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/surveys/delete/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -62,6 +62,7 @@ class Admin extends Controller_Module
 			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
 		}
 		$toolbar .= '</select>';
+		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
 		$toolbar .= '<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> '.$this->lang('Filtrer').'</button>';
 		if (!empty($filters['active']))
 		{
@@ -92,6 +93,8 @@ class Admin extends Controller_Module
 
 	public function _delete($s)
 	{
+		$this->check_csrf('admin/surveys');
+
 		NeoFrag()->db->where('id', $s['id'])->delete('nf_surveys');
 		NeoFrag()->db->where('survey_id', $s['id'])->delete('nf_surveys_options');
 		NeoFrag()->db->where('survey_id', $s['id'])->delete('nf_surveys_votes');
@@ -101,6 +104,8 @@ class Admin extends Controller_Module
 
 	public function _close($s)
 	{
+		$this->check_csrf('admin/surveys');
+
 		NeoFrag()->db->where('id', $s['id'])->update('nf_surveys', ['closed_at' => NeoFrag()->date()->sql()]);
 		notify($this->lang('Sondage fermé.'));
 		redirect('admin/surveys');

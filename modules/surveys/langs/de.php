@@ -54,4 +54,13 @@ return [
 	'f5e4b7e2' => '%d Stimme|%d Stimmen',
 	'f7f51f4a' => 'Geschlossen',
 	'7f838b1b' => 'Öffentliche Einzel- oder Mehrfachauswahl-Umfragen mit konfigurierbaren Ergebnissen.',
+	// i18n 2026-06-11
+	'07c3b036' => 'Keine Umfrage entspricht diesen Kriterien.',
+	'bcdfd64c' => 'Umfrage suchen…',
+	'17a7d347' => 'Alle Status',
+	'dc275fe4' => 'Filtern',
+	'599dba10' => 'Zurücksetzen',
+	'8a7e7178' => '%d Ergebnis|%d Ergebnisse',
+	// i18n 2026-06-11 (code strings)
+	'f9c3c87a' => 'Umfrage bearbeiten',
 ];

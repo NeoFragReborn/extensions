@@ -1,0 +1,28 @@
+<?php
+
+return [
+	'db571b56' => 'Catalogo',
+	'4678bb10' => 'Nuovo articolo',
+	'58545e02' => 'Negozio',
+	'4d63b6b6' => 'Nessun articolo. Crea il primo!',
+	'1379fa98' => 'Eliminare questo articolo?',
+	'bf298a20' => 'Articolo',
+	'57dd4560' => 'Prezzo',
+	'8af77964' => 'Stock',
+	'4a818505' => 'articolo|articoli',
+	'd0f90974' => 'Modifica l\'articolo',
+	'687a534c' => 'Icona (classe FontAwesome)',
+	'e7a37274' => 'Prezzo (punti)',
+	'8d915389' => 'Payload',
+	'9589f05c' => 'Grado: ID del gruppo · VIP: numero di giorni · perk/cosmetico: chiave libera',
+	'9a3c88f1' => 'Stock (-1 = illimitato)',
+	'd74492b4' => 'Un acquisto per membro',
+	'b66f201b' => 'Attivo (visibile nel negozio)',
+	'20cfd509' => 'Articolo eliminato',
+	'7b3f7257' => 'Acquisto negozio: %s',
+	'9958352e' => 'Negozio di beni virtuali (gradi, cosmetici, VIP…) pagabili in punti, e merch.',
+	'53736aaf' => 'Posseduto',
+	'0bc215de' => 'Punti insufficienti',
+	'a1b3a884' => 'Acquista',
+	'88722b7f' => 'Il negozio è vuoto per il momento.',
+];

@@ -19,7 +19,7 @@ class Index extends Controller_Module
 			foreach ($surveys as $s)
 			{
 				$closed = $s['closed_at'] && strtotime($s['closed_at']) <= time();
-				$status = $closed ? '<span class="badge badge-secondary ml-2">'.$this->lang('Fermé').'</span>' : '';
+				$status = $closed ? '<span class="badge text-bg-secondary ms-2">'.$this->lang('Fermé').'</span>' : '';
 				$total = (int)$s['total_votes'];
 				$body .= '<a href="'.url('surveys/'.$s['id'].'/'.url_title($s['title'])).'" class="list-group-item list-group-item-action">';
 				$body .= '<div class="d-flex justify-content-between">';

@@ -11,7 +11,7 @@
 	function getStored() { try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; } }
 	function setStored(v) { try { localStorage.setItem(STORAGE_KEY, v); } catch (e) {} }
 
-	function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
+	function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); document.documentElement.setAttribute('data-bs-theme', t === 'dark' ? 'dark' : 'light'); }
 
 	function syncButton(t) {
 		document.querySelectorAll('.theme-toggle').forEach(function(btn) {

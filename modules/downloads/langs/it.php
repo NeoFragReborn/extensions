@@ -55,4 +55,14 @@ return [
 	'f126e15d' => 'bozza|bozze',
 	'fb9e1051' => 'Nessuna categoria.',
 	'b9392ae8' => 'Libreria di file scaricabili con categorie, versione e contatore.',
+	// i18n 2026-06-11
+	'a0dbcbc7' => 'Nessun file corrisponde a questi criteri.',
+	'48bdcf79' => 'Cerca un titolo…',
+	'db1a293b' => 'Tutte le categorie',
+	'17a7d347' => 'Tutti gli stati',
+	'f4a45088' => 'Pubblicati',
+	'633b7ff4' => 'Bozze',
+	'dc275fe4' => 'Filtra',
+	'599dba10' => 'Reimposta',
+	'8a7e7178' => '%d risultato|%d risultati',
 ];

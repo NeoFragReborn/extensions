@@ -50,6 +50,9 @@ class Admin_Checker extends Module_Checker
 		$filters['pending'] = $pending;
 		$filters['active']  = $filters['q'] !== '' || $filters['category'] || $filters['status'] !== '';
 
+		$filters['sort_cols'] = ['date' => $this->lang('Date'), 'title' => $this->lang('Titre'), 'views' => $this->lang('Vues'), 'price' => $this->lang('Prix')];
+		list($ads, $filters['sort']) = $this->sort_items($ads, ['date' => 'created_ts', 'title' => 'title', 'views' => 'views', 'price' => 'price'], 'date', 'desc');
+
 		return [$cats, $this->module->pagination->fix_items_per_page(20)->get_data($ads, $page), $filters];
 	}
 

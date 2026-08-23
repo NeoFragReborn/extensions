@@ -32,4 +32,17 @@ return [
 	'f44b974c' => 'Moderar mensajes',
 	'f54740ce' => '¡Gracias! Tu mensaje está pendiente de moderación.',
 	'24f787c4' => 'Libro de visitas con moderación admin y rate-limit antispam.',
+	// i18n 2026-06-11
+	'cb208159' => 'Ningún mensaje coincide con estos criterios.',
+	'362b5dc7' => 'Buscar un mensaje o un nombre…',
+	'17a7d347' => 'Todos los estados',
+	'dc275fe4' => 'Filtrar',
+	'599dba10' => 'Restablecer',
+	'8a7e7178' => '%d resultado|%d resultados',
+	93714304 => 'Seleccionar todo',
+	'537f45bd' => 'Acción en lote…',
+	'a3f47afc' => 'Aplicar',
+	'33da0436' => '¿Aplicar la acción a los mensajes seleccionados?',
+	'bfd1e0de' => '%d mensaje eliminado.|%d mensajes eliminados.',
+	'a20de5a0' => '%d mensaje actualizado.|%d mensajes actualizados.',
 ];

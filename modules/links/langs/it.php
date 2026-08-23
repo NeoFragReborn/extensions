@@ -45,4 +45,14 @@ return [
 	'f126e15d' => 'bozza|bozze',
 	'fb9e1051' => 'Nessuna categoria.',
 	'e37acc6d' => 'Directory di link esterni categorizzati con reindirizzamento tracciato e contatore di clic.',
+	// i18n 2026-06-11
+	'697431fe' => 'Nessun link corrisponde a questi criteri.',
+	'918913b6' => 'Cerca un titolo o un URL…',
+	'db1a293b' => 'Tutte le categorie',
+	'17a7d347' => 'Tutti gli stati',
+	'f4a45088' => 'Pubblicati',
+	'633b7ff4' => 'Bozze',
+	'dc275fe4' => 'Filtra',
+	'599dba10' => 'Reimposta',
+	'8a7e7178' => '%d risultato|%d risultati',
 ];

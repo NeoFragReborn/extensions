@@ -56,6 +56,9 @@ class Admin_Checker extends Module_Checker
 		$filters['drafts']    = count($files) - $pub;
 		$filters['active']    = $filters['q'] !== '' || $filters['category'] || $filters['status'] !== '';
 
+		$filters['sort_cols'] = ['date' => $this->lang('Date'), 'title' => $this->lang('Titre'), 'downloads' => $this->lang('Téléchargements')];
+		list($files, $filters['sort']) = $this->sort_items($files, ['date' => 'created_at', 'title' => 'title', 'downloads' => 'downloads_count'], 'date', 'desc');
+
 		return [$cats, $this->module->pagination->fix_items_per_page(20)->get_data($files, $page), $filters];
 	}
 

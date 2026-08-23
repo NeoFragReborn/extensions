@@ -5,6 +5,11 @@ use NF\Modules\Downloads\Downloads;
 
 class Index extends Controller_Widget
 {
+	public function index($config = [])
+	{
+		return $this->popular($config);
+	}
+
 	public function popular($config = [])
 	{
 		$files = NeoFrag()->db	->select('id', 'title', 'file_size_bytes', 'downloads_count')
@@ -24,7 +29,7 @@ class Index extends Controller_Widget
 			$body = '<ul class="list-unstyled mb-0">';
 			foreach ($files as $f)
 			{
-				$body .= '<li class="py-1"><a href="'.url('downloads/go/'.$f['id']).'"><i class="fas fa-download mr-1"></i>'.htmlspecialchars($f['title']).'</a> <small class="text-muted">'.Downloads::format_size($f['file_size_bytes']).' • '.(int)$f['downloads_count'].' DL</small></li>';
+				$body .= '<li class="py-1"><a href="'.url('downloads/go/'.$f['id']).'"><i class="fas fa-download me-1"></i>'.htmlspecialchars($f['title']).'</a> <small class="text-muted">'.Downloads::format_size($f['file_size_bytes']).' • '.(int)$f['downloads_count'].' DL</small></li>';
 			}
 			$body .= '</ul>';
 		}

@@ -32,4 +32,17 @@ return [
 	'f44b974c' => 'Nachrichten moderieren',
 	'f54740ce' => 'Danke! Deine Nachricht wartet auf Moderation.',
 	'24f787c4' => 'Gästebuch mit Admin-Moderation und Anti-Spam-Rate-Limit.',
+	// i18n 2026-06-11
+	'cb208159' => 'Keine Nachricht entspricht diesen Kriterien.',
+	'362b5dc7' => 'Nachricht oder Name suchen…',
+	'17a7d347' => 'Alle Status',
+	'dc275fe4' => 'Filtern',
+	'599dba10' => 'Zurücksetzen',
+	'8a7e7178' => '%d Ergebnis|%d Ergebnisse',
+	93714304 => 'Alle auswählen',
+	'537f45bd' => 'Sammelaktion…',
+	'a3f47afc' => 'Anwenden',
+	'33da0436' => 'Aktion auf die ausgewählten Nachrichten anwenden?',
+	'bfd1e0de' => '%d Nachricht gelöscht.|%d Nachrichten gelöscht.',
+	'a20de5a0' => '%d Nachricht aktualisiert.|%d Nachrichten aktualisiert.',
 ];

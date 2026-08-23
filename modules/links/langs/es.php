@@ -45,4 +45,14 @@ return [
 	'f126e15d' => 'borrador|borradores',
 	'fb9e1051' => 'Sin categoría.',
 	'e37acc6d' => 'Directorio de enlaces externos categorizados con redirección rastreada y contador de clics.',
+	// i18n 2026-06-11
+	'697431fe' => 'Ningún enlace coincide con estos criterios.',
+	'918913b6' => 'Buscar un título o una URL…',
+	'db1a293b' => 'Todas las categorías',
+	'17a7d347' => 'Todos los estados',
+	'f4a45088' => 'Publicados',
+	'633b7ff4' => 'Borradores',
+	'dc275fe4' => 'Filtrar',
+	'599dba10' => 'Restablecer',
+	'8a7e7178' => '%d resultado|%d resultados',
 ];

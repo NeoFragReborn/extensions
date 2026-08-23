@@ -14,7 +14,10 @@ class Block extends Controller_Module
 		return [
 			'articles.latest' => [
 				'title'  => $this->lang('Derniers articles'),
-				'render' => function(){
+				'fields' => [
+					'count' => ['type' => 'int', 'default' => 5, 'min' => 1, 'max' => 20],
+				],
+				'render' => function($settings = []){
 					$rows = $this->db	->select('a.article_id', 'al.title')
 										->from('nf_articles a')
 										->join('nf_articles_lang al', 'a.article_id = al.article_id')
@@ -22,7 +25,7 @@ class Block extends Controller_Module
 										->where('a.deleted_at IS NULL')
 										->where('al.lang', $this->config->lang->info()->name)
 										->order_by('a.date DESC')
-										->limit(5)
+										->limit((int) ($settings['count'] ?? 5))
 										->get();
 
 					if (!$rows)

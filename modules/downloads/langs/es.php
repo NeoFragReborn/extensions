@@ -55,4 +55,14 @@ return [
 	'f126e15d' => 'borrador|borradores',
 	'fb9e1051' => 'Sin categoría.',
 	'b9392ae8' => 'Biblioteca de archivos descargables con categorías, versión y contador.',
+	// i18n 2026-06-11
+	'a0dbcbc7' => 'Ningún archivo coincide con estos criterios.',
+	'48bdcf79' => 'Buscar un título…',
+	'db1a293b' => 'Todas las categorías',
+	'17a7d347' => 'Todos los estados',
+	'f4a45088' => 'Publicados',
+	'633b7ff4' => 'Borradores',
+	'dc275fe4' => 'Filtrar',
+	'599dba10' => 'Restablecer',
+	'8a7e7178' => '%d resultado|%d resultados',
 ];

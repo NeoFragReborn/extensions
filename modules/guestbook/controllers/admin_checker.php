@@ -45,6 +45,17 @@ class Admin_Checker extends Module_Checker
 		$filters['matched'] = count($msgs);
 		$filters['active']  = $filters['q'] !== '' || $filters['status'] !== '';
 
+		$filters['sort_cols'] = [
+			'date'   => $this->lang('Date'),
+			'name'   => $this->lang('Auteur'),
+			'status' => $this->lang('Statut')
+		];
+		list($msgs, $filters['sort']) = $this->sort_items($msgs, [
+			'date'   => 'ts',
+			'name'   => 'name',
+			'status' => 'status'
+		], 'date', 'desc');
+
 		return [
 			$this->module->pagination->fix_items_per_page(20)->get_data($msgs, $page),
 			$filters,
