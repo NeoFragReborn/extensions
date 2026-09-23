@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module guestbook (es)
@@ -39,10 +40,11 @@ return [
 	'dc275fe4' => 'Filtrar',
 	'599dba10' => 'Restablecer',
 	'8a7e7178' => '%d resultado|%d resultados',
-	93714304 => 'Seleccionar todo',
+	'93714304' => 'Seleccionar todo',
 	'537f45bd' => 'Acción en lote…',
 	'a3f47afc' => 'Aplicar',
 	'33da0436' => '¿Aplicar la acción a los mensajes seleccionados?',
 	'bfd1e0de' => '%d mensaje eliminado.|%d mensajes eliminados.',
 	'a20de5a0' => '%d mensaje actualizado.|%d mensajes actualizados.',
+	'7bc610bc' => 'Moderar los mensajes',
 ];

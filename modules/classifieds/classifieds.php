@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Petites annonces — annonces membres (offre/demande) catégorisées,
@@ -20,6 +21,10 @@ class Classifieds extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'admin'       => TRUE,
 			'version'     => '1.0',
 			'depends'     => ['neofrag' => '0.2.0'],
@@ -48,7 +53,7 @@ class Classifieds extends Module
 			'default' => [
 				'access' => [
 					[
-						'title'  => 'Petites annonces',
+						'title'  => $this->lang('Petites annonces'),
 						'icon'   => 'fas fa-bullhorn',
 						'access' => [
 							'manage' => ['title' => $this->lang('Gérer les annonces et catégories'), 'icon' => 'fas fa-edit', 'admin' => TRUE]
@@ -61,7 +66,9 @@ class Classifieds extends Module
 
 	public static function type_label($type)
 	{
-		$L = NeoFrag();
+		// Au nom du MODULE : NeoFrag() seul cherchait ces libellés dans les traductions du cœur, qui ne
+		// les ont pas — « Offre » et « Refusée » restaient en français sur le site anglais (2026-09-23).
+		$L = NeoFrag()->module('classifieds');
 		return [
 			'offer'   => '<span class="badge text-bg-success"><i class="fas fa-tag"></i> '.$L->lang('Offre').'</span>',
 			'request' => '<span class="badge text-bg-info"><i class="fas fa-search"></i> '.$L->lang('Recherche').'</span>'
@@ -70,7 +77,7 @@ class Classifieds extends Module
 
 	public static function status_label($status)
 	{
-		$L = NeoFrag();
+		$L = NeoFrag()->module('classifieds');
 		return [
 			'pending'   => '<span class="badge text-bg-warning"><span class="dot"></span> '.$L->lang('En attente').'</span>',
 			'published' => '<span class="badge text-bg-success"><span class="dot"></span> '.$L->lang('Publiée').'</span>',

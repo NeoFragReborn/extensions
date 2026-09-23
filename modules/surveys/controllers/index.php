@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Modules\Surveys\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 use NF\Modules\Surveys\Surveys;
@@ -23,12 +24,12 @@ class Index extends Controller_Module
 				$total = (int)$s['total_votes'];
 				$body .= '<a href="'.url('surveys/'.$s['id'].'/'.url_title($s['title'])).'" class="list-group-item list-group-item-action">';
 				$body .= '<div class="d-flex justify-content-between">';
-				$body .= '<strong>'.htmlspecialchars($s['title']).$status.'</strong>';
+				$body .= '<strong>'.htmlspecialchars((string) ($s['title'])).$status.'</strong>';
 				$body .= '<small class="text-muted">'.$this->lang('%d vote|%d votes', $total, $total).'</small>';
 				$body .= '</div>';
 				if (!empty($s['description']))
 				{
-					$body .= '<small class="text-muted">'.htmlspecialchars($s['description']).'</small>';
+					$body .= '<small class="text-muted">'.htmlspecialchars((string) ($s['description'])).'</small>';
 				}
 				$body .= '</a>';
 			}
@@ -53,7 +54,7 @@ class Index extends Controller_Module
 		$body = '';
 		if (!empty($survey['description']))
 		{
-			$body .= '<p>'.htmlspecialchars($survey['description']).'</p>';
+			$body .= '<p>'.htmlspecialchars((string) ($survey['description'])).'</p>';
 		}
 
 		if ($show_results)
@@ -65,7 +66,7 @@ class Index extends Controller_Module
 			{
 				$pct = $total > 0 ? round((int)$o['votes'] / $total * 100, 1) : 0;
 				$body .= '<div class="mb-2">'
-					.'<div class="d-flex justify-content-between"><span>'.htmlspecialchars($o['label']).'</span><span><strong>'.$pct.'%</strong> ('.(int)$o['votes'].')</span></div>'
+					.'<div class="d-flex justify-content-between"><span>'.htmlspecialchars((string) ($o['label'])).'</span><span><strong>'.$pct.'%</strong> ('.(int)$o['votes'].')</span></div>'
 					.'<div class="progress" style="height:8px"><div class="progress-bar" role="progressbar" style="width:'.$pct.'%"></div></div>'
 					.'</div>';
 			}
@@ -85,7 +86,7 @@ class Index extends Controller_Module
 				$name = $survey['multiple_choice'] ? 'option_ids[]' : 'option_ids';
 				$body .= '<div class="form-check">';
 				$body .= '<input class="form-check-input" type="'.$type.'" name="'.$name.'" id="opt-'.(int)$o['id'].'" value="'.(int)$o['id'].'" required>';
-				$body .= '<label class="form-check-label" for="opt-'.(int)$o['id'].'">'.htmlspecialchars($o['label']).'</label>';
+				$body .= '<label class="form-check-label" for="opt-'.(int)$o['id'].'">'.htmlspecialchars((string) ($o['label'])).'</label>';
 				$body .= '</div>';
 			}
 
@@ -139,13 +140,24 @@ class Index extends Controller_Module
 			redirect('surveys/'.$survey['id'].'/'.url_title($survey['title']));
 		}
 		$valid_ids = [];
+		// Une requête à UNE colonne rend des scalaires, pas des lignes (`Db::get()`). La version
+		// précédente lisait `$row['id']` sur un entier, donc 0 : aucune option n'était jamais reconnue,
+		// aucun vote n'était enregistré — et le votant lisait quand même « Merci pour ton vote ! ».
 		$rows = NeoFrag()->db->select('id')->from('nf_surveys_options')->where('survey_id', $survey['id'])->get();
-		foreach ($rows as $row)
+		foreach ($rows as $option_id)
 		{
-			if (in_array((int)$row['id'], $option_ids, TRUE))
+			if (in_array((int)$option_id, $option_ids, TRUE))
 			{
-				$valid_ids[] = (int)$row['id'];
+				$valid_ids[] = (int)$option_id;
 			}
+		}
+
+		// Un vote dont aucune option n'appartient au sondage n'est pas un vote : le dire, au lieu de
+		// remercier pour un vote qui n'a pas eu lieu.
+		if (empty($valid_ids))
+		{
+			notify($this->lang('Vote invalide.'));
+			redirect('surveys/'.$survey['id'].'/'.url_title($survey['title']));
 		}
 
 		foreach ($valid_ids as $opt_id)

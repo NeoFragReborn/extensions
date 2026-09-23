@@ -20,11 +20,23 @@ class Extend extends Theme
 			'link'        => 'https://neofr.ag',
 			'author'      => 'Chewbaka — port NeoFrag Reborn',
 			'license'     => 'Creative Commons CC BY-NC-SA 4.0',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'version'     => '1.0.0',
 			'depends' => [
 				'neofrag' => '0.2.1'
 			],
-			'zones'       => ['Navigation', 'Bannière', 'Avant-contenu', 'Contenu', 'Post-contenu', 'Footer']
+			'zones'       => ['Navigation', 'Bannière', 'Avant-contenu', 'Contenu', 'Post-contenu', 'Footer'],
+			'regions'     => [
+				'navigation'     => 'Navigation',
+				'banner'         => 'Bannière',
+				'before_content' => 'Avant-contenu',
+				'content'        => 'Contenu',
+				'after_content'  => 'Post-contenu',
+				'footer'         => 'Footer',
+			]
 		];
 	}
 
@@ -33,6 +45,10 @@ class Extend extends Theme
 		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
 				->css('style')
+				// APRES la feuille du theme, et jamais avant : elle retablit ce que le theme
+				// ecrase sans le vouloir — cadre des boutons « contour », coins des cartes.
+				// Voir css/nf-apres-theme.css.
+				->css('nf-apres-theme')
 				->js('bootstrap.bundle.min')
 				->js('modal')
 				->js('notify')
@@ -262,21 +278,16 @@ class Extend extends Theme
 
 		/* ---------------------------------------------------------------- Footer */
 
-		$dispositions->set('*', 'Footer', $this->array([
-			$this->row(
-					$this->col(
-						$this	->widget($this->db->insert('nf_widgets', [
-									'widget'   => 'html',
-									'type'     => 'index',
-									'settings' => serialize([
-										'content' => utf8_htmlentities($this->lang('Propulsé par NeoFrag Reborn'))
-									])
-								]))
-								->style('panel-default')
-					)
-				)
-				->style('row-default')
-		]));
+		/* ----------------------------------------------------------------- Footer */
+
+		// La zone de pied est laissée VIDE, et c'est délibéré. Elle contenait un widget HTML
+		// « Propulsé par NeoFrag Reborn » — exactement ce que le gabarit du thème écrit déjà de son
+		// côté, deux lignes plus bas (`ex-copy`). Un site neuf en thème Extend affichait donc la
+		// mention DEUX FOIS, une fois dans un panneau encadré et une fois dans la barre de pied.
+		//
+		// Aucun des trois autres thèmes (forge, blockcraft, granite) ne pose de widget là : ils
+		// déclarent la région pour que l'administrateur puisse y mettre ce qu'il veut, et s'en
+		// tiennent à leur propre ligne de copyright. Extend s'aligne.
 
 		return parent::install($dispositions);
 	}

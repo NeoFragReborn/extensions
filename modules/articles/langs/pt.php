@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module articles (pt)
@@ -67,9 +68,9 @@ return [
 	'dc275fe4' => 'Filtrar',
 	'599dba10' => 'Repor',
 	'8a7e7178' => '%d resultado|%d resultados',
-	93714304 => 'Selecionar tudo',
+	'93714304' => 'Selecionar tudo',
 	'537f45bd' => 'Ação em lote…',
-	84915314 => 'Despublicar',
+	'84915314' => 'Despublicar',
 	'a3f47afc' => 'Aplicar',
 	'5caa1174' => '%d artigo atualizado.|%d artigos atualizados.',
 	'f0b7b5b5' => 'Data de publicação',
@@ -94,4 +95,5 @@ return [
 	'bf0c0171' => 'Editor avançado TinyMCE. Usa os níveis de título (Heading 2/3) para estruturar (índice gerado automaticamente).',
 	'f0c21815' => 'Uma data futura agenda a publicação: o artigo permanece oculto publicamente até essa data (se publicado).',
 	'978c2026' => 'Últimos artigos',
+	'cd8737fa' => 'Artigo',
 ];

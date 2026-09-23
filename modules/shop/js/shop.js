@@ -24,19 +24,19 @@
 				var card = btn.closest('[data-shop-item]');
 				if (card) {
 					var foot = card.querySelector('.card-footer');
-					if (foot) foot.innerHTML = '<span class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> Possédé</span>';
+					if (foot) foot.innerHTML = '<span class="btn btn-sm btn-success disabled"><i class="fas fa-check"></i> <?php echo addslashes($this->lang('Possédé')) ?></span>';
 				}
 				var bal = document.querySelector('[data-shop-balance]');
 				if (bal && typeof d.balance !== 'undefined') bal.textContent = d.balance;
 			} else {
 				btn.disabled = false;
 				btn.innerHTML = original;
-				var msg = 'Achat impossible.';
+				var msg = '<?php echo addslashes($this->lang('Achat impossible.')) ?>';
 				if (d) {
-					if (d.error === 'insufficient') msg = 'Points insuffisants.';
-					else if (d.error === 'owned') msg = 'Tu possèdes déjà cet item.';
-					else if (d.error === 'login') msg = 'Connecte-toi pour acheter.';
-					else if (d.error === 'stock') msg = 'Stock épuisé.';
+					if (d.error === 'insufficient') msg = '<?php echo addslashes($this->lang('Points insuffisants.')) ?>';
+					else if (d.error === 'owned') msg = '<?php echo addslashes($this->lang('Tu possèdes déjà cet item.')) ?>';
+					else if (d.error === 'login') msg = '<?php echo addslashes($this->lang('Connecte-toi pour acheter.')) ?>';
+					else if (d.error === 'stock') msg = '<?php echo addslashes($this->lang('Stock épuisé.')) ?>';
 				}
 				window.alert(msg);
 			}

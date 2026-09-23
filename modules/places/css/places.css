@@ -1,0 +1,120 @@
+/**
+ * Carte des lieux.
+ *
+ * Aucune couleur écrite en dur : tout passe par le vocabulaire `--nf-*` que chaque thème définit,
+ * sans quoi le bloc serait illisible sur la moitié d'entre eux.
+ */
+.nf-places-map {
+	height: 420px;
+	margin-bottom: 1.25rem;
+	border: 1px solid var(--nf-border);
+	border-radius: .5rem;
+	overflow: hidden;
+}
+
+/* Le fond des tuiles reste clair même en thème sombre : c'est une carte, pas un élément d'interface. */
+.nf-places-map .leaflet-container {
+	background: #ddd;
+	font: inherit;
+}
+
+.nf-places-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nf-places-item {
+	padding: .85rem 0;
+	cursor: pointer;
+}
+
+.nf-places-item + .nf-places-item {
+	border-top: 1px solid var(--nf-border);
+}
+
+.nf-places-item:hover .nf-places-title {
+	color: var(--nf-accent-text, var(--nf-accent));
+}
+
+.nf-places-title {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: var(--nf-text);
+}
+
+.nf-places-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .75rem;
+	margin-top: .2rem;
+	font-size: .8125rem;
+	color: var(--nf-text-muted);
+}
+
+.nf-places-desc {
+	margin: .4rem 0 0;
+	font-size: .9rem;
+	line-height: 1.45;
+	color: var(--nf-text-muted);
+}
+
+.nf-places-links {
+	margin-top: .4rem;
+	font-size: .8125rem;
+}
+
+.nf-places-links a {
+	color: var(--nf-accent-text, var(--nf-accent));
+	text-decoration: none;
+}
+
+.nf-places-links a:hover {
+	text-decoration: underline;
+}
+
+/**
+ * Le marqueur : une pastille ronde portant une icône FontAwesome.
+ *
+ * C'est ce qui permet de n'embarquer AUCUNE des images de Leaflet — ses trois fichiers ne servent
+ * qu'au contrôle de couches et à son heuristique de chemin d'icône, dont on n'emploie ni l'un ni
+ * l'autre.
+ */
+.nf-places-divicon {
+	background: none;
+	border: 0;
+}
+
+.nf-places-pin {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50% 50% 50% 0;
+	transform: rotate(-45deg);
+	background: var(--nf-accent);
+	color: var(--nf-on-accent);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+}
+
+.nf-places-pin .icon,
+.nf-places-pin i {
+	transform: rotate(45deg);
+	font-size: .8rem;
+}
+
+.nf-places-popup {
+	font-weight: 600;
+}
+
+@media (max-width: 575.98px) {
+	.nf-places-map {
+		height: 300px;
+	}
+}
+
+/* Le lien d'attribution de la carte : le bleu de la bibliothèque (#0078a8) sur son bandeau gris ne
+   tenait que 3,6:1 (check-mise-en-page, 2026-09-23). */
+.leaflet-control-attribution a { color: #005f86; }

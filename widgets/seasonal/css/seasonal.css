@@ -1,0 +1,26 @@
+/**
+ * Effet saisonnier.
+ *
+ * Le canvas couvre l'écran sans jamais gêner : `pointer-events: none` laisse passer les clics, et
+ * le z-index reste bas pour ne pas passer devant les fenêtres modales ni la barre d'administration.
+ */
+.nf-seasonal {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 3;
+}
+
+/**
+ * Le visiteur qui a demandé moins d'animations à son système ne doit pas en recevoir une.
+ *
+ * La règle est ici ET dans le script : la feuille suffit à masquer, mais tant que le script tourne
+ * il consomme une boucle d'animation pour rien — et sur un portable, cela se voit sur la batterie.
+ */
+@media (prefers-reduced-motion: reduce) {
+	.nf-seasonal {
+		display: none;
+	}
+}

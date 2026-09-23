@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module bugtracker (fr)
@@ -57,5 +58,9 @@ return [
 	'f33c7dbd' => 'Aucun ticket',
 	'f7f51f4a' => 'Fermé',
 	'fa6c2309' => 'Ticket supprimé.',
-	'fd9c21ab' => 'Créer le ticket'
+	'fd9c21ab' => 'Créer le ticket',
+	'76f47454' => 'Ticket #%s — %s',
+	'5e910685' => 'bug critique|bugs critiques',
+	'15a51af2' => 'Voir les tickets',
+	'ee1e54cf' => 'Gérer les tickets',
 ];

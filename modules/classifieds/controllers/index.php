@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Modules\Classifieds\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 use NF\Modules\Classifieds\Classifieds;
@@ -34,7 +35,7 @@ class Index extends Controller_Module
 
 		if (!empty($ad['image']))
 		{
-			$body .= '<div class="mb-3 text-center"><img src="'.htmlspecialchars($ad['image']).'" alt="'.htmlspecialchars($ad['title'], ENT_QUOTES).'" class="img-fluid rounded" style="max-height:360px;"></div>';
+			$body .= '<div class="mb-3 text-center"><img src="'.htmlspecialchars((string) ($ad['image'])).'" alt="'.htmlspecialchars((string) ($ad['title']), ENT_QUOTES).'" class="img-fluid rounded" style="max-height:360px;"></div>';
 		}
 
 		$body .= '<div class="d-flex flex-wrap align-items-center mb-2" style="gap:8px;">';
@@ -45,7 +46,7 @@ class Index extends Controller_Module
 		$body .= '<div class="text-muted small mb-3">';
 		$author = $ad['author_id'] ? $this->user->link($ad['author_id'], $ad['author']) : '<i>'.$this->lang('Anonyme').'</i>';
 		$body  .= $this->lang('Déposée par %s', $author).' · '.timetostr('d/m/Y', $ad['created_ts']);
-		$body  .= ' · <i class="fas fa-folder"></i> '.htmlspecialchars($ad['cat_title']);
+		$body  .= ' · <i class="fas fa-folder"></i> '.htmlspecialchars((string) ($ad['cat_title']));
 		$body  .= ' · <i class="fas fa-eye"></i> '.(int)$ad['views'];
 		if ($ad['status'] !== 'published')
 		{
@@ -53,12 +54,12 @@ class Index extends Controller_Module
 		}
 		$body .= '</div>';
 
-		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(htmlspecialchars($ad['description'])).'</div></div>';
+		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(htmlspecialchars((string) ($ad['description']))).'</div></div>';
 
 		// Contact vendeur
 		if (!empty($ad['contact']))
 		{
-			$body .= '<div class="alert alert-light"><i class="fas fa-address-card"></i> '.htmlspecialchars($ad['contact']).'</div>';
+			$body .= '<div class="alert alert-light"><i class="fas fa-address-card"></i> '.htmlspecialchars((string) ($ad['contact'])).'</div>';
 		}
 
 		if ($is_owner)
@@ -67,7 +68,7 @@ class Index extends Controller_Module
 			$body .= '<a class="btn btn-outline-primary" href="'.url('classifieds/'.$ad['id'].'/'.$slug.'/edit').'"><i class="fas fa-pen"></i> '.$this->lang('Modifier').'</a>';
 			if ($ad['status'] === 'published')
 			{
-				$body .= '<a class="btn btn-outline-secondary" href="'.url('classifieds/'.$ad['id'].'/'.$slug.'/close').'" data-confirm="'.htmlspecialchars($this->lang('Clôturer cette annonce ?'), ENT_QUOTES).'"><i class="fas fa-check"></i> '.$this->lang('Clôturer').'</a>';
+				$body .= '<a class="btn btn-outline-secondary" href="'.url('classifieds/'.$ad['id'].'/'.$slug.'/close').'" data-confirm="'.htmlspecialchars((string) ($this->lang('Clôturer cette annonce ?')), ENT_QUOTES).'"><i class="fas fa-check"></i> '.$this->lang('Clôturer').'</a>';
 			}
 			$body .= '</div>';
 		}
@@ -76,8 +77,8 @@ class Index extends Controller_Module
 			if ($this->user())
 			{
 				$body .= '<form method="post" action="'.url('classifieds/'.$ad['id'].'/'.$slug.'/contact').'">';
-				$body .= '<div class="form-group"><label><i class="fas fa-envelope"></i> '.$this->lang('Contacter le vendeur').'</label>';
-				$body .= '<textarea name="message" class="form-control" rows="3" required placeholder="'.htmlspecialchars($this->lang('Votre message au vendeur…'), ENT_QUOTES).'"></textarea></div>';
+				$body .= '<div class="nf-field"><label><i class="fas fa-envelope"></i> '.$this->lang('Contacter le vendeur').'</label>';
+				$body .= '<textarea name="message" class="form-control" rows="3" required placeholder="'.htmlspecialchars((string) ($this->lang('Votre message au vendeur…')), ENT_QUOTES).'"></textarea></div>';
 				$body .= '<button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> '.$this->lang('Envoyer').'</button>';
 				$body .= '</form>';
 			}
@@ -117,7 +118,7 @@ class Index extends Controller_Module
 				'image'       => ['label' => $this->lang('Image (URL)'), 'type' => 'text', 'value' => $is_new ? '' : $ad['image'], 'description' => $this->lang('Lien direct vers une image (optionnel).')],
 				'contact'     => ['label' => $this->lang('Contact (optionnel)'), 'type' => 'text', 'value' => $is_new ? '' : $ad['contact'], 'description' => $this->lang('Discord, email… À défaut, les membres pourront te contacter via le site.')]
 			 ])
-			 ->add_submit($is_new ? $this->lang('Publier') : $this->lang('Enregistrer'));
+			 ->add_submit($is_new ? $this->lang('Publier') : $this->lang('Enregistrer'), $is_new ? 'fas fa-bullhorn' : 'fas fa-check');
 
 		if ($this->form()->is_valid($post))
 		{
@@ -209,7 +210,7 @@ class Index extends Controller_Module
 		foreach ($categories as $c)
 		{
 			$out .= '<a class="list-group-item list-group-item-action'.($active === (int)$c['id'] ? ' active' : '').'" href="'.url('classifieds/category/'.$c['id'].'/'.url_title($c['title'])).'">'
-				.htmlspecialchars($c['title']).' <span class="badge text-bg-light">'.(int)$c['nb'].'</span></a>';
+				.htmlspecialchars((string) ($c['title'])).' <span class="badge text-bg-light">'.(int)$c['nb'].'</span></a>';
 		}
 		$out .= '</div></div>';
 		return $out;
@@ -229,15 +230,15 @@ class Index extends Controller_Module
 			$out .= '<div class="nf-content-card">';
 			if (!empty($a['image']))
 			{
-				$out .= '<a href="'.url('classifieds/'.$a['id'].'/'.$slug).'"><div style="height:140px;background:#0001 center/cover no-repeat url(\''.htmlspecialchars($a['image'], ENT_QUOTES).'\');border-radius:6px;margin-bottom:8px;"></div></a>';
+				$out .= '<a href="'.url('classifieds/'.$a['id'].'/'.$slug).'"><div style="height:140px;background:#0001 center/cover no-repeat url(\''.htmlspecialchars((string) ($a['image']), ENT_QUOTES).'\');border-radius:6px;margin-bottom:8px;"></div></a>';
 			}
 			$out .= '<div class="nf-content-card-head">';
-			$out .= '<div class="nf-content-card-title"><a href="'.url('classifieds/'.$a['id'].'/'.$slug).'">'.htmlspecialchars($a['title']).'</a></div>';
+			$out .= '<div class="nf-content-card-title"><a href="'.url('classifieds/'.$a['id'].'/'.$slug).'">'.htmlspecialchars((string) ($a['title'])).'</a></div>';
 			$out .= Classifieds::type_label($a['ad_type']);
 			$out .= '</div>';
 			$out .= '<div class="nf-content-card-meta">';
 			$out .= '<span>'.Classifieds::format_price($a['price'], $this).'</span>';
-			$out .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars($a['cat_title']).'</span>';
+			$out .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars((string) ($a['cat_title'])).'</span>';
 			$out .= '</div>';
 			$out .= '<div class="nf-content-card-foot">';
 			$author = $a['author_id'] ? $this->user->link($a['author_id'], $a['author']) : '<i>'.$this->lang('Anonyme').'</i>';

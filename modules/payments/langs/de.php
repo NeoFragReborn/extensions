@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'a35de96c' => 'Stripe',
@@ -36,4 +37,13 @@ return [
 	'800a749d' => 'Bezahlen',
 	'148b4185' => 'Nicht verfügbar',
 	'840437e1' => 'Kein Paket verfügbar.',
+	'8fd9c7ef' => 'Speichern',
+	'c9340a06' => 'Aktiv',
+	'b0d653e1' => 'Inaktiv',
+	'57dd4560' => 'Preis',
+	'e2c8f589' => 'Status',
+	'2cecf817' => 'Typ',
+	'4441a1e9' => 'Währung',
+	'51692a67' => 'Zahlung nicht verfügbar.',
+	'4ceb7801' => 'Zahlungsfehler.',
 ];

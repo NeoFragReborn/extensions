@@ -1,0 +1,34 @@
+/*
+ * L'index alphabétique du dictionnaire.
+ *
+ * Les lettres étaient écrites à la suite, sans aucune mise en forme : chaque lien mesurait 8 × 16 px,
+ * loin des 24 px qu'un doigt demande (check-mise-en-page, 2026-09-23). Chaque lettre a sa case ; une
+ * lettre sans terme reste à sa place, atténuée.
+ */
+.nf-glossary-index {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 1rem;
+}
+
+.nf-glossary-index > a,
+.nf-glossary-index > .nf-glossary-index-off {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 28px;
+	min-height: 28px;
+	border-radius: var(--nf-radius-sm, 4px);
+	font-weight: 600;
+}
+
+.nf-glossary-index > a {
+	background: var(--nf-surface-2, rgba(127, 127, 127, .12));
+	text-decoration: none;
+}
+
+.nf-glossary-index > .nf-glossary-index-off {
+	color: var(--nf-muted, #6c757d);
+	opacity: .6;
+}

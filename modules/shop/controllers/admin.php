@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Boutique — administration du catalogue (CRUD items).
@@ -23,19 +24,20 @@ class Admin extends Controller_Module
 			return $this->admin_card('fas fa-store', $this->lang('Boutique'), $this->admin_empty('fas fa-store', $this->lang('Aucun item. Crée le premier !')));
 		}
 
+		$libelles = $this->boutique()->type_labels();
 		$rows = '';
 		foreach ($items as $it)
 		{
-			$type = isset(Shop::TYPES[$it['type']]) ? $this->lang(Shop::TYPES[$it['type']]) : htmlspecialchars($it['type']);
+			$type = $libelles[$it['type']] ?? htmlspecialchars((string) ($it['type']));
 			$rows .= '<tr>'
-				.'<td><i class="'.htmlspecialchars($it['icon'] ?: 'fas fa-gift').'"></i> '.htmlspecialchars($it['title']).'</td>'
+				.'<td><i class="'.htmlspecialchars((string) ($it['icon'] ?: 'fas fa-gift')).'"></i> '.htmlspecialchars((string) ($it['title'])).'</td>'
 				.'<td>'.$type.'</td>'
 				.'<td class="text-end"><i class="fas fa-coins"></i> '.(int)$it['price'].'</td>'
 				.'<td class="text-center">'.((int)$it['stock'] < 0 ? '∞' : (int)$it['stock']).'</td>'
 				.'<td class="text-center">'.(!empty($it['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
 				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/shop/edit/'.(int)$it['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cet item ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet item ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}
@@ -71,11 +73,7 @@ class Admin extends Controller_Module
 		$this->subtitle($id ? $this->lang('Modifier l\'item') : $this->lang('Nouvel item'))->icon('fas fa-store');
 		$this->breadcrumb($this->lang('Boutique'), 'admin/shop');
 
-		$types = [];
-		foreach (Shop::TYPES as $k => $v)
-		{
-			$types[$k] = $this->lang($v);
-		}
+		$types = $this->boutique()->type_labels();
 
 		$form = $this->form()
 			->add_rules([
@@ -100,7 +98,7 @@ class Admin extends Controller_Module
 				'description'     => $post['description'],
 				'icon'            => $post['icon'] ?: 'fas fa-gift',
 				'price'           => max(0, (int)$post['price']),
-				'type'            => isset(Shop::TYPES[$post['type']]) ? $post['type'] : 'perk',
+				'type'            => in_array($post['type'], Shop::TYPES, TRUE) ? $post['type'] : 'perk',
 				'payload'         => $post['payload'],
 				'stock'           => (int)$post['stock'],
 				'position'        => (int)$post['position'],
@@ -121,7 +119,7 @@ class Admin extends Controller_Module
 			redirect('admin/shop');
 		}
 
-		return $this->admin_back('admin/shop', $this->lang('Boutique')).$this->admin_card('fas fa-store', $id ? $this->lang('Modifier l\'item') : $this->lang('Nouvel item'), $form->display());
+		return $this->admin_card('fas fa-store', $id ? $this->lang('Modifier l\'item') : $this->lang('Nouvel item'), $form->display());
 	}
 
 	public function _delete($id)
@@ -131,5 +129,14 @@ class Admin extends Controller_Module
 		$this->db->where('id', (int)$id)->delete('nf_shop_items');
 		notify($this->lang('Item supprimé'));
 		redirect('admin/shop');
+	}
+
+	/** Le module, sous son vrai type : `module()` le rend comme un `Module` quelconque. */
+	private function boutique(): \NF\Modules\Shop\Shop
+	{
+		/** @var \NF\Modules\Shop\Shop $shop */
+		$shop = $this->module('shop');
+
+		return $shop;
 	}
 }

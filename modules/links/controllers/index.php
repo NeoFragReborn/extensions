@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Modules\Links\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
@@ -19,19 +20,19 @@ class Index extends Controller_Module
 			$body = '';
 			foreach ($groups as $g)
 			{
-				$body .= '<h2 class="h4 mt-3 mb-2"><i class="far fa-folder-open"></i> '.htmlspecialchars($g['cat']['title']).'</h2>';
+				$body .= '<h2 class="h4 mt-3 mb-2"><i class="far fa-folder-open"></i> '.htmlspecialchars((string) ($g['cat']['title'])).'</h2>';
 				$body .= '<div class="list-group mb-3">';
 				foreach ($g['links'] as $l)
 				{
 					$clicks = (int)$l['clicks'];
 					$body .= '<a href="'.url('links/go/'.$l['id']).'" target="_blank" rel="noopener" class="list-group-item list-group-item-action">';
 					$body .= '<div class="d-flex justify-content-between">';
-					$body .= '<strong>'.htmlspecialchars($l['title']).'</strong>';
+					$body .= '<strong>'.htmlspecialchars((string) ($l['title'])).'</strong>';
 					$body .= '<small class="text-muted">'.$this->lang('%d clic|%d clics', $clicks, $clicks).'</small>';
 					$body .= '</div>';
 					if (!empty($l['description']))
 					{
-						$body .= '<small class="text-muted">'.htmlspecialchars($l['description']).'</small>';
+						$body .= '<small class="text-muted">'.htmlspecialchars((string) ($l['description'])).'</small>';
 					}
 					$body .= '</a>';
 				}

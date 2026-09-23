@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Régie publicitaire — bannières/HTML par emplacement. Masquées pour les
@@ -23,6 +24,10 @@ class Ads extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'version'     => '1.0',
 			'admin'       => TRUE,
 			'depends'     => ['neofrag' => '1.0.0'],
@@ -96,8 +101,8 @@ class Ads extends Module
 			return '<div class="nf-ad nf-ad-html">'.$ad['html'].'</div>';
 		}
 
-		return '<a class="nf-ad nf-ad-image" href="'.url('ads/click/'.(int)$ad['id']).'" target="_blank" rel="noopener sponsored" title="'.htmlspecialchars($ad['title']).'">'
-			.'<img src="'.htmlspecialchars($ad['image_url']).'" alt="'.htmlspecialchars($ad['title']).'" style="max-width:100%;height:auto;" />'
+		return '<a class="nf-ad nf-ad-image" href="'.url('ads/click/'.(int)$ad['id']).'" target="_blank" rel="noopener sponsored" title="'.htmlspecialchars((string) ($ad['title'])).'">'
+			.'<img src="'.htmlspecialchars((string) ($ad['image_url'])).'" alt="'.htmlspecialchars((string) ($ad['title'])).'" style="max-width:100%;height:auto;" />'
 			.'</a>';
 	}
 }

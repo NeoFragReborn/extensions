@@ -1,0 +1,119 @@
+/**
+ * Webradio.
+ *
+ * Aucune couleur écrite en dur : tout passe par le vocabulaire `--nf-*` que chaque thème définit.
+ */
+.nf-webradio {
+	padding: 1rem;
+	margin-bottom: 1.25rem;
+	border: 1px solid var(--nf-border);
+	border-radius: .5rem;
+	background: var(--nf-surface-2);
+}
+
+.nf-webradio-player audio {
+	width: 100%;
+}
+
+.nf-webradio-now {
+	margin-top: .75rem;
+	font-size: .95rem;
+	color: var(--nf-text);
+}
+
+/* Le point rouge du direct : il clignote, sauf pour qui a demandé moins d'animations. */
+.nf-webradio-live {
+	color: var(--bs-danger-text-emphasis, var(--nf-danger));
+	font-weight: 600;
+	animation: nf-webradio-pulse 2s ease-in-out infinite;
+}
+
+.nf-webradio-live .icon,
+.nf-webradio-live i {
+	font-size: .55rem;
+	vertical-align: middle;
+}
+
+@keyframes nf-webradio-pulse {
+	0%, 100% { opacity: 1; }
+	50%      { opacity: .45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.nf-webradio-live {
+		animation: none;
+	}
+}
+
+.nf-webradio-off,
+.nf-webradio-host,
+.nf-webradio-hours,
+.nf-webradio-time {
+	color: var(--nf-text-muted);
+}
+
+.nf-webradio-hours,
+.nf-webradio-time {
+	font-variant-numeric: tabular-nums;
+	font-size: .85rem;
+}
+
+.nf-webradio-site {
+	margin-top: .5rem;
+	font-size: .8125rem;
+}
+
+.nf-webradio-site a {
+	color: var(--nf-accent-text, var(--nf-accent));
+	text-decoration: none;
+}
+
+.nf-webradio-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+	gap: 1rem;
+	margin-top: .75rem;
+}
+
+.nf-webradio-day {
+	padding: .75rem;
+	border: 1px solid var(--nf-border);
+	border-radius: .5rem;
+}
+
+.nf-webradio-day.is-today {
+	border-color: var(--nf-accent);
+}
+
+.nf-webradio-day-title {
+	margin: 0 0 .5rem;
+	font-size: .95rem;
+	font-weight: 600;
+	/* --nf-text et non --nf-text-strong : cette dernière n est pas définie par le thème admin,
+	   et check-css-variables refuse à juste titre une variable que tous les thèmes ne portent pas. */
+	color: var(--nf-text);
+}
+
+.nf-webradio-day ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nf-webradio-day li + li {
+	margin-top: .5rem;
+	padding-top: .5rem;
+	border-top: 1px solid var(--nf-border);
+}
+
+.nf-webradio-day li.is-live {
+	padding-left: .5rem;
+	border-left: 3px solid var(--nf-danger);
+}
+
+.nf-webradio-desc,
+.nf-webradio-empty {
+	margin: .25rem 0 0;
+	font-size: .85rem;
+	color: var(--nf-text-muted);
+}

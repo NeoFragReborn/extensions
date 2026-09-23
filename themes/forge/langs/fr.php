@@ -77,4 +77,5 @@ return [
 	'abe737fd' => 'Réseaux sociaux',
 	'c77f6c43' => 'Propulsé par',
 	'275eec43' => 'Thème gaming « fonte en fusion » : rouge lave sur charbon, nuit par défaut et mode jour, lueur de braise, titres Rajdhani. Entièrement personnalisable.',
+	'4f376417' => 'Retour en haut',
 ];

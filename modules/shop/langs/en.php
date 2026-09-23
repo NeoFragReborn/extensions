@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'db571b56' => 'Catalog',
@@ -25,4 +26,22 @@ return [
 	'0bc215de' => 'Not enough points',
 	'a1b3a884' => 'Buy',
 	'88722b7f' => 'The shop is empty for now.',
+	'c9340a06' => 'Active',
+	'b0d653e1' => 'Inactive',
+	'2cecf817' => 'Type',
+	'e2c8f589' => 'Status',
+	'eb78cff1' => 'Description',
+	'8fd9c7ef' => 'Save',
+	'27ba8e29' => 'points',
+	'0afa7a5f' => 'Login required',
+	'dbdd2515' => 'Purchase failed.',
+	'6fb4df84' => 'Not enough points.',
+	'306baf3e' => 'You already own this item.',
+	'753598c7' => 'Log in to buy.',
+	'af8ea586' => 'Out of stock.',
+	'23f30673' => 'Rank (group shown on the profile)',
+	'3538fa30' => 'Cosmetic',
+	'360924c6' => 'Perk',
+	'4539b307' => 'VIP (payload = days)',
+	'5a7a9517' => 'Physical product (merch)',
 ];

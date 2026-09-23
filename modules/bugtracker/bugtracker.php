@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Bug Tracker — tickets internes (bugs, features, questions).
@@ -19,6 +20,10 @@ class Bugtracker extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'admin'       => TRUE,
 			'version'     => '1.0',
 			'depends'     => ['neofrag' => '0.2.0'],
@@ -40,10 +45,10 @@ class Bugtracker extends Module
 			'default' => [
 				'access' => [
 					[
-						'title'  => 'Tickets',
+						'title'  => $this->lang('Tickets'),
 						'icon'   => 'fas fa-bug',
 						'access' => [
-							'manage' => ['title' => 'Gérer tickets', 'icon' => 'fas fa-edit', 'admin' => TRUE]
+							'manage' => ['title' => $this->lang('Gérer les tickets'), 'icon' => 'fas fa-edit', 'admin' => TRUE]
 						]
 					]
 				]
@@ -53,7 +58,7 @@ class Bugtracker extends Module
 
 	public static function status_label($status)
 	{
-		$L = NeoFrag();
+		$L = NeoFrag()->module('bugtracker');
 		return [
 			'open'        => '<span class="badge text-bg-info"><span class="dot"></span> '.$L->lang('Ouvert').'</span>',
 			'in_progress' => '<span class="badge text-bg-warning"><span class="dot"></span> '.$L->lang('En cours').'</span>',
@@ -65,7 +70,7 @@ class Bugtracker extends Module
 
 	public static function priority_label($priority)
 	{
-		$L = NeoFrag();
+		$L = NeoFrag()->module('bugtracker');
 		return [
 			'low'      => '<span class="badge text-bg-light"><i class="fas fa-arrow-down"></i> '.$L->lang('Faible').'</span>',
 			'normal'   => '<span class="badge text-bg-secondary"><span class="dot"></span> '.$L->lang('Normale').'</span>',
@@ -76,7 +81,7 @@ class Bugtracker extends Module
 
 	public static function type_label($type)
 	{
-		$L = NeoFrag();
+		$L = NeoFrag()->module('bugtracker');
 		return [
 			'bug'      => '<span class="badge text-bg-danger"><i class="fas fa-bug"></i> '.$L->lang('Bug').'</span>',
 			'feature'  => '<span class="badge text-bg-info"><i class="fas fa-star"></i> '.$L->lang('Feature').'</span>',

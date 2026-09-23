@@ -1,23 +1,15 @@
 /**
  * Extend theme — interactions légères.
- * - sélecteur de thème (footer) : pose le cookie nf_theme et recharge
  * - bouton « retour en haut » au défilement (respecte prefers-reduced-motion)
  */
 (function() {
 	'use strict';
 
 	function init() {
-		document.querySelectorAll('[data-theme-pick]').forEach(function(el) {
-			el.addEventListener('click', function() {
-				document.cookie = 'nf_theme=' + encodeURIComponent(el.getAttribute('data-theme-pick')) + ';path=/;max-age=31536000;samesite=lax';
-				location.reload();
-			});
-		});
-
 		var btn = document.createElement('button');
 		btn.type = 'button';
 		btn.className = 'ex-to-top';
-		btn.setAttribute('aria-label', 'Retour en haut');
+		btn.setAttribute('aria-label', '<?php echo addslashes($this->lang('Retour en haut')) ?>');
 		btn.innerHTML = '<i class="fas fa-chevron-up"></i>';
 		document.body.appendChild(btn);
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Paiements — page publique (packs), retours success/cancel, et webhook Stripe.
@@ -12,7 +13,7 @@ class Index extends Controller_Module
 {
 	public function index()
 	{
-		$this->css('payments')->js('payments');
+		$this->js('payments');
 
 		$pay = $this->module('payments');
 

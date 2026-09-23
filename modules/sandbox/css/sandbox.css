@@ -1,0 +1,46 @@
+/**
+ * Bac à sable.
+ *
+ * Aucune couleur écrite en dur : tout passe par le vocabulaire `--nf-*` que chaque thème définit.
+ */
+.nf-sandbox-help {
+	margin-bottom: 1rem;
+	font-size: .9rem;
+	color: var(--nf-text-muted);
+}
+
+.nf-sandbox-help ul {
+	margin: .5rem 0 0;
+	padding-left: 1.25rem;
+}
+
+.nf-sandbox-help li + li {
+	margin-top: .25rem;
+}
+
+/**
+ * L'aperçu est encadré : sans cadre, on ne sait pas où finit la page et où commence le rendu —
+ * et c'est précisément la question qu'on vient se poser ici.
+ */
+.nf-sandbox-preview {
+	padding: 1rem;
+	border: 1px dashed var(--nf-border);
+	border-radius: .5rem;
+	background: var(--nf-surface);
+	color: var(--nf-text);
+	overflow-wrap: anywhere;
+}
+
+.nf-sandbox-preview img {
+	max-width: 100%;
+	height: auto;
+}
+
+.nf-sandbox-removed code {
+	margin-right: .25rem;
+}
+
+.nf-sandbox-removed p {
+	margin: .35rem 0;
+	font-size: .9rem;
+}

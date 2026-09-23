@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Modules\Links\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
@@ -16,11 +17,11 @@ class Admin extends Controller_Module
 			foreach ($cats as $c) {
 				$slug = url_title($c['title']);
 				$cats_body .= '<tr>'
-					.'<td><strong>'.htmlspecialchars($c['title']).'</strong></td>'
+					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
 					.'<td class="text-end">'.(int)$c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/links/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 			$cats_body .= '</tbody></table>';
@@ -43,20 +44,20 @@ class Admin extends Controller_Module
 
 				$ls_body .= '<div class="nf-content-card">';
 				$ls_body .= '<div class="nf-content-card-head">';
-				$ls_body .= '<div class="nf-content-card-title"><a href="'.htmlspecialchars($l['url']).'" target="_blank" rel="noopener">'.htmlspecialchars($l['title']).'</a></div>';
+				$ls_body .= '<div class="nf-content-card-title"><a href="'.htmlspecialchars((string) ($l['url'])).'" target="_blank" rel="noopener">'.htmlspecialchars((string) ($l['title'])).'</a></div>';
 				$ls_body .= '<span class="nf-content-card-status '.($published ? 'published' : 'draft').'">';
 				$ls_body .= '<i class="fas '.($published ? 'fa-check' : 'fa-clock').'"></i> '.($published ? $this->lang('Publié') : $this->lang('Brouillon'));
 				$ls_body .= '</span>';
 				$ls_body .= '</div>';
 				$ls_body .= '<div class="nf-content-card-meta">';
-				$ls_body .= '<span><i class="fas fa-external-link-alt"></i> '.htmlspecialchars($host).'</span>';
-				$ls_body .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars($l['cat_title']).'</span>';
+				$ls_body .= '<span><i class="fas fa-external-link-alt"></i> '.htmlspecialchars((string) ($host)).'</span>';
+				$ls_body .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars((string) ($l['cat_title'])).'</span>';
 				$ls_body .= '<span title="'.$this->lang('Clics').'"><i class="fas fa-mouse-pointer"></i> '.(int)$l['clicks'].'</span>';
 				$ls_body .= '</div>';
 				$ls_body .= '<div class="nf-content-card-foot">';
 				$ls_body .= '<span class="nf-content-card-spacer"></span>';
 				$ls_body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/links/link/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$ls_body .= '</div>';
 				$ls_body .= '</div>';
 			}
@@ -66,18 +67,18 @@ class Admin extends Controller_Module
 		// Barre recherche / filtre (GET). $_GET préservé à travers la pagination par get_pagination().
 		$form_action = url($this->module->pagination->get_url());
 		$toolbar  = '<form method="get" action="'.$form_action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars($filters['q']).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars($this->lang('Rechercher un titre ou une URL…'), ENT_QUOTES).'" style="max-width:240px;">';
-		$toolbar .= '<select name="category" class="form-control form-control-sm" style="width:auto;">';
+		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filters['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un titre ou une URL…')), ENT_QUOTES).'" style="max-width:240px;">';
+		$toolbar .= '<select name="category" class="form-select form-select-sm" style="width:auto;">';
 		$toolbar .= '<option value="0">'.$this->lang('Toutes les catégories').'</option>';
 		foreach ($cats as $c)
 		{
-			$toolbar .= '<option value="'.(int)$c['id'].'"'.((int)$filters['category'] === (int)$c['id'] ? ' selected' : '').'>'.htmlspecialchars($c['title']).'</option>';
+			$toolbar .= '<option value="'.(int)$c['id'].'"'.((int)$filters['category'] === (int)$c['id'] ? ' selected' : '').'>'.htmlspecialchars((string) ($c['title'])).'</option>';
 		}
 		$toolbar .= '</select>';
-		$toolbar .= '<select name="status" class="form-control form-control-sm" style="width:auto;">';
+		$toolbar .= '<select name="status" class="form-select form-select-sm" style="width:auto;">';
 		foreach (['' => $this->lang('Tous les statuts'), 'published' => $this->lang('Publiés'), 'draft' => $this->lang('Brouillons')] as $val => $label)
 		{
-			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars($label).'</option>';
+			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars((string) ($label)).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
@@ -138,7 +139,7 @@ class Admin extends Controller_Module
 				'sort_order'  => ['label' => $this->lang('Ordre tri'), 'type' => 'text', 'value' => $is_new ? '0' : $l['sort_order']],
 				'published'   => ['label' => $this->lang('Publier'), 'type' => 'checkbox', 'value' => ['1'], 'values' => ['1' => $this->lang('Lien publié')], 'checked' => ['1' => ($is_new || !empty($l['published']))]]
 			 ])
-			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'));
+			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'), $is_new ? 'fas fa-plus' : 'fas fa-check');
 
 		if ($this->form()->is_valid($post))
 		{
@@ -158,7 +159,7 @@ class Admin extends Controller_Module
 			redirect('admin/links');
 		}
 
-		return $this->admin_back('admin/links', $this->lang('Liens')).$this->admin_card($is_new ? 'fas fa-plus' : 'fas fa-edit', $is_new ? $this->lang('Nouveau lien') : $this->lang('Éditer : %s', $l['title']), $this->form()->display());
+		return $this->admin_card($is_new ? 'fas fa-plus' : 'fas fa-edit', $is_new ? $this->lang('Nouveau lien') : $this->lang('Éditer : %s', $l['title']), $this->form()->display());
 	}
 
 	public function _cat_add()    { return $this->_cat_form(NULL); }
@@ -188,7 +189,7 @@ class Admin extends Controller_Module
 				'title'      => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required'],
 				'sort_order' => ['label' => $this->lang('Ordre tri'), 'type' => 'text', 'value' => $is_new ? '0' : $c['sort_order']]
 			 ])
-			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'));
+			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'), $is_new ? 'fas fa-plus' : 'fas fa-check');
 
 		if ($this->form()->is_valid($post))
 		{
@@ -200,6 +201,6 @@ class Admin extends Controller_Module
 			redirect('admin/links');
 		}
 
-		return $this->admin_back('admin/links', $this->lang('Liens')).$this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title']), $this->form()->display());
+		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title']), $this->form()->display());
 	}
 }

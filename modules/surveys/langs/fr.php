@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module surveys (fr)
@@ -58,5 +59,9 @@ return [
 	'17a7d347' => 'Tous les statuts',
 	'dc275fe4' => 'Filtrer',
 	'599dba10' => 'Réinitialiser',
-	'8a7e7178' => '%d résultat|%d résultats'
+	'8a7e7178' => '%d résultat|%d résultats',
+	'f9c3c87a' => 'Éditer le sondage',
+	'0aac9844' => 'Date',
+	'7f838b1b' => 'Sondages publics à choix unique ou multiple avec résultats configurables.',
+	'ca7a89fb' => 'Gérer les sondages',
 ];

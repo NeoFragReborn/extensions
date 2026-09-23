@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'db571b56' => 'Catálogo',
@@ -25,4 +26,22 @@ return [
 	'0bc215de' => 'Puntos insuficientes',
 	'a1b3a884' => 'Comprar',
 	'88722b7f' => 'La tienda está vacía por el momento.',
+	'c9340a06' => 'Activo',
+	'b0d653e1' => 'Inactivo',
+	'2cecf817' => 'Tipo',
+	'e2c8f589' => 'Estado',
+	'eb78cff1' => 'Descripción',
+	'8fd9c7ef' => 'Guardar',
+	'27ba8e29' => 'puntos',
+	'0afa7a5f' => 'Inicio de sesión obligatorio',
+	'dbdd2515' => 'No se puede realizar la compra.',
+	'6fb4df84' => 'Puntos insuficientes.',
+	'306baf3e' => 'Ya tienes este artículo.',
+	'753598c7' => 'Inicia sesión para comprar.',
+	'af8ea586' => 'Agotado.',
+	'23f30673' => 'Rango (grupo mostrado en el perfil)',
+	'3538fa30' => 'Cosmético',
+	'360924c6' => 'Ventaja (perk)',
+	'4539b307' => 'VIP (payload = días)',
+	'5a7a9517' => 'Producto físico (merch)',
 ];

@@ -1,0 +1,63 @@
+/**
+ * Lecteur de flux.
+ *
+ * Aucune couleur écrite en dur : tout passe par le vocabulaire `--nf-*` que chaque thème définit,
+ * sans quoi le bloc serait illisible sur la moitié d'entre eux. C'est ce que `check-css-variables`
+ * vérifie, et c'est ce qui avait produit les « blocs blancs en thème sombre ».
+ */
+.nf-rss-head {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+	margin-bottom: .75rem;
+	font-weight: 600;
+}
+
+.nf-rss-head a {
+	color: var(--nf-accent-text, var(--nf-accent));
+	text-decoration: none;
+}
+
+.nf-rss-head a:hover {
+	text-decoration: underline;
+}
+
+.nf-rss-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nf-rss-item + .nf-rss-item {
+	margin-top: .75rem;
+	padding-top: .75rem;
+	border-top: 1px solid var(--nf-border);
+}
+
+.nf-rss-title {
+	display: block;
+	color: var(--nf-text);
+	font-weight: 600;
+	line-height: 1.35;
+	text-decoration: none;
+}
+
+a.nf-rss-title:hover {
+	color: var(--nf-accent-text, var(--nf-accent));
+}
+
+.nf-rss-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
+	margin-top: .15rem;
+	font-size: .8125rem;
+	color: var(--nf-text-muted);
+}
+
+.nf-rss-summary {
+	margin: .35rem 0 0;
+	font-size: .875rem;
+	line-height: 1.45;
+	color: var(--nf-text-muted);
+}

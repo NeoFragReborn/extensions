@@ -78,4 +78,5 @@ return [
 	'c77f6c43' => 'Propulsé par',
 	'c4040c2f' => 'Thème « Extend » : navy et bleu acier, titres condensés Economica, bascule nuit/jour, mise en page riche (navigation, bannière, multi-zones). Entièrement personnalisable.',
 	'bfc1a4bd' => 'Propulsé par NeoFrag Reborn',
+	'4f376417' => 'Retour en haut',
 ];

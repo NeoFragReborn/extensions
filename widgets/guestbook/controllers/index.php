@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Widgets\Guestbook\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Widget as Controller_Widget;
 
@@ -31,10 +32,10 @@ class Index extends Controller_Widget
 			foreach ($msgs as $m)
 			{
 				$author = $m['user_id'] && $m['username']
-					? htmlspecialchars($m['username'])
-					: htmlspecialchars($m['name']);
+					? htmlspecialchars((string) ($m['username']))
+					: htmlspecialchars((string) ($m['name']));
 				$body .= '<div class="mb-2"><strong>'.$author.'</strong> <small class="text-muted">'.timetostr('j M', $m['ts']).'</small>';
-				$body .= '<br><small>'.htmlspecialchars(mb_substr($m['message'], 0, 80)).(mb_strlen($m['message']) > 80 ? '…' : '').'</small></div>';
+				$body .= '<br><small>'.htmlspecialchars((string) (mb_substr($m['message'], 0, 80))).(mb_strlen($m['message']) > 80 ? '…' : '').'</small></div>';
 			}
 		}
 

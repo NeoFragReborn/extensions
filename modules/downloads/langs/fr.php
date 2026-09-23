@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module downloads (fr)
@@ -62,5 +63,10 @@ return [
 	'633b7ff4' => 'Brouillons',
 	'dc275fe4' => 'Filtrer',
 	'599dba10' => 'Réinitialiser',
-	'8a7e7178' => '%d résultat|%d résultats'
+	'8a7e7178' => '%d résultat|%d résultats',
+	'ae4f5e0e' => 'catégorie|catégories',
+	'b2656c03' => 'Éditer catégorie : %s',
+	'0aac9844' => 'Date',
+	'42c9cea8' => 'Téléchargements populaires',
+	'b9392ae8' => 'Bibliothèque de fichiers à télécharger avec catégories, version et compteur.',
 ];

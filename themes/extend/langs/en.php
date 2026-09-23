@@ -77,5 +77,6 @@ return [
 	'abe737fd' => 'Social networks',
 	'c77f6c43' => 'Powered by',
 	'c4040c2f' => 'Extend theme: navy & steel blue, condensed Economica headings, night/day toggle, rich layout (navigation, banner, multi-zone). Fully customizable.',
-	'bfc1a4bd' => 'Propulsé par NeoFrag Reborn',
+	'bfc1a4bd' => 'Powered by NeoFrag Reborn',
+	'4f376417' => 'Back to top',
 ];

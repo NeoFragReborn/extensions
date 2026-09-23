@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module bugtracker (de)
@@ -61,4 +62,7 @@ return [
 	'caf5c873' => 'Aktionen',
 	// i18n 2026-06-11 (code strings)
 	'76f47454' => 'Ticket #%s — %s',
+	'5e910685' => 'kritischer Fehler|kritische Fehler',
+	'15a51af2' => 'Tickets ansehen',
+	'ee1e54cf' => 'Tickets verwalten',
 ];

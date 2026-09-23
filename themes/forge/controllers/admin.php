@@ -275,7 +275,7 @@ class Admin extends Controller
 									'theme_name' => $this->__caller->info()->name
 								]), FALSE)
 					)
-					->size('col-4 col-lg-3'),
+					->size('col-12 col-md-4 col-lg-3'),
 			$this	->col(
 						$this	->panel()
 								->heading($this->lang('Dashboard'), 'fas fa-cog')
@@ -287,7 +287,7 @@ class Admin extends Controller
 									'form_socials'    => $form_socials->display()
 								]))
 					)
-					->size('col-8 col-lg-9')
+					->size('col-12 col-md-8 col-lg-9')
 		);
 	}
 }

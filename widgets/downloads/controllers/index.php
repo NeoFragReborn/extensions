@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Widgets\Downloads\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Widget as Controller_Widget;
 use NF\Modules\Downloads\Downloads;
@@ -29,7 +30,7 @@ class Index extends Controller_Widget
 			$body = '<ul class="list-unstyled mb-0">';
 			foreach ($files as $f)
 			{
-				$body .= '<li class="py-1"><a href="'.url('downloads/go/'.$f['id']).'"><i class="fas fa-download me-1"></i>'.htmlspecialchars($f['title']).'</a> <small class="text-muted">'.Downloads::format_size($f['file_size_bytes']).' • '.(int)$f['downloads_count'].' DL</small></li>';
+				$body .= '<li class="py-1"><a href="'.url('downloads/go/'.$f['id']).'"><i class="fas fa-download me-1"></i>'.htmlspecialchars((string) ($f['title'])).'</a> <small class="text-muted">'.Downloads::format_size($f['file_size_bytes']).' • '.(int)$f['downloads_count'].' DL</small></li>';
 			}
 			$body .= '</ul>';
 		}

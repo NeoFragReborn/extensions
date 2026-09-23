@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Régie publicitaire — tracking de clic + redirection vers la cible.

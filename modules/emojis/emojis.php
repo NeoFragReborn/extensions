@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Emojis — emojis personnalisés uploadés en admin, rendus partout via `:nom:` → <img>
@@ -20,6 +21,10 @@ class Emojis extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'admin'       => TRUE,
 			'version'     => '1.0',
 			'depends'     => ['neofrag' => '0.2.0'],
@@ -37,7 +42,7 @@ class Emojis extends Module
 			'default' => [
 				'access' => [
 					[
-						'title'  => 'Emojis',
+						'title'  => $this->lang('Emojis'),
 						'icon'   => 'far fa-smile',
 						'access' => [
 							'manage' => ['title' => $this->lang('Gérer les emojis'), 'icon' => 'fas fa-edit', 'admin' => TRUE]

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module surveys (en)
@@ -51,7 +52,7 @@ return [
 	'ec20168c' => 'Always visible',
 	'f126e15d' => 'draft|drafts',
 	'f24f16aa' => 'New survey',
-	'f5e4b7e2' => '%d vote',
+	'f5e4b7e2' => '%d vote|%d votes',
 	'f7f51f4a' => 'Closed',
 	'7f838b1b' => 'Public single or multiple choice surveys with configurable results.',
 	'07c3b036' => 'No survey matches these criteria.',
@@ -62,4 +63,6 @@ return [
 	'8a7e7178' => '%d result|%d results',
 	// i18n 2026-06-11 (code strings)
 	'f9c3c87a' => 'Edit the survey',
+	'0aac9844' => 'Date',
+	'ca7a89fb' => 'Manage surveys',
 ];

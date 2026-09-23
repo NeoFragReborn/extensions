@@ -76,4 +76,5 @@ return [
 	'abe737fd' => 'Social networks',
 	'c77f6c43' => 'Powered by',
 	'6da7fc68' => 'Clean "rock & summit" gaming theme, teal accent on slate. Day and night modes, condensed headings, fully customizable.',
+	'4f376417' => 'Back to top',
 ];

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Articles — articles longs avec sommaire auto, temps de lecture, catégories, tags.
@@ -11,6 +12,52 @@ use NF\NeoFrag\Addons\Module;
 
 class Articles extends Module
 {
+
+	/** Descripteurs de contenu — cf. Module::content_types(). */
+	public function declare_content_types()
+	{
+		return [
+			'articles' => [
+				'table' => 'nf_articles', 'pk' => 'article_id', 'author' => 'user_id',
+				'reactable' => TRUE, 'subscribable' => TRUE, 'revisable' => TRUE,
+				// « article » au singulier circule aussi (reactions, gamification) : meme contenu.
+				'aliases' => ['article'],
+			],
+			'article-category' => [
+				'table' => 'nf_articles_categories', 'pk' => 'category_id',
+				'subscribable' => TRUE,
+			],
+		];
+	}
+
+	/** URL publique d'un article (titre lu dans la langue courante). */
+	public function content_url($type, $id)
+	{
+		if ($type !== 'articles' && $type !== 'article')
+		{
+			return '';
+		}
+
+		$title = $this->db	->select('title')
+							->from('nf_articles_lang')
+							->where('article_id', (int) $id)
+							->where('lang', $this->config->lang->info()->name)
+							->row();
+
+		return $title ? 'articles/'.(int) $id.'/'.url_title($title) : '';
+	}
+
+	/** Corbeille : type restaurable declare par le module lui-meme (cf. Trash::types()). */
+	public function trash_types()
+	{
+		return [
+			'article' => [
+				'label'   => 'Article', 'table' => 'nf_articles',
+				'pk'      => 'article_id', 'lang' => 'nf_articles_lang', 'title' => 'title',
+				'restore' => 'restore_article', 'purge' => 'purge_article', 'url' => 'articles/%d/%s',
+			],
+		];
+	}
 	protected function __info()
 	{
 		return [
@@ -20,6 +67,10 @@ class Articles extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'user_id',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'admin'       => TRUE,
 			'version'     => '1.0',
 			'depends'     => [
@@ -65,7 +116,7 @@ class Articles extends Module
 			'default' => [
 				'access' => [
 					[
-						'title'  => 'Articles',
+						'title'  => $this->lang('Articles'),
 						'icon'   => 'far fa-newspaper',
 						'access' => [
 							'add_articles'      => ['title' => $this->lang('Ajouter'),  'icon' => 'fas fa-plus',          'admin' => TRUE],
@@ -95,11 +146,18 @@ class Articles extends Module
 	 * Génère un sommaire HTML depuis les <h2> et <h3> du content.
 	 * Ajoute un id="..." à chaque heading pour ancres.
 	 *
-	 * @param string $html (modifié par référence : ajoute les id="")
+	 * Le corps d'un article peut valoir NULL en base : la méthode l'accepte et le normalise, et
+	 * la variable de l'appelant ressort toujours en chaîne.
+	 *
+	 * @param string|null $html (modifié par référence : ajoute les id="")
+	 * @param-out string  $html
 	 * @return string HTML du sommaire (vide si moins de 2 headings)
 	 */
 	public static function build_toc(&$html)
 	{
+		// Le corps d'un article peut valoir NULL en base : sans cela, `preg_replace_callback()`
+		// recevrait NULL la ou il attend une chaine.
+		$html    = (string) $html;
 		$counter = 0;
 		$entries = [];
 
@@ -117,23 +175,31 @@ class Articles extends Module
 			}
 			else
 			{
-				$existing_attrs .= ' id="'.htmlspecialchars($slug).'"';
+				$existing_attrs .= ' id="'.htmlspecialchars((string) ($slug)).'"';
 			}
 
 			$entries[] = ['level' => $level, 'slug' => $slug, 'title' => trim(strip_tags($inner))];
 			return '<'.$level.$existing_attrs.'>'.$inner.'</'.$level.'>';
-		}, $html);
+		}, $html) ?? $html;
+
+		/*
+		 * Le `?? $html` ci-dessus n'est pas une precaution de style. `preg_replace_callback()` rend
+		 * NULL quand le moteur abandonne — au-dela de `pcre.backtrack_limit`, ce que le `(.*?)` de
+		 * ce motif peut atteindre sur un article long. Sans ce repli, le corps de l'article etait
+		 * remplace par NULL : la page repondait 200 avec un article VIDE, et rien nulle part ne
+		 * l'expliquait. On prefere un sommaire manquant a un article efface.
+		 */
 
 		if (count($entries) < 2)
 		{
 			return '';
 		}
 
-		$out = '<div class="article-toc panel card mb-3"><div class="card-header"><i class="fas fa-list-ul"></i> '.NeoFrag()->lang('Sommaire').'</div><ul class="list-group list-group-flush">';
+		$out = '<div class="article-toc card mb-3"><div class="card-header"><i class="fas fa-list-ul"></i> '.NeoFrag()->lang('Sommaire').'</div><ul class="list-group list-group-flush">';
 		foreach ($entries as $e)
 		{
 			$indent = $e['level'] === 'h3' ? ' style="padding-left:2rem"' : '';
-			$out .= '<li class="list-group-item border-0 py-1"'.$indent.'><a href="#'.htmlspecialchars($e['slug']).'">'.htmlspecialchars($e['title']).'</a></li>';
+			$out .= '<li class="list-group-item border-0 py-1"'.$indent.'><a href="#'.htmlspecialchars((string) ($e['slug'])).'">'.htmlspecialchars((string) ($e['title'])).'</a></li>';
 		}
 		$out .= '</ul></div>';
 		return $out;

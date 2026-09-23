@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'c69f6198' => 'Werbeverwaltung',
@@ -21,4 +22,12 @@ return [
 	'0944c42d' => 'Beginn (optional)',
 	'eae6f46e' => 'Ende (optional)',
 	'e060760c' => 'Anzeige gelöscht',
+	'32eeee39' => 'Ankündigungen',
+	'c932b0c8' => 'Keine Anzeige.',
+	'4cb2f934' => 'Aktiv',
+	'4653ea21' => 'Platzierung',
+	'e2c8f589' => 'Status',
+	'ca1ec941' => 'Bild-URL',
+	'e1748a2d' => 'HTML-Code',
+	'8fd9c7ef' => 'Speichern',
 ];

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module links (de)
@@ -55,4 +56,7 @@ return [
 	'dc275fe4' => 'Filtern',
 	'599dba10' => 'Zurücksetzen',
 	'8a7e7178' => '%d Ergebnis|%d Ergebnisse',
+	'ae4f5e0e' => 'Kategorie|Kategorien',
+	'b2656c03' => 'Kategorie bearbeiten: %s',
+	'0aac9844' => 'Datum',
 ];

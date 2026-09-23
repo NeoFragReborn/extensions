@@ -76,4 +76,5 @@ return [
 	'abe737fd' => 'Social networks',
 	'c77f6c43' => 'Powered by',
 	'5c6b7f18' => 'Gaming theme inspired by cube-based worlds. Day "biome" mode and night "cave" mode, grass-green accent, fully customizable.',
+	'4f376417' => 'Back to top',
 ];

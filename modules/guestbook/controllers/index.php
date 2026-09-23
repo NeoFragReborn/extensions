@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Modules\Guestbook\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
@@ -30,7 +31,7 @@ class Index extends Controller_Module
 					'rules' => 'required'
 				]
 			 ])
-			 ->add_submit($this->lang('Signer le livre d\'or'));
+			 ->add_submit($this->lang('Signer le livre d\'or'), 'fas fa-pen');
 
 		if ($this->form()->is_valid($post))
 		{
@@ -71,7 +72,7 @@ class Index extends Controller_Module
 			{
 				$display_name = $m['user_id'] && $m['username']
 					? $this->user->link($m['user_id'], $m['username'])
-					: '<strong>'.htmlspecialchars($m['name']).'</strong>';
+					: '<strong>'.htmlspecialchars((string) ($m['name'])).'</strong>';
 
 				$body .= '<div class="card mb-2">'
 					.'<div class="card-body">'
@@ -79,7 +80,7 @@ class Index extends Controller_Module
 					.'<span>'.$display_name.'</span>'
 					.'<small class="text-muted">'.timetostr('j M Y H:i', $m['ts']).'</small>'
 					.'</div>'
-					.'<p class="mb-0">'.nl2br(htmlspecialchars($m['message'])).'</p>'
+					.'<p class="mb-0">'.nl2br(htmlspecialchars((string) ($m['message']))).'</p>'
 					.'</div>'
 					.'</div>';
 			}

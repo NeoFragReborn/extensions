@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'd4c3d04b' => 'Emoji',

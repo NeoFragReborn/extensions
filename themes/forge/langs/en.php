@@ -77,4 +77,5 @@ return [
 	'abe737fd' => 'Social networks',
 	'c77f6c43' => 'Powered by',
 	'275eec43' => 'Molten-metal gaming theme: lava red on charcoal, night by default plus a day mode, ember glow, Rajdhani headings. Fully customizable.',
+	'4f376417' => 'Back to top',
 ];

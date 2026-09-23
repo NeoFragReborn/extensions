@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Boutique — endpoint AJAX d'achat : /shop/ajax/buy/{id}.

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'c69f6198' => 'Gestione pubblicitaria',
@@ -21,4 +22,12 @@ return [
 	'0944c42d' => 'Inizio (opzionale)',
 	'eae6f46e' => 'Fine (opzionale)',
 	'e060760c' => 'Annuncio eliminato',
+	'32eeee39' => 'Annunci',
+	'c932b0c8' => 'Nessun annuncio.',
+	'4cb2f934' => 'Attivo',
+	'4653ea21' => 'Posizione',
+	'e2c8f589' => 'Stato',
+	'ca1ec941' => 'URL dell\'immagine',
+	'e1748a2d' => 'Codice HTML',
+	'8fd9c7ef' => 'Salva',
 ];

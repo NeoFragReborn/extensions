@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'db571b56' => 'Catalogo',
@@ -25,4 +26,22 @@ return [
 	'0bc215de' => 'Punti insufficienti',
 	'a1b3a884' => 'Acquista',
 	'88722b7f' => 'Il negozio è vuoto per il momento.',
+	'c9340a06' => 'Attivo',
+	'b0d653e1' => 'Inattivo',
+	'2cecf817' => 'Tipo',
+	'e2c8f589' => 'Stato',
+	'eb78cff1' => 'Descrizione',
+	'8fd9c7ef' => 'Salva',
+	'27ba8e29' => 'punti',
+	'0afa7a5f' => 'Connessione richiesta',
+	'dbdd2515' => 'Acquisto impossibile.',
+	'6fb4df84' => 'Punti insufficienti.',
+	'306baf3e' => 'Possiedi già questo oggetto.',
+	'753598c7' => 'Accedi per acquistare.',
+	'af8ea586' => 'Esaurito.',
+	'23f30673' => 'Grado (gruppo mostrato sul profilo)',
+	'3538fa30' => 'Cosmetico',
+	'360924c6' => 'Vantaggio (perk)',
+	'4539b307' => 'VIP (payload = giorni)',
+	'5a7a9517' => 'Prodotto fisico (merch)',
 ];

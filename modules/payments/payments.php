@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Paiements (Stripe) — recharge de points + packs VIP en argent réel.
@@ -26,6 +27,10 @@ class Payments extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'version'     => '1.0',
 			'admin'       => TRUE,
 			'depends'     => ['neofrag' => '1.0.0'],
@@ -105,7 +110,6 @@ class Payments extends Module
 
 		$resp = curl_exec($ch);
 		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
 
 		if ($code !== 200 || !$resp)
 		{

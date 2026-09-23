@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module articles (en)
@@ -94,4 +95,5 @@ return [
 	'bf0c0171' => 'TinyMCE rich editor. Use heading levels (Heading 2/3) to structure (table of contents auto-generated).',
 	'f0c21815' => 'A future date schedules publication: the article stays publicly hidden until that date (if published).',
 	'978c2026' => 'Latest articles',
+	'cd8737fa' => 'Article',
 ];

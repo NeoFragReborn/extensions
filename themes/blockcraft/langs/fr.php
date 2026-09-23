@@ -76,4 +76,5 @@ return [
 	'abe737fd' => 'Réseaux sociaux',
 	'c77f6c43' => 'Propulsé par',
 	'5c6b7f18' => 'Thème gaming inspiré des univers cubiques. Mode jour « biome » et mode nuit « grotte », accent vert herbe, entièrement personnalisable.',
+	'4f376417' => 'Retour en haut',
 ];

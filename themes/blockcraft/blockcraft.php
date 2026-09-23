@@ -20,11 +20,22 @@ class Blockcraft extends Theme
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag fork',
 			'license'     => 'Creative Commons CC BY-NC-SA 4.0',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'version'     => '1.0.0',
 			'depends' => [
 				'neofrag' => '0.2.1'
 			],
-			'zones'       => ['Header', 'Avant-contenu', 'Contenu', 'Post-contenu', 'Footer']
+			'zones'       => ['Header', 'Avant-contenu', 'Contenu', 'Post-contenu', 'Footer'],
+			'regions'     => [
+				'header'         => 'Header',
+				'before_content' => 'Avant-contenu',
+				'content'        => 'Contenu',
+				'after_content'  => 'Post-contenu',
+				'footer'         => 'Footer',
+			]
 		];
 	}
 
@@ -33,6 +44,10 @@ class Blockcraft extends Theme
 		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
 				->css('style')
+				// APRES la feuille du theme, et jamais avant : elle retablit ce que le theme
+				// ecrase sans le vouloir — cadre des boutons « contour », coins des cartes.
+				// Voir css/nf-apres-theme.css.
+				->css('nf-apres-theme')
 				->js('bootstrap.bundle.min')
 				->js('modal')
 				->js('notify')

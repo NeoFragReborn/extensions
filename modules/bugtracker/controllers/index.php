@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Modules\Bugtracker\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 use NF\Modules\Bugtracker\Bugtracker;
@@ -15,7 +16,7 @@ class Index extends Controller_Module
 			$body .= '<a class="btn btn-primary mb-3" href="'.url('bugtracker/new').'"><i class="fas fa-plus"></i> '.$this->lang('Nouveau ticket').'</a>';
 		}
 
-		$body .= '<table class="table table-sm"><thead><tr><th>#</th><th>'.$this->lang('Titre').'</th><th>'.$this->lang('Type').'</th><th>'.$this->lang('Priorité').'</th><th>'.$this->lang('Statut').'</th><th>'.$this->lang('Auteur').'</th><th>'.$this->lang('Date').'</th></tr></thead><tbody>';
+		$body .= '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>#</th><th>'.$this->lang('Titre').'</th><th>'.$this->lang('Type').'</th><th>'.$this->lang('Priorité').'</th><th>'.$this->lang('Statut').'</th><th>'.$this->lang('Auteur').'</th><th>'.$this->lang('Date').'</th></tr></thead><tbody>';
 		if (empty($tickets))
 		{
 			$body .= '<tr><td colspan="7" class="text-center text-muted">'.$this->lang('Aucun ticket').'</td></tr>';
@@ -26,7 +27,7 @@ class Index extends Controller_Module
 			{
 				$body .= '<tr>'
 					.'<td>#'.(int)$t['id'].'</td>'
-					.'<td><a href="'.url('bugtracker/'.$t['id'].'/'.url_title($t['title'])).'">'.htmlspecialchars($t['title']).'</a></td>'
+					.'<td><a href="'.url('bugtracker/'.$t['id'].'/'.url_title($t['title'])).'">'.htmlspecialchars((string) ($t['title'])).'</a></td>'
 					.'<td>'.Bugtracker::type_label($t['type']).'</td>'
 					.'<td>'.Bugtracker::priority_label($t['priority']).'</td>'
 					.'<td>'.Bugtracker::status_label($t['status']).'</td>'
@@ -35,7 +36,7 @@ class Index extends Controller_Module
 					.'</tr>';
 			}
 		}
-		$body .= '</tbody></table>';
+		$body .= '</tbody></table></div>';
 
 		return $this->panel()->title($this->lang('Tickets'), 'fas fa-bug')->body($body);
 	}
@@ -52,7 +53,7 @@ class Index extends Controller_Module
 				'description' => ['label' => $this->lang('Description détaillée'), 'type' => 'textarea', 'rules' => 'required',
 				                   'description' => $this->lang('Décris le problème, les étapes pour reproduire, le comportement attendu vs observé.')]
 			 ])
-			 ->add_submit($this->lang('Créer le ticket'));
+			 ->add_submit($this->lang('Créer le ticket'), 'fas fa-plus');
 
 		if ($this->form()->is_valid($post))
 		{
@@ -92,7 +93,7 @@ class Index extends Controller_Module
 			$body .= ' — '.$this->lang('Assigné à %s', $this->user->link($ticket['assignee_id'], $ticket['assignee']));
 		}
 		$body .= '</div>';
-		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(htmlspecialchars($ticket['description'])).'</div></div>';
+		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(htmlspecialchars((string) ($ticket['description']))).'</div></div>';
 		$body .= '</div>';
 
 		// Comments
@@ -108,7 +109,7 @@ class Index extends Controller_Module
 				$author = $c['user_id'] ? $this->user->link($c['user_id'], $c['username']) : '<i>'.$this->lang('Anonyme').'</i>';
 				$body .= '<div class="card mb-2"><div class="card-body py-2">';
 				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.date('Y-m-d H:i', $c['ts']).'</small></div>';
-				$body .= '<div>'.nl2br(htmlspecialchars($c['content'])).'</div>';
+				$body .= '<div>'.nl2br(htmlspecialchars((string) ($c['content']))).'</div>';
 				$body .= '</div></div>';
 			}
 		}
@@ -117,7 +118,7 @@ class Index extends Controller_Module
 		if ($this->user())
 		{
 			$body .= '<form method="post" action="'.url('bugtracker/'.$ticket['id'].'/'.url_title($ticket['title']).'/comment').'" class="mt-3">';
-			$body .= '<div class="form-group"><label>'.$this->lang('Ajouter un commentaire').'</label>';
+			$body .= '<div class="nf-field"><label>'.$this->lang('Ajouter un commentaire').'</label>';
 			$body .= '<textarea name="content" class="form-control" rows="3" required></textarea></div>';
 			$body .= '<button type="submit" class="btn btn-primary"><i class="fas fa-comment"></i> '.$this->lang('Commenter').'</button>';
 			$body .= '</form>';

@@ -45,7 +45,9 @@ $text_is_custom   = ($text_color !== $text_default);
 	--bc-accent-strong:  color-mix(in srgb, <?php echo $accent ?> 82%, #000 18%);
 	--bc-accent-soft:    color-mix(in srgb, <?php echo $accent ?> 14%, transparent);
 	--bc-accent-text:    color-mix(in srgb, <?php echo $accent ?> 68%, #000 32%);
-	--bc-on-accent:      #14181d;
+	/* Calcule, et non fige : l'accent est reglable par l'administrateur, et du blanc sur un
+	   accent clair devient illisible (1,75:1 sur le turquoise par defaut). */
+	--bc-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
 
 	--bc-link:           var(--bc-accent-text);
 	--bc-link-hover:     color-mix(in srgb, <?php echo $accent ?> 55%, #000 45%);
@@ -61,7 +63,7 @@ $text_is_custom   = ($text_color !== $text_default);
 
 	/* Texte */
 	--bc-text-strong:    #1c1a16;
-	--bc-muted:          #6f7468;
+	--bc-muted:          #6b6f64;
 	--bc-muted-2:        #9aa091;
 
 	/* Sémantiques — jour (foncés pour contraste sur clair) */
@@ -85,7 +87,13 @@ $text_is_custom   = ($text_color !== $text_default);
 	--bc-radius-xs:      2px;
 
 	/* Typographie */
-	--bc-font:           "Inter", "Segoe UI", system-ui, sans-serif;
+	/* Police : déclarée dans le vocabulaire partagé `--nf-*` pour qu'un réglage d'administration
+	   puisse la surcharger sans toucher au thème. Les jetons propres au thème pointent
+	   dessus : changer `--nf-font` change toute la typographie, y compris les titres si le thème
+	   n'en distingue pas. `--nf-font-mono` reste fixe : du code se lit en chasse fixe, toujours. */
+	--nf-font:           "Inter", "Segoe UI", system-ui, sans-serif;
+	--nf-font-display:   "Inter", "Segoe UI", system-ui, sans-serif;
+	--bc-font:           var(--nf-font);
 	--bc-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
 	/* Dégradé de bannière par défaut — herbe → terre */
@@ -112,6 +120,12 @@ $text_is_custom   = ($text_color !== $text_default);
 	--nf-muted:         var(--bc-muted);
 	--nf-hover:         var(--bc-surface-2);
 	--nf-danger:        var(--bc-danger);
+	/* Alias du vocabulaire partagé : les feuilles des MODULES sont écrites pour n'importe quel
+	   thème. Sans eux, `var(--nf-danger-soft, …)` retombait sur son repli — c'est ce qui posait
+	   des blocs blancs en thème sombre ailleurs dans le produit. Contrôlé par
+	   tools/check-css-variables.php. */
+	--nf-danger-soft:   color-mix(in srgb, var(--bc-danger) 18%, transparent);
+	--nf-muted-2:       var(--bc-muted);
 	--nf-success:       var(--bc-success);
 	--nf-warning:       var(--bc-warning);
 	--nf-info:          var(--bc-info);
@@ -132,7 +146,7 @@ $text_is_custom   = ($text_color !== $text_default);
 	--bc-border:         rgba(255, 255, 255, 0.08);
 	--bc-border-strong:  rgba(255, 255, 255, 0.16);
 	--bc-text-strong:    #f1f5f0;
-	--bc-muted:          #8a9486;
+	--bc-muted:          #8e978a;
 	--bc-muted-2:        #5d6657;
 
 	--bc-success:        #34d058;
@@ -158,6 +172,12 @@ $text_is_custom   = ($text_color !== $text_default);
 	<?php endif ?>
 	<?php if (!$accent_is_custom): ?>
 	--bc-accent:         #4caf6a;
+	/* La seconde palette emploie un AUTRE accent : `on-accent` doit donc etre recalcule ICI,
+	   sinon il garde la couleur choisie pour l'accent de la premiere. C'est ce qui mettait du
+	   blanc sur le turquoise clair de `granite` — 1,86:1, mesure sur la page servie — dans tout
+	   le panneau `panel-color` : en-tete, libelles, boutons. Le meme oubli existait dans les six
+	   themes. Constate le 2026-09-16 par tools/check-contraste.php. */
+	--bc-on-accent:      <?php echo couleur_lisible_sur('#4caf6a') ?>;
 	<?php endif ?>
 
 	/* Dérivés recalculés depuis l'accent courant — éclaircis pour fond sombre */
@@ -402,7 +422,10 @@ i.icon:only-child { margin: 0; }
 }
 @media (max-width: 767.98px) {
 	.navbar-user .navbar-text { display: none; }
-	.navbar-user .navbar-account .dropdown-toggle .ml-2 { display: none; }
+	/* Le libelle du compte : le pont (`css/nf-bs5-bridge.css`) l'efface sous 576 px en le
+	   laissant aux lecteurs d'ecran. La regle qui vivait ici visait `.ml-2`, nom de
+	   Bootstrap 4 que le markup n'emet plus depuis la migration : elle ne selectionnait
+	   plus rien. */
 }
 .navbar-user .navbar-account { display: flex !important; flex-wrap: nowrap; align-items: center; gap: 4px; margin: 0 0 0 auto; padding: 0; list-style: none; flex: 0 0 auto; }
 
@@ -525,6 +548,15 @@ i.icon:only-child { margin: 0; }
 .card.panel-color i, .card.panel-color .icon,
 .card.panel-color .text-muted,
 .card.panel-color .list-group-item { color: var(--bc-on-accent); }
+/* Les LIBELLES de formulaire manquaient a cette liste : ils gardaient
+   `--bc-text-strong`, la couleur prevue pour une surface normale, alors que le panneau est
+   peint avec l'accent. « Se souvenir de moi » tombait ainsi entre 1,72:1 et 3,61:1 selon le
+   theme — mesure par tools/check-contraste.php le 2026-09-16. */
+.card.panel-color label,
+.card.panel-color .form-label,
+.card.panel-color .col-form-label,
+.card.panel-color .form-check,
+.card.panel-color .form-check-label { color: var(--bc-on-accent); }
 .card.panel-color a:hover { opacity: 0.75; }
 .card.panel-color .list-group-item { background: transparent; border-color: color-mix(in srgb, var(--bc-on-accent) 15%, transparent); }
 .card.panel-color .badge { background: rgba(20, 24, 29, 0.82); color: #fff; border: 0; }
@@ -555,7 +587,10 @@ i.icon:only-child { margin: 0; }
 .row > [class*="col-"] > .widget,
 .row > .col > .widget { margin-bottom: 16px; }
 
-.row { margin-right: -15px; margin-left: -15px; }
+/* Les gouttieres de Bootstrap 5 valent 1,5 rem, soit -12 px de marge sur .row, compenses par les
+   12 px de padding de .container. Cette regle les remettait a -15 px — la valeur de Bootstrap 4,
+   ou la gouttiere valait 30 px. Les 3 px d'ecart depassaient donc de chaque cote : mesure a 390 px,
+   le document faisait 393 px et la page defilait lateralement. Bootstrap 5 s'en charge seul. */
 .row > [class*="col-"], .row > .col { padding-right: 15px; padding-left: 15px; }
 .card .row { margin-right: 0; margin-left: 0; }
 .card .row > [class*="col-"], .card .row > .col { padding-right: 8px; padding-left: 8px; }
@@ -607,8 +642,8 @@ i.icon:only-child { margin: 0; }
    §12 — Forms
    ======================================================================== */
 
-.form-control, .custom-select, textarea.form-control {
-	background:    var(--bc-surface-2);
+.form-control, .form-select, textarea.form-control {
+	background-color:    var(--bc-surface-2);
 	border:        1px solid var(--bc-border);
 	border-radius: var(--bc-radius-sm);
 	padding:       8px 12px;
@@ -618,10 +653,10 @@ i.icon:only-child { margin: 0; }
 }
 .form-control::placeholder { color: var(--bc-muted); }
 .form-control:focus, .form-control:focus-visible,
-.custom-select:focus {
+.form-select:focus {
 	outline: none;
 	border-color: var(--bc-accent);
-	background: var(--bc-surface);
+	background-color: var(--bc-surface);
 	color: var(--bc-text-strong);
 	box-shadow: 0 0 0 3px var(--bc-accent-soft);
 }
@@ -635,17 +670,13 @@ i.icon:only-child { margin: 0; }
 .form-text, .text-muted { color: var(--bc-muted); }
 
 .input-group-text { background: var(--bc-surface-2); border: 1px solid var(--bc-border); color: var(--bc-muted); }
-/* Soude l'addon (icône) au champ : ce build BS ne gère pas le radius des
-   input-group (cf. .widget-search plus bas), d'où le décrochage icône/texte. */
-.input-group > .input-group-prepend > .input-group-text { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }
-.input-group > .input-group-append  > .input-group-text { border-top-left-radius: 0;  border-bottom-left-radius: 0;  border-left: 0; }
-.input-group > .form-control:not(:first-child), .input-group > .custom-select:not(:first-child) { border-top-left-radius: 0;  border-bottom-left-radius: 0; }
-.input-group > .form-control:not(:last-child),  .input-group > .custom-select:not(:last-child)  { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.input-group > .form-control:not(:first-child) { border-top-left-radius: 0;  border-bottom-left-radius: 0; }
+.input-group > .form-control:not(:last-child)  { border-top-right-radius: 0; border-bottom-right-radius: 0; }
 /* BS4 fixe une height sur .form-control → empêche le stretch et le champ reste
    plus court que l'addon. height:auto le laisse s'étirer à la hauteur du groupe. */
-.input-group > .form-control, .input-group > .custom-select { height: auto; }
+.input-group > .form-control { height: auto; }
 
-.custom-control-input:checked ~ .custom-control-label::before { background: var(--bc-accent); border-color: var(--bc-accent); }
+.form-check-input:checked { background-color: var(--bc-accent); border-color: var(--bc-accent); }
 
 /* =========================================================================
    §13 — Nav tabs / pills
@@ -745,12 +776,6 @@ i.icon:only-child { margin: 0; }
    ======================================================================== */
 
 .badge { font-family: var(--bc-font); font-size: 11.5px; font-weight: 700; padding: 3px 7px; border-radius: 999px; display: inline-flex; align-items: center; vertical-align: middle; line-height: 1; }
-.badge-primary, .badge.badge-primary { background: var(--bc-accent); color: var(--bc-on-accent); }
-.badge-secondary { background: var(--bc-surface-2); color: var(--bc-text); border: 1px solid var(--bc-border); }
-.badge-success { background: var(--bc-success-soft); color: var(--bc-success); border: 1px solid color-mix(in srgb, var(--bc-success) 30%, transparent); }
-.badge-danger  { background: var(--bc-danger-soft);  color: var(--bc-danger);  border: 1px solid color-mix(in srgb, var(--bc-danger) 30%, transparent); }
-.badge-warning { background: var(--bc-warning-soft); color: var(--bc-warning); border: 1px solid color-mix(in srgb, var(--bc-warning) 30%, transparent); }
-.badge-info    { background: var(--bc-info-soft);    color: var(--bc-info);    border: 1px solid color-mix(in srgb, var(--bc-info) 30%, transparent); }
 
 /* =========================================================================
    §17 — Alerts
@@ -758,10 +783,10 @@ i.icon:only-child { margin: 0; }
 
 .alert { border-radius: var(--bc-radius-sm); border: 1px solid; font-size: 13.5px; padding: 12px 14px; }
 .alert i.icon:first-child, .alert i.fas:first-child { margin-right: 8px; font-size: 14px; vertical-align: middle; }
-.alert-success { background: var(--bc-success-soft); color: var(--bc-success); border-color: color-mix(in srgb, var(--bc-success) 30%, transparent); }
-.alert-danger  { background: var(--bc-danger-soft);  color: var(--bc-danger);  border-color: color-mix(in srgb, var(--bc-danger) 30%, transparent); }
-.alert-warning { background: var(--bc-warning-soft); color: var(--bc-warning); border-color: color-mix(in srgb, var(--bc-warning) 30%, transparent); }
-.alert-info    { background: var(--bc-info-soft);    color: var(--bc-info);    border-color: color-mix(in srgb, var(--bc-info) 30%, transparent); }
+.alert-success { background: var(--bc-success-soft); color: var(--bs-success-text-emphasis); border-color: color-mix(in srgb, var(--bc-success) 30%, transparent); }
+.alert-danger  { background: var(--bc-danger-soft);  color: var(--bs-danger-text-emphasis);  border-color: color-mix(in srgb, var(--bc-danger) 30%, transparent); }
+.alert-warning { background: var(--bc-warning-soft); color: var(--bs-warning-text-emphasis); border-color: color-mix(in srgb, var(--bc-warning) 30%, transparent); }
+.alert-info    { background: var(--bc-info-soft);    color: var(--bs-info-text-emphasis);    border-color: color-mix(in srgb, var(--bc-info) 30%, transparent); }
 
 /* =========================================================================
    §18 — Dropdowns / modals / pagination / breadcrumb
@@ -786,13 +811,11 @@ i.icon:only-child { margin: 0; }
 .modal-title { font-size: 15px; font-weight: 800; color: var(--bc-text-strong); line-height: 1.4; }
 .modal-body { padding: 18px; }
 .modal-footer { background: var(--bc-surface-2); border-top: 1px solid var(--bc-border); padding: 12px 18px; gap: 6px; }
-.modal-header .close, .modal-header button.close {
-	width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
-	font-size: 24px; padding: 0; margin: -8px -8px -8px auto;
-	border-radius: var(--bc-radius-xs); color: var(--bc-muted); background: transparent; border: 0;
-	transition: background-color 120ms ease, color 120ms ease;
+.modal-header .btn-close {
+	width: 36px; height: 36px; margin: -8px -8px -8px auto; border-radius: var(--bc-radius-xs);
+	transition: background-color 120ms ease;
 }
-.modal-header .close:hover { background: var(--bc-surface-2); color: var(--bc-text-strong); }
+.modal-header .btn-close:hover { background-color: var(--bc-surface-2); }
 
 .page-link { background: var(--bc-surface); border: 1px solid var(--bc-border); color: var(--bc-text); border-radius: var(--bc-radius-xs); margin: 0 2px; padding: 6px 12px; font-size: 13px; font-weight: 600; transition: background-color 140ms ease, color 140ms ease; }
 .page-link:hover { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
@@ -1016,10 +1039,10 @@ h1, h2, h3, h4 { letter-spacing: 0; }
 .border-danger    { border-color: color-mix(in srgb, var(--bc-danger) 45%, var(--bc-border)) !important; }
 .border-warning   { border-color: color-mix(in srgb, var(--bc-warning) 45%, var(--bc-border)) !important; }
 .text-primary { color: var(--bc-accent-text) !important; }
-.text-info    { color: var(--bc-info) !important; }
-.text-success { color: var(--bc-success) !important; }
-.text-danger  { color: var(--bc-danger) !important; }
-.text-warning { color: var(--bc-warning) !important; }
+.text-info    { color: var(--bs-info-text-emphasis) !important; }
+.text-success { color: var(--bs-success-text-emphasis) !important; }
+.text-danger  { color: var(--bs-danger-text-emphasis) !important; }
+.text-warning { color: var(--bs-warning-text-emphasis) !important; }
 .bg-info    { background-color: var(--bc-info) !important; }
 .bg-success { background-color: var(--bc-success) !important; }
 .bg-danger  { background-color: var(--bc-danger) !important; }
@@ -1070,8 +1093,8 @@ h1, h2, h3, h4 { letter-spacing: 0; }
 [data-theme="light"] .btn-warning { background: color-mix(in srgb, var(--bc-warning) 74%, #000); border-color: color-mix(in srgb, var(--bc-warning) 74%, #000); color: #fff; }
 .btn-info, .btn-success, .btn-danger { color: #fff; }
 .btn-info    { background: color-mix(in srgb, var(--bc-info) 80%, #000);    border-color: color-mix(in srgb, var(--bc-info) 80%, #000); }
-.btn-success { background: color-mix(in srgb, var(--bc-success) 74%, #000); border-color: color-mix(in srgb, var(--bc-success) 74%, #000); }
-.btn-danger  { background: color-mix(in srgb, var(--bc-danger) 80%, #000);  border-color: color-mix(in srgb, var(--bc-danger) 80%, #000); }
+.btn-success { background: color-mix(in srgb, var(--bc-success) 60%, #000); border-color: color-mix(in srgb, var(--bc-success) 60%, #000); }
+.btn-danger  { background: color-mix(in srgb, var(--bc-danger) 72%, #000);  border-color: color-mix(in srgb, var(--bc-danger) 72%, #000); }
 
 /* Navbar : recentrage vertical de l'icône de marque (tachymètre admin) qui dépassait. */
 .navbar-user .navbar-brand { display: inline-flex; align-items: center; }

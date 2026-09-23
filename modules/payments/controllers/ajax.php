@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Paiements — création de la session Stripe Checkout (AJAX) : /payments/ajax/checkout/{id}.

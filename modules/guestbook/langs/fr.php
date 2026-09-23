@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module guestbook (fr)
@@ -42,5 +43,7 @@ return [
 	'a3f47afc' => 'Appliquer',
 	'33da0436' => 'Appliquer l\'action aux messages sélectionnés ?',
 	'bfd1e0de' => '%d message supprimé.|%d messages supprimés.',
-	'a20de5a0' => '%d message mis à jour.|%d messages mis à jour.'
+	'a20de5a0' => '%d message mis à jour.|%d messages mis à jour.',
+	'24f787c4' => 'Livre d\'or avec modération admin et rate-limit anti-spam.',
+	'7bc610bc' => 'Modérer les messages',
 ];

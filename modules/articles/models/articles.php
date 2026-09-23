@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  */
@@ -27,6 +28,16 @@ class Articles extends Model
 
 	public function get_articles($filter = '', $filter_data = '')
 	{
+		/*
+		 * La langue d'une LISTE est celle qu'on demande — sauf pour la page d'une catégorie, qui
+		 * est une page de contenu comme une autre. Si la catégorie n'existe que dans une langue,
+		 * la lister dans une autre rendait une liste vide, donc un 404 pour le visiteur. On sert
+		 * alors la langue de la catégorie, et la page le dit.
+		 */
+		$lang = $filter == 'category' && !empty($filter_data)
+			? $this->langue_du_contenu('nf_articles_categories_lang', 'category_id', $filter_data)
+			: $this->config->lang->info()->name;
+
 		$this->db	->select('a.*', 'al.title', 'al.excerpt', 'al.content', 'al.tags',
 							'IFNULL(a.image_id, c.image_id) as image',
 							'c.icon_id as category_icon', 'c.name as category_name', 'cl.title as category_title',
@@ -37,8 +48,8 @@ class Articles extends Model
 					->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
 					->join('nf_user u',                      'a.user_id     = u.id AND u.deleted = "0"')
 					->join('nf_user_profile up',             'up.id         = u.id')
-					->where('al.lang', $this->config->lang->info()->name)
-					->where('cl.lang', $this->config->lang->info()->name)
+					->where('al.lang', $lang)
+					->where('cl.lang', $lang)
 					->where('a.deleted_at', NULL)
 					->order_by('a.date DESC');
 
@@ -65,6 +76,12 @@ class Articles extends Model
 
 	public function get_article($article_id)
 	{
+		// Résolu AVANT la requête : `$this->db` est un constructeur partagé, et l'interroger au
+		// milieu d'une chaîne écrase celle qu'on est en train de bâtir.
+		// La catégorie suit la langue de l'article : elles sont saisies ensemble, et un article
+		// servi en repli doit porter le libellé de catégorie de SA version.
+		$lang = $this->langue_du_contenu('nf_articles_lang', 'article_id', $article_id);
+
 		$article = $this->db	->select('a.*', 'al.title', 'al.excerpt', 'al.content', 'al.tags',
 										'IFNULL(a.image_id, c.image_id) as image',
 										'c.icon_id as category_icon', 'c.name as category_name', 'cl.title as category_title',
@@ -76,8 +93,8 @@ class Articles extends Model
 								->join('nf_user u',                      'a.user_id     = u.id AND u.deleted = "0"')
 								->join('nf_user_profile up',             'up.id         = u.id')
 								->where('a.article_id', $article_id)
-								->where('al.lang', $this->config->lang->info()->name)
-								->where('cl.lang', $this->config->lang->info()->name)
+								->where('al.lang', $lang)
+								->where('cl.lang', $lang)
 								->where('a.deleted_at', NULL)
 								->row();
 

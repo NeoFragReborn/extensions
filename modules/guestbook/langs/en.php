@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module guestbook (en)
@@ -44,4 +45,5 @@ return [
 	'33da0436' => 'Apply the action to the selected messages?',
 	'bfd1e0de' => '%d message deleted.|%d messages deleted.',
 	'a20de5a0' => '%d message updated.|%d messages updated.',
+	'7bc610bc' => 'Moderate messages',
 ];

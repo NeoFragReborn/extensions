@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace NF\Widgets\Articles\Controllers;
 use NF\NeoFrag\Loadables\Controllers\Widget as Controller_Widget;
 
@@ -28,7 +29,7 @@ class Index extends Controller_Widget
 			foreach ($articles as $a)
 			{
 				$body .= '<li class="py-1 border-bottom">';
-				$body .= '<a href="'.url('articles/'.$a['article_id'].'/'.url_title($a['title'])).'"><i class="far fa-file-alt me-1"></i>'.htmlspecialchars($a['title']).'</a>';
+				$body .= '<a href="'.url('articles/'.$a['article_id'].'/'.url_title($a['title'])).'"><i class="far fa-file-alt me-1"></i>'.htmlspecialchars((string) ($a['title'])).'</a>';
 				$body .= '<br><small class="text-muted">'.timetostr('j M Y', $a['ts']).'</small>';
 				$body .= '</li>';
 			}

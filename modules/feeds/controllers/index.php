@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Flux RSS — page d'index + flux news/articles (RSS 2.0).

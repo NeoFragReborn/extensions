@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
 	'c69f6198' => 'Ad management',
@@ -21,4 +22,12 @@ return [
 	'0944c42d' => 'Start (optional)',
 	'eae6f46e' => 'End (optional)',
 	'e060760c' => 'Ad deleted',
+	'32eeee39' => 'Announcements',
+	'c932b0c8' => 'No ad.',
+	'4cb2f934' => 'Active',
+	'4653ea21' => 'Placement',
+	'e2c8f589' => 'Status',
+	'ca1ec941' => 'Image URL',
+	'e1748a2d' => 'HTML code',
+	'8fd9c7ef' => 'Save',
 ];

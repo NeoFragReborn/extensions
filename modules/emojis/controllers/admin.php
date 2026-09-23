@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  */
@@ -25,8 +26,8 @@ class Admin extends Controller_Module
 				$url   = NeoFrag()->model2('file', $e['image_id'])->path();
 				$body .= '<tr>'
 					.'<td>'.($url ? '<img src="'.$url.'" alt="" style="height:24px;width:auto;">' : '').'</td>'
-					.'<td><code>:'.htmlspecialchars($e['name']).':</code></td>'
-					.'<td class="text-end"><a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/emojis/delete/'.$e['id'].'/'.url_title($e['name'])).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cet emoji ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a></td>'
+					.'<td><code>:'.htmlspecialchars((string) ($e['name'])).':</code></td>'
+					.'<td class="text-end"><a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/emojis/delete/'.$e['id'].'/'.url_title($e['name'])).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet emoji ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a></td>'
 					.'</tr>';
 			}
 			$body .= '</tbody></table>';
@@ -62,7 +63,7 @@ class Admin extends Controller_Module
 					}
 				]
 			 ])
-			 ->add_submit($this->lang('Créer'));
+			 ->add_submit($this->lang('Créer'), 'fas fa-plus');
 
 		if ($this->form()->is_valid($post))
 		{
@@ -91,7 +92,7 @@ class Admin extends Controller_Module
 			redirect('admin/emojis');
 		}
 
-		return $this->admin_back('admin/emojis', $this->lang('Emojis')).$this->admin_card('fas fa-plus', $this->lang('Nouvel emoji'), $this->form()->display());
+		return $this->admin_card('fas fa-plus', $this->lang('Nouvel emoji'), $this->form()->display());
 	}
 
 	public function _delete($e)

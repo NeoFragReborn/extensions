@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Widget Publicité — affiche une annonce de la régie pour un emplacement donné.
@@ -16,9 +17,14 @@ class Ads extends Widget
 		return [
 			'title'       => $this->lang('Publicité'),
 			'description' => $this->lang('Affiche une annonce de la régie pour un emplacement (masquée pour les membres sans-pub / VIP).'),
+			'icon'        => 'fas fa-rectangle-ad',
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'version'     => '1.0',
 			'depends'     => ['neofrag' => '1.0.0']
 		];

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Flux — génère des flux RSS 2.0 du contenu (news, articles).
@@ -22,6 +23,10 @@ class Feeds extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => ['news', 'articles'],
 			'version'     => '1.0',
 			'depends'     => ['neofrag' => '1.0.0'],
 			'routes'      => [

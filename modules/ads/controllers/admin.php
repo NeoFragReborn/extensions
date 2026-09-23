@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Régie publicitaire — administration des annonces (CRUD).
@@ -26,14 +27,14 @@ class Admin extends Controller_Module
 		foreach ($ads as $a)
 		{
 			$rows .= '<tr>'
-				.'<td>'.htmlspecialchars($a['title']).'</td>'
-				.'<td><code>'.htmlspecialchars($a['placement']).'</code></td>'
-				.'<td>'.htmlspecialchars($a['format']).'</td>'
+				.'<td>'.htmlspecialchars((string) ($a['title'])).'</td>'
+				.'<td><code>'.htmlspecialchars((string) ($a['placement'])).'</code></td>'
+				.'<td>'.htmlspecialchars((string) ($a['format'])).'</td>'
 				.'<td class="text-center">'.(!empty($a['active']) ? '<span class="badge text-bg-success">'.$this->lang('Active').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactive').'</span>').'</td>'
 				.'<td class="text-end">'.(int)$a['impressions'].' / '.(int)$a['clicks'].'</td>'
 				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/ads/edit/'.(int)$a['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/ads/delete/'.(int)$a['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer cette annonce ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/ads/delete/'.(int)$a['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette annonce ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}
@@ -113,7 +114,7 @@ class Admin extends Controller_Module
 			redirect('admin/ads');
 		}
 
-		return $this->admin_back('admin/ads', $this->lang('Régie publicitaire')).$this->admin_card('fas fa-rectangle-ad', $id ? $this->lang('Modifier l\'annonce') : $this->lang('Nouvelle annonce'), $form->display());
+		return $this->admin_card('fas fa-rectangle-ad', $id ? $this->lang('Modifier l\'annonce') : $this->lang('Nouvelle annonce'), $form->display());
 	}
 
 	public function _delete($id)

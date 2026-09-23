@@ -76,4 +76,5 @@ return [
 	'abe737fd' => 'Réseaux sociaux',
 	'c77f6c43' => 'Propulsé par',
 	'6da7fc68' => 'Thème gaming épuré « roche & sommet », accent teal sur ardoise. Mode jour et mode nuit, titres condensés, entièrement personnalisable.',
+	'4f376417' => 'Retour en haut',
 ];

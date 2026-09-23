@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Module Boutique — catalogue + achats. Découplé de gamification : paiement
@@ -12,14 +13,12 @@ use NF\NeoFrag\Addons\Module;
 
 class Shop extends Module
 {
-	/* type d'item => libellé admin */
-	const TYPES = [
-		'group'    => 'Grade (groupe affiché sur le profil)',
-		'cosmetic' => 'Cosmétique',
-		'perk'     => 'Avantage (perk)',
-		'vip'      => 'VIP (payload = jours)',
-		'merch'    => 'Produit physique (merch)',
-	];
+	/*
+	 * Les types d'item : des clés techniques, sans libellé. Une constante ne peut pas appeler lang() ;
+	 * elle portait le libellé français, que l'administration retraduisait par un appel DYNAMIQUE
+	 * qu'aucun contrôle ne suivait. Pour AFFICHER un type : type_labels(), ci-dessous.
+	 */
+	const TYPES = ['group', 'cosmetic', 'perk', 'vip', 'merch'];
 
 	protected function __info()
 	{
@@ -30,6 +29,10 @@ class Shop extends Module
 			'link'        => 'https://neofr.ag',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
+			'core'        => FALSE,
+			'presets'     => [],
+			'requires'    => [],
 			'version'     => '1.0',
 			'admin'       => TRUE,
 			'depends'     => ['neofrag' => '1.0.0'],
@@ -41,6 +44,18 @@ class Shop extends Module
 				'admin/edit/{id}'   => '_edit',
 				'admin/delete/{id}' => '_delete',
 			]
+		];
+	}
+
+	/** Les libellés TRADUITS des types d'item, par clé de TYPES. */
+	public function type_labels()
+	{
+		return [
+			'group'    => $this->lang('Grade (groupe affiché sur le profil)'),
+			'cosmetic' => $this->lang('Cosmétique'),
+			'perk'     => $this->lang('Avantage (perk)'),
+			'vip'      => $this->lang('VIP (payload = jours)'),
+			'merch'    => $this->lang('Produit physique (merch)'),
 		];
 	}
 

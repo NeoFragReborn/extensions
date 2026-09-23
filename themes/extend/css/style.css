@@ -41,7 +41,9 @@ $text_is_custom   = ($text_color !== $text_default);
 	--ex-accent-strong:  color-mix(in srgb, <?php echo $accent ?> 80%, #fff 20%);
 	--ex-accent-soft:    color-mix(in srgb, <?php echo $accent ?> 18%, transparent);
 	--ex-accent-text:    color-mix(in srgb, <?php echo $accent ?> 72%, #fff 28%);
-	--ex-on-accent:      #ffffff;
+	/* Calcule, et non fige : l'accent est reglable par l'administrateur, et du blanc sur un
+	   accent clair devient illisible (1,75:1 sur le turquoise par defaut). */
+	--ex-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
 
 	--ex-link:           var(--ex-accent-text);
 	--ex-link-hover:     color-mix(in srgb, <?php echo $accent ?> 60%, #fff 40%);
@@ -79,8 +81,14 @@ $text_is_custom   = ($text_color !== $text_default);
 	--ex-radius-sm:      3px;
 	--ex-radius-xs:      2px;
 
-	--ex-font:           "Open Sans", "Segoe UI", system-ui, sans-serif;
-	--ex-font-display:   "Economica", "Oswald", "Open Sans", "Segoe UI", sans-serif;
+	/* Police : déclarée dans le vocabulaire partagé `--nf-*` pour qu'un réglage d'administration
+	   puisse la surcharger sans toucher au thème. Les jetons propres au thème pointent
+	   dessus : changer `--nf-font` change toute la typographie, y compris les titres si le thème
+	   n'en distingue pas. `--nf-font-mono` reste fixe : du code se lit en chasse fixe, toujours. */
+	--nf-font:           "Open Sans", "Segoe UI", system-ui, sans-serif;
+	--nf-font-display:   "Economica", "Oswald", "Open Sans", "Segoe UI", sans-serif;
+	--ex-font:           var(--nf-font);
+	--ex-font-display:   var(--nf-font-display);
 	--ex-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
 	--ex-banner-gradient: linear-gradient(135deg, #2f86d4 0%, #236daf 48%, #0e151a 100%);
@@ -106,6 +114,12 @@ $text_is_custom   = ($text_color !== $text_default);
 	--nf-muted:         var(--ex-muted);
 	--nf-hover:         var(--ex-surface-2);
 	--nf-danger:        var(--ex-danger);
+	/* Alias du vocabulaire partagé : les feuilles des MODULES sont écrites pour n'importe quel
+	   thème. Sans eux, `var(--nf-danger-soft, …)` retombait sur son repli — c'est ce qui posait
+	   des blocs blancs en thème sombre ailleurs dans le produit. Contrôlé par
+	   tools/check-css-variables.php. */
+	--nf-danger-soft:   color-mix(in srgb, var(--ex-danger) 18%, transparent);
+	--nf-muted-2:       var(--ex-muted);
 	--nf-success:       var(--ex-success);
 	--nf-warning:       var(--ex-warning);
 	--nf-info:          var(--ex-info);
@@ -124,9 +138,9 @@ $text_is_custom   = ($text_color !== $text_default);
 	--ex-border:         #d6dee6;
 	--ex-border-strong:  #b9c6d2;
 	--ex-text-strong:    #14202b;
-	--ex-muted:          #61727f;
+	--ex-muted:          #5e6f7b;
 	--ex-muted-2:        #93a4b1;
-	--ex-on-accent:      #ffffff;
+	--ex-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
 
 	--ex-success:        #1f9d57;
 	--ex-success-soft:   #e2f6ea;
@@ -151,6 +165,12 @@ $text_is_custom   = ($text_color !== $text_default);
 	<?php endif ?>
 	<?php if (!$accent_is_custom): ?>
 	--ex-accent:         #1d5d97;
+	/* La seconde palette emploie un AUTRE accent : `on-accent` doit donc etre recalcule ICI,
+	   sinon il garde la couleur choisie pour l'accent de la premiere. C'est ce qui mettait du
+	   blanc sur le turquoise clair de `granite` — 1,86:1, mesure sur la page servie — dans tout
+	   le panneau `panel-color` : en-tete, libelles, boutons. Le meme oubli existait dans les six
+	   themes. Constate le 2026-09-16 par tools/check-contraste.php. */
+	--ex-on-accent:      <?php echo couleur_lisible_sur('#1d5d97') ?>;
 	<?php endif ?>
 
 	/* Dérivés recalculés depuis l'accent courant — assombris pour fond clair */
@@ -412,11 +432,24 @@ i.icon:only-child { margin: 0; }
 .card.panel-color i, .card.panel-color .icon,
 .card.panel-color .text-muted,
 .card.panel-color .list-group-item { color: var(--ex-on-accent); }
+/* Les LIBELLES de formulaire manquaient a cette liste : ils gardaient
+   `--ex-text-strong`, la couleur prevue pour une surface normale, alors que le panneau est
+   peint avec l'accent. « Se souvenir de moi » tombait ainsi entre 1,72:1 et 3,61:1 selon le
+   theme — mesure par tools/check-contraste.php le 2026-09-16. */
+.card.panel-color label,
+.card.panel-color .form-label,
+.card.panel-color .col-form-label,
+.card.panel-color .form-check,
+.card.panel-color .form-check-label { color: var(--ex-on-accent); }
 .card.panel-color a:hover { opacity: 0.8; }
 .card.panel-color .list-group-item { background: transparent; border-color: color-mix(in srgb, #fff 18%, transparent); }
 .card.panel-color .badge { background: rgba(255, 255, 255, 0.9); color: var(--ex-accent); border: 0; }
-.card.panel-color .btn-primary { background: #fff; border-color: #fff; color: var(--ex-accent); }
-.card.panel-color .btn-primary:hover { background: #f3f3f3; border-color: #f3f3f3; }
+/* Fond = `on-accent`, texte = accent — comme blockcraft et granite. Ecrire `#fff` en dur
+   donnait l'accent sur du blanc : 1,86:1 sur le turquoise de nebula, 3,88:1 sur la lave de
+   forge. Le jeton, lui, est calcule pour rester lisible quel que soit l'accent choisi par
+   l'administrateur. Mesure : tools/check-contraste.php, 2026-09-16. */
+.card.panel-color .btn-primary { background: var(--ex-on-accent); border-color: var(--ex-on-accent); color: var(--ex-accent); }
+.card.panel-color .btn-primary:hover { filter: brightness(0.92); }
 
 /* =========================================================================
    §10 — Rows + gutters
@@ -427,7 +460,10 @@ i.icon:only-child { margin: 0; }
 .ex-header-banner .row-dark > [class*="col-"] { padding-left: 0; padding-right: 0; }
 .row.row-space { margin-top: 24px; }
 .row > [class*="col-"] > .card, .row > .col > .card, .row > [class*="col-"] > .widget, .row > .col > .widget { margin-bottom: 16px; }
-.row { margin-right: -15px; margin-left: -15px; }
+/* Les gouttieres de Bootstrap 5 valent 1,5 rem, soit -12 px de marge sur .row, compenses par les
+   12 px de padding de .container. Cette regle les remettait a -15 px — la valeur de Bootstrap 4,
+   ou la gouttiere valait 30 px. Les 3 px d'ecart depassaient donc de chaque cote : mesure a 390 px,
+   le document faisait 393 px et la page defilait lateralement. Bootstrap 5 s'en charge seul. */
 .row > [class*="col-"], .row > .col { padding-right: 15px; padding-left: 15px; }
 .card .row { margin-right: 0; margin-left: 0; }
 .card .row > [class*="col-"], .card .row > .col { padding-right: 8px; padding-left: 8px; }
@@ -469,15 +505,15 @@ i.icon:only-child { margin: 0; }
    §12 — Forms
    ======================================================================== */
 
-.form-control, .custom-select, textarea.form-control {
-	background: var(--ex-surface-2); border: 1px solid var(--ex-border);
+.form-control, .form-select, textarea.form-control {
+	background-color: var(--ex-surface-2); border: 1px solid var(--ex-border);
 	border-radius: var(--ex-radius-sm); padding: 8px 12px; font-size: 14px;
 	color: var(--ex-text);
 	transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
 }
 .form-control::placeholder { color: var(--ex-muted); }
-.form-control:focus, .form-control:focus-visible, .custom-select:focus {
-	outline: none; border-color: var(--ex-accent); background: var(--ex-surface);
+.form-control:focus, .form-control:focus-visible, .form-select:focus {
+	outline: none; border-color: var(--ex-accent); background-color: var(--ex-surface);
 	color: var(--ex-text-strong); box-shadow: 0 0 0 3px var(--ex-accent-soft);
 }
 .form-control.is-valid { border-color: var(--ex-success); }
@@ -488,12 +524,10 @@ i.icon:only-child { margin: 0; }
 .col-form-label, .form-label, label { color: var(--ex-text-strong); font-size: 14px; font-weight: 600; }
 .form-text, .text-muted { color: var(--ex-muted); }
 .input-group-text { background: var(--ex-surface-2); border: 1px solid var(--ex-border); color: var(--ex-muted); }
-.input-group > .input-group-prepend > .input-group-text { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }
-.input-group > .input-group-append  > .input-group-text { border-top-left-radius: 0;  border-bottom-left-radius: 0;  border-left: 0; }
-.input-group > .form-control:not(:first-child), .input-group > .custom-select:not(:first-child) { border-top-left-radius: 0;  border-bottom-left-radius: 0; }
-.input-group > .form-control:not(:last-child),  .input-group > .custom-select:not(:last-child)  { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-.input-group > .form-control, .input-group > .custom-select { height: auto; }
-.custom-control-input:checked ~ .custom-control-label::before { background: var(--ex-accent); border-color: var(--ex-accent); }
+.input-group > .form-control:not(:first-child) { border-top-left-radius: 0;  border-bottom-left-radius: 0; }
+.input-group > .form-control:not(:last-child)  { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.input-group > .form-control { height: auto; }
+.form-check-input:checked { background-color: var(--ex-accent); border-color: var(--ex-accent); }
 
 /* =========================================================================
    §13 — Nav tabs / pills
@@ -565,12 +599,6 @@ i.icon:only-child { margin: 0; }
    ======================================================================== */
 
 .badge { font-family: var(--ex-font); font-size: 11.5px; font-weight: 700; padding: 3px 7px; border-radius: 999px; display: inline-flex; align-items: center; vertical-align: middle; line-height: 1; }
-.badge-primary, .badge.badge-primary { background: var(--ex-accent); color: var(--ex-on-accent); }
-.badge-secondary { background: var(--ex-surface-2); color: var(--ex-text); border: 1px solid var(--ex-border); }
-.badge-success { background: var(--ex-success-soft); color: var(--ex-success); border: 1px solid color-mix(in srgb, var(--ex-success) 30%, transparent); }
-.badge-danger  { background: var(--ex-danger-soft);  color: var(--ex-danger);  border: 1px solid color-mix(in srgb, var(--ex-danger) 30%, transparent); }
-.badge-warning { background: var(--ex-warning-soft); color: var(--ex-warning); border: 1px solid color-mix(in srgb, var(--ex-warning) 30%, transparent); }
-.badge-info    { background: var(--ex-info-soft);    color: var(--ex-info);    border: 1px solid color-mix(in srgb, var(--ex-info) 30%, transparent); }
 
 /* =========================================================================
    §17 — Alerts
@@ -578,10 +606,10 @@ i.icon:only-child { margin: 0; }
 
 .alert { border-radius: var(--ex-radius-sm); border: 1px solid; font-size: 14px; padding: 12px 14px; }
 .alert i.icon:first-child, .alert i.fas:first-child { margin-right: 8px; font-size: 14px; vertical-align: middle; }
-.alert-success { background: var(--ex-success-soft); color: var(--ex-success); border-color: color-mix(in srgb, var(--ex-success) 30%, transparent); }
-.alert-danger  { background: var(--ex-danger-soft);  color: var(--ex-danger);  border-color: color-mix(in srgb, var(--ex-danger) 30%, transparent); }
-.alert-warning { background: var(--ex-warning-soft); color: var(--ex-warning); border-color: color-mix(in srgb, var(--ex-warning) 30%, transparent); }
-.alert-info    { background: var(--ex-info-soft);    color: var(--ex-info);    border-color: color-mix(in srgb, var(--ex-info) 30%, transparent); }
+.alert-success { background: var(--ex-success-soft); color: var(--bs-success-text-emphasis); border-color: color-mix(in srgb, var(--ex-success) 30%, transparent); }
+.alert-danger  { background: var(--ex-danger-soft);  color: var(--bs-danger-text-emphasis);  border-color: color-mix(in srgb, var(--ex-danger) 30%, transparent); }
+.alert-warning { background: var(--ex-warning-soft); color: var(--bs-warning-text-emphasis); border-color: color-mix(in srgb, var(--ex-warning) 30%, transparent); }
+.alert-info    { background: var(--ex-info-soft);    color: var(--bs-info-text-emphasis);    border-color: color-mix(in srgb, var(--ex-info) 30%, transparent); }
 
 /* =========================================================================
    §18 — Dropdowns / modals / pagination / breadcrumb
@@ -598,12 +626,11 @@ i.icon:only-child { margin: 0; }
 .modal-title { font-size: 21px; font-weight: 700; color: var(--ex-text-strong); line-height: 1.25; font-family: var(--ex-font-display); letter-spacing: 0.01em; }
 .modal-body { padding: 18px; }
 .modal-footer { background: var(--ex-surface-2); border-top: 1px solid var(--ex-border); padding: 12px 18px; gap: 6px; }
-.modal-header .close, .modal-header button.close {
-	width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
-	font-size: 24px; padding: 0; margin: -8px -8px -8px auto; border-radius: var(--ex-radius-xs);
-	color: var(--ex-muted); background: transparent; border: 0; transition: background-color 120ms ease, color 120ms ease;
+.modal-header .btn-close {
+	width: 36px; height: 36px; margin: -8px -8px -8px auto; border-radius: var(--ex-radius-xs);
+	transition: background-color 120ms ease;
 }
-.modal-header .close:hover { background: var(--ex-surface-2); color: var(--ex-text-strong); }
+.modal-header .btn-close:hover { background-color: var(--ex-surface-2); }
 
 .page-link { background: var(--ex-surface); border: 1px solid var(--ex-border); color: var(--ex-text); border-radius: var(--ex-radius-xs); margin: 0 2px; padding: 6px 12px; font-size: 13px; font-weight: 600; transition: background-color 140ms ease, color 140ms ease; }
 .page-link:hover { background: var(--ex-accent-soft); color: var(--ex-accent-text); }
@@ -721,10 +748,10 @@ body .widget-user .avatar, body .widget-user img.avatar {
 .border-danger    { border-color: color-mix(in srgb, var(--ex-danger) 45%, var(--ex-border)) !important; }
 .border-warning   { border-color: color-mix(in srgb, var(--ex-warning) 45%, var(--ex-border)) !important; }
 .text-primary { color: var(--ex-accent-text) !important; }
-.text-info    { color: var(--ex-info) !important; }
-.text-success { color: var(--ex-success) !important; }
-.text-danger  { color: var(--ex-danger) !important; }
-.text-warning { color: var(--ex-warning) !important; }
+.text-info    { color: var(--bs-info-text-emphasis) !important; }
+.text-success { color: var(--bs-success-text-emphasis) !important; }
+.text-danger  { color: var(--bs-danger-text-emphasis) !important; }
+.text-warning { color: var(--bs-warning-text-emphasis) !important; }
 .bg-info    { background-color: var(--ex-info) !important; }
 .bg-success { background-color: var(--ex-success) !important; }
 .bg-danger  { background-color: var(--ex-danger) !important; }
@@ -797,8 +824,8 @@ body .widget-user .avatar, body .widget-user img.avatar {
 [data-theme="light"] .btn-warning { background: color-mix(in srgb, var(--ex-warning) 72%, #000); border-color: color-mix(in srgb, var(--ex-warning) 72%, #000); color: #fff; }
 .btn-info, .btn-success, .btn-danger { color: #fff; }
 .btn-info    { background: color-mix(in srgb, var(--ex-info) 80%, #000);    border-color: color-mix(in srgb, var(--ex-info) 80%, #000); }
-.btn-success { background: color-mix(in srgb, var(--ex-success) 72%, #000); border-color: color-mix(in srgb, var(--ex-success) 72%, #000); }
-.btn-danger  { background: color-mix(in srgb, var(--ex-danger) 78%, #000);  border-color: color-mix(in srgb, var(--ex-danger) 78%, #000); }
+.btn-success { background: color-mix(in srgb, var(--ex-success) 60%, #000); border-color: color-mix(in srgb, var(--ex-success) 60%, #000); }
+.btn-danger  { background: color-mix(in srgb, var(--ex-danger) 72%, #000);  border-color: color-mix(in srgb, var(--ex-danger) 72%, #000); }
 
 .navbar-user .navbar-brand { display: inline-flex; align-items: center; }
 .navbar-user .navbar-brand i { line-height: 1; display: block; }

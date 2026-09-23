@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module surveys (de)
@@ -63,4 +64,6 @@ return [
 	'8a7e7178' => '%d Ergebnis|%d Ergebnisse',
 	// i18n 2026-06-11 (code strings)
 	'f9c3c87a' => 'Umfrage bearbeiten',
+	'0aac9844' => 'Datum',
+	'ca7a89fb' => 'Umfragen verwalten',
 ];

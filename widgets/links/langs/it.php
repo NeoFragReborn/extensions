@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  */
@@ -12,4 +13,5 @@ return [
 	// i18n 2026-06-11 (code strings)
 	'58d430b6' => 'Numero di link',
 	'042e2c3d' => 'Mostra in un pannello',
+	'e2a147a0' => 'Sì',
 ];

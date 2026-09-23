@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module articles (fr)
@@ -79,5 +80,17 @@ return [
 	'35d40dc5' => 'Restaurer la révision #%d',
 	'125bf259' => 'Le contenu actuel sera remplacé par cette version. La version actuelle reste conservée dans l\'historique.',
 	'7dbe4e5a' => 'Nouvel article : %s',
-	'2912f879' => 'Article envoyé à la corbeille.'
+	'2912f879' => 'Article envoyé à la corbeille.',
+	'ba7c894b' => 'Image à la une',
+	'123d8d20' => 'Image (max. %d Mo). Sinon, image de la catégorie.',
+	'1b818b78' => 'Veuillez choisir un fichier image',
+	'bf0c0171' => 'Éditeur riche TinyMCE. Utilise les niveaux de titre (Heading 2/3) pour structurer (sommaire généré auto).',
+	'f0c21815' => 'Une date future programme la publication : l\'article reste masqué publiquement jusqu\'à cette date (si publié).',
+	'978c2026' => 'Derniers articles',
+	'c89fa72f' => 'Articles longs avec catégories, tags, sommaire automatique et temps de lecture.',
+	'52c9bbab' => 'Modifier',
+	'3bf7b6cb' => 'Catégories — Ajouter',
+	'5c4d415d' => 'Catégories — Modifier',
+	'd94e2477' => 'Catégories — Supprimer',
+	'cd8737fa' => 'Article',
 ];

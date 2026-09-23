@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://neofr.ag
  * Paiements — admin : réglages Stripe (clés) + catalogue des packs.
@@ -50,13 +51,13 @@ class Admin extends Controller_Module
 		foreach ($packs as $p)
 		{
 			$rows .= '<tr>'
-				.'<td>'.htmlspecialchars($p['label']).'</td>'
+				.'<td>'.htmlspecialchars((string) ($p['label'])).'</td>'
 				.'<td>'.($p['kind'] === 'vip' ? $this->lang('VIP (%d j)', (int)$p['units']) : $this->lang('%d points', (int)$p['units'])).'</td>'
 				.'<td class="text-end">'.number_format((int)$p['price_cents'] / 100, 2).' '.strtoupper($p['currency']).'</td>'
 				.'<td class="text-center">'.(!empty($p['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
 				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/payments/packs/edit/'.(int)$p['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/payments/packs/delete/'.(int)$p['id']).'" data-confirm="'.htmlspecialchars($this->lang('Supprimer ce pack ?'), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/payments/packs/delete/'.(int)$p['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ce pack ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}
@@ -130,7 +131,7 @@ class Admin extends Controller_Module
 			redirect('admin/payments');
 		}
 
-		return $this->admin_back('admin/payments', $this->lang('Paiements')).$this->admin_card('fas fa-box', $id ? $this->lang('Modifier le pack') : $this->lang('Nouveau pack'), $form->display());
+		return $this->admin_card('fas fa-box', $id ? $this->lang('Modifier le pack') : $this->lang('Nouveau pack'), $form->display());
 	}
 
 	public function _pack_delete($id)

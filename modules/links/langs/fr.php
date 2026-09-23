@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * https://translate.neofr.ag
  * @author: NeoFrag — module links (fr)
@@ -52,5 +53,9 @@ return [
 	'633b7ff4' => 'Brouillons',
 	'dc275fe4' => 'Filtrer',
 	'599dba10' => 'Réinitialiser',
-	'8a7e7178' => '%d résultat|%d résultats'
+	'8a7e7178' => '%d résultat|%d résultats',
+	'e37acc6d' => 'Annuaire de liens externes catégorisés avec redirection trackée et compteur de clics.',
+	'ae4f5e0e' => 'catégorie|catégories',
+	'b2656c03' => 'Éditer catégorie : %s',
+	'0aac9844' => 'Date',
 ];
