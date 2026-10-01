@@ -9,6 +9,9 @@ $cle_bot  = $cle_bot ?? FALSE;
 	<li><?php echo $this->lang('Clé d’accès du bot au site : %s', $cle_bot ? $this->lang('créée') : $this->lang('à créer')) ?></li>
 	<li><?php echo $this->lang('%d salon(s) relié(s) à un forum, %d groupe(s) relié(s) à un rôle', (int) ($salons ?? 0), (int) ($roles ?? 0)) ?></li>
 </ul>
+<?php if (!empty($droits_manquants)): ?>
+<div class="alert alert-warning small"><?php echo icon('fas fa-key').' '.$this->lang('La clé d’accès du bot date d’une version précédente : il lui manque des droits (%s). Créez-en une nouvelle, puis remplacez-la sur la machine du bot.', htmlspecialchars(implode(', ', (array) $droits_manquants))) ?></div>
+<?php endif ?>
 <div class="d-flex flex-wrap gap-2">
 	<a class="btn btn-primary btn-sm" href="<?php echo url('admin/discord/connexion') ?>"><?php echo icon('fas fa-plug').' '.$this->lang('Connexion') ?></a>
 	<?php if ($cle_bot): ?>
@@ -19,6 +22,9 @@ $cle_bot  = $cle_bot ?? FALSE;
 	<?php if (!empty($invitation)): ?>
 	<a class="btn btn-outline-primary btn-sm" href="<?php echo htmlspecialchars((string) $invitation) ?>" target="_blank" rel="noopener noreferrer" title="<?php echo htmlspecialchars((string) $this->lang('Ajoute le bot à un serveur Discord, avec les seules permissions dont il a besoin.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-user-plus').' '.$this->lang('Inviter le bot') ?></a>
 	<?php endif ?>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/fonctionnalites') ?>"><?php echo icon('fas fa-puzzle-piece').' '.$this->lang('Fonctionnalités') ?><?php if (!empty($fonctionnalites)): ?> <span class="badge text-bg-light"><?php echo (int) $fonctionnalites ?></span><?php endif ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/mise-en-place') ?>"><?php echo icon('fas fa-magic').' '.$this->lang('Mise en place du serveur') ?></a>
 	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/salons') ?>"><?php echo icon('fas fa-exchange-alt').' '.$this->lang('Salons et forums') ?></a>
 	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/roles') ?>"><?php echo icon('fas fa-user-tag').' '.$this->lang('Groupes et rôles') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/roles-temporaires') ?>"><?php echo icon('fas fa-hourglass-half').' '.$this->lang('Rôles temporaires') ?></a>
 </div>

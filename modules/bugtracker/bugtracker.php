@@ -42,6 +42,28 @@ class Bugtracker extends Module
 		];
 	}
 
+	/** Les événements du Bugtracker que le fil de l'API retient (le bot Discord tient ainsi le fil de chaque ticket). */
+	public const EVENEMENTS = ['bugtracker.ticket.created', 'bugtracker.ticket.updated', 'bugtracker.ticket.deleted', 'bugtracker.comment.created', 'bugtracker.comment.edited', 'bugtracker.comment.deleted'];
+
+	/**
+	 * Le module api n'est pas chargé pendant une page du Bugtracker : il ne peut pas écouter lui-même,
+	 * le Bugtracker lui confie ses événements (comme le forum).
+	 *
+	 * couplage(api): facultatif — sans le module api, `Module::__load` rend NULL et rien n'est inscrit.
+	 */
+	public function __init()
+	{
+		foreach (self::EVENEMENTS as $evenement)
+		{
+			$this->events->on($evenement, static function ($charge) use ($evenement) {
+				if (is_array($charge) && ($api = \NF\NeoFrag\Addons\Module::__load(\NeoFrag(), ['api'])) instanceof \NF\Modules\Api\Api)
+				{
+					$api->consigner($evenement, $charge);
+				}
+			});
+		}
+	}
+
 	public function permissions()
 	{
 		return [

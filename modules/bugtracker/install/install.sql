@@ -28,6 +28,9 @@ CREATE TABLE IF NOT EXISTS `nf_bug_comments` (
   `user_id` int(10) unsigned DEFAULT NULL,
   `content` text NOT NULL,
   `is_status_change` tinyint(1) NOT NULL DEFAULT 0,
+  `author_provider` varchar(20) DEFAULT NULL,
+  `author_external_id` varchar(64) DEFAULT NULL,
+  `author_name` varchar(100) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `idx_ticket` (`ticket_id`,`created_at`)

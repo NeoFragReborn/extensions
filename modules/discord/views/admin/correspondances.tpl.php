@@ -12,7 +12,7 @@ $titres = $titres ?? ['', '', ''];
 		<td class="text-muted"><?php echo icon('fas fa-exchange-alt') ?></td>
 		<td><?php echo htmlspecialchars((string) $l['droite']) ?></td>
 		<td class="small text-muted"><?php echo htmlspecialchars((string) $l['detail']) ?></td>
-		<td class="text-end pe-3"><a class="btn btn-sm btn-outline-danger" href="<?php echo $l['supprimer'] ?>" title="<?php echo htmlspecialchars((string) $this->lang('Défaire cette correspondance ?'), ENT_QUOTES) ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Défaire cette correspondance ?'), ENT_QUOTES) ?>"><?php echo icon('fas fa-unlink') ?></a></td>
+		<td class="text-end pe-3 text-nowrap"><?php if (!empty($l['etiquettes'])): ?><a class="btn btn-sm btn-outline-secondary me-1" href="<?php echo $l['etiquettes'] ?>" title="<?php echo htmlspecialchars((string) $this->lang('Préfixes et étiquettes'), ENT_QUOTES) ?>"><?php echo icon('fas fa-tags') ?></a><?php endif ?><a class="btn btn-sm btn-outline-danger" href="<?php echo $l['supprimer'] ?>" title="<?php echo htmlspecialchars((string) $this->lang('Défaire cette correspondance ?'), ENT_QUOTES) ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Défaire cette correspondance ?'), ENT_QUOTES) ?>"><?php echo icon('fas fa-unlink') ?></a></td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>

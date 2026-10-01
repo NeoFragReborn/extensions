@@ -41,9 +41,14 @@ class Ajax extends Controller_Module
 
 		$conditions = [];
 
+		// Un titre écrit par un formulaire est rangé encodé (« r&eacute;agit ») : chaque mot est cherché
+		// sous ses deux formes, sans quoi un mot accentué ne trouvait jamais rien.
 		foreach ($mots as $mot)
 		{
-			array_push($conditions, 't.title LIKE', '%'.addcslashes($mot, '%_').'%', 'OR');
+			foreach (array_unique([$mot, utf8_htmlentities($mot)]) as $forme)
+			{
+				array_push($conditions, 't.title LIKE', '%'.addcslashes($forme, '%_').'%', 'OR');
+			}
 		}
 
 		$this->db	->select('t.id', 't.title', 't.type', 't.status')
@@ -56,12 +61,12 @@ class Ajax extends Controller_Module
 
 		foreach ($this->db->limit(40)->get() as $ticket)
 		{
-			$titre = mb_strtolower((string) $ticket['title']);
+			$titre = mb_strtolower(html_entity_decode((string) $ticket['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 			$score = count(array_filter($mots, static fn (string $mot): bool => str_contains($titre, $mot)));
 
 			$tickets[] = [
 				'id'     => (int) $ticket['id'],
-				'title'  => (string) $ticket['title'],
+				'title'  => html_entity_decode((string) $ticket['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8'),
 				'url'    => url('bugtracker/'.$ticket['id'].'/'.url_title($ticket['title'])),
 				'type'   => trim(strip_tags(Bugtracker::type_label($ticket['type']))),
 				'status' => trim(strip_tags(Bugtracker::status_label($ticket['status']))),

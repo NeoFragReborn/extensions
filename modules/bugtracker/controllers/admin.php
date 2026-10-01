@@ -28,13 +28,13 @@ class Admin extends Controller_Module
 
 				$body .= '<div class="nf-content-card">';
 				$body .= '<div class="nf-content-card-head">';
-				$body .= '<div class="nf-content-card-title"><a href="'.url('bugtracker/'.$t['id'].'/'.$slug).'"><span class="text-muted" style="font-family:monospace;font-size:11px;">#'.(int)$t['id'].'</span> '.htmlspecialchars((string) ($t['title'])).'</a></div>';
+				$body .= '<div class="nf-content-card-title"><a href="'.url('bugtracker/'.$t['id'].'/'.$slug).'"><span class="text-muted" style="font-family:monospace;font-size:11px;">#'.(int)$t['id'].'</span> '.htmlspecialchars((string) $t['title'], ENT_QUOTES, 'UTF-8', FALSE).'</a></div>';
 				$body .= '<span class="nf-content-card-status '.($is_closed ? 'draft' : 'published').'">'.Bugtracker::status_label($t['status']).'</span>';
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-meta">';
 				$body .= '<span><i class="fas fa-tag"></i> '.Bugtracker::type_label($t['type']).'</span>';
 				$body .= '<span><i class="fas fa-flag"></i> '.Bugtracker::priority_label($t['priority']).'</span>';
-				$body .= '<span><i class="fas fa-user"></i> '.htmlspecialchars((string) ($t['reporter'] ?? '—')).'</span>';
+				$body .= '<span><i class="fas fa-user"></i> '.htmlspecialchars((string) ($t['reporter'] ?? '—'), ENT_QUOTES, 'UTF-8', FALSE).'</span>';
 				$body .= '<span title="'.$this->lang('Commentaires').'"><i class="far fa-comments"></i> '.(int)$t['nb_comments'].'</span>';
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-foot">';
@@ -71,7 +71,7 @@ class Admin extends Controller_Module
 				'type'        => ['label' => $this->lang('Type'), 'type' => 'select', 'values' => ['bug' => $this->lang('Bug'), 'feature' => $this->lang('Feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')], 'value' => $t['type']],
 				'assigned_to' => ['label' => $this->lang('Assigné à'), 'type' => 'select', 'values' => $users_array, 'value' => $t['assigned_to'] ?? ''],
 				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $t['title'], 'rules' => 'required'],
-				'description' => ['label' => $this->lang('Description'), 'type' => 'editor', 'value' => $t['description'], 'rules' => 'required']
+				'description' => ['label' => $this->lang('Description'), 'type' => 'textarea', 'value' => $t['description'], 'rules' => 'required']
 			 ])
 			 ->add_submit($this->lang('Enregistrer'));
 
@@ -85,7 +85,7 @@ class Admin extends Controller_Module
 				$origine = 0;
 			}
 
-			NeoFrag()->db->where('id', $t['id'])->update('nf_bug_tickets', [
+			$this->_modele()->modifier_ticket((int) $t['id'], [
 				'duplicate_of' => $origine ?: NULL,
 				'title'       => $post['title'],
 				'description' => $post['description'],
@@ -95,7 +95,17 @@ class Admin extends Controller_Module
 				'assigned_to' => $post['assigned_to'] !== '' ? (int)$post['assigned_to'] : NULL
 			]);
 
-			notify($this->lang('Ticket mis à jour.'));
+			// Le statut « Doublon » sans ticket d'origine valable n'est pas appliqué : on le dit, plutôt
+			// qu'un « Ticket mis à jour » qui laissait croire le contraire.
+			if ($post['status'] === 'duplicate' && !$origine)
+			{
+				notify($this->lang('Ticket mis à jour, mais pas son statut : « Doublon » demande le numéro d’un autre ticket existant.'), 'warning');
+			}
+			else
+			{
+				notify($this->lang('Ticket mis à jour.'));
+			}
+
 			redirect('admin/bugtracker');
 		}
 
@@ -106,9 +116,21 @@ class Admin extends Controller_Module
 	{
 		$this->check_csrf('admin/bugtracker');
 
-		NeoFrag()->db->where('id', $t['id'])->delete('nf_bug_tickets');
-		NeoFrag()->db->where('ticket_id', $t['id'])->delete('nf_bug_comments');
+		$this->_modele()->supprimer_ticket((int) $t['id']);
 		notify($this->lang('Ticket supprimé.'));
 		redirect('admin/bugtracker');
+	}
+
+	/** Le modèle du module, typé : pour l'analyse statique, `$this->model()` rend un modèle générique. */
+	private function _modele(): \NF\Modules\Bugtracker\Models\Bugtracker
+	{
+		$modele = $this->model('bugtracker');
+
+		if (!$modele instanceof \NF\Modules\Bugtracker\Models\Bugtracker)
+		{
+			throw new \LogicException('modèle du Bugtracker introuvable');
+		}
+
+		return $modele;
 	}
 }

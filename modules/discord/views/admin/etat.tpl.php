@@ -35,4 +35,5 @@ $intents  = (array) ($vie['intents'] ?? []);
 	<a class="btn btn-success btn-sm" href="<?php echo $liens['marche'] ?? '#' ?>"><?php echo icon('fas fa-play').' '.$this->lang('Mettre en marche') ?></a>
 	<?php endif ?>
 	<a class="btn btn-outline-primary btn-sm" href="<?php echo $liens['redemarrer'] ?? '#' ?>"><?php echo icon('fas fa-redo').' '.$this->lang('Redémarrer') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo $liens['resync'] ?? '#' ?>" title="<?php echo htmlspecialchars((string) $this->lang('Remettre tout d’accord : rôles et pseudos, et ce qui s’est écrit sur Discord pendant une absence du bot.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-sync').' '.$this->lang('Resynchroniser') ?></a>
 </div>

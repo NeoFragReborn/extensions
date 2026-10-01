@@ -72,4 +72,5 @@ return [
 	'eeb78c6a' => 'Già segnalato?',
 	'680a5f7e' => 'Questi ticket aperti somigliano al tuo: se è lo stesso argomento, aggiungi piuttosto un commento lì.',
 	'bde466c1' => 'Tutti',
+	'8f685755' => 'Ticket aggiornato, ma non il suo stato: «Duplicato» richiede il numero di un altro ticket esistente.',
 ];

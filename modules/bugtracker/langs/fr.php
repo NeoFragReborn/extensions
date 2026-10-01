@@ -70,4 +70,5 @@ return [
 	'd8a1f614' => 'Ce ticket est un doublon de %s : la suite se passe là-bas.',
 	'eeb78c6a' => 'Déjà signalé ?',
 	'680a5f7e' => 'Ces tickets ouverts ressemblent au vôtre : s’il s’agit du même sujet, ajoutez-y plutôt un commentaire.',
+	'8f685755' => 'Ticket mis à jour, mais pas son statut : « Doublon » demande le numéro d’un autre ticket existant.',
 ];

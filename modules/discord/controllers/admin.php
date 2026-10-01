@@ -3,8 +3,8 @@ declare(strict_types=1);
 /**
  * https://neofr.ag
  *
- * couplage(forum): les forums du site ne sont lus, dans `_salons()`, qu'après la garde
- * `module('forum')` ; sans le forum, il n'y a simplement aucun forum à relier.
+ * couplage(forum): les forums du site ne sont lus, dans `_forums_du_site()`, qu'après la garde
+ * `module('forum')` ; sans le forum, il n'y a simplement aucun forum à relier ni à mettre en place.
  */
 
 namespace NF\Modules\Discord\Controllers;
@@ -46,18 +46,25 @@ class Admin extends Controller_Module
 			$statut = !empty($vie['connected']) ? 'en_ligne' : 'connexion';
 		}
 
+		$cle_bot = $this->db->select('scopes')->from('nf_api_tokens')->where('name', 'Bot Discord')->where('revoked_at', NULL)->order_by('token_id DESC')->row();
+		$cle_bot = is_string($cle_bot) ? $cle_bot : NULL;
+
 		$donnees = [
 			'reglages' => $reglages,
 			'vie'      => $vie,
 			'age'      => $age,
 			'statut'   => $statut,
 			'journal'  => $this->_journal_traduit($modele->journal(30)),
-			'cle_bot'  => (bool) $this->db->select('COUNT(*)')->from('nf_api_tokens')->where('name', 'Bot Discord')->where('revoked_at', NULL)->row(),
+			'cle_bot'  => $cle_bot !== NULL,
+			// Une clé créée par une version précédente n'a pas les droits ajoutés depuis (le Bugtracker…).
+			'droits_manquants' => $cle_bot !== NULL ? array_values(array_diff(Discord::DROITS_DU_BOT, array_filter(explode(',', $cle_bot)))) : [],
 			'liens'    => [
 				'marche'      => $this->csrf_url('admin/discord/commande/marche'),
 				'pause'       => $this->csrf_url('admin/discord/commande/pause'),
 				'redemarrer'  => $this->csrf_url('admin/discord/commande/redemarrer'),
+				'resync'      => $this->csrf_url('admin/discord/commande/resynchroniser'),
 			],
+			'fonctionnalites' => count($modele->fonctionnalites()),
 			'salons'   => count($modele->salons()),
 			'roles'    => count($modele->roles()),
 			// Le lien qui ajoute le bot au serveur, avec ses seules permissions (cf. Discord::PERMISSIONS_DISCORD).
@@ -101,8 +108,6 @@ class Admin extends Controller_Module
 				                'description' => $this->lang('Clic droit sur le serveur dans Discord → « Copier l’identifiant du serveur » (mode développeur).')],
 				'token'     => ['label' => $this->lang('Clé du bot (token)'), 'type' => 'password',
 				                'description' => $reglages['token_set'] ? $this->lang('Une clé est enregistrée, chiffrée. Laissez vide pour la garder.') : $this->lang('Onglet « Bot » du portail des développeurs → « Reset Token ».')],
-				'nicknames' => ['label' => $this->lang('Pseudos'), 'type' => 'checkbox', 'value' => ['1'],
-				                'values' => ['1' => $this->lang('Donner aux membres liés leur pseudo du site sur le serveur')], 'checked' => ['1' => $reglages['nicknames']]],
 			 ])
 			 ->add_submit($this->lang('Enregistrer'), 'fas fa-check')
 			 ->add_back('admin/discord');
@@ -118,7 +123,7 @@ class Admin extends Controller_Module
 			}
 			else
 			{
-				$this->_modele()->enregistrer_connexion($client, $guilde, trim((string) ($post['token'] ?? '')), in_array('1', (array) ($post['nicknames'] ?? []), TRUE));
+				$this->_modele()->enregistrer_connexion($client, $guilde, trim((string) ($post['token'] ?? '')));
 
 				(new \NF\NeoFrag\Libraries\Audit_Log($this))->log('discord.connexion', ['details' => trim((string) ($post['token'] ?? '')) !== '' ? 'token' : 'settings']);
 
@@ -185,6 +190,11 @@ class Admin extends Controller_Module
 			$modele->commander('restart');
 			notify($this->lang('Le bot redémarre dans la minute.'));
 		}
+		else if ($commande === 'resynchroniser')
+		{
+			$modele->commander('resync');
+			notify($this->lang('Le bot resynchronise tout dans la minute : son journal en rendra compte.'));
+		}
 
 		(new \NF\NeoFrag\Libraries\Audit_Log($this))->log('discord.commande', ['details' => (string) $commande]);
 
@@ -210,25 +220,7 @@ class Admin extends Controller_Module
 		}
 
 		// Les forums du site, titres traduits ; pas ceux qui ne sont qu'un lien vers une adresse extérieure.
-		$forums       = [];
-		$forum        = $this->module('forum');
-		$modele_forum = $forum ? $forum->model('forum') : NULL;
-
-		if ($modele_forum instanceof \NF\Modules\Forum\Models\Forum)
-		{
-			// Une ligne d'adresse peut exister vide : seul un forum dont l'adresse est remplie est un lien.
-			foreach ((array) $this->db	->select('f.forum_id', $modele_forum->titre_forum('f').' AS title', 'u.url')
-										->from('nf_forum f')
-										->join('nf_forum_url u', 'u.forum_id = f.forum_id', 'LEFT')
-										->order_by('f.order', 'f.forum_id')
-										->get() as $f)
-			{
-				if ((string) ($f['url'] ?? '') === '')
-				{
-					$forums[(int) $f['forum_id']] = (string) $f['title'];
-				}
-			}
-		}
+		$forums = array_map(static fn (array $f): string => $f['title'], $this->_forums_du_site());
 
 		$this->form()
 			 ->add_rules([
@@ -270,12 +262,95 @@ class Admin extends Controller_Module
 				'droite'    => $forums[$s['forum_id']] ?? '?',
 				'detail'    => $s['mode'] === 'reaction' ? $this->lang('À la demande, par la réaction %s', $s['emoji']) : $this->lang('Tout'),
 				'supprimer' => $this->csrf_url('admin/discord/salons/supprimer/'.$s['mapping_id']),
+				'etiquettes' => url('admin/discord/etiquettes/'.$s['mapping_id']),
 			];
 		}
 
 		return $this->admin_back('admin/discord')
 			.$this->_correspondances($this->lang('Salons reliés'), $lignes, [$this->lang('Salon Discord'), $this->lang('Forum du site'), $this->lang('Synchronisation')], $this->lang('Aucun salon relié pour le moment.'))
 			.$this->admin_card('fas fa-link', $this->lang('Relier un salon'), $this->form()->display());
+	}
+
+	/**
+	 * Les étiquettes d'un salon Forum relié : chaque préfixe du forum du site a son étiquette sur
+	 * Discord. Le bot pose l'étiquette quand le préfixe change sur le site, et l'inverse. La mise en
+	 * place du serveur remplit déjà cette page ; à défaut, l'étiquette du même nom est proposée.
+	 */
+	public function _etiquettes($salon)
+	{
+		$this->title($this->lang('Préfixes et étiquettes'))->icon('fas fa-tags')->breadcrumb();
+
+		$modele    = $this->_modele();
+		$prefixes  = $this->_prefixes_du_site();
+		$instantane = array_values(array_filter((array) ($this->_guilde($modele)['channels'] ?? []), static fn (array $c): bool => (string) $c['id'] === $salon['channel_id']))[0] ?? NULL;
+		$tags      = [];
+
+		foreach ((array) ($instantane['tags'] ?? []) as $t)
+		{
+			$tags[(string) $t['id']] = (string) $t['name'];
+		}
+
+		if (!$prefixes || !$tags)
+		{
+			return $this->admin_back('admin/discord/salons').$this->admin_card('fas fa-tags', $this->lang('Préfixes et étiquettes'), $this->admin_empty('fas fa-tags',
+				!$prefixes ? $this->lang('Le forum n’a aucun préfixe.') : $this->lang('Ce salon Forum n’a aucune étiquette, ou le bot ne l’a pas encore décrit.'),
+				!$prefixes ? $this->lang('Les préfixes se créent dans l’administration du forum (bouton « Préfixes »).') : $this->lang('Ajoutez des étiquettes au salon sur Discord, ou relancez la mise en place du serveur : elle crée une étiquette par préfixe.')));
+		}
+
+		$actuelles = [];
+
+		foreach ($modele->etiquettes() as $e)
+		{
+			if ($e['channel_id'] === $salon['channel_id'])
+			{
+				$actuelles[$e['prefix_id']] = $e['tag_id'];
+			}
+		}
+
+		$regles = [];
+
+		foreach ($prefixes as $p)
+		{
+			$meme = array_search(mb_strtolower((string) $p['title']), array_map('mb_strtolower', $tags), TRUE);
+
+			$regles['prefixe_'.$p['prefix_id']] = [
+				'label'  => (string) $p['title'],
+				'type'   => 'select',
+				'values' => ['' => $this->lang('— Aucune —')] + $tags,
+				'value'  => $actuelles[$p['prefix_id']] ?? ($meme !== FALSE ? (string) $meme : ''),
+			];
+		}
+
+		$this->form()->add_rules($regles)->add_submit($this->lang('Enregistrer'), 'fas fa-check')->add_back('admin/discord/salons');
+
+		if ($this->form()->is_valid($post))
+		{
+			$paires = [];
+
+			foreach ($prefixes as $p)
+			{
+				$choisie = (string) ($post['prefixe_'.$p['prefix_id']] ?? '');
+
+				if ($choisie !== '' && isset($tags[$choisie]))
+				{
+					$paires[(int) $p['prefix_id']] = $choisie;
+				}
+			}
+
+			if (count($paires) !== count(array_unique($paires)))
+			{
+				notify($this->lang('Une étiquette ne peut valoir que pour un seul préfixe.'), 'danger');
+			}
+			else
+			{
+				$modele->remplacer_etiquettes((string) $salon['channel_id'], $paires);
+				notify($this->lang('Étiquettes enregistrées : le bot les applique dans la minute.'));
+				redirect('admin/discord/salons');
+			}
+		}
+
+		return $this->admin_back('admin/discord/salons')
+			.$this->admin_card('fas fa-tags', $this->lang('Préfixes et étiquettes'), '<p class="text-muted small">'.$this->lang('Le préfixe d’un sujet devient l’étiquette de son fil sur Discord, et l’étiquette posée sur Discord devient le préfixe du sujet.').'</p>'.$this->form()->display());
 	}
 
 	public function _salons_supprimer($mapping)
@@ -304,17 +379,7 @@ class Admin extends Controller_Module
 			}
 		}
 
-		$groupes = [];
-
-		$coeur = NeoFrag()->groups;
-
-		foreach ($coeur instanceof \NF\NeoFrag\Core\Groups ? (array) $coeur() : [] as $cle => $g)
-		{
-			if ($cle !== 'visitors')
-			{
-				$groupes[(string) $cle] = (string) ($g['title'] ?? $cle);
-			}
-		}
+		$groupes = $this->_groupes_du_site();
 
 		$this->form()
 			 ->add_rules([
@@ -368,6 +433,464 @@ class Admin extends Controller_Module
 		$this->_modele()->supprimer_role((int) $mapping['mapping_id']);
 		notify($this->lang('Groupe délié.'));
 		redirect('admin/discord/roles');
+	}
+
+	/**
+	 * Les rôles temporaires en cours, donnés sur Discord par `/role give` (fonctionnalité « Rôles
+	 * temporaires ») : le bot les retire à l'échéance ; « Retirer maintenant » avance l'échéance.
+	 */
+	public function _roles_temporaires()
+	{
+		$this->title($this->lang('Rôles temporaires'))->icon('fas fa-hourglass-half')->breadcrumb();
+
+		$modele = $this->_modele();
+		$roles  = array_column((array) ($this->_guilde($modele)['roles'] ?? []), 'name', 'id');
+		$lignes = [];
+
+		foreach ($modele->roles_temporaires() as $r)
+		{
+			$lie = $modele->membre_lie($r['discord_id']);
+
+			$lignes[] = [
+				'membre'  => htmlspecialchars($r['username'] !== '' ? $r['username'] : $r['discord_id']).($lie ? ' <span class="text-muted small">('.$this->user->link($lie['user_id'], $lie['username']).')</span>' : ''),
+				'role'    => (string) ($roles[$r['role_id']] ?? '@'.$r['role_id']),
+				'fin'     => timetostr($this->lang('d/m/Y H:i'), $r['expires_at']),
+				'echu'    => $r['expires_at'] <= time(),
+				'par'     => $r['given_by_name'],
+				'raison'  => $r['reason'],
+				'retirer' => $this->csrf_url('admin/discord/roles-temporaires/retirer/'.$r['timed_id']),
+			];
+		}
+
+		$active = !empty($modele->config_fonctionnalites()['roles-temporaires']['enabled']);
+		$aide   = '<p class="text-muted small mb-3">'.$this->lang('Un membre qui peut gérer les rôles en donne un pour une durée avec la commande %s sur Discord ; le bot le retire à la fin, et le redonne à qui quitte puis rejoint le serveur avant.', '<code>/role give</code>').'</p>'
+			.($active ? '' : '<div class="alert alert-warning small">'.$this->lang('La fonctionnalité « Rôles temporaires » est éteinte : allumez-la dans %s.', '<a href="'.url('admin/discord/fonctionnalites').'">'.$this->lang('Fonctionnalités').'</a>').'</div>');
+
+		return $this->admin_back('admin/discord')
+			.$this->admin_card('fas fa-hourglass-half', $this->lang('Rôles temporaires en cours'), $aide.($lignes
+				? $this->view('admin/roles-temporaires', ['lignes' => $lignes])
+				: $this->admin_empty('fas fa-hourglass', (string) $this->lang('Aucun rôle temporaire en cours.'))));
+	}
+
+	public function _roles_temporaires_retirer($ligne)
+	{
+		$this->check_csrf('admin/discord/roles-temporaires');
+		$this->_modele()->echoir_role_temporaire((int) $ligne['timed_id']);
+		notify($this->lang('Le bot retirera ce rôle d’ici une minute.'));
+		redirect('admin/discord/roles-temporaires');
+	}
+
+	// ── Les fonctionnalités ────────────────────────────────────────────────
+
+	/** Les fonctionnalités que le bot déclare : allumées ou non, et leurs réglages. */
+	public function _fonctionnalites()
+	{
+		$this->title($this->lang('Fonctionnalités du bot'))->icon('fas fa-puzzle-piece')->breadcrumb();
+
+		$modele = $this->_modele();
+		$config = $modele->config_fonctionnalites();
+		$cartes = '';
+
+		foreach ($modele->fonctionnalites() as $f)
+		{
+			$nom    = (string) $f['nom'];
+			$active = !empty($config[$nom]['enabled']);
+
+			$cartes .= $this->view('admin/fonctionnalite', [
+				'titre'       => $this->_t((string) $f['titre']),
+				'description' => $this->_t((string) $f['description']),
+				'nom'         => $nom,
+				'active'      => $active,
+				'reglages'    => count((array) $f['reglages']),
+				'basculer'    => $this->csrf_url('admin/discord/fonctionnalite/'.$nom.'/basculer'),
+			]);
+		}
+
+		return $this->admin_back('admin/discord')
+			.$this->admin_card('fas fa-puzzle-piece', $this->lang('Fonctionnalités du bot'), $cartes !== ''
+				? '<p class="text-muted small">'.$this->lang('Le bot déclare ses fonctionnalités à chaque signe de vie : une fonctionnalité ajoutée au bot apparaît ici. Un changement s’applique dans la minute, sans redémarrer.').'</p>'.$cartes
+				: $this->admin_empty('fas fa-puzzle-piece', $this->lang('Le bot n’a encore déclaré aucune fonctionnalité.'), $this->lang('Elles apparaissent ici dès son premier signe de vie.')));
+	}
+
+	/** Allumer ou éteindre une fonctionnalité. */
+	public function _basculer($fonctionnalite)
+	{
+		$this->check_csrf('admin/discord/fonctionnalites');
+
+		$modele = $this->_modele();
+		$active = !empty($modele->config_fonctionnalites()[$fonctionnalite['nom']]['enabled']);
+
+		$modele->regler_fonctionnalite((string) $fonctionnalite['nom'], !$active);
+		(new \NF\NeoFrag\Libraries\Audit_Log($this))->log('discord.fonctionnalite', ['details' => $fonctionnalite['nom'].' : '.($active ? 'off' : 'on')]);
+
+		notify($active ? $this->lang('Fonctionnalité éteinte : le bot l’arrête dans la minute.') : $this->lang('Fonctionnalité allumée : le bot la démarre dans la minute.'));
+		redirect('admin/discord/fonctionnalites');
+	}
+
+	/** Les réglages d'une fonctionnalité, en formulaire tiré de ce qu'elle déclare. */
+	public function _fonctionnalite($fonctionnalite)
+	{
+		$titre = $this->_t((string) $fonctionnalite['titre']);
+
+		$this->title($titre)->icon('fas fa-sliders-h')->breadcrumb();
+
+		$modele  = $this->_modele();
+		$valeurs = $modele->config_fonctionnalites()[$fonctionnalite['nom']]['settings'] ?? [];
+		$guilde  = $this->_guilde($modele);
+		$regles  = [];
+
+		foreach ((array) $fonctionnalite['reglages'] as $r)
+		{
+			$cle   = (string) $r['cle'];
+			$libelle = $this->_t((string) $r['libelle']);
+			$aide  = (string) $r['aide'] !== '' ? $this->_t((string) $r['aide']) : '';
+			$valeur  = $valeurs[$cle] ?? $r['defaut'];
+			$regle = ['label' => $libelle] + ($aide !== '' ? ['description' => $aide] : []);
+
+			switch ($r['type'])
+			{
+				case 'bool':
+					$regles[$cle] = ['label' => $libelle, 'type' => 'checkbox', 'value' => ['1'], 'values' => ['1' => $libelle], 'checked' => ['1' => (bool) $valeur]] + ($aide !== '' ? ['description' => $aide] : []);
+					break;
+
+				case 'int':
+					$regles[$cle] = $regle + ['type' => 'number', 'value' => (string) (int) $valeur, 'rules' => 'required'];
+					break;
+
+				case 'choix':
+					$choix = [];
+
+					foreach ((array) $r['choix'] as $c)
+					{
+						$choix[(string) $c['valeur']] = $this->_t((string) $c['libelle']);
+					}
+
+					$regles[$cle] = $regle + ['type' => 'select', 'values' => $choix, 'value' => (string) $valeur];
+					break;
+
+				case 'salon':
+					$salons = ['' => $this->lang('— Aucun —')];
+
+					foreach ((array) ($guilde['channels'] ?? []) as $c)
+					{
+						if (in_array((int) $c['type'], (array) $r['salons'], TRUE) || !$r['salons'])
+						{
+							$salons[(string) $c['id']] = (string) $c['name'];
+						}
+					}
+
+					$regles[$cle] = $regle + ['type' => 'select', 'values' => $salons, 'value' => (string) $valeur];
+					break;
+
+				case 'role':
+					$roles = ['' => $this->lang('— Aucun —')];
+
+					foreach ((array) ($guilde['roles'] ?? []) as $x)
+					{
+						if (empty($x['managed']) && (string) $x['name'] !== '@everyone')
+						{
+							$roles[(string) $x['id']] = (string) $x['name'];
+						}
+					}
+
+					$regles[$cle] = $regle + ['type' => 'select', 'values' => $roles, 'value' => (string) $valeur];
+					break;
+
+				default:
+					$regles[$cle] = $regle + ['type' => 'text', 'value' => (string) $valeur];
+			}
+		}
+
+		if (!$regles)
+		{
+			return $this->admin_back('admin/discord/fonctionnalites').$this->admin_card('fas fa-sliders-h', $titre, $this->admin_empty('fas fa-sliders-h', $this->lang('Cette fonctionnalité n’a pas de réglages.')));
+		}
+
+		$this->form()->add_rules($regles)->add_submit($this->lang('Enregistrer'), 'fas fa-check')->add_back('admin/discord/fonctionnalites');
+
+		if ($this->form()->is_valid($post))
+		{
+			$reglages = [];
+			$erreurs  = [];
+
+			foreach ((array) $fonctionnalite['reglages'] as $r)
+			{
+				$cle   = (string) $r['cle'];
+				$brute = $post[$cle] ?? NULL;
+
+				switch ($r['type'])
+				{
+					case 'bool':
+						$reglages[$cle] = in_array('1', (array) $brute, TRUE);
+						break;
+
+					case 'int':
+						$n = filter_var($brute, FILTER_VALIDATE_INT);
+
+						if ($n === FALSE || ($r['min'] !== NULL && $n < $r['min']) || ($r['max'] !== NULL && $n > $r['max']))
+						{
+							$erreurs[] = $this->lang('« %s » : un nombre entre %d et %d.', $this->_t((string) $r['libelle']), (int) $r['min'], (int) $r['max']);
+						}
+						else
+						{
+							$reglages[$cle] = $n;
+						}
+						break;
+
+					case 'choix':
+						$valides = array_map(static fn ($c): string => (string) $c['valeur'], (array) $r['choix']);
+						$reglages[$cle] = in_array((string) $brute, $valides, TRUE) ? (string) $brute : $r['defaut'];
+						break;
+
+					case 'salon':
+					case 'role':
+						$reglages[$cle] = ctype_digit((string) $brute) ? (string) $brute : '';
+						break;
+
+					default:
+						$reglages[$cle] = mb_substr(trim((string) $brute), 0, 500);
+				}
+			}
+
+			if ($erreurs)
+			{
+				notify(implode(' ', array_map('strval', $erreurs)), 'danger');
+			}
+			else
+			{
+				$modele->regler_fonctionnalite((string) $fonctionnalite['nom'], NULL, $reglages);
+				(new \NF\NeoFrag\Libraries\Audit_Log($this))->log('discord.fonctionnalite', ['details' => $fonctionnalite['nom'].' : settings']);
+				notify($this->lang('Réglages enregistrés : le bot les applique dans la minute.'));
+				redirect('admin/discord/fonctionnalites');
+			}
+		}
+
+		return $this->admin_back('admin/discord/fonctionnalites').$this->admin_card('fas fa-sliders-h', $titre, $this->form()->display());
+	}
+
+	// ── La mise en place du serveur ────────────────────────────────────────
+
+	/**
+	 * Choisir ce que le bot crée sur le serveur : une catégorie, un salon Forum par forum du site, un
+	 * rôle par groupe. Un aperçu suit, puis l'application ; la dernière mise en place s'annule.
+	 */
+	public function _mise_en_place()
+	{
+		$this->title($this->lang('Mise en place du serveur'))->icon('fas fa-magic')->breadcrumb();
+
+		$modele = $this->_modele();
+		$forums = $this->_forums_du_site();
+		$relies = array_column($modele->salons(), 'forum_id');
+		$groupes = $this->_groupes_du_site();
+		$deja    = array_column($modele->roles(), 'group_key');
+
+		$this->form()
+			 ->add_rules([
+				'categorie' => ['label' => $this->lang('Catégorie des salons'), 'type' => 'text', 'value' => (string) $this->config->nf_name,
+				                'description' => $this->lang('Reprise si elle existe déjà ; vide : les salons sont créés hors catégorie.')],
+				'forums'    => ['label' => $this->lang('Un salon Forum pour'), 'type' => 'checkbox', 'values' => array_map(static fn (array $f): string => $f['title'], $forums),
+				                'checked' => array_fill_keys(array_diff(array_keys($forums), $relies), TRUE),
+				                'description' => $this->lang('Les préfixes du forum deviennent les étiquettes du salon. Un salon du même nom est repris au lieu d’être dédoublé.')],
+				'groupes'   => ['label' => $this->lang('Un rôle pour'), 'type' => 'checkbox', 'values' => $groupes,
+				                'checked' => [],
+				                'description' => $this->lang('Un rôle du même nom est repris. Les rôles créés sont placés sous celui du bot : il peut les donner.')],
+			 ])
+			 ->add_submit($this->lang('Voir l’aperçu'), 'fas fa-eye');
+
+		if ($this->form()->is_valid($post))
+		{
+			$choisis_forums  = array_values(array_intersect(array_map('intval', (array) ($post['forums'] ?? [])), array_keys($forums)));
+			$choisis_groupes = array_values(array_intersect(array_map('strval', (array) ($post['groupes'] ?? [])), array_map('strval', array_keys($groupes))));
+
+			if (!$choisis_forums && !$choisis_groupes)
+			{
+				notify($this->lang('Choisissez au moins un forum ou un groupe.'), 'danger');
+			}
+			else
+			{
+				// Le plan part sur Discord : des noms en clair, pas encodés pour le web comme le site les range.
+				$clair      = static fn (mixed $texte): string => html_entity_decode((string) $texte, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+				$etiquettes = array_values(array_map(static fn (array $p): array => ['prefix_id' => (int) $p['prefix_id'], 'nom' => $clair($p['title'])], $this->_prefixes_du_site()));
+
+				$modele->poser_etat('setup-draft', (string) json_encode([
+					'categorie' => mb_substr(trim($clair($post['categorie'] ?? '')), 0, 100),
+					'salons'    => array_map(static fn (int $id): array => ['forum_id' => $id, 'nom' => $clair($forums[$id]['title']), 'description' => $clair($forums[$id]['description']), 'etiquettes' => $etiquettes], $choisis_forums),
+					'roles'     => array_map(fn (string $cle): array => ['group_key' => $cle, 'nom' => $clair($groupes[$cle]), 'couleur' => $this->_couleur_du_groupe($cle)], $choisis_groupes),
+				], JSON_UNESCAPED_UNICODE));
+
+				redirect('admin/discord/mise-en-place/apercu');
+			}
+		}
+
+		$derniere = $modele->derniere_mise_en_place();
+		$attente  = (string) $modele->etat('setup-pending') !== '';
+
+		return $this->admin_back('admin/discord')
+			.($attente ? '<div class="alert alert-info">'.icon('fas fa-hourglass-half').' '.$this->lang('Une mise en place attend le bot : il l’applique à son prochain signe de vie, et son journal en rendra compte.').'</div>' : '')
+			.($derniere ? $this->admin_card('fas fa-history', $this->lang('Dernière mise en place'), $this->view('admin/mise-en-place-derniere', [
+				'derniere' => $derniere,
+				'annuler'  => $this->csrf_url('admin/discord/mise-en-place/annuler'),
+			])) : '')
+			.$this->admin_card('fas fa-magic', $this->lang('Mise en place du serveur'), $this->form()->display());
+	}
+
+	/** L'aperçu : ce qui sera créé, et ce qui sera repris parce qu'il existe déjà. */
+	public function _mise_en_place_apercu()
+	{
+		$this->title($this->lang('Aperçu de la mise en place'))->icon('fas fa-eye')->breadcrumb();
+
+		$modele    = $this->_modele();
+		$brouillon = json_decode((string) $modele->etat('setup-draft'), TRUE);
+
+		if (!is_array($brouillon) || !$brouillon)
+		{
+			redirect('admin/discord/mise-en-place');
+
+			return '';
+		}
+
+		$guilde = $this->_guilde($modele);
+		$lignes = [];
+
+		if (($brouillon['categorie'] ?? '') !== '')
+		{
+			$existe   = (bool) array_filter((array) ($guilde['channels'] ?? []), static fn (array $c): bool => (int) $c['type'] === 4 && mb_strtolower((string) $c['name']) === mb_strtolower((string) $brouillon['categorie']));
+			$lignes[] = ['quoi' => $this->lang('Catégorie'), 'nom' => (string) $brouillon['categorie'], 'repris' => $existe, 'detail' => ''];
+		}
+
+		foreach ((array) ($brouillon['salons'] ?? []) as $s)
+		{
+			$nom      = Discord::nom_de_salon((string) $s['nom']);
+			$existant = array_values(array_filter((array) ($guilde['channels'] ?? []), static fn (array $c): bool => (int) $c['type'] === 15 && (string) $c['name'] === $nom))[0] ?? NULL;
+			$noms     = array_map(static fn ($e): string => is_array($e) ? (string) $e['nom'] : (string) $e, (array) $s['etiquettes']);
+			$ajouts   = $existant ? array_values(array_diff(array_map('mb_strtolower', $noms), array_map(static fn (array $t): string => mb_strtolower((string) $t['name']), (array) ($existant['tags'] ?? [])))) : $noms;
+			$lignes[] = ['quoi' => $this->lang('Salon Forum'), 'nom' => '#'.$nom, 'repris' => (bool) $existant, 'detail' => $ajouts ? $this->lang('Étiquettes ajoutées : %s', implode(', ', $ajouts)) : ''];
+		}
+
+		foreach ((array) ($brouillon['roles'] ?? []) as $r)
+		{
+			$existe   = (bool) array_filter((array) ($guilde['roles'] ?? []), static fn (array $x): bool => (string) $x['name'] === (string) $r['nom'] && empty($x['managed']));
+			$lignes[] = ['quoi' => $this->lang('Rôle'), 'nom' => '@'.(string) $r['nom'], 'repris' => $existe, 'detail' => ''];
+		}
+
+		$vie      = (array) json_decode((string) $modele->etat('heartbeat'), TRUE);
+		$en_ligne = isset($vie['at']) && time() - (int) $vie['at'] <= self::HORS_LIGNE_APRES && !empty($vie['connected']);
+
+		return $this->admin_back('admin/discord/mise-en-place')
+			.$this->admin_card('fas fa-eye', $this->lang('Aperçu de la mise en place'), $this->view('admin/mise-en-place-apercu', [
+				'lignes'    => $lignes,
+				'en_ligne'  => $en_ligne,
+				'appliquer' => $this->csrf_url('admin/discord/mise-en-place/appliquer'),
+			]));
+	}
+
+	public function _mise_en_place_appliquer()
+	{
+		$this->check_csrf('admin/discord/mise-en-place');
+
+		$modele    = $this->_modele();
+		$brouillon = json_decode((string) $modele->etat('setup-draft'), TRUE);
+
+		if (is_array($brouillon) && $brouillon)
+		{
+			$id = (string) time();
+
+			$modele->commander('setup', ['id' => $id] + $brouillon);
+			$modele->poser_etat('setup-pending', $id);
+			$modele->poser_etat('setup-draft', '');
+			(new \NF\NeoFrag\Libraries\Audit_Log($this))->log('discord.mise_en_place', ['details' => 'channels: '.count((array) ($brouillon['salons'] ?? [])).', roles: '.count((array) ($brouillon['roles'] ?? []))]);
+
+			notify($this->lang('Le bot met le serveur en place dans la minute : son journal en rendra compte.'));
+		}
+
+		redirect('admin/discord/mise-en-place');
+	}
+
+	/** Annuler la dernière mise en place : le bot supprime ce qu'il avait créé — et seulement cela. */
+	public function _mise_en_place_annuler()
+	{
+		$this->check_csrf('admin/discord/mise-en-place');
+
+		$modele   = $this->_modele();
+		$derniere = $modele->derniere_mise_en_place();
+
+		if ($derniere)
+		{
+			$modele->commander('setup-undo', ['id' => (string) $derniere['id']] + (array) $derniere['cree']);
+			(new \NF\NeoFrag\Libraries\Audit_Log($this))->log('discord.mise_en_place', ['details' => 'undo '.$derniere['id']]);
+
+			notify($this->lang('Le bot supprime ce qu’il avait créé dans la minute : son journal en rendra compte.'));
+		}
+
+		redirect('admin/discord/mise-en-place');
+	}
+
+	/** @return array<int, array{title: string, description: string}> les forums du site qui peuvent avoir un salon (pas les liens) */
+	private function _forums_du_site(): array
+	{
+		$forums       = [];
+		$forum        = $this->module('forum');
+		$modele_forum = $forum ? $forum->model('forum') : NULL;
+
+		if ($modele_forum instanceof \NF\Modules\Forum\Models\Forum)
+		{
+			foreach ((array) $this->db	->select('f.forum_id', $modele_forum->titre_forum('f').' AS title', $modele_forum->titre_forum('f', 'description').' AS description', 'u.url')
+										->from('nf_forum f')
+										->join('nf_forum_url u', 'u.forum_id = f.forum_id', 'LEFT')
+										->order_by('f.order', 'f.forum_id')
+										->get() as $f)
+			{
+				if ((string) ($f['url'] ?? '') === '')
+				{
+					$forums[(int) $f['forum_id']] = ['title' => (string) $f['title'], 'description' => trim(strip_tags((string) $f['description']))];
+				}
+			}
+		}
+
+		return $forums;
+	}
+
+	/** @return array<int, array{prefix_id: int, title: string}> les préfixes du forum */
+	private function _prefixes_du_site(): array
+	{
+		$forum        = $this->module('forum');
+		$modele_forum = $forum ? $forum->model('forum') : NULL;
+
+		return $modele_forum instanceof \NF\Modules\Forum\Models\Forum ? $modele_forum->prefixes() : [];
+	}
+
+	/** @return array<string, string> les groupes du site (clé => titre), sans les visiteurs */
+	private function _groupes_du_site(): array
+	{
+		$groupes = [];
+		$coeur   = NeoFrag()->groups;
+
+		foreach ($coeur instanceof \NF\NeoFrag\Core\Groups ? (array) $coeur() : [] as $cle => $g)
+		{
+			if ($cle !== 'visitors')
+			{
+				$groupes[(string) $cle] = (string) ($g['title'] ?? $cle);
+			}
+		}
+
+		return $groupes;
+	}
+
+	/** La couleur d'un groupe en hexadécimal, pour le rôle qui lui correspond (NULL : la couleur par défaut de Discord). */
+	private function _couleur_du_groupe(string $cle): ?string
+	{
+		$coeur   = NeoFrag()->groups;
+		$couleur = $coeur instanceof \NF\NeoFrag\Core\Groups ? (string) (((array) $coeur())[$cle]['color'] ?? '') : '';
+
+		return Discord::couleur_hexadecimale($couleur);
+	}
+
+	/** Un texte déclaré par le bot, traduit si le module le connaît. */
+	private function _t(string $modele): string
+	{
+		$module = $this->module('discord');
+
+		return $module instanceof Discord ? ($module->traduire_journal($modele, []) ?? $modele) : $modele;
 	}
 
 	/** Le serveur Discord tel que le bot l'a décrit à son dernier signe de vie (salons, rôles), ou rien. */

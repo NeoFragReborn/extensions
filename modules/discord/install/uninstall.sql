@@ -5,9 +5,12 @@
 SET FOREIGN_KEY_CHECKS = 0;
 SET NAMES utf8mb4;
 
+DROP TABLE IF EXISTS `nf_discord_timed_roles`;
+DROP TABLE IF EXISTS `nf_discord_tags`;
 DROP TABLE IF EXISTS `nf_discord_state`;
 DROP TABLE IF EXISTS `nf_discord_roles`;
 DROP TABLE IF EXISTS `nf_discord_logs`;
+DROP TABLE IF EXISTS `nf_discord_link_tokens`;
 DROP TABLE IF EXISTS `nf_discord_links`;
 DROP TABLE IF EXISTS `nf_discord_channels`;
 
