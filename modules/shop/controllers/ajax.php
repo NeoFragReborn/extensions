@@ -86,6 +86,15 @@ class Ajax extends Controller_Module
 					'user_id'  => $user_id,
 					'group_id' => $group_id
 				]);
+
+				// Le fil d'événements de l'API : le membre a gagné un groupe.
+				// couplage(api): facultatif — sans le module api, `Module::__load` rend NULL et rien n'est inscrit.
+				$this->events->fire('user.groups.changed', ['user_id' => (int) $user_id]);
+
+				if (($api = \NF\NeoFrag\Addons\Module::__load(\NeoFrag(), ['api'])) instanceof \NF\Modules\Api\Api)
+				{
+					$api->consigner('user.groups.changed', ['user_id' => (int) $user_id]);
+				}
 			}
 		}
 		else if ($item['type'] === 'vip' && ($days = (int)$item['payload']))
