@@ -137,6 +137,33 @@
 .blog-lies a { display: grid; gap: .45rem; color: var(--nf-text); line-height: 1.35; min-width: 0; overflow-wrap: anywhere; }
 .blog-lies img, .blog-lies .blog-couverture-vide { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--nf-radius-sm); display: block; }
 .blog-encart { position: sticky; top: 90px; align-self: start; }
+.blog-boite-auteur a:not(:has(img)) { font-size: .88rem; color: var(--nf-accent-text); }
+.blog-categories a.actif { color: var(--nf-accent-text); font-weight: 600; }
+
+/* ── L'en-tête d'une page d'auteur, d'archives ou de série ───────────── */
+.blog-page-entete { display: flex; align-items: center; gap: 1.1rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--nf-border); margin-bottom: 1.4rem; min-width: 0; }
+.blog-page-entete > div { display: grid; gap: .35rem; min-width: 0; }
+.blog-page-entete h1 { font-family: var(--nf-font-display); font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.15; margin: 0; overflow-wrap: anywhere; }
+.blog-page-entete p { margin: 0; color: var(--nf-text-muted); }
+.blog-page-entete p a { color: var(--nf-accent-text); }
+
+/* ── Une série : l'encadré dans un billet, et la page de la série ───────── */
+.blog-serie { border: 1px solid var(--nf-border); border-left: 3px solid var(--nf-accent); border-radius: var(--nf-radius-sm); padding: .9rem 1.1rem; margin-bottom: 1.6rem; background: var(--nf-surface); }
+.blog-serie-titre { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .7rem; margin-bottom: .5rem; }
+.blog-serie-titre small { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--nf-accent-text); }
+.blog-serie-titre a { font-weight: 700; color: var(--nf-text-strong); }
+.blog-serie-titre span { font-size: .85rem; color: var(--nf-text-muted); }
+.blog-serie ol { margin: 0; padding-left: 1.3rem; display: grid; gap: .3rem; }
+.blog-serie ol a { color: var(--nf-text); }
+.blog-serie ol a:hover { color: var(--nf-accent-text); }
+.blog-serie ol strong { color: var(--nf-accent-text); }
+.blog-serie-parties { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.blog-serie-parties li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--nf-border); }
+.blog-serie-parties h2 { font-family: var(--nf-font-display); font-size: 1.15rem; margin: 0 0 .35rem; overflow-wrap: anywhere; }
+.blog-serie-parties h2 a { color: var(--nf-text-strong); }
+.blog-serie-parties h2 a:hover { color: var(--nf-accent-text); }
+.blog-serie-parties > li > div { display: grid; gap: .35rem; min-width: 0; }
+.blog-serie-rang { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--nf-accent-soft); color: var(--nf-accent-text); font-weight: 700; }
 
 /* ── Écran moyen : la fusion garde le sommaire, l'encart s'efface ────────
    Trois colonnes à 1 024 px laissaient au texte 500 px : les titres « À lire aussi » se

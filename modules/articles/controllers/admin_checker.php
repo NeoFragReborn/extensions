@@ -180,4 +180,69 @@ class Admin_Checker extends Module_Checker
 			return [$category];
 		}
 	}
+
+	/** La liste des catégories : on y retrouve chacune pour la modifier ou la supprimer. */
+	public function _categories()
+	{
+		if (!$this->is_authorized('add_categories') && !$this->is_authorized('modify_categories') && !$this->is_authorized('delete_categories'))
+		{
+			$this->error->unauthorized();
+		}
+
+		return [$this->_modele()->get_categories()];
+	}
+
+	/*
+	 * Les séries s'organisent avec les billets : elles demandent le droit de modifier
+	 * les billets.
+	 */
+
+	public function _series()
+	{
+		$this->_droit_series();
+
+		return [$this->_modele()->get_series_list()];
+	}
+
+	public function _series_add()
+	{
+		$this->_droit_series();
+
+		return [];
+	}
+
+	public function _series_edit($series_id, $title)
+	{
+		$this->_droit_series();
+
+		return ($serie = $this->_modele()->get_series((int) $series_id)) ? [$serie] : NULL;
+	}
+
+	public function _series_delete($series_id, $title)
+	{
+		$this->_droit_series();
+
+		return ($serie = $this->_modele()->get_series((int) $series_id)) ? [$serie] : NULL;
+	}
+
+	private function _droit_series(): void
+	{
+		if (!$this->is_authorized('modify_articles'))
+		{
+			$this->error->unauthorized();
+		}
+	}
+
+	/** Le modèle du Blog, typé : pour l'analyse statique, `$this->model()` rend un modèle générique. */
+	private function _modele(): \NF\Modules\Articles\Models\Articles
+	{
+		$modele = $this->model('articles');
+
+		if (!$modele instanceof \NF\Modules\Articles\Models\Articles)
+		{
+			throw new \LogicException('modèle du Blog introuvable');
+		}
+
+		return $modele;
+	}
 }

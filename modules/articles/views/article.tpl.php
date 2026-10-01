@@ -8,15 +8,31 @@
 
 use NF\Modules\Articles\Articles;
 
+$article   = $article ?? [];
+$content   = $content ?? '';
+$read_time = $read_time ?? 1;
 $fiche  = $fiche ?? 'fusion';
 $toc    = $toc ?? '';
 $autour = $autour ?? ['precedent' => NULL, 'suivant' => NULL, 'lies' => []];
+$serie  = $serie ?? [];
 
 $lien     = static fn (array $a): string => url('articles/'.$a['article_id'].'/'.url_title($a['title']));
 $couv     = !empty($article['image']) ? (string) NeoFrag()->model2('file', $article['image'])->path() : '';
 $auteur   = !empty($article['user_id']) ? $this->module('user')->model2('user', $article['user_id'])->avatar()->append_attr('class', 'blog-avatar').' '.$this->user->link($article['user_id'], $article['username']) : '';
 $adresse  = absolute_url('articles/'.$article['article_id'].'/'.url_title($article['title']));
 $categorie = url('articles/category/'.$article['category_id'].'/'.url_title($article['category_name']));
+$ses_billets = !empty($article['user_id']) ? url('articles/auteur/'.(int) $article['user_id'].'/'.url_title((string) $article['username'])) : '';
+
+// La série du billet : sa position, et la liste des parties.
+$rang_serie = 0;
+
+foreach ($serie['parties'] ?? [] as $i => $partie)
+{
+	if ((int) $partie['article_id'] === (int) $article['article_id'])
+	{
+		$rang_serie = $i + 1;
+	}
+}
 ?>
 <article class="blog-billet blog-fiche-<?php echo $fiche ?>">
 	<header class="blog-entete<?php echo $couv ? ' blog-entete-image' : '' ?>">
@@ -48,6 +64,21 @@ $categorie = url('articles/category/'.$article['category_id'].'/'.url_title($art
 			</details>
 			<?php endif ?>
 
+			<?php if (!empty($serie['parties'])): ?>
+			<aside class="blog-serie" aria-label="<?php echo $this->lang('Série') ?>">
+				<div class="blog-serie-titre">
+					<small><?php echo icon('fas fa-layer-group').' '.$this->lang('Série') ?></small>
+					<a href="<?php echo url('articles/serie/'.$serie['serie']['series_id'].'/'.url_title($serie['serie']['title'])) ?>"><?php echo htmlspecialchars($serie['serie']['title']) ?></a>
+					<?php if ($rang_serie): ?><span><?php echo $this->lang('Partie %d sur %d', $rang_serie, count($serie['parties'])) ?></span><?php endif ?>
+				</div>
+				<ol>
+					<?php foreach ($serie['parties'] as $partie): ?>
+					<li><?php if ((int) $partie['article_id'] === (int) $article['article_id']): ?><strong aria-current="page"><?php echo htmlspecialchars((string) $partie['title']) ?></strong><?php else: ?><a href="<?php echo $lien($partie) ?>"><?php echo htmlspecialchars((string) $partie['title']) ?></a><?php endif ?></li>
+					<?php endforeach ?>
+				</ol>
+			</aside>
+			<?php endif ?>
+
 			<div class="article-content blog-contenu" data-blog-contenu>
 				<?php echo $content ?>
 			</div>
@@ -72,6 +103,7 @@ $categorie = url('articles/category/'.$article['category_id'].'/'.url_title($art
 				<div>
 					<small><?php echo $this->lang('Écrit par') ?></small>
 					<strong><?php echo $this->user->link($article['user_id'], $article['username']) ?></strong>
+					<a href="<?php echo $ses_billets ?>"><?php echo $this->lang('Tous ses billets') ?></a>
 				</div>
 			</div>
 			<?php endif ?>
@@ -118,6 +150,7 @@ $categorie = url('articles/category/'.$article['category_id'].'/'.url_title($art
 			<div class="blog-boite">
 				<h3><?php echo $this->lang('Auteur') ?></h3>
 				<span class="blog-auteur"><?php echo $auteur ?></span>
+				<p class="mb-0 mt-2"><a href="<?php echo $ses_billets ?>"><?php echo $this->lang('Tous ses billets') ?></a></p>
 			</div>
 			<?php endif ?>
 			<div class="blog-boite">

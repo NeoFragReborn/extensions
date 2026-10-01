@@ -25,7 +25,7 @@ class Index extends Controller_Module
 		return $this->_liste($articles, $une, $barre, $pagination);
 	}
 
-	public function _article($article, $autour = [])
+	public function _article($article, $autour = [], $serie = [])
 	{
 		$this->css('blog');
 		$this->js('blog');
@@ -41,6 +41,8 @@ class Index extends Controller_Module
 		$toc       = Articles::build_toc($content);
 		$read_time = Articles::read_time_minutes($content);
 
+		$this->_partage($article, $content);
+
 		return $this->panel()
 					->style('card-transparent blog-panel')
 					->body($this->view('article', [
@@ -49,8 +51,87 @@ class Index extends Controller_Module
 						'toc'       => $toc,
 						'read_time' => $read_time,
 						'autour'    => $autour + ['precedent' => NULL, 'suivant' => NULL, 'lies' => []],
+						'serie'     => $serie,
 						'fiche'     => Articles::mise_en_page('fiche', (string) $this->config->articles_fiche),
 					]), FALSE);
+	}
+
+	public function _auteur($articles, $auteur, $barre = [], $pagination = '')
+	{
+		$this	->title($this->lang('Billets de %s', $auteur['username']))
+				->icon('fas fa-user-edit')
+				->breadcrumb();
+
+		$membre = $this->module('user')->model2('user', $auteur['user_id']);
+
+		$entete = '<header class="blog-page-entete">'
+			.($membre instanceof \NF\NeoFrag\Models\User ? $membre->avatar()->append_attr('class', 'blog-avatar-grand') : '')
+			.'<div><h1>'.htmlspecialchars($auteur['username']).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', $auteur['total'], $auteur['total'])
+			.' · '.$this->user->link($auteur['user_id'], $this->lang('Voir son profil')).'</p></div></header>';
+
+		return $this->_liste($articles, NULL, $barre, $pagination, $entete);
+	}
+
+	public function _archives($articles, $mois, $barre = [], $pagination = '')
+	{
+		$libelle = timetostr('F Y', $mois.'-01');
+
+		$this	->title($this->lang('Archives : %s', $libelle))
+				->icon('far fa-calendar-alt')
+				->breadcrumb();
+
+		return $this->_liste($articles, NULL, $barre, $pagination, '<header class="blog-page-entete"><div><h1>'.htmlspecialchars($libelle).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', count($articles), count($articles)).'</p></div></header>', 0, $mois);
+	}
+
+	public function _serie($serie, $parties)
+	{
+		$this->css('blog');
+		$this->js('blog');
+
+		$this	->title($serie['title'])
+				->meta_description($serie['description'] ?: $serie['title'])
+				->icon('fas fa-layer-group')
+				->breadcrumb();
+
+		return $this->panel()
+					->style('card-transparent blog-panel')
+					->body($this->view('serie', [
+						'serie'   => $serie,
+						'parties' => $parties,
+					]), FALSE);
+	}
+
+	/**
+	 * Ce que voit un réseau social ou un moteur quand on partage un billet : sa
+	 * couverture, le type « article », et ses données structurées (titre, auteur, dates, image).
+	 */
+	private function _partage(array $article, string $content): void
+	{
+		$image   = !empty($article['image']) ? (string) NeoFrag()->model2('file', $article['image'])->path() : '';
+		// `path()` rend une adresse depuis la racine : on lui ajoute l'origine (pas `absolute_url()`,
+		// qui y glisserait la langue comme pour une page).
+		$image   = $image !== '' && strpos($image, '://') === FALSE ? site_origin().'/'.ltrim($image, '/') : $image;
+		$adresse = absolute_url('articles/'.$article['article_id'].'/'.url_title($article['title']));
+
+		$donnees = array_filter([
+			'@context'         => 'https://schema.org',
+			'@type'            => 'BlogPosting',
+			'headline'         => mb_substr((string) $article['title'], 0, 110),
+			'description'      => mb_strimwidth(trim((string) preg_replace('/\s+/', ' ', strip_tags(!empty($article['excerpt']) ? (string) $article['excerpt'] : $content))), 0, 300, '…'),
+			'datePublished'    => date('c', (int) strtotime((string) $article['date'])),
+			'author'           => !empty($article['username']) ? ['@type' => 'Person', 'name' => (string) $article['username']] : NULL,
+			'image'            => $image ?: NULL,
+			'mainEntityOfPage' => $adresse,
+			'wordCount'        => count(preg_split('/\s+/', strip_tags($content), -1, PREG_SPLIT_NO_EMPTY) ?: []),
+		], static fn ($v) => $v !== NULL && $v !== '');
+
+		$this->output->data->set('module', 'og_type', 'article');
+		$this->output->data->set('module', 'jsonld', $donnees);
+
+		if ($image !== '')
+		{
+			$this->output->data->set('module', 'og_image', $image);
+		}
 	}
 
 	public function _category($articles, $category_id, $title, $barre = [], $pagination = '')
@@ -73,7 +154,7 @@ class Index extends Controller_Module
 		return $this->_liste($articles, NULL, $barre, $pagination);
 	}
 
-	private function _liste($articles, $une, $barre, $pagination, string $avant = '', int $categorie = 0)
+	private function _liste($articles, $une, $barre, $pagination, string $avant = '', int $categorie = 0, string $mois = '')
 	{
 		$this->css('blog');
 		$this->js('blog');
@@ -85,6 +166,7 @@ class Index extends Controller_Module
 						'une'        => $une,
 						'barre'      => $barre,
 						'categorie'  => $categorie,
+						'mois'       => $mois,
 						'liste'      => Articles::mise_en_page('liste', (string) $this->config->articles_liste),
 						'pagination' => (string) $pagination,
 					]), FALSE);

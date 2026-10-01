@@ -8,8 +8,8 @@ class Articles extends Widget
 	protected function __info()
 	{
 		return [
-			'title'   => $this->lang('Articles'),
-			'description' => $this->lang('Liste des derniers articles publiés.'),
+			'title'   => $this->lang('Blog'),
+			'description' => $this->lang('Les billets du Blog : les derniers, les plus lus, celui à la une, les catégories, les tags et les archives.'),
 			'icon'        => 'far fa-newspaper',
 			'author'  => 'NeoFrag',
 			'license' => 'LGPLv3',
@@ -17,9 +17,18 @@ class Articles extends Widget
 			'core'        => FALSE,
 			'presets'     => [],
 			'requires'    => [],
-			'version' => '1.0',
+			'version' => '1.1',
 			'depends' => ['neofrag' => '0.2.0'],
-			'types'   => ['index' => $this->lang('Articles récents')]
+			// Les widgets du Blog (2026-10-01). `index` garde son nom : les dispositions
+			// existantes qui posent « Articles récents » continuent de l'afficher.
+			'types'   => [
+				'index'      => $this->lang('Derniers billets'),
+				'populaires' => $this->lang('Les plus lus'),
+				'une'        => $this->lang('À la une'),
+				'categories' => $this->lang('Catégories'),
+				'tags'       => $this->lang('Tags'),
+				'archives'   => $this->lang('Archives'),
+			]
 		];
 	}
 }

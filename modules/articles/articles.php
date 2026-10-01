@@ -82,10 +82,18 @@ class Articles extends Module
 				'{id}/{url_title}'                         => '_article',
 				'tag/{url_title}{pages}'                   => '_tag',
 				'category/{id}/{url_title}{pages}'         => '_category',
+				'auteur/{id}/{url_title}{pages}'           => '_auteur',
+				'archives/{id}/{id}{pages}'                => '_archives',
+				'serie/{id}/{url_title}'                   => '_serie',
 
 				//Admin
 				'admin{pages}'                             => 'index',
 				'admin/add'                                => '_add',
+				'admin/categories'                         => '_categories',
+				'admin/series'                             => '_series',
+				'admin/series/add'                         => '_series_add',
+				'admin/series/{id}/{url_title}'            => '_series_edit',
+				'admin/series/delete/{id}/{url_title}'     => '_series_delete',
 				'admin/history/{id}/{url_title}'           => '_history',
 				'admin/revision/restore/{id}/{url_title}/{id}' => '_revision_restore',
 				'admin/delete/{id}/{url_title}'            => '_delete',

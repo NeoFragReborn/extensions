@@ -1,0 +1,42 @@
+/*
+ * Les widgets du Blog (2026-10-01). Uniquement les variables communes des thèmes (`--nf-*`,
+ * cf. `check-css-variables`) : chaque thème, clair ou sombre, y met ses couleurs.
+ */
+.widget-blog { display: grid; gap: .6rem; min-width: 0; }
+.widget-blog a { text-decoration: none; }
+.widget-blog-vide { margin: 0; color: var(--nf-text-muted); text-align: center; }
+
+.widget-blog-billets { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+.widget-blog-billets li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: .7rem; align-items: center; }
+.widget-blog-billets li > div { display: grid; gap: .1rem; min-width: 0; }
+.widget-blog-billets li > div a { color: var(--nf-text); font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.widget-blog-billets li > div a:hover { color: var(--nf-accent-text); }
+.widget-blog-billets small { color: var(--nf-text-muted); }
+.widget-blog-vignette { display: block; width: 64px; aspect-ratio: 4 / 3; border-radius: var(--nf-radius-sm); overflow: hidden; background: var(--nf-surface-2); }
+.widget-blog-vignette img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.widget-blog-vignette.vide, .widget-blog-une-image.vide { background: linear-gradient(135deg, var(--nf-accent-soft), var(--nf-surface-2)); }
+
+.widget-blog-populaires { margin: 0; padding-left: 1.4rem; display: grid; gap: .5rem; }
+.widget-blog-populaires li::marker { color: var(--nf-accent-text); font-weight: 700; }
+.widget-blog-populaires a { color: var(--nf-text); overflow-wrap: anywhere; }
+.widget-blog-populaires a:hover { color: var(--nf-accent-text); }
+.widget-blog-populaires small { color: var(--nf-text-muted); white-space: nowrap; }
+
+.widget-blog-une { display: grid; gap: .5rem; min-width: 0; }
+.widget-blog-une-image { display: block; aspect-ratio: 16 / 9; border-radius: var(--nf-radius-sm); overflow: hidden; background: var(--nf-surface-2); }
+.widget-blog-une-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.widget-blog-pastille { justify-self: start; font-size: .75rem; font-weight: 600; padding: .15rem .6rem; border-radius: 2rem; background: var(--nf-accent-soft); color: var(--nf-accent-text); }
+.widget-blog-une h3 { font-family: var(--nf-font-display); font-size: 1.05rem; line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
+.widget-blog-une h3 a { color: var(--nf-text-strong); }
+.widget-blog-une h3 a:hover { color: var(--nf-accent-text); }
+.widget-blog-une p { margin: 0; color: var(--nf-text-muted); font-size: .9rem; }
+
+.widget-blog-compteurs { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.widget-blog-compteurs li { display: flex; justify-content: space-between; gap: .6rem; }
+.widget-blog-compteurs a { color: var(--nf-text); }
+.widget-blog-compteurs a:hover { color: var(--nf-accent-text); }
+.widget-blog-compteurs span { color: var(--nf-text-muted); font-variant-numeric: tabular-nums; }
+
+.widget-blog-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.widget-blog-tags a { font-size: .8rem; padding: .3rem .65rem; border-radius: 2rem; background: var(--nf-surface-2); color: var(--nf-text-muted); }
+.widget-blog-tags a:hover { color: var(--nf-accent-text); }

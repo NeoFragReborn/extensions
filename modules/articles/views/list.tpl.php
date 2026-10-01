@@ -12,6 +12,7 @@ $articles   = $articles ?? [];
 $une       = $une ?? NULL;
 $barre      = $barre ?? [];
 $categorie  = $categorie ?? 0;
+$mois       = $mois ?? '';
 $liste      = $liste ?? 'barre';
 $pagination = $pagination ?? '';
 
@@ -25,7 +26,8 @@ $auteur   = function (array $a): string {
 		return '';
 	}
 
-	return '<span class="blog-auteur">'.$this->module('user')->model2('user', $a['user_id'])->avatar()->append_attr('class', 'blog-avatar').' '.$this->user->link($a['user_id'], $a['username']).'</span>';
+	// Le nom mène à la page de l'auteur dans le Blog : ses autres billets.
+	return '<span class="blog-auteur">'.$this->module('user')->model2('user', $a['user_id'])->avatar()->append_attr('class', 'blog-avatar').' <a href="'.url('articles/auteur/'.(int) $a['user_id'].'/'.url_title((string) $a['username'])).'">'.htmlspecialchars((string) $a['username']).'</a></span>';
 };
 
 $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): string {
@@ -130,8 +132,8 @@ $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): s
 			<div class="blog-boite">
 				<h3><?php echo $this->lang('Archives') ?></h3>
 				<ul class="blog-categories">
-					<?php foreach ($barre['archives'] as $mois => $n): ?>
-					<li><span><?php echo timetostr('F Y', $mois.'-01') ?></span> <span><?php echo (int) $n ?></span></li>
+					<?php foreach ($barre['archives'] as $cle => $n): ?>
+					<li><a class="<?php echo $mois === $cle ? 'actif' : '' ?>" href="<?php echo url('articles/archives/'.str_replace('-', '/', (string) $cle)) ?>"><?php echo timetostr('F Y', $cle.'-01') ?></a> <span><?php echo (int) $n ?></span></li>
 					<?php endforeach ?>
 				</ul>
 			</div>

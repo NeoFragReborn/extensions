@@ -37,13 +37,13 @@ class Checker extends Module_Checker
 		$une  ??= $tous[0] ?? NULL;
 		$reste = $une ? array_values(array_filter($tous, static fn (array $b): bool => (int) $b['article_id'] !== (int) $une['article_id'])) : $tous;
 
-		$pages = $this->module->pagination;
+		[$donnees, $pagination] = $this->_paginer($reste, $page);
 
 		return [
-			$pages->fix_items_per_page($this->config->articles_per_page ?: 10)->get_data($reste, $page),
+			$donnees,
 			$this->_premiere_page($page) ? $une : NULL,
 			$this->_barre($tous),
-			(string) $pages->get_pagination(),
+			$pagination,
 		];
 	}
 
@@ -56,8 +56,93 @@ class Checker extends Module_Checker
 				$this->_modele()->increment_views($article_id);
 			}
 
-			return [$article, $this->_autour($article)];
+			return [$article, $this->_autour($article), $this->_serie_du_billet($article)];
 		}
+	}
+
+	/** La page d'un auteur : ses billets visibles. Un auteur sans billet visible n'a pas de page. */
+	public function _auteur($user_id, $title, $page = '')
+	{
+		$articles = $this->_modele()->get_articles('user', (int) $user_id);
+
+		if (empty($articles))
+		{
+			return;
+		}
+
+		[$donnees, $pagination] = $this->_paginer($articles, $page);
+
+		return [
+			$donnees,
+			['user_id' => (int) $user_id, 'username' => (string) $articles[0]['username'], 'total' => count($articles)],
+			$this->_barre($this->_modele()->get_articles()),
+			$pagination,
+		];
+	}
+
+	/** Un mois d'archives. Un mois impossible ou sans billet visible n'a pas de page. */
+	public function _archives($annee, $mois, $page = '')
+	{
+		$annee = (int) $annee;
+		$mois  = (int) $mois;
+
+		if ($annee < 1970 || $mois < 1 || $mois > 12)
+		{
+			return;
+		}
+
+		$cle      = sprintf('%04d-%02d', $annee, $mois);
+		$articles = $this->_modele()->get_articles('month', $cle);
+
+		if (empty($articles))
+		{
+			return;
+		}
+
+		[$donnees, $pagination] = $this->_paginer($articles, $page);
+
+		return [
+			$donnees,
+			$cle,
+			$this->_barre($this->_modele()->get_articles()),
+			$pagination,
+		];
+	}
+
+	/** La page d'une série : sa présentation, puis ses parties visibles dans l'ordre. */
+	public function _serie($series_id, $title)
+	{
+		if (!($serie = $this->_modele()->get_series((int) $series_id)) || !($parties = $this->_parties((int) $series_id)))
+		{
+			return;
+		}
+
+		return [$serie, $parties];
+	}
+
+	/**
+	 * Les parties visibles d'une série, dans leur ordre : le rang, puis la date pour départager.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function _parties(int $series_id): array
+	{
+		$parties = $this->_modele()->get_articles('series', $series_id);
+
+		usort($parties, static fn (array $a, array $b): int => [(int) $a['series_order'], (string) $a['date']] <=> [(int) $b['series_order'], (string) $b['date']]);
+
+		return $parties;
+	}
+
+	/** La série d'un billet et ses parties, ou un tableau vide s'il n'en fait pas partie. */
+	private function _serie_du_billet(array $article): array
+	{
+		if (empty($article['series_id']) || !($serie = $this->_modele()->get_series((int) $article['series_id'])))
+		{
+			return [];
+		}
+
+		return ['serie' => $serie, 'parties' => $this->_parties((int) $article['series_id'])];
 	}
 
 	public function _category($category_id, $title, $page = '')
@@ -69,14 +154,14 @@ class Checker extends Module_Checker
 			return;
 		}
 
-		$pages = $this->module->pagination;
+		[$donnees, $pagination] = $this->_paginer($articles, $page);
 
 		return [
-			$pages->fix_items_per_page($this->config->articles_per_page ?: 10)->get_data($articles, $page),
+			$donnees,
 			$category_id,
 			$title,
 			$this->_barre($this->_modele()->get_articles()),
-			(string) $pages->get_pagination(),
+			$pagination,
 		];
 	}
 
@@ -84,14 +169,29 @@ class Checker extends Module_Checker
 	{
 		$articles = $this->_modele()->get_articles('tag', $tag);
 
-		$pages = $this->module->pagination;
+		[$donnees, $pagination] = $this->_paginer($articles, $page);
 
 		return [
-			$pages->fix_items_per_page($this->config->articles_per_page ?: 10)->get_data($articles, $page),
+			$donnees,
 			$tag,
 			$this->_barre($this->_modele()->get_articles()),
-			(string) $pages->get_pagination(),
+			$pagination,
 		];
+	}
+
+	/**
+	 * Une page de billets et sa pagination, dans cet ordre : la pagination se calcule sur la page
+	 * qu'on vient de découper.
+	 *
+	 * @param array<int, array<string, mixed>> $billets
+	 * @return array{0: mixed, 1: string}
+	 */
+	private function _paginer(array $billets, $page): array
+	{
+		$pages   = $this->module->pagination;
+		$donnees = $pages->fix_items_per_page($this->config->articles_per_page ?: 10)->get_data($billets, $page);
+
+		return [$donnees, (string) $pages->get_pagination()];
 	}
 
 	private function _premiere_page($page): bool

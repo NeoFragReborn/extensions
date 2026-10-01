@@ -133,7 +133,8 @@ class Admin extends Controller_Module
 		$body = $toolbar.$body.$pagination;
 
 		$subtitle = $published_count.' '.$this->lang('publié|publiés', $published_count).($drafts_count > 0 ? ' · '.$drafts_count.' '.$this->lang('brouillon|brouillons', $drafts_count) : '');
-		$actions  = '<a class="btn btn-secondary btn-sm" href="'.url('admin/articles/categories/add').'"><i class="fas fa-folder-plus"></i> '.$this->lang('Catégorie').'</a> '
+		$actions  = '<a class="btn btn-secondary btn-sm" href="'.url('admin/articles/categories').'"><i class="fas fa-folder"></i> '.$this->lang('Catégories').'</a> '
+			.'<a class="btn btn-secondary btn-sm" href="'.url('admin/articles/series').'"><i class="fas fa-layer-group"></i> '.$this->lang('Séries').'</a> '
 			.'<a class="btn btn-primary btn-sm" href="'.url('admin/articles/add').'"><i class="fas fa-plus"></i> '.$this->lang('Nouvel article').'</a>';
 
 		return $this->admin_card('far fa-newspaper', $this->lang('Articles'), $body, $subtitle, $actions);
@@ -189,6 +190,13 @@ class Admin extends Controller_Module
 			$categories_array[$row['category_id']] = $row['title'];
 		}
 
+		// Les séries : un billet peut être une partie de l'une d'elles, à son rang.
+		$series_array = ['0' => $this->lang('Aucune')];
+		foreach ($this->_modele()->get_series_list() as $s)
+		{
+			$series_array[$s['series_id']] = $s['title'];
+		}
+
 		$this->form()
 			 ->add_rules([
 				'title' => [
@@ -236,6 +244,19 @@ class Admin extends Controller_Module
 					'value' => $is_new ? '' : $article['tags'],
 					'description' => $this->lang('Séparés par des virgules.')
 				],
+				'series_id' => [
+					'label'       => $this->lang('Série'),
+					'type'        => 'select',
+					'values'      => $series_array,
+					'value'       => $is_new ? '0' : (string) (int) ($article['series_id'] ?? 0),
+					'description' => $this->lang('Un billet en plusieurs parties : chacune affiche la liste des autres.')
+				],
+				'series_order' => [
+					'label'       => $this->lang('Partie n°'),
+					'type'        => 'number',
+					'value'       => $is_new ? '' : (string) (int) ($article['series_order'] ?? 0),
+					'description' => $this->lang('Le rang du billet dans sa série.')
+				],
 				'date' => [
 					'label'       => $this->lang('Date de publication'),
 					'type'        => 'datetime',
@@ -260,6 +281,8 @@ class Admin extends Controller_Module
 			$lang = $this->config->lang->info()->name;
 			$published = in_array('1', $post['published'] ?? []) ? '1' : '0';
 			$featured  = in_array('1', $post['featured'] ?? []) ? 1 : 0;
+			$serie     = isset($series_array[(int) ($post['series_id'] ?? 0)]) && (int) ($post['series_id'] ?? 0) ? (int) $post['series_id'] : NULL;
+			$rang      = $serie ? max(0, min(65535, (int) ($post['series_order'] ?? 0))) : 0;
 
 			if ($is_new)
 			{
@@ -270,6 +293,8 @@ class Admin extends Controller_Module
 					'date'        => !empty($post['date']) ? $post['date'] : NeoFrag()->date()->sql(),
 					'published'   => $published,
 					'featured'    => $featured,
+					'series_id'   => $serie,
+					'series_order' => $rang,
 					'views'       => 0
 				]);
 				$new_id = (int)NeoFrag()->db->driver()->insert_id();
@@ -299,7 +324,9 @@ class Admin extends Controller_Module
 									'category_id' => (int)$post['category_id'],
 									'image_id'   => $post['image'] ?: NULL,
 									'published'   => $published,
-									'featured'    => $featured
+									'featured'    => $featured,
+									'series_id'   => $serie,
+									'series_order' => $rang
 								], !empty($post['date']) ? ['date' => $post['date']] : []));
 
 				NeoFrag()->db	->where('article_id', $article['article_id'])
@@ -423,7 +450,7 @@ class Admin extends Controller_Module
 			}
 
 			notify($this->lang('Catégorie créée.'));
-			redirect('admin/articles');
+			redirect('admin/articles/categories');
 		}
 
 		return $this->admin_card('fas fa-folder-plus', $this->lang('Nouvelle catégorie'), $this->form()->display());
@@ -450,34 +477,141 @@ class Admin extends Controller_Module
 							->update('nf_articles_categories_lang', ['title' => $post['title']]);
 
 			notify($this->lang('Catégorie modifiée.'));
-			redirect('admin/articles');
+			redirect('admin/articles/categories');
 		}
 
 		return $this->admin_card('fas fa-folder-open', $this->lang('Éditer la catégorie : %s', $category['title']), $this->form()->display());
 	}
 
+	/** La liste des catégories : chacune, son nombre de billets, et de quoi la modifier. */
+	public function _categories($categories)
+	{
+		$this->title($this->lang('Catégories'))->icon('fas fa-folder')->breadcrumb();
+
+		$lignes = '';
+
+		foreach ($categories as $c)
+		{
+			$slug    = url_title((string) $c['title']);
+			$lignes .= '<tr><td>'.htmlspecialchars((string) $c['title']).' <small class="text-muted">/'.htmlspecialchars((string) $c['name']).'</small></td><td>'.(int) $c['articles_count'].'</td><td class="text-end">'
+				.($this->is_authorized('modify_categories') ? '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/articles/categories/'.$c['category_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> ' : '')
+				.($this->is_authorized('delete_categories') && !(int) $c['articles_count'] ? '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/categories/delete/'.$c['category_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) $this->lang('Supprimer cette catégorie ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>' : '')
+				.'</td></tr>';
+		}
+
+		$corps = $lignes
+			? '<div class="table-responsive"><table class="table table-sm align-middle mb-0"><thead><tr><th>'.$this->lang('Catégorie').'</th><th>'.$this->lang('Billets').'</th><th></th></tr></thead><tbody>'.$lignes.'</tbody></table></div>'
+			: $this->admin_empty('fas fa-folder', $this->lang('Aucune catégorie pour le moment.'));
+
+		$actions = $this->is_authorized('add_categories') ? '<a class="btn btn-primary btn-sm" href="'.url('admin/articles/categories/add').'"><i class="fas fa-folder-plus"></i> '.$this->lang('Nouvelle catégorie').'</a>' : '';
+
+		return $this->admin_back('admin/articles').$this->admin_card('fas fa-folder', $this->lang('Catégories'), $corps, '', $actions);
+	}
+
+	/** Les séries : un billet en plusieurs parties, avec leur navigation. */
+	public function _series($series)
+	{
+		$this->title($this->lang('Séries'))->icon('fas fa-layer-group')->breadcrumb();
+
+		$lignes = '';
+
+		foreach ($series as $s)
+		{
+			$slug    = url_title($s['title']);
+			$lignes .= '<tr><td>'.htmlspecialchars($s['title']).'</td><td>'.$this->lang('%d partie|%d parties', $s['parts'], $s['parts']).'</td><td class="text-end">'
+				.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/articles/series/'.$s['series_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> '
+				.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/series/delete/'.$s['series_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) $this->lang('Supprimer cette série ? Ses billets restent publiés.'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>'
+				.'</td></tr>';
+		}
+
+		$corps = $lignes
+			? '<div class="table-responsive"><table class="table table-sm align-middle mb-0"><thead><tr><th>'.$this->lang('Série').'</th><th>'.$this->lang('Parties').'</th><th></th></tr></thead><tbody>'.$lignes.'</tbody></table></div>'
+			: $this->admin_empty('fas fa-layer-group', $this->lang('Aucune série pour le moment.'), $this->lang('Une série réunit un billet en plusieurs parties : chaque partie affiche la liste des autres, dans l’ordre.'));
+
+		return $this->admin_back('admin/articles').$this->admin_card('fas fa-layer-group', $this->lang('Séries'), $corps, '', '<a class="btn btn-primary btn-sm" href="'.url('admin/articles/series/add').'"><i class="fas fa-plus"></i> '.$this->lang('Nouvelle série').'</a>');
+	}
+
+	public function _series_add()
+	{
+		return $this->_formulaire_serie(NULL);
+	}
+
+	public function _series_edit($serie)
+	{
+		return $this->_formulaire_serie($serie);
+	}
+
+	public function _series_delete($serie)
+	{
+		$this->check_csrf('admin/articles/series');
+
+		$this->_modele()->delete_series((int) $serie['series_id']);
+
+		notify($this->lang('Série supprimée.'));
+		redirect('admin/articles/series');
+	}
+
+	private function _formulaire_serie(?array $serie)
+	{
+		$titre = $serie ? $this->lang('Éditer la série : %s', $serie['title']) : $this->lang('Nouvelle série');
+
+		$this->title($titre)->icon('fas fa-layer-group')->breadcrumb();
+
+		$this->form()
+			 ->add_rules([
+				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $serie['title'] ?? '', 'rules' => 'required'],
+				'description' => ['label' => $this->lang('Présentation'), 'type' => 'textarea', 'value' => $serie['description'] ?? '',
+				                  'description' => $this->lang('Affichée en tête de la page de la série.')]
+			 ])
+			 ->add_submit($serie ? $this->lang('Enregistrer') : $this->lang('Créer'), $serie ? 'fas fa-check' : 'fas fa-plus')
+			 ->add_back('admin/articles/series');
+
+		if ($this->form()->is_valid($post))
+		{
+			$this->_modele()->save_series($serie ? (int) $serie['series_id'] : NULL, $this->config->lang->info()->name, trim((string) $post['title']), trim((string) ($post['description'] ?? '')));
+
+			notify($serie ? $this->lang('Série modifiée.') : $this->lang('Série créée.'));
+			redirect('admin/articles/series');
+		}
+
+		return $this->admin_card('fas fa-layer-group', $titre, $this->form()->display());
+	}
+
+	/** Le modèle du Blog, typé : pour l'analyse statique, `$this->model()` rend un modèle générique. */
+	private function _modele(): \NF\Modules\Articles\Models\Articles
+	{
+		$modele = $this->model('articles');
+
+		if (!$modele instanceof \NF\Modules\Articles\Models\Articles)
+		{
+			throw new \LogicException('modèle du Blog introuvable');
+		}
+
+		return $modele;
+	}
+
 	public function _categories_delete($category)
 	{
+		$this->check_csrf('admin/articles/categories');
+
 		// Vérifier qu'il n'y a pas d'articles dans cette catégorie
 		$count = (int)NeoFrag()->db	->select('COUNT(*)')
 									->from('nf_articles')
 									->where('category_id', $category['category_id'])
-									->row(FALSE);
+									->row();
 
 		if ($count > 0)
 		{
 			notify($this->lang('Impossible : %d article(s) dans cette catégorie. Déplace-les ou supprime-les d\'abord.', $count));
-			redirect('admin/articles');
+			redirect('admin/articles/categories');
 		}
 
-		NeoFrag()->db	->from('nf_articles_categories')
-						->where('category_id', $category['category_id'])
-						->delete();
-		NeoFrag()->db	->from('nf_articles_categories_lang')
-						->where('category_id', $category['category_id'])
-						->delete();
+		NeoFrag()->db	->where('category_id', $category['category_id'])
+						->delete('nf_articles_categories');
+		NeoFrag()->db	->where('category_id', $category['category_id'])
+						->delete('nf_articles_categories_lang');
 
 		notify($this->lang('Catégorie supprimée.'));
-		redirect('admin/articles');
+		redirect('admin/articles/categories');
 	}
 }

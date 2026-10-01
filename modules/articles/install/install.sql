@@ -1,6 +1,6 @@
 -- NeoFrag Reborn — install du module « articles » — tables propres au module.
 -- Généré par tools/extract-module-sql.php depuis la base vive. NE PAS éditer à la main.
--- Régénérer : docker compose exec -T web php tools/extract-module-sql.php
+-- Régénérer : php tools/extract-module-sql.php
 
 SET FOREIGN_KEY_CHECKS = 0;
 SET NAMES utf8mb4;
@@ -8,6 +8,8 @@ SET NAMES utf8mb4;
 CREATE TABLE IF NOT EXISTS `nf_articles` (
   `article_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `category_id` int(10) unsigned NOT NULL,
+  `series_id` int(10) unsigned DEFAULT NULL,
+  `series_order` smallint(5) unsigned NOT NULL DEFAULT 0,
   `user_id` int(10) unsigned NOT NULL,
   `image_id` int(10) unsigned DEFAULT NULL,
   -- datetime : une `date` future programme/masque la publication (cf. models/articles.php). TIMESTAMP
@@ -24,7 +26,8 @@ CREATE TABLE IF NOT EXISTS `nf_articles` (
   KEY `idx_user` (`user_id`),
   KEY `idx_image` (`image_id`),
   KEY `idx_deleted_at` (`deleted_at`),
-  KEY `idx_schedule` (`published`,`announced_at`,`date`)
+  KEY `idx_schedule` (`published`,`announced_at`,`date`),
+  KEY `idx_series` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `nf_articles_lang` (
@@ -52,6 +55,20 @@ CREATE TABLE IF NOT EXISTS `nf_articles_categories_lang` (
   `lang` varchar(5) NOT NULL,
   `title` varchar(100) NOT NULL,
   PRIMARY KEY (`category_id`,`lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `nf_articles_series` (
+  `series_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`series_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `nf_articles_series_lang` (
+  `series_id` int(10) unsigned NOT NULL,
+  `lang` varchar(5) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` varchar(500) NOT NULL DEFAULT '',
+  PRIMARY KEY (`series_id`,`lang`),
+  CONSTRAINT `nf_articles_series_lang_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `nf_articles_series` (`series_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
