@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `nf_articles` (
   -- plafonne au 19/01/2038 → rejet en mode strict. `announced_at` reste TIMESTAMP (posé à la parution réelle).
   `date` datetime NOT NULL DEFAULT current_timestamp(),
   `published` enum('0','1') NOT NULL DEFAULT '0',
+  `featured` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `announced_at` timestamp NULL DEFAULT NULL,
   `views` int(10) unsigned NOT NULL DEFAULT 0,
   `deleted_at` timestamp NULL DEFAULT NULL,

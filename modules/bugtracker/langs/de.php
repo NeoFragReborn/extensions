@@ -65,4 +65,11 @@ return [
 	'5e910685' => 'kritischer Fehler|kritische Fehler',
 	'15a51af2' => 'Tickets ansehen',
 	'ee1e54cf' => 'Tickets verwalten',
+	'7d356adf' => 'Duplikat',
+	'cb96801d' => 'Duplikat von Ticket Nr.',
+	'db7a1b21' => 'Mit dem Status „Duplikat“: das ursprüngliche Ticket, auf das dieses verweist.',
+	'd8a1f614' => 'Dieses Ticket ist ein Duplikat von %s: Es geht dort weiter.',
+	'eeb78c6a' => 'Schon gemeldet?',
+	'680a5f7e' => 'Diese offenen Tickets ähneln deinem: Wenn es dasselbe Thema ist, kommentiere lieber dort.',
+	'bde466c1' => 'Alle',
 ];

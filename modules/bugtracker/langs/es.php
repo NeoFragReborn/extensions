@@ -65,4 +65,11 @@ return [
 	'5e910685' => 'error crítico|errores críticos',
 	'15a51af2' => 'Ver los tickets',
 	'ee1e54cf' => 'Gestionar los tickets',
+	'7d356adf' => 'Duplicado',
+	'cb96801d' => 'Duplicado del ticket n.º',
+	'db7a1b21' => 'Con el estado «Duplicado»: el ticket original al que remitirá este.',
+	'd8a1f614' => 'Este ticket es un duplicado de %s: la continuación está allí.',
+	'eeb78c6a' => '¿Ya informado?',
+	'680a5f7e' => 'Estos tickets abiertos se parecen al tuyo: si es el mismo asunto, mejor añade un comentario allí.',
+	'bde466c1' => 'Todos',
 ];

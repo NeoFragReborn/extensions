@@ -1,6 +1,6 @@
 -- NeoFrag Reborn — install du module « bugtracker » — tables propres au module.
 -- Généré par tools/extract-module-sql.php depuis la base vive. NE PAS éditer à la main.
--- Régénérer : docker compose exec -T web php tools/extract-module-sql.php
+-- Régénérer : php tools/extract-module-sql.php
 
 SET FOREIGN_KEY_CHECKS = 0;
 SET NAMES utf8mb4;
@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS `nf_bug_tickets` (
   `description` text NOT NULL,
   `type` enum('bug','feature','question','other') NOT NULL DEFAULT 'bug',
   `priority` enum('low','normal','high','critical') NOT NULL DEFAULT 'normal',
-  `status` enum('open','in_progress','resolved','closed','wont_fix') NOT NULL DEFAULT 'open',
+  `status` enum('open','in_progress','resolved','closed','wont_fix','duplicate') NOT NULL DEFAULT 'open',
+  `duplicate_of` int(10) unsigned DEFAULT NULL,
   `user_id` int(10) unsigned DEFAULT NULL,
   `assigned_to` int(10) unsigned DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),

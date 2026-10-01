@@ -5,14 +5,26 @@ use NF\NeoFrag\Loadables\Controllers\Module_Checker;
 
 class Checker extends Module_Checker
 {
+	/**
+	 * `?type=bug|feature|question|other` filtre la liste (2026-10-01) : les forums « Signaler un bug »
+	 * et « Suggestions » de la vitrine mènent ici, sur les tickets déjà ouverts du même type, avant le
+	 * formulaire — on voit ce qui est signalé avant de le signaler une seconde fois.
+	 */
 	public function index()
 	{
-		$tickets = NeoFrag()->db	->select('t.id', 't.title', 't.type', 't.priority', 't.status', 'UNIX_TIMESTAMP(t.created_at) AS ts', 'u.id AS reporter_id', 'u.username AS reporter')
-									->from('nf_bug_tickets t')
-									->join('nf_user u', 't.user_id = u.id', 'LEFT')
-									->order_by('FIELD(t.status, "open","in_progress","resolved","closed","wont_fix") ASC, t.created_at DESC')
-									->get();
-		return [$tickets];
+		$type = in_array($_GET['type'] ?? '', \NF\Modules\Bugtracker\Bugtracker::TYPES, TRUE) ? (string) $_GET['type'] : '';
+
+		NeoFrag()->db	->select('t.id', 't.title', 't.type', 't.priority', 't.status', 'UNIX_TIMESTAMP(t.created_at) AS ts', 'u.id AS reporter_id', 'u.username AS reporter')
+						->from('nf_bug_tickets t')
+						->join('nf_user u', 't.user_id = u.id', 'LEFT')
+						->order_by('FIELD(t.status, "open","in_progress","resolved","closed","wont_fix","duplicate") ASC, t.created_at DESC');
+
+		if ($type !== '')
+		{
+			NeoFrag()->db->where('t.type', $type);
+		}
+
+		return [NeoFrag()->db->get(), $type];
 	}
 
 	public function _new()

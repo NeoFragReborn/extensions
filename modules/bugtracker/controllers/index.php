@@ -6,15 +6,24 @@ use NF\Modules\Bugtracker\Bugtracker;
 
 class Index extends Controller_Module
 {
-	public function index($tickets)
+	public function index($tickets, $type = '')
 	{
 		$this->title($this->lang('Tickets'))->icon('fas fa-bug')->breadcrumb();
 
-		$body = '';
+		$body  = '<div class="d-flex flex-wrap align-items-center gap-2 mb-3">';
+		$types = ['' => $this->lang('Tous'), 'bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')];
+
+		foreach ($types as $code => $libelle)
+		{
+			$body .= '<a class="btn btn-sm '.($code === $type ? 'btn-primary' : 'btn-outline-secondary').'" href="'.url('bugtracker').($code !== '' ? '?type='.$code : '').'">'.$libelle.'</a>';
+		}
+
 		if ($this->user())
 		{
-			$body .= '<a class="btn btn-primary mb-3" href="'.url('bugtracker/new').'"><i class="fas fa-plus"></i> '.$this->lang('Nouveau ticket').'</a>';
+			$body .= '<a class="btn btn-primary ms-auto" href="'.url('bugtracker/new').($type !== '' ? '?type='.$type : '').'"><i class="fas fa-plus"></i> '.$this->lang('Nouveau ticket').'</a>';
 		}
+
+		$body .= '</div>';
 
 		$body .= '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>#</th><th>'.$this->lang('Titre').'</th><th>'.$this->lang('Type').'</th><th>'.$this->lang('Priorité').'</th><th>'.$this->lang('Statut').'</th><th>'.$this->lang('Auteur').'</th><th>'.$this->lang('Date').'</th></tr></thead><tbody>';
 		if (empty($tickets))
@@ -48,7 +57,7 @@ class Index extends Controller_Module
 		$this->form()
 			 ->add_rules([
 				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'rules' => 'required'],
-				'type'        => ['label' => $this->lang('Type'), 'type' => 'select', 'values' => ['bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')], 'value' => 'bug', 'rules' => 'required'],
+				'type'        => ['label' => $this->lang('Type'), 'type' => 'select', 'values' => ['bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')], 'value' => in_array($_GET['type'] ?? '', Bugtracker::TYPES, TRUE) ? (string) $_GET['type'] : 'bug', 'rules' => 'required'],
 				'priority'    => ['label' => $this->lang('Priorité'), 'type' => 'select', 'values' => ['low' => $this->lang('Faible'), 'normal' => $this->lang('Normale'), 'high' => $this->lang('Haute'), 'critical' => $this->lang('Critique')], 'value' => 'normal', 'rules' => 'required'],
 				'description' => ['label' => $this->lang('Description détaillée'), 'type' => 'textarea', 'rules' => 'required',
 				                   'description' => $this->lang('Décris le problème, les étapes pour reproduire, le comportement attendu vs observé.')]
@@ -71,14 +80,30 @@ class Index extends Controller_Module
 			redirect('bugtracker/'.$ticket_id.'/'.url_title($post['title']));
 		}
 
-		return $this->row($this->col($this->panel()->heading()->body($this->form()->display()))->size('col-12'));
+		// « Déjà signalé ? » : js/similaires.js place cette boîte sous le titre et la remplit pendant la frappe.
+		$this->js('similaires');
+
+		$similaires = '<div id="bt-similaires" class="alert alert-warning mt-2" hidden'
+			.' data-adresse="'.htmlspecialchars(url('ajax/bugtracker/similaires'), ENT_QUOTES).'"'
+			.' data-titre="'.htmlspecialchars((string) $this->lang('Déjà signalé ?'), ENT_QUOTES).'"'
+			.' data-aide="'.htmlspecialchars((string) $this->lang('Ces tickets ouverts ressemblent au vôtre : s’il s’agit du même sujet, ajoutez-y plutôt un commentaire.'), ENT_QUOTES).'"></div>';
+
+		return $this->row($this->col($this->panel()->heading()->body($this->form()->display().$similaires))->size('col-12'));
 	}
 
 	public function _show($ticket, $comments)
 	{
 		$this->title('#'.$ticket['id'].' — '.$ticket['title'])->icon('fas fa-bug')->breadcrumb();
 
-		$body = '<div class="mb-3">';
+		$body = '';
+
+		if ($ticket['status'] === 'duplicate' && !empty($ticket['duplicate_of']) && ($origine = NeoFrag()->db->select('id', 'title')->from('nf_bug_tickets')->where('id', (int) $ticket['duplicate_of'])->row()))
+		{
+			$lien  = '<a href="'.url('bugtracker/'.$origine['id'].'/'.url_title($origine['title'])).'">#'.(int) $origine['id'].' — '.htmlspecialchars((string) $origine['title']).'</a>';
+			$body .= '<div class="alert alert-info">'.icon('fas fa-clone').' '.$this->lang('Ce ticket est un doublon de %s : la suite se passe là-bas.', $lien).'</div>';
+		}
+
+		$body .= '<div class="mb-3">';
 		$body .= '<div class="d-flex flex-wrap gap-2 align-items-center mb-2">';
 		$body .= Bugtracker::status_label($ticket['status']).' ';
 		$body .= Bugtracker::type_label($ticket['type']).' ';

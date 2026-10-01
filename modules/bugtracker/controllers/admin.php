@@ -65,7 +65,8 @@ class Admin extends Controller_Module
 
 		$this->form()
 			 ->add_rules([
-				'status'      => ['label' => $this->lang('Statut'), 'type' => 'select', 'values' => ['open' => $this->lang('Ouvert'), 'in_progress' => $this->lang('En cours'), 'resolved' => $this->lang('Résolu'), 'closed' => $this->lang('Fermé'), 'wont_fix' => $this->lang('Wont fix')], 'value' => $t['status']],
+				'status'      => ['label' => $this->lang('Statut'), 'type' => 'select', 'values' => ['open' => $this->lang('Ouvert'), 'in_progress' => $this->lang('En cours'), 'resolved' => $this->lang('Résolu'), 'closed' => $this->lang('Fermé'), 'wont_fix' => $this->lang('Wont fix'), 'duplicate' => $this->lang('Doublon')], 'value' => $t['status']],
+				'duplicate_of' => ['label' => $this->lang('Doublon du ticket n°'), 'type' => 'number', 'value' => $t['duplicate_of'] ?? '', 'description' => $this->lang('Avec le statut « Doublon » : le ticket d’origine, vers lequel celui-ci renverra.')],
 				'priority'    => ['label' => $this->lang('Priorité'), 'type' => 'select', 'values' => ['low' => $this->lang('Faible'), 'normal' => $this->lang('Normale'), 'high' => $this->lang('Haute'), 'critical' => $this->lang('Critique')], 'value' => $t['priority']],
 				'type'        => ['label' => $this->lang('Type'), 'type' => 'select', 'values' => ['bug' => $this->lang('Bug'), 'feature' => $this->lang('Feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')], 'value' => $t['type']],
 				'assigned_to' => ['label' => $this->lang('Assigné à'), 'type' => 'select', 'values' => $users_array, 'value' => $t['assigned_to'] ?? ''],
@@ -76,12 +77,21 @@ class Admin extends Controller_Module
 
 		if ($this->form()->is_valid($post))
 		{
+			// Un doublon renvoie à un AUTRE ticket qui existe ; sans lui, le statut n'a pas de sens.
+			$origine = $post['status'] === 'duplicate' ? (int) ($post['duplicate_of'] ?? 0) : 0;
+
+			if ($origine === (int) $t['id'] || ($origine && !NeoFrag()->db->select('id')->from('nf_bug_tickets')->where('id', $origine)->row()))
+			{
+				$origine = 0;
+			}
+
 			NeoFrag()->db->where('id', $t['id'])->update('nf_bug_tickets', [
+				'duplicate_of' => $origine ?: NULL,
 				'title'       => $post['title'],
 				'description' => $post['description'],
 				'type'        => $post['type'],
 				'priority'    => $post['priority'],
-				'status'      => $post['status'],
+				'status'      => $post['status'] === 'duplicate' && !$origine ? $t['status'] : $post['status'],
 				'assigned_to' => $post['assigned_to'] !== '' ? (int)$post['assigned_to'] : NULL
 			]);
 

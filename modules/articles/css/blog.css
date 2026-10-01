@@ -1,0 +1,165 @@
+/*
+ * Le Blog (2026-10-01) — la proposition fusionnée des maquettes. Uniquement les variables
+ * communes des thèmes (`--nf-*`, cf. `check-css-variables`) : chaque thème, clair ou sombre, y met ses
+ * couleurs, et le Blog les suit. La première version employait `--bs-primary`, que les thèmes laissent
+ * au bleu de Bootstrap : vingt défauts de contraste sur les pastilles (check-mise-en-page, 2026-10-01).
+ */
+
+.blog { --blog-rayon: var(--nf-radius); --blog-bord: var(--nf-border); display: grid; gap: 24px; }
+.blog a { text-decoration: none; }
+
+/* La pastille de catégorie */
+.blog-pastille { display: inline-block; font-size: .78rem; font-weight: 600; padding: .2rem .7rem; border-radius: 2rem;
+	background: var(--nf-accent-soft); color: var(--nf-accent-text); }
+.blog-pastille:hover { background: var(--nf-accent-soft); }
+
+.blog-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .9rem; font-size: .85rem; color: var(--nf-text-muted); }
+.blog-auteur { display: inline-flex; align-items: center; gap: .45rem; color: var(--nf-text); }
+.blog-avatar { width: 26px !important; height: 26px !important; border-radius: 50%; object-fit: cover; }
+.blog-avatar-grand { width: 56px !important; height: 56px !important; border-radius: 50%; object-fit: cover; }
+.blog-extrait { margin: 0; color: var(--nf-text-muted); }
+
+/* ── La une ──────────────────────────────────────────────────────────── */
+.blog-une { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); border: 1px solid var(--blog-bord); border-radius: var(--blog-rayon);
+	overflow: hidden; background: var(--nf-surface); }
+.blog-une:not(:has(.blog-une-image)) { grid-template-columns: 1fr; }
+.blog-une-image img { width: 100%; height: 100%; min-height: 260px; max-height: 380px; object-fit: cover; display: block; }
+.blog-une-corps { padding: 1.6rem 1.8rem; display: grid; align-content: center; gap: .8rem; min-width: 0; }
+.blog-une-mention { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--nf-accent-text); }
+.blog-une-titre { font-family: var(--nf-font-display); font-size: clamp(1.35rem, 2.4vw, 1.9rem); line-height: 1.15; margin: 0; text-wrap: balance; }
+.blog-une-titre a, .blog-carte-titre a { color: var(--nf-text-strong); }
+.blog-une-titre a:hover, .blog-carte-titre a:hover { color: var(--nf-accent-text); }
+
+/* ── Le corps : billets et barre latérale ─────────────────────────────── */
+.blog-corps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.blog-liste-barre .blog-corps { grid-template-columns: minmax(0, 1fr) 290px; }
+.blog-principal { display: grid; gap: 18px; align-content: start; min-width: 0; }
+
+.blog-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.blog-filtres { display: flex; flex-wrap: wrap; gap: 8px; }
+.blog-filtres a { padding: .3rem .8rem; border-radius: 2rem; border: 1px solid var(--blog-bord); font-size: .85rem; color: var(--nf-text-muted); }
+.blog-filtres a:hover { color: var(--nf-accent-text); border-color: var(--nf-accent); }
+.blog-filtres a.actif { background: var(--nf-accent); border-color: var(--nf-accent); color: var(--nf-on-accent); font-weight: 600; }
+.blog-vues { display: inline-flex; border: 1px solid var(--blog-bord); border-radius: .5rem; overflow: hidden; }
+.blog-vues button { border: 0; background: transparent; color: var(--nf-text-muted); min-width: 40px; min-height: 40px; padding: 0 .7rem; }
+.blog-vues button[aria-pressed="true"] { background: var(--nf-accent-soft); color: var(--nf-accent-text); }
+
+/* Les cartes : grille (deux colonnes avec la barre, trois sans) ou lignes. */
+/* Autant de colonnes que la place en permet : deux avec la barre sur grand écran, trois sans. */
+.blog-billets { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; }
+.blog-liste-magazine .blog-billets { grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+.blog-carte { display: grid; grid-template-rows: auto 1fr; border: 1px solid var(--blog-bord); border-radius: var(--blog-rayon); overflow: hidden; background: var(--nf-surface); min-width: 0; }
+.blog-couverture { display: block; aspect-ratio: 16 / 9; max-width: 100%; background: var(--nf-surface-2); overflow: hidden; }
+.blog-couverture img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+.blog-carte:hover .blog-couverture img { transform: scale(1.03); }
+.blog-couverture-vide { background: linear-gradient(135deg, var(--nf-accent-soft), var(--nf-surface-2)); }
+.blog-carte-corps { padding: 1rem 1.15rem 1.2rem; display: grid; gap: .55rem; align-content: start; min-width: 0; }
+.blog-carte-titre { font-family: var(--nf-font-display); font-size: 1.12rem; line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
+
+/* Lignes : vignette à gauche, texte à droite. */
+.blog-billets.blog-billets-lignes { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.blog-billets-lignes .blog-carte { grid-template-rows: none; grid-template-columns: 220px minmax(0, 1fr); border: 0; border-bottom: 1px solid var(--blog-bord); border-radius: 0; background: transparent; padding: 1.1rem 0; gap: 1.2rem; }
+.blog-billets-lignes .blog-couverture { border-radius: var(--nf-radius-sm); aspect-ratio: 4 / 3; }
+.blog-billets-lignes .blog-carte-corps { padding: 0; }
+
+.blog-pagination { display: flex; justify-content: center; }
+
+/* La barre latérale */
+.blog-barre, .blog-encart { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.blog-boite { border: 1px solid var(--blog-bord); border-radius: var(--blog-rayon); padding: 1rem; display: grid; gap: .7rem; background: var(--nf-surface); }
+.blog-boite h3 { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--nf-text-muted); margin: 0; font-weight: 700; }
+.blog-populaires { margin: 0; padding-left: 1.4rem; display: grid; gap: .55rem; }
+.blog-populaires li::marker { color: var(--nf-accent-text); font-weight: 700; }
+.blog-populaires a, .blog-categories a { color: var(--nf-text); }
+.blog-populaires a:hover, .blog-categories a:hover { color: var(--nf-accent-text); }
+.blog-categories { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.blog-categories li { display: flex; justify-content: space-between; gap: .6rem; }
+.blog-categories li > span:last-child { color: var(--nf-text-muted); font-variant-numeric: tabular-nums; }
+.blog-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.blog-tags a { font-size: .8rem; padding: .3rem .65rem; border-radius: 2rem; background: var(--nf-surface-2); color: var(--nf-text-muted); }
+.blog-tags a:hover { color: var(--nf-accent-text); }
+
+/* ── La fiche ─────────────────────────────────────────────────────────── */
+.blog-billet { display: grid; gap: 0; }
+.blog-entete { position: relative; border-radius: var(--nf-radius); overflow: hidden; }
+.blog-entete-image { min-height: 300px; display: grid; align-content: end; }
+.blog-entete-fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.blog-entete-texte { position: relative; display: grid; gap: .8rem; padding: 1.8rem 0 .6rem; }
+.blog-entete-image .blog-entete-texte { padding: 2rem; background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, .15)); color: #fff; }
+.blog-entete-image .blog-meta, .blog-entete-image .blog-auteur, .blog-entete-image .blog-auteur a { color: rgba(255, 255, 255, .88); }
+.blog-entete-image .blog-pastille { background: rgba(255, 255, 255, .18); color: #fff; justify-self: start; }
+.blog-entete-texte .blog-pastille { justify-self: start; }
+.blog-entete h1 { font-family: var(--nf-font-display); font-size: clamp(1.6rem, 3.4vw, 2.5rem); line-height: 1.1; margin: 0; max-width: 24ch; text-wrap: balance; }
+.blog-entete-image h1 { color: #fff; }
+
+.blog-progression { height: 3px; background: var(--nf-border); border-radius: 3px; margin: 1.1rem 0 1.6rem; overflow: hidden; }
+.blog-progression span { display: block; height: 100%; width: 0; background: var(--nf-accent); transition: width .1s linear; }
+
+.blog-lecture { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+.blog-fiche-fusion .blog-lecture { grid-template-columns: 200px minmax(0, 1fr) 210px; }
+.blog-fiche-sommaire .blog-lecture { grid-template-columns: 220px minmax(0, 1fr); }
+.blog-fiche-centree .blog-lecture, .blog-fiche-centree .blog-entete-texte { max-width: 760px; margin-inline: auto; width: 100%; }
+.blog-texte { min-width: 0; max-width: 72ch; width: 100%; margin-inline: auto; }
+.blog-contenu { font-size: 1.04rem; line-height: 1.75; }
+.blog-contenu img { max-width: 100%; height: auto; border-radius: var(--nf-radius-sm); }
+.blog-contenu h2, .blog-contenu h3 { scroll-margin-top: 90px; margin-top: 2rem; }
+
+/* Le sommaire : à gauche, il suit la lecture ; replié, en tête du texte. */
+.blog-sommaire { position: sticky; top: 90px; align-self: start; font-size: .9rem; }
+.blog-sommaire .article-toc, .blog-sommaire-replie .article-toc { border: 0; background: transparent; margin: 0 !important; }
+.blog-sommaire .card-header { background: transparent; border: 0; padding: 0 0 .5rem .9rem; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--nf-text-muted); font-weight: 700; }
+.blog-sommaire .list-group { border-left: 1px solid var(--nf-border); border-radius: 0; }
+.blog-sommaire .list-group-item { background: transparent; padding: .3rem .9rem !important; border-left: 2px solid transparent !important; margin-left: -1px; }
+.blog-sommaire .list-group-item a { color: var(--nf-text-muted); }
+.blog-sommaire .list-group-item.actif { border-left-color: var(--nf-accent) !important; }
+.blog-sommaire .list-group-item.actif a { color: var(--nf-accent-text); }
+.blog-sommaire-replie { display: none; border: 1px solid var(--nf-border); border-radius: var(--nf-radius); margin-bottom: 1.5rem; }
+.blog-sommaire-replie.toujours { display: block; }
+.blog-sommaire-replie summary { padding: .8rem 1rem; cursor: pointer; font-weight: 600; }
+/* Fermé, son contenu ne s'affiche pas — explicitement : Chrome le mesure sinon à sa place, sur le texte. */
+.blog-sommaire-replie:not([open]) > :not(summary) { display: none; }
+.blog-sommaire-replie .card-header { display: none; }
+.blog-sommaire-replie .list-group-item { background: transparent; }
+
+.blog-boite-auteur { display: flex; align-items: center; gap: 1rem; border: 1px solid var(--nf-border); border-radius: var(--nf-radius); padding: 1rem 1.1rem; margin-top: 1.6rem; }
+.blog-boite-auteur div { display: grid; }
+.blog-boite-auteur small { color: var(--nf-text-muted); }
+
+.blog-voisins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 1.4rem; }
+.blog-voisins a { border: 1px solid var(--nf-border); border-radius: var(--nf-radius); padding: .9rem 1rem; display: grid; gap: .2rem; color: var(--nf-text); }
+.blog-voisins a:hover { border-color: var(--nf-accent); }
+.blog-voisins a.suivant { text-align: right; }
+.blog-voisins small { color: var(--nf-text-muted); }
+
+.blog-lies { margin-top: 2rem; }
+.blog-lies h2 { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--nf-text-muted); font-weight: 700; }
+.blog-lies > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 14px; }
+.blog-lies a { display: grid; gap: .45rem; color: var(--nf-text); line-height: 1.35; min-width: 0; overflow-wrap: anywhere; }
+.blog-lies img, .blog-lies .blog-couverture-vide { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--nf-radius-sm); display: block; }
+.blog-encart { position: sticky; top: 90px; align-self: start; }
+
+/* ── Écran moyen : la fusion garde le sommaire, l'encart s'efface ────────
+   Trois colonnes à 1 024 px laissaient au texte 500 px : les titres « À lire aussi » se
+   chevauchaient, et l'éditeur des commentaires débordait (check-mise-en-page, 2026-10-01). */
+@media (max-width: 1199.98px) {
+	.blog-fiche-fusion .blog-lecture { grid-template-columns: 200px minmax(0, 1fr); }
+	.blog-fiche-fusion .blog-encart { display: none; }
+}
+
+/* ── Téléphone et tablette ───────────────────────────────────────────── */
+@media (max-width: 991.98px) {
+	.blog-liste-barre .blog-corps, .blog-fiche-fusion .blog-lecture, .blog-fiche-sommaire .blog-lecture { grid-template-columns: minmax(0, 1fr); }
+	.blog-sommaire, .blog-encart { display: none; }
+	.blog-sommaire-replie { display: block; }
+}
+@media (max-width: 575.98px) {
+	.blog-une { grid-template-columns: minmax(0, 1fr); }
+	.blog-une-image img { min-height: 180px; }
+	.blog-voisins { grid-template-columns: minmax(0, 1fr); }
+	.blog-billets-lignes .blog-carte { grid-template-columns: minmax(0, 1fr); }
+	.blog-voisins a.suivant { text-align: left; }
+	.blog-entete-image .blog-entete-texte { padding: 1.3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.blog-couverture img, .blog-progression span { transition: none; }
+}

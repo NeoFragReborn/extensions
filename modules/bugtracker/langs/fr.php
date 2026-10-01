@@ -63,4 +63,11 @@ return [
 	'5e910685' => 'bug critique|bugs critiques',
 	'15a51af2' => 'Voir les tickets',
 	'ee1e54cf' => 'Gérer les tickets',
+	'bde466c1' => 'Tous',
+	'7d356adf' => 'Doublon',
+	'cb96801d' => 'Doublon du ticket n°',
+	'db7a1b21' => 'Avec le statut « Doublon » : le ticket d’origine, vers lequel celui-ci renverra.',
+	'd8a1f614' => 'Ce ticket est un doublon de %s : la suite se passe là-bas.',
+	'eeb78c6a' => 'Déjà signalé ?',
+	'680a5f7e' => 'Ces tickets ouverts ressemblent au vôtre : s’il s’agit du même sujet, ajoutez-y plutôt un commentaire.',
 ];

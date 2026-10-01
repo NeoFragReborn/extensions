@@ -65,4 +65,11 @@ return [
 	'5e910685' => 'critical bug|critical bugs',
 	'15a51af2' => 'View tickets',
 	'ee1e54cf' => 'Manage tickets',
+	'7d356adf' => 'Duplicate',
+	'cb96801d' => 'Duplicate of ticket no.',
+	'db7a1b21' => 'With the “Duplicate” status: the original ticket this one will point to.',
+	'd8a1f614' => 'This ticket is a duplicate of %s: follow it there.',
+	'eeb78c6a' => 'Already reported?',
+	'680a5f7e' => 'These open tickets look like yours: if it is the same issue, add a comment there instead.',
+	'bde466c1' => 'All',
 ];

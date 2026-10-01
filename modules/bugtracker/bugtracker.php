@@ -11,6 +11,9 @@ use NF\NeoFrag\Addons\Module;
 
 class Bugtracker extends Module
 {
+	/** Les types de ticket, ceux de la colonne `nf_bug_tickets.type`. */
+	public const TYPES = ['bug', 'feature', 'question', 'other'];
+
 	protected function __info()
 	{
 		return [
@@ -64,7 +67,8 @@ class Bugtracker extends Module
 			'in_progress' => '<span class="badge text-bg-warning"><span class="dot"></span> '.$L->lang('En cours').'</span>',
 			'resolved'    => '<span class="badge text-bg-success"><span class="dot"></span> '.$L->lang('Résolu').'</span>',
 			'closed'      => '<span class="badge text-bg-secondary"><span class="dot"></span> '.$L->lang('Fermé').'</span>',
-			'wont_fix'    => '<span class="badge text-bg-light"><span class="dot"></span> '.$L->lang('Wont fix').'</span>'
+			'wont_fix'    => '<span class="badge text-bg-light"><span class="dot"></span> '.$L->lang('Wont fix').'</span>',
+			'duplicate'   => '<span class="badge text-bg-dark"><span class="dot"></span> '.$L->lang('Doublon').'</span>'
 		][$status] ?? $status;
 	}
 

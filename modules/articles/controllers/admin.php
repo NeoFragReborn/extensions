@@ -246,6 +246,11 @@ class Admin extends Controller_Module
 					'label'  => $this->lang('Publier'),
 					'type'   => 'checkbox',
 					'value' => ['1'], 'values' => ['1' => $this->lang('Article publié (visible publiquement)')], 'checked' => ['1' => (!$is_new && !empty($article['published']))]
+				],
+				'featured' => [
+					'label'   => $this->lang('À la une'),
+					'type'    => 'checkbox',
+					'value'   => ['1'], 'values' => ['1' => $this->lang('Ouvrir la liste du Blog avec ce billet')], 'checked' => ['1' => (!$is_new && !empty($article['featured']))]
 				]
 			 ])
 			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'), $is_new ? 'fas fa-plus' : 'fas fa-check');
@@ -254,6 +259,7 @@ class Admin extends Controller_Module
 		{
 			$lang = $this->config->lang->info()->name;
 			$published = in_array('1', $post['published'] ?? []) ? '1' : '0';
+			$featured  = in_array('1', $post['featured'] ?? []) ? 1 : 0;
 
 			if ($is_new)
 			{
@@ -263,6 +269,7 @@ class Admin extends Controller_Module
 					'image_id'    => $post['image'] ?: NULL,
 					'date'        => !empty($post['date']) ? $post['date'] : NeoFrag()->date()->sql(),
 					'published'   => $published,
+					'featured'    => $featured,
 					'views'       => 0
 				]);
 				$new_id = (int)NeoFrag()->db->driver()->insert_id();
@@ -291,7 +298,8 @@ class Admin extends Controller_Module
 								->update('nf_articles', array_merge([
 									'category_id' => (int)$post['category_id'],
 									'image_id'   => $post['image'] ?: NULL,
-									'published'   => $published
+									'published'   => $published,
+									'featured'    => $featured
 								], !empty($post['date']) ? ['date' => $post['date']] : []));
 
 				NeoFrag()->db	->where('article_id', $article['article_id'])

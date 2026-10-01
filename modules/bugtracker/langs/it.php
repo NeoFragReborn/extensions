@@ -65,4 +65,11 @@ return [
 	'5e910685' => 'bug critico|bug critici',
 	'15a51af2' => 'Vedere i ticket',
 	'ee1e54cf' => 'Gestisci i ticket',
+	'7d356adf' => 'Duplicato',
+	'cb96801d' => 'Duplicato del ticket n.',
+	'db7a1b21' => 'Con lo stato «Duplicato»: il ticket originale a cui rimanderà questo.',
+	'd8a1f614' => 'Questo ticket è un duplicato di %s: il seguito è lì.',
+	'eeb78c6a' => 'Già segnalato?',
+	'680a5f7e' => 'Questi ticket aperti somigliano al tuo: se è lo stesso argomento, aggiungi piuttosto un commento lì.',
+	'bde466c1' => 'Tutti',
 ];

@@ -61,7 +61,7 @@ class Articles extends Module
 	protected function __info()
 	{
 		return [
-			'title'       => $this->lang('Articles'),
+			'title'       => $this->lang('Blog'),
 			'description' => $this->lang('Articles longs avec catégories, tags, sommaire automatique et temps de lecture.'),
 			'icon'        => 'far fa-newspaper',
 			'link'        => 'https://neofr.ag',
@@ -95,13 +95,24 @@ class Articles extends Module
 				'admin/{id}/{url_title}'                   => '_edit'
 			],
 			'settings'    => function(){
-				return $this->form2()
+				$form = $this->form2()
 							->rule($this->form_number('articles_per_page')
 										->title($this->lang('Articles par page'))
 										->value($this->config->articles_per_page ?: 10)
-							)
+							);
+
+				// Les mises en page du Blog : la liste, la fiche d'un billet.
+				foreach (['liste' => $this->lang('Mise en page de la liste'), 'fiche' => $this->lang('Mise en page d’un billet')] as $ecran => $titre)
+				{
+					$form->rule('articles_'.$ecran, $titre, self::mise_en_page($ecran, (string) $this->config->{'articles_'.$ecran}), 'select', self::mises_en_page($ecran));
+				}
+
+				return $form
 							->success(function($data){
 								$this->config('articles_per_page', $data['articles_per_page']);
+								$config = $this->config;
+								$config('articles_liste', self::mise_en_page('liste', (string) ($data['articles_liste'] ?? '')));
+								$config('articles_fiche', self::mise_en_page('fiche', (string) ($data['articles_fiche'] ?? '')));
 								notify($this->lang('Configuration modifiée'));
 								refresh();
 							})
@@ -130,6 +141,29 @@ class Articles extends Module
 				]
 			]
 		];
+	}
+
+	/**
+	 * Les mises en page du Blog que l'administrateur peut choisir : la liste et la fiche
+	 * d'un billet. La première de chaque liste est celle par défaut — la proposition fusionnée.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function mises_en_page(string $ecran): array
+	{
+		$m = NeoFrag()->module('articles');
+
+		return $ecran === 'fiche'
+			? ['fusion' => (string) $m->lang('Sommaire, colonne de lecture et encart'), 'sommaire' => (string) $m->lang('Sommaire à gauche'), 'centree' => (string) $m->lang('Colonne centrée')]
+			: ['barre' => (string) $m->lang('Magazine avec barre latérale'), 'magazine' => (string) $m->lang('Magazine pleine largeur'), 'lignes' => (string) $m->lang('Lecture en lignes')];
+	}
+
+	/** La mise en page retenue : celle du réglage si elle existe, sinon celle par défaut. */
+	public static function mise_en_page(string $ecran, string $reglage): string
+	{
+		$choix = $ecran === 'fiche' ? ['fusion', 'sommaire', 'centree'] : ['barre', 'magazine', 'lignes'];
+
+		return in_array($reglage, $choix, TRUE) ? $reglage : $choix[0];
 	}
 
 	/**
