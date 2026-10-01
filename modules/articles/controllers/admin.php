@@ -180,8 +180,7 @@ class Admin extends Controller_Module
 		// Categories pour le select
 		$categories_rows = NeoFrag()->db	->select('c.category_id', 'cl.title')
 											->from('nf_articles_categories c')
-											->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
-											->where('cl.lang', $this->config->lang->info()->name)
+											->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id')
 											->order_by('cl.title')
 											->get();
 		$categories_array = [];

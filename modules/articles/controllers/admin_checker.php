@@ -121,9 +121,8 @@ class Admin_Checker extends Module_Checker
 	{
 		if (($category = NeoFrag()->db	->select('c.*', 'cl.title')
 										->from('nf_articles_categories c')
-										->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+										->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id')
 										->where('c.category_id', $category_id)
-										->where('cl.lang', $this->config->lang->info()->name)
 										->row()))
 		{
 			return [$category];
@@ -134,9 +133,8 @@ class Admin_Checker extends Module_Checker
 	{
 		if (($category = NeoFrag()->db	->select('c.*', 'cl.title')
 										->from('nf_articles_categories c')
-										->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+										->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id')
 										->where('c.category_id', $category_id)
-										->where('cl.lang', $this->config->lang->info()->name)
 										->row()))
 		{
 			return [$category];

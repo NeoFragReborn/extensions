@@ -45,11 +45,10 @@ class Articles extends Model
 					->from('nf_articles a')
 					->join('nf_articles_lang al',            'a.article_id  = al.article_id')
 					->join('nf_articles_categories c',       'a.category_id = c.category_id')
-					->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+					->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id', $lang)
 					->join('nf_user u',                      'a.user_id     = u.id AND u.deleted = "0"')
 					->join('nf_user_profile up',             'up.id         = u.id')
 					->where('al.lang', $lang)
-					->where('cl.lang', $lang)
 					->where('a.deleted_at', NULL)
 					->order_by('a.date DESC');
 
@@ -89,12 +88,11 @@ class Articles extends Model
 								->from('nf_articles a')
 								->join('nf_articles_lang al',            'a.article_id  = al.article_id')
 								->join('nf_articles_categories c',       'a.category_id = c.category_id')
-								->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+								->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id', $lang)
 								->join('nf_user u',                      'a.user_id     = u.id AND u.deleted = "0"')
 								->join('nf_user_profile up',             'up.id         = u.id')
 								->where('a.article_id', $article_id)
 								->where('al.lang', $lang)
-								->where('cl.lang', $lang)
 								->where('a.deleted_at', NULL)
 								->row();
 
@@ -131,9 +129,8 @@ class Articles extends Model
 	{
 		return $this->db	->select('c.category_id', 'c.name', 'cl.title', 'COUNT(a.article_id) AS articles_count')
 							->from('nf_articles_categories c')
-							->join('nf_articles_categories_lang cl', 'c.category_id = cl.category_id')
+							->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id')
 							->join('nf_articles a',                  'c.category_id = a.category_id AND a.deleted_at IS NULL', 'LEFT')
-							->where('cl.lang', $this->config->lang->info()->name)
 							->group_by('c.category_id')
 							->order_by('cl.title')
 							->get();
