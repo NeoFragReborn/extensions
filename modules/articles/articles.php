@@ -237,7 +237,7 @@ class Articles extends Module
 			return '';
 		}
 
-		$out = '<div class="article-toc card mb-3"><div class="card-header"><i class="fas fa-list-ul"></i> '.NeoFrag()->lang('Sommaire').'</div><ul class="list-group list-group-flush">';
+		$out = '<div class="article-toc card mb-3"><div class="card-header"><i class="fas fa-list-ul"></i> '.NeoFrag()->module('articles')->lang('Sommaire').'</div><ul class="list-group list-group-flush">';
 		foreach ($entries as $e)
 		{
 			$indent = $e['level'] === 'h3' ? ' style="padding-left:2rem"' : '';
