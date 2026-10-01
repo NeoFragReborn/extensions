@@ -16,7 +16,7 @@ class Admin extends Controller_Module
 				->icon('far fa-newspaper');
 
 		// Actions en masse (POST) : publier / dépublier la sélection, puis refresh.
-		if (!empty($_POST['bulk_action']) && !empty($_POST['selected']) && is_array($_POST['selected']))
+		if ($this->is_authorized('modify_articles') && !empty($_POST['bulk_action']) && !empty($_POST['selected']) && is_array($_POST['selected']))
 		{
 			$ids    = array_values(array_filter(array_map('intval', $_POST['selected'])));
 			$action = (string)$_POST['bulk_action'];

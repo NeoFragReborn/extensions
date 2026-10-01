@@ -24,6 +24,7 @@ class Block extends Controller_Module
 										->join('nf_articles_lang al', 'a.article_id = al.article_id')
 										->where('a.published', '1')
 										->where('a.deleted_at IS NULL')
+										->where('a.date <=', date('Y-m-d H:i:s'))
 										->where('al.lang', $this->config->lang->info()->name)
 										->order_by('a.date DESC')
 										->limit((int) ($settings['count'] ?? 5))

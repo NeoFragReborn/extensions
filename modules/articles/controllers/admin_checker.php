@@ -77,11 +77,21 @@ class Admin_Checker extends Module_Checker
 
 	public function _add()
 	{
+		if (!$this->is_authorized('add_articles'))
+		{
+			$this->error->unauthorized();
+		}
+
 		return [];
 	}
 
 	public function _delete($article_id, $title)
 	{
+		if (!$this->is_authorized('delete_articles'))
+		{
+			$this->error->unauthorized();
+		}
+
 		if (($article = $this->model()->get_article($article_id)) && !empty($article))
 		{
 			return [$article];
@@ -90,6 +100,11 @@ class Admin_Checker extends Module_Checker
 
 	public function _edit($article_id, $title)
 	{
+		if (!$this->is_authorized('modify_articles'))
+		{
+			$this->error->unauthorized();
+		}
+
 		if (($article = $this->model()->get_article($article_id)) && !empty($article))
 		{
 			return [$article];
@@ -98,6 +113,11 @@ class Admin_Checker extends Module_Checker
 
 	public function _history($article_id, $title)
 	{
+		if (!$this->is_authorized('modify_articles'))
+		{
+			$this->error->unauthorized();
+		}
+
 		if (($article = $this->model()->get_article($article_id)) && !empty($article))
 		{
 			return [$article];
@@ -106,6 +126,11 @@ class Admin_Checker extends Module_Checker
 
 	public function _revision_restore($article_id, $title, $revision_id)
 	{
+		if (!$this->is_authorized('modify_articles'))
+		{
+			$this->error->unauthorized();
+		}
+
 		if (($article = $this->model()->get_article($article_id)) && !empty($article))
 		{
 			return [$article, (int)$revision_id];
@@ -114,11 +139,21 @@ class Admin_Checker extends Module_Checker
 
 	public function _categories_add()
 	{
+		if (!$this->is_authorized('add_categories'))
+		{
+			$this->error->unauthorized();
+		}
+
 		return ['add'];
 	}
 
 	public function _categories_edit($category_id, $title)
 	{
+		if (!$this->is_authorized('modify_categories'))
+		{
+			$this->error->unauthorized();
+		}
+
 		if (($category = NeoFrag()->db	->select('c.*', 'cl.title')
 										->from('nf_articles_categories c')
 										->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id')
@@ -131,6 +166,11 @@ class Admin_Checker extends Module_Checker
 
 	public function _categories_delete($category_id, $title)
 	{
+		if (!$this->is_authorized('delete_categories'))
+		{
+			$this->error->unauthorized();
+		}
+
 		if (($category = NeoFrag()->db	->select('c.*', 'cl.title')
 										->from('nf_articles_categories c')
 										->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id')
