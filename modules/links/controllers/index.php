@@ -47,7 +47,7 @@ class Index extends Controller_Module
 	{
 		// Redirect direct vers l'URL externe (le compteur a été incrémenté dans le checker)
 		// URL vide → ne pas émettre header('Location: ') vide (= boucle, cf. bug forum). Retour à la liste.
-		if (empty($link['url']))
+		if (empty($link['url']) || !nf_url_sure((string) $link['url']))
 		{
 			redirect('links');
 		}

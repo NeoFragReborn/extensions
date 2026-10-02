@@ -50,6 +50,7 @@ class Admin extends Controller_Module
 		$cle_bot = is_string($cle_bot) ? $cle_bot : NULL;
 
 		$donnees = [
+			'jeton'    => $this->csrf_token(),
 			'reglages' => $reglages,
 			'vie'      => $vie,
 			'age'      => $age,
@@ -166,6 +167,9 @@ class Admin extends Controller_Module
 	 */
 	public function _cle()
 	{
+		// Un lien d'action (révoque la clé en service, en crée une) : il porte le jeton de session.
+		$this->check_csrf('admin/discord');
+
 		$this->title($this->lang('Clé d’accès du bot'))->icon('fas fa-key')->breadcrumb();
 
 		$api        = $this->module('api');

@@ -59,4 +59,5 @@ return [
 	'ae4f5e0e' => 'Kategorie|Kategorien',
 	'b2656c03' => 'Kategorie bearbeiten: %s',
 	'0aac9844' => 'Datum',
+	'287e1fcc' => 'Der Link muss eine Webadresse (http oder https) oder eine Seite der Website sein.',
 ];

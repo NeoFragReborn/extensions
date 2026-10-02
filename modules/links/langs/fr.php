@@ -58,4 +58,5 @@ return [
 	'ae4f5e0e' => 'catégorie|catégories',
 	'b2656c03' => 'Éditer catégorie : %s',
 	'0aac9844' => 'Date',
+	'287e1fcc' => 'Le lien doit être une adresse web (http ou https) ou une page du site.',
 ];

@@ -44,7 +44,7 @@ class Admin extends Controller_Module
 
 				$ls_body .= '<div class="nf-content-card">';
 				$ls_body .= '<div class="nf-content-card-head">';
-				$ls_body .= '<div class="nf-content-card-title"><a href="'.htmlspecialchars((string) ($l['url'])).'" target="_blank" rel="noopener">'.htmlspecialchars((string) ($l['title'])).'</a></div>';
+				$ls_body .= '<div class="nf-content-card-title"><a href="'.htmlspecialchars(nf_url_sure((string) $l['url']) ? (string) $l['url'] : '#').'" target="_blank" rel="noopener">'.htmlspecialchars((string) ($l['title'])).'</a></div>';
 				$ls_body .= '<span class="nf-content-card-status '.($published ? 'published' : 'draft').'">';
 				$ls_body .= '<i class="fas '.($published ? 'fa-check' : 'fa-clock').'"></i> '.($published ? $this->lang('Publié') : $this->lang('Brouillon'));
 				$ls_body .= '</span>';
@@ -141,7 +141,11 @@ class Admin extends Controller_Module
 			 ])
 			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'), $is_new ? 'fas fa-plus' : 'fas fa-check');
 
-		if ($this->form()->is_valid($post))
+		if ($this->form()->is_valid($post) && !nf_url_sure((string) $post['url']))
+		{
+			notify($this->lang('Le lien doit être une adresse web (http ou https) ou une page du site.'), 'danger');
+		}
+		else if ($this->form()->is_valid($post))
 		{
 			$data = [
 				'category_id' => (int)$post['category_id'],

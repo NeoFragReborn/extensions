@@ -19,7 +19,7 @@
 		<?php foreach ($articles as $nf_article): ?>
 		<li class="nf-rss-item">
 			<?php if ($nf_article['link'] !== ''): ?>
-			<a class="nf-rss-title" href="<?php echo htmlspecialchars($nf_article['link'], ENT_QUOTES) ?>" target="_blank" rel="noopener nofollow"><?php echo htmlspecialchars($nf_article['title']) ?></a>
+			<a class="nf-rss-title" href="<?php echo htmlspecialchars(nf_url_sure((string) $nf_article['link']) ? (string) $nf_article['link'] : '#', ENT_QUOTES) ?>" target="_blank" rel="noopener nofollow"><?php echo htmlspecialchars($nf_article['title']) ?></a>
 			<?php else: ?>
 			<span class="nf-rss-title"><?php echo htmlspecialchars($nf_article['title']) ?></span>
 			<?php endif ?>

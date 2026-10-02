@@ -68,7 +68,7 @@ class Index extends Controller_Module
 			$body .= '<a class="btn btn-outline-primary" href="'.url('classifieds/'.$ad['id'].'/'.$slug.'/edit').'"><i class="fas fa-pen"></i> '.$this->lang('Modifier').'</a>';
 			if ($ad['status'] === 'published')
 			{
-				$body .= '<a class="btn btn-outline-secondary" href="'.url('classifieds/'.$ad['id'].'/'.$slug.'/close').'" data-confirm="'.htmlspecialchars((string) ($this->lang('Clôturer cette annonce ?')), ENT_QUOTES).'"><i class="fas fa-check"></i> '.$this->lang('Clôturer').'</a>';
+				$body .= '<a class="btn btn-outline-secondary" href="'.$this->csrf_url('classifieds/'.$ad['id'].'/'.$slug.'/close').'" data-confirm="'.htmlspecialchars((string) ($this->lang('Clôturer cette annonce ?')), ENT_QUOTES).'"><i class="fas fa-check"></i> '.$this->lang('Clôturer').'</a>';
 			}
 			$body .= '</div>';
 		}
@@ -162,6 +162,9 @@ class Index extends Controller_Module
 
 	public function _close($ad)
 	{
+		// Un lien d'action : il porte le jeton de session, sans quoi un lien piégé clôturait l'annonce.
+		$this->check_csrf('classifieds/'.$ad['id'].'/'.url_title($ad['title']));
+
 		NeoFrag()->db->where('id', $ad['id'])->update('nf_classifieds', ['status' => 'closed']);
 		notify($this->lang('Annonce clôturée.'));
 		redirect('classifieds/'.$ad['id'].'/'.url_title($ad['title']));

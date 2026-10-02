@@ -2,6 +2,7 @@
 /* Les réglages du bot en un coup d'œil, et les actions qui les changent. Les sous-pages sont dans les
    onglets en haut de page (_onglets()). */
 $reglages = $reglages ?? [];
+$jeton    = $jeton ?? '';
 $cle_bot  = $cle_bot ?? FALSE;
 ?>
 <ul class="list-unstyled small mb-3">
@@ -16,9 +17,9 @@ $cle_bot  = $cle_bot ?? FALSE;
 <div class="d-flex flex-wrap gap-2">
 	<a class="btn btn-primary btn-sm" href="<?php echo url('admin/discord/connexion') ?>"><?php echo icon('fas fa-plug').' '.$this->lang('Connexion') ?></a>
 	<?php if ($cle_bot): ?>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle') ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Créer une nouvelle clé d’accès pour le bot ? L’ancienne sera révoquée : il faudra la remplacer sur la machine du bot.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-key').' '.$this->lang('Nouvelle clé d’accès') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle').'?_='.$jeton ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Créer une nouvelle clé d’accès pour le bot ? L’ancienne sera révoquée : il faudra la remplacer sur la machine du bot.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-key').' '.$this->lang('Nouvelle clé d’accès') ?></a>
 	<?php else: ?>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle') ?>"><?php echo icon('fas fa-key').' '.$this->lang('Créer la clé d’accès') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle').'?_='.$jeton ?>"><?php echo icon('fas fa-key').' '.$this->lang('Créer la clé d’accès') ?></a>
 	<?php endif ?>
 	<?php if (!empty($invitation)): ?>
 	<a class="btn btn-outline-secondary btn-sm" href="<?php echo htmlspecialchars((string) $invitation) ?>" target="_blank" rel="noopener noreferrer" title="<?php echo htmlspecialchars((string) $this->lang('Ajoute le bot à un serveur Discord, avec les seules permissions dont il a besoin.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-user-plus').' '.$this->lang('Inviter le bot') ?></a>

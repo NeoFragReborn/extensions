@@ -59,4 +59,5 @@ return [
 	'ae4f5e0e' => 'categoría|categorías',
 	'b2656c03' => 'Editar categoría: %s',
 	'0aac9844' => 'Fecha',
+	'287e1fcc' => 'El enlace debe ser una dirección web (http o https) o una página del sitio.',
 ];
