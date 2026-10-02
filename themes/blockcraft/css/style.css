@@ -516,7 +516,7 @@ i.icon:only-child { margin: 0; }
 .card .card-footer { background: var(--bc-surface-2); border-top: 1px solid var(--bc-border); padding: 10px 16px; font-size: 12px; color: var(--bc-muted); }
 
 .card.card-transparent { background: transparent; border: none; box-shadow: none; }
-.card.card-transparent .card-header { border-bottom: none; padding-left: 0; padding-right: 0; }
+.card.card-transparent > .card-header { border-bottom: none; padding-left: 0; padding-right: 0; } /* l'en-tête direct : un cadre imbriqué (les commentaires d'un billet) garde le sien */
 
 /* panel-default = alias card */
 /* panel-header = bandeau header accent */
