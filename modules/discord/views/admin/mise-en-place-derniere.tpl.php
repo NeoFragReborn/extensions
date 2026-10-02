@@ -5,7 +5,7 @@ $annuler  = $annuler ?? '#';
 $cree     = (array) ($derniere['cree'] ?? []);
 $nombre   = count((array) ($cree['salons'] ?? [])) + count((array) ($cree['roles'] ?? [])) + (!empty($cree['categorie']) ? 1 : 0);
 ?>
-<p class="mb-2"><?php echo $this->lang('Le %s : %d élément(s) créé(s), %d repris.', htmlspecialchars(date('d/m/Y H:i', (int) ($derniere['at'] ?? 0))), $nombre, (int) ($derniere['repris'] ?? 0)) ?></p>
+<p class="mb-2"><?php echo $this->lang('Le %s : %d élément(s) créé(s), %d repris.', htmlspecialchars(timetostr('d/m/Y H:i', (int) ($derniere['at'] ?? 0))), $nombre, (int) ($derniere['repris'] ?? 0)) ?></p>
 <?php if (!empty($derniere['erreurs'])): ?>
 <div class="alert alert-danger small mb-2">
 	<?php echo $this->lang('Ce que le bot n’a pas pu faire :') ?>

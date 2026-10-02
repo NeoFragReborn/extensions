@@ -120,7 +120,7 @@ class Index extends Controller_Module
 			$par_jour[Schedule::jour($creneau['day'])][] = $creneau;
 		}
 
-		$aujourdhui = (int) date('N');
+		$aujourdhui = (int) (new \DateTime('now', nf_fuseau_site()))->format('N');   // la grille est à l'heure du site
 		$html = '<h2 class="h5 mt-4">'.$this->lang('La grille de la semaine').'</h2><div class="nf-webradio-grid">';
 
 		foreach (self::JOURS as $numero)

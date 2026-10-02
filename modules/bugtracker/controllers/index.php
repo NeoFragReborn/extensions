@@ -41,7 +41,7 @@ class Index extends Controller_Module
 					.'<td>'.Bugtracker::priority_label($t['priority']).'</td>'
 					.'<td>'.Bugtracker::status_label($t['status']).'</td>'
 					.'<td>'.($t['reporter_id'] ? $this->user->link($t['reporter_id'], $t['reporter']) : '<i class="text-muted">'.$this->lang('Anonyme').'</i>').'</td>'
-					.'<td><small>'.date('Y-m-d', $t['ts']).'</small></td>'
+					.'<td><small>'.timetostr('Y-m-d', $t['ts']).'</small></td>'
 					.'</tr>';
 			}
 		}
@@ -125,7 +125,7 @@ class Index extends Controller_Module
 			{
 				$author = $c['user_id'] ? $this->user->link($c['user_id'], $c['username']) : (!empty($c['author_name']) ? icon('fab fa-discord').' '.htmlspecialchars((string) $c['author_name'], ENT_QUOTES, 'UTF-8', FALSE) : '<i>'.$this->lang('Anonyme').'</i>');
 				$body .= '<div class="card mb-2"><div class="card-body py-2">';
-				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.date('Y-m-d H:i', $c['ts']).'</small></div>';
+				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.timetostr('Y-m-d H:i', $c['ts']).'</small></div>';
 				$body .= '<div>'.nl2br(htmlspecialchars((string) $c['content'], ENT_QUOTES, 'UTF-8', FALSE)).'</div>';
 				$body .= '</div></div>';
 			}

@@ -119,8 +119,15 @@ class Schedule
 	 */
 	public static function a_l_antenne(array $creneaux, ?int $jour = NULL, ?string $heure = NULL): ?array
 	{
-		$jour  = $jour ?? (int) date('N');
-		$heure = $heure ?? date('H:i');
+		// La grille est écrite à l'heure du site (Paramètres → Préférences générales) : « maintenant »
+		// se lit donc dans ce fuseau, pas dans celui du serveur — à l'heure universelle, l'émission
+		// annoncée en direct avait deux heures de retard pour un site français.
+		if ($jour === NULL || $heure === NULL)
+		{
+			$maintenant = new \DateTime('now', nf_fuseau_site());
+			$jour       = $jour ?? (int) $maintenant->format('N');
+			$heure      = $heure ?? $maintenant->format('H:i');
+		}
 
 		foreach ($creneaux as $creneau)
 		{
