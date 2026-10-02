@@ -363,4 +363,5 @@ return [
 	'616b60e0' => 'Being removed',
 	'f0cde957' => 'Remove this role now? The bot will remove it within a minute.',
 	'9c36e3f1' => 'Remove now',
+	'4831760d' => 'Overview',
 ];

@@ -28,7 +28,7 @@ class Admin extends Controller_Module
 					.'<td>'.icon($icone).' <strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
 					.'<td class="text-end">'.(int) $c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/places/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/places/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/places/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette catégorie ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
@@ -77,7 +77,7 @@ class Admin extends Controller_Module
 					.'</td>'
 					.'<td>'.htmlspecialchars((string) ($l['cat_title'])).'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/places/p/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/places/p/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/places/p/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ce lieu ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}

@@ -363,4 +363,5 @@ return [
 	'616b60e0' => 'Rimozione in corso',
 	'f0cde957' => 'Togliere questo ruolo ora? Il bot lo toglierà entro un minuto.',
 	'9c36e3f1' => 'Togli ora',
+	'4831760d' => 'Panoramica',
 ];

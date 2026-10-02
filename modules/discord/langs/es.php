@@ -363,4 +363,5 @@ return [
 	'616b60e0' => 'Retirada en curso',
 	'f0cde957' => '¿Quitar este rol ahora? El bot lo quitará en menos de un minuto.',
 	'9c36e3f1' => 'Quitar ahora',
+	'4831760d' => 'Resumen',
 ];

@@ -61,7 +61,7 @@ class Admin extends Controller_Module
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-desc">'.htmlspecialchars((string) ($m['message'])).'</div>';
 				$body .= '<div class="nf-content-card-meta">';
-				$body .= '<span><i class="far fa-clock"></i> '.timetostr('Y-m-d H:i', $m['ts']).'</span>';
+				$body .= '<span><i class="far fa-clock"></i> '.nf_date_heure($m['ts']).'</span>';
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';

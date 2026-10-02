@@ -14,13 +14,13 @@ class Admin extends Controller_Module
 	public function index()
 	{
 		$this->subtitle($this->lang('Annonces'))->icon('fas fa-rectangle-ad');
-		$this->add_action($this->button($this->lang('Nouvelle annonce'), 'fas fa-plus', 'primary')->url('admin/ads/new'));
+		$nouveau = $this->admin_create('admin/ads/new', $this->lang('Nouvelle annonce'));
 
 		$ads = $this->db->select('*')->from('nf_ads')->order_by('placement', 'position', 'id')->get(FALSE);
 
 		if (!$ads)
 		{
-			return $this->admin_card('fas fa-rectangle-ad', $this->lang('Régie publicitaire'), $this->admin_empty('fas fa-rectangle-ad', $this->lang('Aucune annonce.')));
+			return $this->admin_card('fas fa-rectangle-ad', $this->lang('Régie publicitaire'), $this->admin_empty('fas fa-rectangle-ad', $this->lang('Aucune annonce.')), '', $nouveau);
 		}
 
 		$rows = '';
@@ -33,7 +33,7 @@ class Admin extends Controller_Module
 				.'<td class="text-center">'.(!empty($a['active']) ? '<span class="badge text-bg-success">'.$this->lang('Active').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactive').'</span>').'</td>'
 				.'<td class="text-end">'.(int)$a['impressions'].' / '.(int)$a['clicks'].'</td>'
 				.'<td class="text-end">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/ads/edit/'.(int)$a['id']).'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/ads/edit/'.(int)$a['id']).'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/ads/delete/'.(int)$a['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette annonce ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
@@ -44,7 +44,7 @@ class Admin extends Controller_Module
 			.'<th class="text-center">'.$this->lang('Statut').'</th><th class="text-end">'.$this->lang('Vues / Clics').'</th><th></th>'
 			.'</tr></thead><tbody>'.$rows.'</tbody></table></div>';
 
-		return $this->admin_card('fas fa-rectangle-ad', $this->lang('Régie publicitaire'), $body, count($ads).' '.$this->lang('annonce|annonces', count($ads)));
+		return $this->admin_card('fas fa-rectangle-ad', $this->lang('Régie publicitaire'), $body, count($ads).' '.$this->lang('annonce|annonces', count($ads)), $nouveau);
 	}
 
 	public function _new()

@@ -26,7 +26,7 @@ class Admin extends Controller_Module
 					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
 					.'<td class="text-end">'.(int) $c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/quotes/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/quotes/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/quotes/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette catégorie ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
@@ -73,7 +73,7 @@ class Admin extends Controller_Module
 				$corps .= '</div>';
 				$corps .= '<div class="nf-content-card-foot">';
 				$corps .= '<span class="nf-content-card-spacer"></span>';
-				$corps .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/quotes/q/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
+				$corps .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/quotes/q/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
 				$corps .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/quotes/q/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette citation ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$corps .= '</div>';
 				$corps .= '</div>';

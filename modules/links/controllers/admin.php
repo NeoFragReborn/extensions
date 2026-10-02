@@ -20,7 +20,7 @@ class Admin extends Controller_Module
 					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
 					.'<td class="text-end">'.(int)$c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/links/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/links/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
@@ -56,7 +56,7 @@ class Admin extends Controller_Module
 				$ls_body .= '</div>';
 				$ls_body .= '<div class="nf-content-card-foot">';
 				$ls_body .= '<span class="nf-content-card-spacer"></span>';
-				$ls_body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/links/link/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
+				$ls_body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/links/link/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
 				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$ls_body .= '</div>';
 				$ls_body .= '</div>';

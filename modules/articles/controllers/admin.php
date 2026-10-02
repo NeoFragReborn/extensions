@@ -73,7 +73,7 @@ class Admin extends Controller_Module
 
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
-				$body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/articles/'.$a['article_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/articles/'.$a['article_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
 				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/delete/'.$a['article_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet article ? Action irréversible.')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
@@ -494,7 +494,7 @@ class Admin extends Controller_Module
 		{
 			$slug    = url_title((string) $c['title']);
 			$lignes .= '<tr><td>'.htmlspecialchars((string) $c['title']).' <small class="text-muted">/'.htmlspecialchars((string) $c['name']).'</small></td><td>'.(int) $c['articles_count'].'</td><td class="text-end">'
-				.($this->is_authorized('modify_categories') ? '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/articles/categories/'.$c['category_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> ' : '')
+				.($this->is_authorized('modify_categories') ? '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/articles/categories/'.$c['category_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> ' : '')
 				.($this->is_authorized('delete_categories') && !(int) $c['articles_count'] ? '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/categories/delete/'.$c['category_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) $this->lang('Supprimer cette catégorie ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>' : '')
 				.'</td></tr>';
 		}
@@ -519,7 +519,7 @@ class Admin extends Controller_Module
 		{
 			$slug    = url_title($s['title']);
 			$lignes .= '<tr><td>'.htmlspecialchars($s['title']).'</td><td>'.$this->lang('%d partie|%d parties', $s['parts'], $s['parts']).'</td><td class="text-end">'
-				.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/articles/series/'.$s['series_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> '
+				.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/articles/series/'.$s['series_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> '
 				.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/series/delete/'.$s['series_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) $this->lang('Supprimer cette série ? Ses billets restent publiés.'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>'
 				.'</td></tr>';
 		}

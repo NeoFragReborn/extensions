@@ -39,7 +39,7 @@ class Admin extends Controller_Module
 					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
 					.'<td class="text-end">'.(int)$c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/classifieds/cat/'.$c['id'].'/'.$slug).'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/classifieds/cat/'.$c['id'].'/'.$slug).'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}

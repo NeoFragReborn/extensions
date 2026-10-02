@@ -1,5 +1,6 @@
 <?php
-/* Les réglages du bot en un coup d'œil, et les pages pour les changer. */
+/* Les réglages du bot en un coup d'œil, et les actions qui les changent. Les sous-pages sont dans les
+   onglets en haut de page (_onglets()). */
 $reglages = $reglages ?? [];
 $cle_bot  = $cle_bot ?? FALSE;
 ?>
@@ -15,16 +16,11 @@ $cle_bot  = $cle_bot ?? FALSE;
 <div class="d-flex flex-wrap gap-2">
 	<a class="btn btn-primary btn-sm" href="<?php echo url('admin/discord/connexion') ?>"><?php echo icon('fas fa-plug').' '.$this->lang('Connexion') ?></a>
 	<?php if ($cle_bot): ?>
-	<a class="btn btn-outline-primary btn-sm" href="<?php echo url('admin/discord/cle') ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Créer une nouvelle clé d’accès pour le bot ? L’ancienne sera révoquée : il faudra la remplacer sur la machine du bot.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-key').' '.$this->lang('Nouvelle clé d’accès') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle') ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Créer une nouvelle clé d’accès pour le bot ? L’ancienne sera révoquée : il faudra la remplacer sur la machine du bot.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-key').' '.$this->lang('Nouvelle clé d’accès') ?></a>
 	<?php else: ?>
-	<a class="btn btn-outline-primary btn-sm" href="<?php echo url('admin/discord/cle') ?>"><?php echo icon('fas fa-key').' '.$this->lang('Créer la clé d’accès') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle') ?>"><?php echo icon('fas fa-key').' '.$this->lang('Créer la clé d’accès') ?></a>
 	<?php endif ?>
 	<?php if (!empty($invitation)): ?>
-	<a class="btn btn-outline-primary btn-sm" href="<?php echo htmlspecialchars((string) $invitation) ?>" target="_blank" rel="noopener noreferrer" title="<?php echo htmlspecialchars((string) $this->lang('Ajoute le bot à un serveur Discord, avec les seules permissions dont il a besoin.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-user-plus').' '.$this->lang('Inviter le bot') ?></a>
+	<a class="btn btn-outline-secondary btn-sm" href="<?php echo htmlspecialchars((string) $invitation) ?>" target="_blank" rel="noopener noreferrer" title="<?php echo htmlspecialchars((string) $this->lang('Ajoute le bot à un serveur Discord, avec les seules permissions dont il a besoin.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-user-plus').' '.$this->lang('Inviter le bot') ?></a>
 	<?php endif ?>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/fonctionnalites') ?>"><?php echo icon('fas fa-puzzle-piece').' '.$this->lang('Fonctionnalités') ?><?php if (!empty($fonctionnalites)): ?> <span class="badge text-bg-light"><?php echo (int) $fonctionnalites ?></span><?php endif ?></a>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/mise-en-place') ?>"><?php echo icon('fas fa-magic').' '.$this->lang('Mise en place du serveur') ?></a>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/salons') ?>"><?php echo icon('fas fa-exchange-alt').' '.$this->lang('Salons et forums') ?></a>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/roles') ?>"><?php echo icon('fas fa-user-tag').' '.$this->lang('Groupes et rôles') ?></a>
-	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/roles-temporaires') ?>"><?php echo icon('fas fa-hourglass-half').' '.$this->lang('Rôles temporaires') ?></a>
 </div>

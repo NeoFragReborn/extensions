@@ -29,7 +29,7 @@ class Admin extends Controller_Module
 					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
 					.'<td class="text-end">'.(int) $c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/glossary/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/glossary/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/glossary/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette catégorie ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
@@ -50,7 +50,7 @@ class Admin extends Controller_Module
 		else
 		{
 			$corps = '<table class="table table-hover"><thead><tr>'
-				.'<th style="width:3rem;">'.$this->lang('Lettre').'</th>'
+				.'<th class="text-nowrap" style="width:1%;">'.$this->lang('Lettre').'</th>'
 				.'<th>'.$this->lang('Terme').'</th>'
 				.'<th>'.$this->lang('Définition').'</th>'
 				.'<th>'.$this->lang('Catégorie').'</th>'
@@ -71,7 +71,7 @@ class Admin extends Controller_Module
 					.'<td class="text-muted">'.htmlspecialchars((string) ($apercu)).'</td>'
 					.'<td>'.htmlspecialchars((string) ($t['cat_title'])).'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/glossary/t/'.$t['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/glossary/t/'.$t['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/glossary/t/delete/'.$t['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ce terme ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}

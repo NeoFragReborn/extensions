@@ -73,7 +73,8 @@ class Admin extends Controller_Module
 				: '',
 		];
 
-		return '<div class="row g-3 mb-3">'
+		return $this->_onglets('index')
+			.'<div class="row g-3 mb-3">'
 				.'<div class="col-12 col-xl-6">'.$this->admin_card('fas fa-robot', $this->lang('État du bot'), $this->view('admin/etat', $donnees)).'</div>'
 				.'<div class="col-12 col-xl-6">'.$this->admin_card('fab fa-discord', $this->lang('Réglages'), $this->view('admin/reglages', $donnees)).'</div>'
 			.'</div>'
@@ -82,6 +83,30 @@ class Admin extends Controller_Module
 				: $this->admin_empty('fas fa-list', $this->lang('Le bot n’a encore rien écrit dans son journal.')), '', '', (bool) $donnees['journal']);
 	}
 
+	/**
+	 * Les onglets des pages Discord (charte de l'administration : plusieurs vues sur un même sujet).
+	 * Les sous-pages étaient des boutons au milieu de la carte « Réglages », mêlés aux vraies actions.
+	 */
+	private function _onglets(string $actif): string
+	{
+		$onglets = [
+			'index'              => ['admin/discord',                   'fab fa-discord',      $this->lang('Vue d\'ensemble')],
+			'fonctionnalites'    => ['admin/discord/fonctionnalites',   'fas fa-puzzle-piece', $this->lang('Fonctionnalités')],
+			'mise-en-place'      => ['admin/discord/mise-en-place',     'fas fa-magic',        $this->lang('Mise en place du serveur')],
+			'salons'             => ['admin/discord/salons',            'fas fa-exchange-alt', $this->lang('Salons et forums')],
+			'roles'              => ['admin/discord/roles',             'fas fa-user-tag',     $this->lang('Groupes et rôles')],
+			'roles-temporaires'  => ['admin/discord/roles-temporaires', 'fas fa-hourglass-half', $this->lang('Rôles temporaires')],
+		];
+
+		$html = '<div class="nf-local-nav">';
+
+		foreach ($onglets as $cle => [$adresse, $icone, $titre])
+		{
+			$html .= '<a class="nf-local-tab'.($cle === $actif ? ' active' : '').'" href="'.url($adresse).'"><i class="'.$icone.'"></i> '.$titre.'</a>';
+		}
+
+		return $html.'</div>';
+	}
 	/**
 	 * Une liste de correspondances dans sa carte, ou l'invitation à en créer une. Les textes arrivent
 	 * de `lang()`, qui rend un objet traduisible : d'où les paramètres non typés.
@@ -266,7 +291,7 @@ class Admin extends Controller_Module
 			];
 		}
 
-		return $this->admin_back('admin/discord')
+		return $this->_onglets('salons')
 			.$this->_correspondances($this->lang('Salons reliés'), $lignes, [$this->lang('Salon Discord'), $this->lang('Forum du site'), $this->lang('Synchronisation')], $this->lang('Aucun salon relié pour le moment.'))
 			.$this->admin_card('fas fa-link', $this->lang('Relier un salon'), $this->form()->display());
 	}
@@ -422,7 +447,7 @@ class Admin extends Controller_Module
 			];
 		}
 
-		return $this->admin_back('admin/discord')
+		return $this->_onglets('roles')
 			.$this->_correspondances($this->lang('Groupes reliés'), $lignes, [$this->lang('Groupe du site'), $this->lang('Rôle Discord'), ''], $this->lang('Aucun groupe relié pour le moment.'))
 			.$this->admin_card('fas fa-link', $this->lang('Relier un groupe'), $this->form()->display());
 	}
@@ -466,7 +491,7 @@ class Admin extends Controller_Module
 		$aide   = '<p class="text-muted small mb-3">'.$this->lang('Un membre qui peut gérer les rôles en donne un pour une durée avec la commande %s sur Discord ; le bot le retire à la fin, et le redonne à qui quitte puis rejoint le serveur avant.', '<code>/role give</code>').'</p>'
 			.($active ? '' : '<div class="alert alert-warning small">'.$this->lang('La fonctionnalité « Rôles temporaires » est éteinte : allumez-la dans %s.', '<a href="'.url('admin/discord/fonctionnalites').'">'.$this->lang('Fonctionnalités').'</a>').'</div>');
 
-		return $this->admin_back('admin/discord')
+		return $this->_onglets('roles-temporaires')
 			.$this->admin_card('fas fa-hourglass-half', $this->lang('Rôles temporaires en cours'), $aide.($lignes
 				? $this->view('admin/roles-temporaires', ['lignes' => $lignes])
 				: $this->admin_empty('fas fa-hourglass', (string) $this->lang('Aucun rôle temporaire en cours.'))));
@@ -506,7 +531,7 @@ class Admin extends Controller_Module
 			]);
 		}
 
-		return $this->admin_back('admin/discord')
+		return $this->_onglets('fonctionnalites')
 			.$this->admin_card('fas fa-puzzle-piece', $this->lang('Fonctionnalités du bot'), $cartes !== ''
 				? '<p class="text-muted small">'.$this->lang('Le bot déclare ses fonctionnalités à chaque signe de vie : une fonctionnalité ajoutée au bot apparaît ici. Un changement s’applique dans la minute, sans redémarrer.').'</p>'.$cartes
 				: $this->admin_empty('fas fa-puzzle-piece', $this->lang('Le bot n’a encore déclaré aucune fonctionnalité.'), $this->lang('Elles apparaissent ici dès son premier signe de vie.')));
@@ -725,7 +750,7 @@ class Admin extends Controller_Module
 		$derniere = $modele->derniere_mise_en_place();
 		$attente  = (string) $modele->etat('setup-pending') !== '';
 
-		return $this->admin_back('admin/discord')
+		return $this->_onglets('mise-en-place')
 			.($attente ? '<div class="alert alert-info">'.icon('fas fa-hourglass-half').' '.$this->lang('Une mise en place attend le bot : il l’applique à son prochain signe de vie, et son journal en rendra compte.').'</div>' : '')
 			.($derniere ? $this->admin_card('fas fa-history', $this->lang('Dernière mise en place'), $this->view('admin/mise-en-place-derniere', [
 				'derniere' => $derniere,

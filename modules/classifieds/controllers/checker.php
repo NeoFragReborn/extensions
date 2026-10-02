@@ -44,7 +44,8 @@ class Checker extends Module_Checker
 		$viewer = NeoFrag()->user ? (int)NeoFrag()->user->id : 0;
 		if (!$viewer || $viewer !== (int)$ad['user_id'])
 		{
-			NeoFrag()->db->execute('UPDATE nf_classifieds SET views = views + 1 WHERE id = '.(int)$id);
+			// updated_at = updated_at : une visite ne modifie pas l'annonce (la colonne suit ON UPDATE).
+			NeoFrag()->db->execute('UPDATE nf_classifieds SET views = views + 1, updated_at = updated_at WHERE id = '.(int)$id);
 		}
 
 		return [$ad];

@@ -14,7 +14,6 @@ class Admin extends Controller_Module
 	public function index()
 	{
 		$this->subtitle($this->lang('Stripe'))->icon('fas fa-credit-card');
-		$this->add_action($this->button($this->lang('Nouveau pack'), 'fas fa-plus', 'primary')->url('admin/payments/packs/new'));
 
 		$form = $this->form()
 			->add_rules([
@@ -56,7 +55,7 @@ class Admin extends Controller_Module
 				.'<td class="text-end">'.number_format((int)$p['price_cents'] / 100, 2).' '.strtoupper($p['currency']).'</td>'
 				.'<td class="text-center">'.(!empty($p['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
 				.'<td class="text-end">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/payments/packs/edit/'.(int)$p['id']).'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/payments/packs/edit/'.(int)$p['id']).'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/payments/packs/delete/'.(int)$p['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ce pack ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
@@ -67,7 +66,7 @@ class Admin extends Controller_Module
 			: $this->admin_empty('fas fa-box', $this->lang('Aucun pack.'));
 
 		return $this->admin_card('fas fa-credit-card', $this->lang('Réglages Stripe'), $form->display())
-			.$this->admin_card('fas fa-box', $this->lang('Packs'), $packs_body);
+			.$this->admin_card('fas fa-box', $this->lang('Packs'), $packs_body, '', $this->admin_create('admin/payments/packs/new', $this->lang('Nouveau pack')));
 	}
 
 	public function _pack_new()

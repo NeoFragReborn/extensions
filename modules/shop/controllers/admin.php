@@ -15,13 +15,13 @@ class Admin extends Controller_Module
 	public function index()
 	{
 		$this->subtitle($this->lang('Catalogue'))->icon('fas fa-store')->css('shop');
-		$this->add_action($this->button($this->lang('Nouvel item'), 'fas fa-plus', 'primary')->url('admin/shop/new'));
+		$nouveau = $this->admin_create('admin/shop/new', $this->lang('Nouvel item'));
 
 		$items = $this->db->select('*')->from('nf_shop_items')->order_by('position', 'id')->get(FALSE);
 
 		if (!$items)
 		{
-			return $this->admin_card('fas fa-store', $this->lang('Boutique'), $this->admin_empty('fas fa-store', $this->lang('Aucun item. Crée le premier !')));
+			return $this->admin_card('fas fa-store', $this->lang('Boutique'), $this->admin_empty('fas fa-store', $this->lang('Aucun item. Crée le premier !')), '', $nouveau);
 		}
 
 		$libelles = $this->boutique()->type_labels();
@@ -36,7 +36,7 @@ class Admin extends Controller_Module
 				.'<td class="text-center">'.((int)$it['stock'] < 0 ? '∞' : (int)$it['stock']).'</td>'
 				.'<td class="text-center">'.(!empty($it['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
 				.'<td class="text-end">'
-					.'<a class="btn btn-sm btn-outline-primary" href="'.url('admin/shop/edit/'.(int)$it['id']).'"><i class="fas fa-pen"></i></a> '
+					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/shop/edit/'.(int)$it['id']).'"><i class="fas fa-pen"></i></a> '
 					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet item ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
@@ -47,7 +47,7 @@ class Admin extends Controller_Module
 			.'<th class="text-center">'.$this->lang('Stock').'</th><th class="text-center">'.$this->lang('Statut').'</th><th></th>'
 			.'</tr></thead><tbody>'.$rows.'</tbody></table></div>';
 
-		return $this->admin_card('fas fa-store', $this->lang('Boutique'), $body, count($items).' '.$this->lang('item|items', count($items)));
+		return $this->admin_card('fas fa-store', $this->lang('Boutique'), $body, count($items).' '.$this->lang('item|items', count($items)), $nouveau);
 	}
 
 	public function _new()

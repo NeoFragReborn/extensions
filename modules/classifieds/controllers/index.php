@@ -45,7 +45,7 @@ class Index extends Controller_Module
 
 		$body .= '<div class="text-muted small mb-3">';
 		$author = $ad['author_id'] ? $this->user->link($ad['author_id'], $ad['author']) : '<i>'.$this->lang('Anonyme').'</i>';
-		$body  .= $this->lang('Déposée par %s', $author).' · '.timetostr('d/m/Y', $ad['created_ts']);
+		$body  .= $this->lang('Déposée par %s', $author).' · '.nf_date($ad['created_ts']);
 		$body  .= ' · <i class="fas fa-folder"></i> '.htmlspecialchars((string) ($ad['cat_title']));
 		$body  .= ' · <i class="fas fa-eye"></i> '.(int)$ad['views'];
 		if ($ad['status'] !== 'published')
@@ -242,7 +242,7 @@ class Index extends Controller_Module
 			$out .= '</div>';
 			$out .= '<div class="nf-content-card-foot">';
 			$author = $a['author_id'] ? $this->user->link($a['author_id'], $a['author']) : '<i>'.$this->lang('Anonyme').'</i>';
-			$out .= '<small class="text-muted">'.$author.' · '.timetostr('d/m', $a['created_ts']).'</small>';
+			$out .= '<small class="text-muted">'.$author.' · '.nf_date($a['created_ts']).'</small>';
 			$out .= '<span class="nf-content-card-spacer"></span>';
 			$out .= '<small class="text-muted"><i class="fas fa-eye"></i> '.(int)$a['views'].'</small>';
 			$out .= '</div>';

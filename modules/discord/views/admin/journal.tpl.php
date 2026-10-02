@@ -7,11 +7,12 @@ $niveaux = [
 	'error' => ['text-danger', 'fas fa-times-circle'],
 ];
 ?>
-<div class="table-responsive"><table class="table table-sm mb-0 align-middle">
+<?php /* Défilement dans la carte : trente entrées alignées faisaient de la page la plus haute de la diffusion. L'heure, dans le fuseau de celui qui regarde (timetostr). */ ?>
+<div class="table-responsive" style="max-height:420px;overflow-y:auto"><table class="table table-sm mb-0 align-middle">
 	<tbody>
 	<?php foreach ($journal as $l): [$classe, $icone] = $niveaux[$l['level']] ?? $niveaux['info'] ?>
 	<tr>
-		<td class="text-nowrap small text-muted ps-3"><?php echo htmlspecialchars((string) $l['created_at']) ?></td>
+		<td class="text-nowrap small text-muted ps-3"><?php echo timetostr($this->lang('d/m/Y H:i'), $l['created_at']) ?></td>
 		<td class="small w-100" style="overflow-wrap:anywhere"><span class="<?php echo $classe ?> me-1"><?php echo icon($icone) ?></span><?php echo htmlspecialchars((string) $l['message']) ?></td>
 	</tr>
 	<?php endforeach ?>

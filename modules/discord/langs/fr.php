@@ -363,4 +363,5 @@ return [
 	'616b60e0' => 'Retrait en cours',
 	'f0cde957' => 'Retirer ce rôle maintenant ? Le bot le retirera d’ici une minute.',
 	'9c36e3f1' => 'Retirer maintenant',
+	'4831760d' => 'Vue d\'ensemble',
 ];

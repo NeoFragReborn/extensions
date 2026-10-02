@@ -42,7 +42,7 @@ class Admin extends Controller_Module
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
-				$body .= '<a class="btn btn-sm btn-outline-primary" href="'.url('admin/surveys/'.$s['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/surveys/'.$s['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
 				if (!$is_closed && $published) {
 					$body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/surveys/close/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Fermer ce sondage ?')), ENT_QUOTES).'" title="'.$this->lang('Fermer').'"><i class="fas fa-lock"></i></a>';
 				}
