@@ -351,7 +351,7 @@ class Admin extends Controller_Module
 
 		$history_btn = $is_new ? '' : '<a class="btn btn-sm btn-light" href="'.url('admin/articles/history/'.(int)$article['article_id'].'/'.url_title($article['title'])).'">'.icon('fas fa-history').' '.$this->lang('Historique').'</a>';
 
-		return $this->admin_card($is_new ? 'fas fa-plus' : 'fas fa-edit', $is_new ? $this->lang('Nouvel article') : $this->lang('Éditer : %s', $article['title']), $this->form()->display(), '', $history_btn);
+		return $this->admin_card($is_new ? 'fas fa-plus' : 'fas fa-edit', $is_new ? $this->lang('Nouvel article') : $this->lang('Éditer : %s', $article['title']), $this->form()->display(), '', $history_btn.($is_new ? '' : ' '.nf_seo_bouton('articles', (int) $article['article_id'])));
 	}
 
 	private function _snapshot($article_id, array $post, $summary)

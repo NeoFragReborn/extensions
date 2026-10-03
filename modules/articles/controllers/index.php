@@ -27,6 +27,9 @@ class Index extends Controller_Module
 
 	public function _article($article, $autour = [], $serie = [])
 	{
+		// Le titre et la description que le billet donne aux moteurs, s'il en donne.
+		nf_seo_contenu('articles', (int) $article['article_id']);
+
 		$this->css('blog');
 		$this->js('blog');
 
