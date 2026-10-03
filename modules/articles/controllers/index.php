@@ -67,7 +67,9 @@ class Index extends Controller_Module
 		$entete = '<header class="blog-page-entete">'
 			.($membre instanceof \NF\NeoFrag\Models\User ? $membre->avatar()->append_attr('class', 'blog-avatar-grand') : '')
 			.'<div><h1>'.htmlspecialchars($auteur['username']).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', $auteur['total'], $auteur['total'])
-			.' · '.$this->user->link($auteur['user_id'], $this->lang('Voir son profil')).'</p></div></header>';
+			// Pas user->link() : son deuxième argument est le NOM du membre, qui fait aussi l'adresse — le
+			// libellé y donnait /user/<id>/voir-son-profil, une page introuvable (check-liens, 2026-10-03).
+			.' · <a href="'.url('user/'.(int) $auteur['user_id'].'/'.url_title($auteur['username'])).'">'.$this->lang('Voir son profil').'</a></p></div></header>';
 
 		return $this->_liste($articles, NULL, $barre, $pagination, $entete);
 	}
