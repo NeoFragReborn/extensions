@@ -10,6 +10,12 @@ Chaque version de ce dépôt joint à sa [page de version](https://github.com/Ne
 les archives de tous les addons distribuables et le catalogue du marketplace (`catalog.json`), avec
 leurs empreintes SHA-256.
 
+Le marketplace propose aussi les addons que les profils d'installation posent d'office — le forum, les
+actualités, les événements, la galerie… Leur code vit avec le cœur, dans le dépôt
+[neofrag](https://github.com/NeoFragReborn/neofrag), pour qu'un clone de celui-ci installe chaque profil
+sans rien d'autre ; ils sont listés à la fin du tableau ci-dessous, avec un lien vers leur code. Un site
+installé « Cœur seul » les ajoute depuis le marketplace.
+
 ## Les addons
 
 <!-- addons:début -->
@@ -58,6 +64,46 @@ leurs empreintes SHA-256.
 | [`extend`](themes/extend) | Extend — Thème « Extend » : navy et bleu acier, titres condensés Economica, bascule nuit/jour, mise en page riche (navigation, bannière, multi-zones). Entièrement personnalisable. | 1.0.0 | Chewbaka — portage NeoFrag Reborn |
 | [`forge`](themes/forge) | Forge — Thème gaming « fonte en fusion » : rouge lave sur charbon, nuit par défaut et mode jour, lueur de braise, titres Rajdhani. Entièrement personnalisable. | 1.0.0 | NeoFrag Reborn |
 | [`granite`](themes/granite) | Granite — Thème gaming épuré « roche & sommet », accent teal sur ardoise. Mode jour et mode nuit, titres condensés, entièrement personnalisable. | 1.0.0 | NeoFrag Reborn |
+
+### Posés d'office par les profils, dans le dépôt neofrag (32)
+
+Le marketplace les propose aussi, et leurs archives sont jointes aux versions de ce dépôt ; leur code
+vit avec le cœur, dans [neofrag](https://github.com/NeoFragReborn/neofrag).
+
+| Addon | Type | Ce qu'il fait | Version | Auteur |
+|---|---|---|---|---|
+| [`api`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/api) | module | API — L’API REST du site : des clés d’accès pour les programmes (le bot Discord, une intégration), des adresses versionnées qui rendent du JSON. | 1.0 | NeoFrag Reborn |
+| [`awards`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/awards) | module | Palmarès — Récompenses (palmarès) attribuables aux membres ou équipes — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`calendar`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/calendar) | module | Calendrier — Calendrier d'événements avec export iCal RFC 5545. | 1.0 | NeoFrag Reborn |
+| [`donations`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/donations) | module | Dons — Système de campagnes de dons avec objectif, barre de progression, liste de donateurs et bouton PayPal. | 1.0 | HiddenBlob (Donation v3), d’après majiid — portage NeoFrag Reborn |
+| [`events`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/events) | module | Événements gaming — Événements et tournois — planning, participants, types — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`faq`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/faq) | module | FAQ — Foire aux questions catégorisée affichée en accordéon Bootstrap. | 1.0 | NeoFrag Reborn |
+| [`forum`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/forum) | module | Forum — Forum communautaire avec catégories, sous-forums, sujets épinglés et permissions. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`gallery`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/gallery) | module | Galeries — Galerie photos avec albums, thumbnails et descriptions. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`games`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/games) | module | Jeux / Cartes — Catalogue de jeux pratiqués — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`gamification`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/gamification) | module | Gamification — Karma, points et VIP. Réputation et monnaie virtuelle dérivées de l'activité (barème réglable). | 1.0 | NeoFrag Reborn |
+| [`news`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/news) | module | Actualités — Actualités du site avec catégories et commentaires. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`newsletter`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/newsletter) | module | Newsletter — Inscription à la newsletter (double opt-in) et envoi de campagnes. | 1.0 | NeoFrag Reborn |
+| [`partners`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/partners) | module | Partenaires — Partenaires et sponsors — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`recruits`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/recruits) | module | Recrutements — Recrutement de joueurs avec candidatures et système de votes — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`teams`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/teams) | module | Équipes — Équipes et clans — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`wiki`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/wiki) | module | Wiki — Pages collaboratives avec historique de révisions automatique. | 1.0 | NeoFrag Reborn |
+| [`about`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/about) | widget | À propos — Bloc de présentation libre éditable en HTML. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`awards`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/awards) | widget | Palmarès — Affiche les dernières récompenses attribuées — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`calendar`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/calendar) | widget | Calendrier — Prochains événements du calendrier. | 1.0 | NeoFrag Reborn |
+| [`donations`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/donations) | widget | Campagne de dons — Affiche la progression d'une campagne de dons : barre de progression, montant collecté, top donateurs et bouton "Faire un don". | 1.0 | HiddenBlob (Donation v3), d’après majiid — portage NeoFrag Reborn |
+| [`events`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/events) | widget | Événements — Calendrier ou liste des événements à venir — module gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`forum`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/forum) | widget | Forum — Derniers sujets ou messages du forum. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`gallery`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/gallery) | widget | Galeries — Aperçu de la galerie photos avec dernières images. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`gameserver`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/gameserver) | widget | Serveur de jeu — Affiche le statut, le nombre de joueurs, la carte et un bouton "Rejoindre" pour un serveur de jeu (Minecraft Java, Minecraft Bedrock, Source / GoldSource — CS2, GMod, ARMA, Rust, etc.). | 1.0 | NeoFrag Reborn |
+| [`news`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/news) | widget | Actualités — Liste des dernières actualités publiées. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`newsletter`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/newsletter) | widget | Newsletter — Formulaire d'inscription à la newsletter. | 1.0 | NeoFrag Reborn |
+| [`partners`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/partners) | widget | Partenaires — Partenaires et sponsors avec logos — widget gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`recruits`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/recruits) | widget | Recrutement — Postes actuellement ouverts au recrutement — widget gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`steam`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/steam) | widget | Groupe Steam — Affiche le nombre de membres, la présence en ligne et l'activité d'un groupe Steam. | 2.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`teams`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/teams) | widget | Équipes — Équipes du clan avec leurs membres — widget gaming. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`teamspeak`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/teamspeak) | widget | Serveur TeamSpeak 3 — Affiche les channels et clients connectés à un serveur TeamSpeak 3, avec un bouton "Se connecter". | 3.0 | NeoFrag Reborn |
+| [`twitch`](https://github.com/NeoFragReborn/neofrag/tree/main/widgets/twitch) | widget | Statut live — Statut en direct de plusieurs chaînes Twitch / YouTube (jeu, viewers, titre, miniature) avec lecteur intégré. | 3.0 | NeoFrag Reborn |
 
 <!-- addons:fin -->
 
