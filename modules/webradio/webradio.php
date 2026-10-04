@@ -4,7 +4,7 @@ declare(strict_types=1);
  * https://neofr.ag
  * Module Webradio — un lecteur de flux et une grille d'émissions.
  *
- * Cinquième des six ajouts de un chantier interne. Contrairement à la carte des lieux, celui-ci demande
+ * Cinquième des six addons ajoutés le 2026-09-20. Contrairement à la carte des lieux, celui-ci demande
  * VRAIMENT quelque chose à la politique de sécurité du site.
  *
  * Pourquoi : la politique ne déclarait aucune directive `media-src`, qui héritait donc de
@@ -32,9 +32,9 @@ class Webradio extends Module
 			'title'       => $this->lang('Webradio'),
 			'description' => $this->lang('Lecteur d\'un flux de webradio et grille des émissions de la semaine.'),
 			'icon'        => 'fas fa-broadcast-tower',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

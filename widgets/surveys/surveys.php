@@ -11,13 +11,14 @@ class Surveys extends Widget
 			'title'   => $this->lang('Sondages'),
 			'description' => $this->lang('Sondage en cours sur le site.'),
 			'icon'        => 'fas fa-poll',
-			'author'  => 'NeoFrag',
-			'license' => 'LGPLv3',
+			'author'  => 'NeoFrag Reborn',
+			'license' => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
 			'requires'    => [],
 			'version' => '1.0',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'depends' => ['neofrag' => '0.2.0'],
 			'types'   => ['current' => $this->lang('Sondage en cours')]
 		];

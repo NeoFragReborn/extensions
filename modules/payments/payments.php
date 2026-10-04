@@ -24,9 +24,9 @@ class Payments extends Module
 			'title'       => $this->lang('Paiements'),
 			'description' => $this->lang('Recharge de points et packs VIP via Stripe (argent réel).'),
 			'icon'        => 'fas fa-credit-card',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

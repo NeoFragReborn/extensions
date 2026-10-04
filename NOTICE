@@ -1,0 +1,28 @@
+NeoFrag Reborn, les addons à la carte — qui a écrit quoi, et sous quelle licence
+================================================================================
+
+Ces addons de NeoFrag Reborn, continuité communautaire de NeoFrag, créé par Michaël BILCOT (FoxLey)
+et Jérémy VALENTIN (eResnova), sont distribués sous la GNU Lesser General Public License, version 3
+ou ultérieure (COPYING, COPYING.LESSER), sauf ceux que ce fichier signale.
+
+Ce fichier est engendré par tools/check-notice.php (dépôt neofrag) depuis les déclarations des
+addons : ne pas l'éditer à la main.
+
+Portages d'addons de la communauté NeoFrag
+------------------------------------------
+  theme extend — Chewbaka — portage NeoFrag Reborn — CC BY-NC-SA 4.0 (LICENSES/CC-BY-NC-SA-4.0.txt)
+
+Addons écrits par NeoFrag Reborn (LGPL-3.0)
+-------------------------------------------
+  module ads, module articles, module bugtracker, module classifieds, module discord, module
+  downloads, module emojis, module feeds, module glossary, module guestbook, module links, module
+  payments, module places, module quotes, module recipes, module sandbox, module shop, module
+  surveys, module webradio, widget ads, widget articles, widget downloads, widget guestbook, widget
+  links, widget rss, widget seasonal, widget surveys, theme blockcraft, theme forge, theme granite
+
+Remerciements — idées reprises, sans leur code
+----------------------------------------------
+  - les thèmes Granite et Blockcraft s’inspirent des thèmes « yosemite » et « LD_minecraft »
+    de Nuked-Klan, sans en reprendre ni code ni image
+
+Les textes des licences citées sont dans COPYING.LESSER (LGPL-3.0) et dans LICENSES/.

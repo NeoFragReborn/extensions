@@ -28,12 +28,13 @@ class Rss extends Widget
 			'description' => $this->lang('Les derniers articles d\'un flux RSS ou Atom extérieur, mis en cache.'),
 			'icon'        => 'fas fa-rss',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
 			'requires'    => [],
 			'version'     => '1.0',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'depends'     => [
 				'neofrag' => '0.2.0'
 			],

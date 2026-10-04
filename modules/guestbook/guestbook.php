@@ -17,9 +17,9 @@ class Guestbook extends Module
 			'title'       => $this->lang('Livre d\'or'),
 			'description' => $this->lang('Livre d\'or avec modération admin et rate-limit anti-spam.'),
 			'icon'        => 'far fa-comment-dots',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

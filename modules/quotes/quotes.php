@@ -4,7 +4,7 @@ declare(strict_types=1);
  * https://neofr.ag
  * Module Citations — citations classées, avec leur auteur et leur source.
  *
- * Premier des trois modules de contenu de la il sert de patron aux deux autres
+ * Premier des trois modules de contenu ajoutés le 2026-09-20 : il sert de patron aux deux autres
  * (recettes, dictionnaire). Le moule est celui de `faq` — des catégories d'un côté, des entrées de
  * l'autre, une page publique et un écran d'administration avec recherche, filtre et tri — parce
  * qu'il est déjà éprouvé et que trois modules bâtis pareil se maintiennent ensemble.
@@ -27,9 +27,9 @@ class Quotes extends Module
 			'title'       => $this->lang('Citations'),
 			'description' => $this->lang('Recueil de citations classées, avec leur auteur et leur source.'),
 			'icon'        => 'fas fa-quote-right',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

@@ -24,6 +24,12 @@ class Sitemap extends Controller_Module
 			$adresses[] = ['adresse' => 'bugtracker/'.$ticket['id'].'/'.url_title($ticket['title']), 'date' => $ticket['updated_at']];
 		}
 
+		// Une rubrique vide n'est pas annoncée aux moteurs : sa page ne dirait que « rien pour l'instant ».
+		if (!$adresses)
+		{
+			return [];
+		}
+
 		array_unshift($adresses, ['adresse' => 'bugtracker', 'date' => $adresses[0]['date'] ?? NULL]);
 
 		return $adresses;

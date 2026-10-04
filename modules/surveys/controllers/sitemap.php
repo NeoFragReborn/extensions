@@ -23,6 +23,7 @@ class Sitemap extends Controller_Module
 			$adresses[] = ['adresse' => 'surveys/'.$sondage['id'].'/'.url_title($sondage['title']), 'date' => $sondage['created_at']];
 		}
 
-		return $adresses;
+		// Une rubrique vide n'est pas annoncée aux moteurs : sa page ne dirait que « rien pour l'instant ».
+		return count($adresses) > 1 ? $adresses : [];
 	}
 }

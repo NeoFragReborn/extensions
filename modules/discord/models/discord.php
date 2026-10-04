@@ -13,7 +13,7 @@ class Discord extends Model
 	/*
 	 * Le bot Discord. Les réglages vivent dans `nf_settings` (`nf_discord_*`) ; la clé
 	 * Discord y est CHIFFRÉE avec la clé propre au site (`Crypt::encrypt_secret`, comme le mot de passe
-	 * SMTP) — choix de le mainteneur, le 2026-10-01 : la changer, démarrer et arrêter le bot sans toucher à la
+	 * SMTP) — choix du 2026-10-01 : la changer, démarrer et arrêter le bot sans toucher à la
 	 * machine qui le fait tourner. Chaque changement de réglage augmente `nf_discord_version` : le bot
 	 * relit sa configuration quand ce numéro change.
 	 */

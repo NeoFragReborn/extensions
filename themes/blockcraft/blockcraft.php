@@ -3,7 +3,7 @@
  * https://neofr.ag
  * Blockcraft — thème orienté serveurs de jeu type bac à sable (blocs/biomes).
  * Direction artistique originale inspirée des univers cubiques. Mode jour (biome)
- * par défaut + mode nuit (grotte). Released under CC BY-NC-SA 4.0.
+ * par défaut + mode nuit (grotte). LGPLv3.
  */
 
 namespace NF\Themes\Blockcraft;
@@ -17,9 +17,9 @@ class Blockcraft extends Theme
 		return [
 			'title'       => 'Blockcraft',
 			'description' => $this->lang('Thème gaming inspiré des univers cubiques. Mode jour « biome » et mode nuit « grotte », accent vert herbe, entièrement personnalisable.'),
-			'link'        => 'https://neofr.ag',
-			'author'      => 'NeoFrag fork',
-			'license'     => 'Creative Commons CC BY-NC-SA 4.0',
+			'link'        => 'https://neofrag-reborn.xyz',
+			'author'      => 'NeoFrag Reborn',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

@@ -1,0 +1,74 @@
+name: CI
+
+# Un addon de ce dépôt ne tourne que posé dans un arbre de neofrag. La CI clone donc neofrag (sa
+# branche main : la version publiée la plus récente), y pose les addons de ce dépôt
+# (tools/assembler.php), puis joue la batterie du CMS sur le produit entier : ses contrôles statiques et
+# sa suite unitaire, sur la plus ancienne et la plus récente des versions de PHP prises en charge.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  produit:
+    name: Le produit entier (PHP ${{ matrix.php }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.5']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: extensions
+
+      # Tant que neofrag est privé, l'application de l'organisation le lit ; public, il se clone seul.
+      - name: Jeton de lecture de neofrag
+        id: jeton
+        if: ${{ vars.NF_APP_ID != '' }}
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.NF_APP_ID }}
+          private-key: ${{ secrets.NF_APP_CLE }}
+          owner: NeoFragReborn
+          repositories: neofrag
+
+      - uses: actions/checkout@v7
+        with:
+          repository: NeoFragReborn/neofrag
+          path: neofrag
+          token: ${{ steps.jeton.outputs.token || github.token }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, mysqli, gd, zip, curl, exif
+          coverage: none
+
+      - name: composer install et npm ci (PHPStan, PHPUnit, ESLint)
+        working-directory: neofrag
+        run: |
+          composer install --no-interaction --no-progress
+          npm ci --no-audit --no-fund
+
+      - name: Poser les addons de ce dépôt
+        working-directory: neofrag
+        run: php tools/assembler.php --extensions=../extensions
+
+      # Le marketplace se juge sur ses archives, qui s'engendrent à la publication.
+      - name: Contrôles statiques du CMS, sur le produit entier
+        working-directory: neofrag
+        run: php tools/check-all.php --sauf=marketplace
+
+      - name: Suite unitaire
+        working-directory: neofrag
+        run: vendor/bin/phpunit --testsuite unit

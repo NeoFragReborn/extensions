@@ -13,7 +13,7 @@ use NF\Widgets\Rss\Lib\Settings;
 /**
  * Rafraîchit le cache des flux, hors du rendu d'une page.
  *
- * C'est ce contrôleur qui tient la promesse de la « un flux lent ne doit jamais
+ * C'est ce contrôleur qui tient la promesse faite à son ajout : « un flux lent ne doit jamais
  * retarder une page ». Le rendu, lui, ne fait que lire un fichier ; il sert même un contenu périmé
  * plutôt que d'attendre le réseau. Sans ce passage périodique, le cache finirait par vieillir
  * indéfiniment.

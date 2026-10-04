@@ -23,6 +23,12 @@ class Sitemap extends Controller_Module
 			$adresses[] = ['adresse' => 'recipes/'.$recette['id'].'/'.url_title($recette['title']), 'date' => $recette['updated_at']];
 		}
 
+		// Une rubrique vide n'est pas annoncée aux moteurs : sa page ne dirait que « rien pour l'instant ».
+		if (!$adresses)
+		{
+			return [];
+		}
+
 		array_unshift($adresses, ['adresse' => 'recipes', 'date' => $adresses ? max(array_column($adresses, 'date')) : NULL]);
 
 		return $adresses;

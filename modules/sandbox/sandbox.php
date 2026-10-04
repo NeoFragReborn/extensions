@@ -4,8 +4,8 @@ declare(strict_types=1);
  * https://neofr.ag
  * Module Bac à sable — un endroit pour essayer la mise en forme sans rien déranger.
  *
- * Sixième et dernier des ajouts de un chantier interne. « Espace d'essai pour les membres » : le mainteneur a
- * tranché pour l'essai de MISE EN FORME, plutôt qu'une catégorie de forum jetable ou un bloc-notes.
+ * Sixième et dernier des addons ajoutés le 2026-09-20. « Espace d'essai pour les membres » : le choix
+ * s'est porté sur l'essai de MISE EN FORME, plutôt qu'une catégorie de forum jetable ou un bloc-notes.
  *
  * Ce qu'il montre, et pourquoi c'est ce qu'il faut montrer
  * --------------------------------------------------------
@@ -33,9 +33,9 @@ class Sandbox extends Module
 			'title'       => $this->lang('Bac à sable'),
 			'description' => $this->lang('Un endroit pour essayer la mise en forme et voir ce que le site en fait, sans rien publier.'),
 			'icon'        => 'fas fa-flask',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

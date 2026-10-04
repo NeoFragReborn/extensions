@@ -2,7 +2,7 @@
 /**
  * https://neofr.ag
  * Forge — thème gaming « fonte en fusion ». Rouge lave, nuit par défaut
- * (+ mode jour), titres Rajdhani, signature lueur de braise. CC BY-NC-SA 4.0.
+ * (+ mode jour), titres Rajdhani, signature lueur de braise. LGPLv3.
  */
 
 namespace NF\Themes\Forge;
@@ -16,9 +16,9 @@ class Forge extends Theme
 		return [
 			'title'       => 'Forge',
 			'description' => $this->lang('Thème gaming « fonte en fusion » : rouge lave sur charbon, nuit par défaut et mode jour, lueur de braise, titres Rajdhani. Entièrement personnalisable.'),
-			'link'        => 'https://neofr.ag',
-			'author'      => 'NeoFrag fork',
-			'license'     => 'Creative Commons CC BY-NC-SA 4.0',
+			'link'        => 'https://neofrag-reborn.xyz',
+			'author'      => 'NeoFrag Reborn',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

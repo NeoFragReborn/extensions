@@ -3,7 +3,7 @@
  * https://neofr.ag
  * Granite — thème gaming sobre « roche & sommet ». Direction artistique
  * teal/ardoise modernisée, clin d'œil aux templates clan d'antan. Mode jour
- * par défaut + mode nuit. Released under CC BY-NC-SA 4.0.
+ * par défaut + mode nuit. LGPLv3.
  */
 
 namespace NF\Themes\Granite;
@@ -17,9 +17,9 @@ class Granite extends Theme
 		return [
 			'title'       => 'Granite',
 			'description' => $this->lang('Thème gaming épuré « roche & sommet », accent teal sur ardoise. Mode jour et mode nuit, titres condensés, entièrement personnalisable.'),
-			'link'        => 'https://neofr.ag',
-			'author'      => 'NeoFrag fork',
-			'license'     => 'Creative Commons CC BY-NC-SA 4.0',
+			'link'        => 'https://neofrag-reborn.xyz',
+			'author'      => 'NeoFrag Reborn',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

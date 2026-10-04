@@ -4,7 +4,7 @@ declare(strict_types=1);
  * https://neofr.ag
  * Module Recettes — recettes classées, avec leurs ingrédients et leurs étapes.
  *
- * Deuxième des trois modules de contenu de un chantier interne, bâti sur le patron du module `quotes` :
+ * Deuxième des trois modules de contenu ajoutés le 2026-09-20, bâti sur le patron du module `quotes` :
  * des catégories d'un côté, des entrées de l'autre, une page publique et un écran d'administration
  * avec recherche, filtre et tri. Ce qui lui est propre tient en trois points :
  *
@@ -29,9 +29,9 @@ class Recipes extends Module
 			'title'       => $this->lang('Recettes'),
 			'description' => $this->lang('Recueil de recettes classées, avec leurs ingrédients, leurs étapes et leurs durées.'),
 			'icon'        => 'fas fa-utensils',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

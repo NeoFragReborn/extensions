@@ -11,13 +11,14 @@ class Guestbook extends Widget
 			'title'   => $this->lang('Livre d\'or'),
 			'description' => $this->lang('Derniers messages du livre d\'or.'),
 			'icon'        => 'far fa-comment-dots',
-			'author'  => 'NeoFrag',
-			'license' => 'LGPLv3',
+			'author'  => 'NeoFrag Reborn',
+			'license' => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
 			'requires'    => [],
 			'version' => '1.0',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'depends' => ['neofrag' => '0.2.0'],
 			'types'   => ['recent' => $this->lang('Derniers messages')]
 		];

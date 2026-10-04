@@ -17,9 +17,9 @@ class Extend extends Theme
 		return [
 			'title'       => 'Extend',
 			'description' => $this->lang('Thème « Extend » : navy et bleu acier, titres condensés Economica, bascule nuit/jour, mise en page riche (navigation, bannière, multi-zones). Entièrement personnalisable.'),
-			'link'        => 'https://neofr.ag',
-			'author'      => 'Chewbaka — port NeoFrag Reborn',
-			'license'     => 'Creative Commons CC BY-NC-SA 4.0',
+			'link'        => 'https://neofrag-reborn.xyz',
+			'author'      => 'Chewbaka — portage NeoFrag Reborn',
+			'license'     => 'Creative Commons CC BY-NC-SA 4.0 <https://creativecommons.org/licenses/by-nc-sa/4.0/>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

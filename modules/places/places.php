@@ -4,7 +4,7 @@ declare(strict_types=1);
  * https://neofr.ag
  * Module Carte des lieux — des lieux situés sur une carte OpenStreetMap.
  *
- * Quatrième des six ajouts de un chantier interne, et celui qui portait le point d'attention : « notre
+ * Quatrième des six addons ajoutés le 2026-09-20, et celui qui portait le point d'attention : « notre
  * politique de sécurité est stricte et sans CDN ; la bibliothèque et ses tuiles doivent être servies
  * par nous ou explicitement autorisées, sans quoi rien ne s'affiche ».
  *
@@ -36,9 +36,9 @@ class Places extends Module
 			'title'       => $this->lang('Carte des lieux'),
 			'description' => $this->lang('Des lieux situés sur une carte OpenStreetMap, avec leur adresse et leur description.'),
 			'icon'        => 'fas fa-map-marked-alt',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],

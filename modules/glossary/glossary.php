@@ -4,7 +4,7 @@ declare(strict_types=1);
  * https://neofr.ag
  * Module Dictionnaire — un lexique des termes de la communauté, rangé par lettre.
  *
- * Troisième des trois modules de contenu de un chantier interne, bâti sur le même patron que `quotes` et
+ * Troisième des trois modules de contenu ajoutés le 2026-09-20, bâti sur le même patron que `quotes` et
  * `recipes` : des catégories d'un côté, des entrées de l'autre, une page publique et un écran
  * d'administration avec recherche, filtre et tri.
  *
@@ -26,9 +26,9 @@ class Glossary extends Module
 			'title'       => $this->lang('Dictionnaire'),
 			'description' => $this->lang('Lexique des termes de la communauté, rangé par lettre, avec ses synonymes.'),
 			'icon'        => 'fas fa-book',
-			'link'        => 'https://neofr.ag',
+			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
-			'license'     => 'LGPLv3 <https://neofr.ag/license>',
+			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
