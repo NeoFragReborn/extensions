@@ -39,7 +39,10 @@ class Index extends Controller_Module
 			'items'   => $items,
 			'owned'   => $owned,
 			'balance' => $balance,
-			'logged'  => $logged
+			'logged'  => $logged,
+			// Le jeton des actions qui modifient : l'achat l'exige (cf. Ajax::_buy).
+			// csrf: vérifié par modules/shop/controllers/ajax.php
+			'jeton'   => $logged ? (string) $this->csrf_token() : ''
 		]);
 	}
 }

@@ -28,7 +28,7 @@ return [
 	'468b6c4f' => 'Pack deleted',
 	'dcab7e66' => 'Payment received! Your account will be credited shortly.',
 	'2b32e568' => 'Payment cancelled.',
-	'5bd81a75' => 'Top-up of points and VIP packs via Stripe (real money).',
+	'a004e692' => 'Packs of points or VIP days (Gamification module) paid through Stripe Checkout, credited after Stripe\'s signed confirmation, only once per payment.',
 	'7a1834da' => 'Stripe top-up',
 	'99f71fd4' => 'Top-up & VIP',
 	'182fb3e4' => 'Payments are not available at the moment.',
@@ -46,4 +46,6 @@ return [
 	'4441a1e9' => 'Currency',
 	'51692a67' => 'Payment unavailable.',
 	'4ceb7801' => 'Payment error.',
+	'e8567c20' => 'The points and VIP sold here are credited by the Gamification module, which is missing or disabled: purchases stay closed until it is installed and enabled.',
+	'e0c070fd' => 'The page has expired: reload it, then try again.',
 ];

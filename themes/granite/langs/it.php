@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Sfondo',
 	'abe737fd' => 'Social network',
 	'c77f6c43' => 'Realizzato con',
-	'6da7fc68' => 'Tema gaming essenziale «roccia e vetta», accento teal su ardesia. Modalità giorno e notte, titoli condensati, completamente personalizzabile.',
+	'b1ceee54' => 'Tema sobrio «roccia e vetta»: verde petrolio su ardesia, titoli condensati in Oswald, modalità notte a scelta del visitatore; colori, immagini e logo regolabili.',
 	'4f376417' => 'Torna su',
 ];

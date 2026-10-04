@@ -72,6 +72,6 @@ return [
 	'32c126c4' => 'Sfondo',
 	'abe737fd' => 'Social network',
 	'c77f6c43' => 'Realizzato con',
-	'275eec43' => 'Tema gaming «metallo fuso»: rosso lava su antracite, notte di default più modalità giorno, bagliore di brace, titoli Rajdhani. Completamente personalizzabile.',
+	'c22d6473' => 'Tema «ferro fuso»: rosso lava su carbone, bagliore di brace, titoli in Rajdhani, modalità giorno a scelta del visitatore; colori, immagini e logo regolabili.',
 	'4f376417' => 'Torna su',
 ];

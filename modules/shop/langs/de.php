@@ -44,4 +44,5 @@ return [
 	'360924c6' => 'Vorteil (Perk)',
 	'4539b307' => 'VIP (Payload = Tage)',
 	'5a7a9517' => 'Physisches Produkt (Merch)',
+	'e0c070fd' => 'Die Seite ist abgelaufen: Lade sie neu und versuche es dann erneut.',
 ];

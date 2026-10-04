@@ -16,7 +16,7 @@ class Blockcraft extends Theme
 	{
 		return [
 			'title'       => 'Blockcraft',
-			'description' => $this->lang('Thème gaming inspiré des univers cubiques. Mode jour « biome » et mode nuit « grotte », accent vert herbe, entièrement personnalisable.'),
+			'description' => $this->lang('Thème inspiré des jeux de blocs : jour « biome » clair, accent vert herbe, nuit « grotte » au choix du visiteur ; couleurs, images et logo réglables.'),
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

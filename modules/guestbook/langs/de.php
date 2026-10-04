@@ -32,7 +32,7 @@ return [
 	'e2c8f589' => 'Status',
 	'f44b974c' => 'Nachrichten moderieren',
 	'f54740ce' => 'Danke! Deine Nachricht wartet auf Moderation.',
-	'24f787c4' => 'Gästebuch mit Admin-Moderation und Anti-Spam-Rate-Limit.',
+	'dd9f83aa' => 'Gästebuch für Besucher wie für Mitglieder: Jede Nachricht wartet auf die Freigabe durch einen Moderator; wiederholte Einträge von derselben IP-Adresse werden begrenzt.',
 	// i18n 2026-06-11
 	'cb208159' => 'Keine Nachricht entspricht diesen Kriterien.',
 	'362b5dc7' => 'Nachricht oder Name suchen…',

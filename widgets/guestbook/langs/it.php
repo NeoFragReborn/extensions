@@ -7,7 +7,7 @@ declare(strict_types=1);
 return [
 	'4cd691cc' => 'Nessun messaggio',
 	'7a841f3e' => 'Tutti i messaggi',
-	'bc0c9fa8' => 'Ultimi messaggi dal libro degli ospiti.',
+	'3af41f74' => 'Gli ultimi messaggi approvati del libro degli ospiti, con autore e data, e un link al libro completo; il numero di messaggi mostrati è regolabile.',
 	'cad40716' => 'Libro degli ospiti',
 	'f3530fd8' => 'Ultimi messaggi',
 	// i18n 2026-06-11 (code strings)

@@ -75,6 +75,6 @@ return [
 	'32c126c4' => 'Arrière-plan',
 	'abe737fd' => 'Réseaux sociaux',
 	'c77f6c43' => 'Propulsé par',
-	'5c6b7f18' => 'Thème gaming inspiré des univers cubiques. Mode jour « biome » et mode nuit « grotte », accent vert herbe, entièrement personnalisable.',
+	'c040bba0' => 'Thème inspiré des jeux de blocs : jour « biome » clair, accent vert herbe, nuit « grotte » au choix du visiteur ; couleurs, images et logo réglables.',
 	'4f376417' => 'Retour en haut',
 ];

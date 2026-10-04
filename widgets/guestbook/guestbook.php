@@ -9,7 +9,7 @@ class Guestbook extends Widget
 	{
 		return [
 			'title'   => $this->lang('Livre d\'or'),
-			'description' => $this->lang('Derniers messages du livre d\'or.'),
+			'description' => $this->lang('Les derniers messages validés du livre d\'or, avec leur auteur et leur date, et un lien vers le livre complet ; le nombre de messages affichés se règle.'),
 			'icon'        => 'far fa-comment-dots',
 			'author'  => 'NeoFrag Reborn',
 			'license' => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

@@ -65,4 +65,81 @@ class Surveys extends Module
 		$ip = \NF\NeoFrag\Libraries\Rate_Limit::client_ip();
 		return hash('sha256', 'survey-salt:'.$ip);
 	}
+
+	/**
+	 * Les résultats d'un sondage sont-ils visibles ? UNE règle pour sa page et pour le widget.
+	 *
+	 * Elle suit les libellés du réglage « Afficher les résultats » de l'administration. Avant elle,
+	 * la page montrait les résultats à quiconque avait voté ou dès la fermeture, quel que soit le
+	 * réglage — « Quand le sondage est fermé » et « Jamais (pour admin uniquement) » ne valaient
+	 * donc que pour qui n'avait pas encore voté —, et le widget les montrait toujours (2026-10-04).
+	 *
+	 * @param string $reglage       always | after_vote | closed | never (une valeur inconnue vaut le défaut, after_vote)
+	 * @param bool   $a_vote        le visiteur a déjà voté
+	 * @param bool   $ferme         le sondage est fermé
+	 * @param bool   $gestionnaire  le visiteur gère les sondages : il voit toujours les résultats
+	 */
+	public static function resultats_visibles(string $reglage, bool $a_vote, bool $ferme, bool $gestionnaire = FALSE): bool
+	{
+		if ($gestionnaire)
+		{
+			return TRUE;
+		}
+
+		switch ($reglage)
+		{
+			case 'always':
+				return TRUE;
+
+			case 'closed':
+				return $ferme;
+
+			case 'never':
+				return FALSE;
+
+			default:
+				return $a_vote || $ferme;
+		}
+	}
+
+	/** Le visiteur a-t-il voté ? Par son compte s'il est connecté, sinon par l'empreinte de son adresse IP. */
+	public static function a_vote(int $survey_id): bool
+	{
+		[$colonne, $valeur] = self::votant();
+
+		return !NeoFrag()->db->from('nf_surveys_votes')->where('survey_id', $survey_id)->where($colonne, $valeur)->empty();
+	}
+
+	/**
+	 * Les sondages où le visiteur a voté, en une requête — pour la liste des sondages.
+	 *
+	 * @return array<int, true>  survey_id => TRUE
+	 */
+	public static function sondages_votes(): array
+	{
+		[$colonne, $valeur] = self::votant();
+
+		$votes = [];
+
+		// Une requête à UNE colonne rend des scalaires (`Db::get()`).
+		foreach ((array) NeoFrag()->db->select('DISTINCT survey_id')->from('nf_surveys_votes')->where($colonne, $valeur)->get() as $survey_id)
+		{
+			$votes[(int) $survey_id] = TRUE;
+		}
+
+		return $votes;
+	}
+
+	/**
+	 * Qui vote : [colonne, valeur] — le compte du membre connecté, sinon l'empreinte de l'IP. Calculé
+	 * AVANT toute requête : le constructeur de requêtes est partagé.
+	 *
+	 * @return array{0: string, 1: int|string}
+	 */
+	private static function votant(): array
+	{
+		$user = NeoFrag()->user();
+
+		return $user ? ['user_id', (int) $user->id] : ['ip_hash', self::ip_hash()];
+	}
 }

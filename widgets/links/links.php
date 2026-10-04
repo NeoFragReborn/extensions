@@ -14,7 +14,7 @@ class Links extends Widget
 	{
 		return [
 			'title'       => $this->lang('Liens'),
-			'description' => $this->lang('Liens populaires de l\'annuaire.'),
+			'description' => $this->lang('Les liens les plus cliqués de l\'annuaire, avec leur nombre de clics, et un lien vers l\'annuaire complet ; le nombre de liens affichés se règle.'),
 			'icon'        => 'fas fa-link',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

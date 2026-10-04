@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Fondo',
 	'abe737fd' => 'Redes sociales',
 	'c77f6c43' => 'Desarrollado con',
-	'6da7fc68' => 'Tema gaming depurado «roca y cima», acento teal sobre pizarra. Modo día y noche, títulos condensados, totalmente personalizable.',
+	'b1ceee54' => 'Tema sobrio «roca y cumbre»: verde azulado sobre pizarra, títulos condensados en Oswald, modo noche a elección del visitante; colores, imágenes y logo ajustables.',
 	'4f376417' => 'Volver arriba',
 ];

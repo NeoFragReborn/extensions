@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 return [
 	'04a2586c' => 'Enlaces populares',
-	'2a580e11' => 'Enlaces populares del directorio.',
+	'a9ed63fa' => 'Los enlaces más pulsados del directorio, con su número de clics, y un enlace al directorio completo; el número de enlaces mostrados es ajustable.',
 	'616195b8' => 'Enlaces',
 	'bfbbf021' => 'Sin enlace',
 	'cc19ada2' => 'Todos los enlaces',

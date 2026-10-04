@@ -9,5 +9,5 @@ return [
 	'42c9cea8' => 'Beliebte Downloads',
 	'611df4ac' => 'Keine Datei',
 	'edde8114' => 'Downloads',
-	'f6f05817' => 'Liste der zuletzt zum Download bereitgestellten Dateien.'
+	'f47437d0' => 'Die am häufigsten heruntergeladenen Dateien der Bibliothek, mit Größe und Anzahl der Downloads, und ein Link zu allen Dateien.'
 ];

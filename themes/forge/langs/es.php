@@ -72,6 +72,6 @@ return [
 	'32c126c4' => 'Fondo',
 	'abe737fd' => 'Redes sociales',
 	'c77f6c43' => 'Desarrollado con',
-	'275eec43' => 'Tema gaming «metal fundido»: rojo lava sobre carbón, noche por defecto y modo día, brillo de brasas, títulos Rajdhani. Totalmente personalizable.',
+	'c22d6473' => 'Tema «hierro fundido»: rojo lava sobre carbón, brillo de brasa, títulos en Rajdhani, modo día a elección del visitante; colores, imágenes y logo ajustables.',
 	'4f376417' => 'Volver arriba',
 ];

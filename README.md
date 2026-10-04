@@ -1,10 +1,35 @@
+<div align="center">
+
+<a href="https://neofrag-reborn.xyz"><img src="https://neofrag-reborn.xyz/themes/vitrine/images/partage/fr.png" alt="NeoFrag Reborn — le CMS libre des communautés" width="720"></a>
+
 # NeoFrag Reborn — les addons à la carte
+
+**Les modules, widgets et thèmes à ajouter à un site NeoFrag Reborn, depuis son marketplace.**
+
+[![Version](https://img.shields.io/github/v/release/NeoFragReborn/extensions?label=version&color=2dd4bf)](https://github.com/NeoFragReborn/extensions/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/NeoFragReborn/extensions/ci.yml?branch=main&label=CI&logo=githubactions&logoColor=white)](https://github.com/NeoFragReborn/extensions/actions/workflows/ci.yml)
+[![PHP 8.2 à 8.5](https://img.shields.io/badge/PHP-8.2%20%C3%A0%208.5-777bb4.svg?logo=php&logoColor=white)](https://github.com/NeoFragReborn/neofrag/blob/main/docs/guide/installation.md#prérequis)
+[![Licence LGPL-3.0-or-later](https://img.shields.io/badge/licence-LGPL--3.0--or--later-blue.svg)](COPYING.LESSER)
+[![Discord](https://img.shields.io/badge/Discord-rejoindre-5865F2.svg?logo=discord&logoColor=white)](https://discord.gg/UmBRbwxtch)
+
+[Le CMS](https://github.com/NeoFragReborn/neofrag) · [Site du projet](https://neofrag-reborn.xyz) ·
+[Démonstration](https://demo.neofrag-reborn.xyz) · [Versions](https://github.com/NeoFragReborn/extensions/releases) ·
+[Discord](https://discord.gg/UmBRbwxtch) · [English](#-in-english)
+
+</div>
 
 Les modules, widgets et thèmes que [NeoFrag Reborn](https://github.com/NeoFragReborn/neofrag)
 n'installe pas d'office : une installation les ajoute après coup, depuis son administration
 (*Système → Thèmes & addons → Marketplace*), ou en envoyant leur archive par *Ajouter*. Le paquet
 d'installation du CMS les contient déjà tous ; le marketplace sert à les mettre à jour, et à les
 reprendre après une suppression.
+
+## 📦 Installer un addon
+
+1. 🧩 **Depuis le marketplace** — dans l'administration du site, *Système → Thèmes & addons →
+   Marketplace* : choisir l'addon et l'installer ; l'archive est vérifiée par son empreinte SHA-256.
+2. 📁 **À la main** — télécharger son archive sur la
+   [page des versions](https://github.com/NeoFragReborn/extensions/releases), puis l'envoyer par *Ajouter*.
 
 Chaque version de ce dépôt joint à sa [page de version](https://github.com/NeoFragReborn/extensions/releases)
 les archives de tous les addons distribuables et le catalogue du marketplace (`catalog.json`), avec
@@ -16,7 +41,9 @@ actualités, les événements, la galerie… Leur code vit avec le cœur, dans l
 sans rien d'autre ; ils sont listés à la fin du tableau ci-dessous, avec un lien vers leur code. Un site
 installé « Cœur seul » les ajoute depuis le marketplace.
 
-## Les addons
+## 📋 Les addons
+
+Les tableaux suivent le catalogue du marketplace livré avec cette version.
 
 <!-- addons:début -->
 ### Modules (19)
@@ -107,7 +134,7 @@ vit avec le cœur, dans [neofrag](https://github.com/NeoFragReborn/neofrag).
 
 <!-- addons:fin -->
 
-## Développer un addon
+## 🔧 Développer un addon
 
 Un addon de ce dépôt ne tourne que posé dans un arbre de [neofrag](https://github.com/NeoFragReborn/neofrag),
 à son chemin (`modules/<nom>`, `widgets/<nom>`, `themes/<nom>`) : c'est là que vivent le cœur, les outils
@@ -122,10 +149,36 @@ php tools/assembler.php --extensions=../extensions
 
 Les guides : [créer un module](https://github.com/NeoFragReborn/neofrag/blob/main/docs/guide/create-a-module.md),
 [un widget](https://github.com/NeoFragReborn/neofrag/blob/main/docs/guide/create-a-widget.md),
-[un thème](https://github.com/NeoFragReborn/neofrag/blob/main/docs/guide/create-a-theme.md). Le chemin
-d'une contribution : [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md).
+[un thème](https://github.com/NeoFragReborn/neofrag/blob/main/docs/guide/create-a-theme.md).
 
-## Licence
+## 🤝 Contribuer
+
+- 🔧 **du code** — le [guide du contributeur](.github/CONTRIBUTING.md) : éprouver un changement, les
+  versions, les conventions (celles du CMS) ;
+- 🐛 **un bug dans un addon à la carte** — une [issue](https://github.com/NeoFragReborn/extensions/issues),
+  avec la version de l'addon et celle du site ;
+- 💡 **une question, une idée** — le [serveur Discord](https://discord.gg/UmBRbwxtch) ou les
+  [Discussions](https://github.com/NeoFragReborn/neofrag/discussions) du CMS ;
+- 🔒 **une faille de sécurité** — jamais d'issue publique : la
+  [politique de sécurité](https://github.com/NeoFragReborn/.github/blob/main/SECURITY.md).
+
+## 🙏 Crédits
+
+NeoFrag a été créé par **Michaël BILCOT** (FoxLey) et **Jérémy VALENTIN** (eResnova) ; leurs addons
+gardent leur signature, dans la colonne *Auteur* des tableaux. Le thème Extend est le portage du thème de
+**Chewbaka**, et les Dons celui du module de **HiddenBlob**, d'après **majiid**. Merci à eux, et à ceux
+dont les idées ont inspiré d'autres addons.
+
+## 📜 Licence
 
 LGPL-3.0 ou ultérieure ([COPYING](COPYING), [COPYING.LESSER](COPYING.LESSER)), sauf le thème Extend,
 portage du thème de Chewbaka, sous CC BY-NC-SA 4.0. Qui a écrit chaque addon : [NOTICE](NOTICE).
+
+## 🌍 In English
+
+This repository holds the optional add-ons — modules, widgets and themes — of
+[NeoFrag Reborn](https://github.com/NeoFragReborn/neofrag), a free PHP CMS for communities. A site adds
+them from the marketplace in its administration, which checks each archive's SHA-256 fingerprint, or by
+uploading an archive by hand. Each [release](https://github.com/NeoFragReborn/extensions/releases)
+attaches every add-on archive and the marketplace catalogue; the tables above list them all. The code
+and the documentation are in French. Join the project on [Discord](https://discord.gg/UmBRbwxtch).

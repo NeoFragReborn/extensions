@@ -15,7 +15,7 @@ class Forge extends Theme
 	{
 		return [
 			'title'       => 'Forge',
-			'description' => $this->lang('Thème gaming « fonte en fusion » : rouge lave sur charbon, nuit par défaut et mode jour, lueur de braise, titres Rajdhani. Entièrement personnalisable.'),
+			'description' => $this->lang('Thème « fonte en fusion » : rouge lave sur charbon, lueur de braise, titres Rajdhani, mode jour au choix du visiteur ; couleurs, images et logo réglables.'),
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

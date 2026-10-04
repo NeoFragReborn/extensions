@@ -16,16 +16,22 @@ class Index extends Controller_Module
 		}
 		else
 		{
+			// Le total des votes est un résultat : il suit la même règle que la page du sondage
+			// (Surveys::resultats_visibles). Il s'affichait toujours, y compris pour « Jamais ».
+			$votes        = Surveys::sondages_votes();
+			$gestionnaire = ($module = $this->module('surveys')) && $module->is_authorized();
+
 			$body = '<div class="list-group">';
 			foreach ($surveys as $s)
 			{
 				$closed = $s['closed_at'] && strtotime($s['closed_at']) <= time();
 				$status = $closed ? '<span class="badge text-bg-secondary ms-2">'.$this->lang('Fermé').'</span>' : '';
 				$total = (int)$s['total_votes'];
+				$visible = Surveys::resultats_visibles((string) $s['show_results'], isset($votes[(int) $s['id']]), (bool) $closed, (bool) $gestionnaire);
 				$body .= '<a href="'.url('surveys/'.$s['id'].'/'.url_title($s['title'])).'" class="list-group-item list-group-item-action">';
 				$body .= '<div class="d-flex justify-content-between">';
 				$body .= '<strong>'.htmlspecialchars((string) ($s['title'])).$status.'</strong>';
-				$body .= '<small class="text-muted">'.$this->lang('%d vote|%d votes', $total, $total).'</small>';
+				$body .= $visible ? '<small class="text-muted">'.$this->lang('%d vote|%d votes', $total, $total).'</small>' : '';
 				$body .= '</div>';
 				if (!empty($s['description']))
 				{
@@ -43,10 +49,10 @@ class Index extends Controller_Module
 	{
 		$this->title($survey['title'])->icon('fas fa-poll')->breadcrumb();
 
-		$closed = $survey['closed_at'] && strtotime($survey['closed_at']) <= time();
-		$show_results = $user_voted || $closed
-			|| $survey['show_results'] === 'always'
-			|| ($survey['show_results'] === 'closed' && $closed);
+		$closed       = $survey['closed_at'] && strtotime($survey['closed_at']) <= time();
+		$gestionnaire = ($module = $this->module('surveys')) && $module->is_authorized();
+		$show_results = Surveys::resultats_visibles((string) $survey['show_results'], (bool) $user_voted, (bool) $closed, (bool) $gestionnaire);
+		$public       = Surveys::resultats_visibles((string) $survey['show_results'], (bool) $user_voted, (bool) $closed);
 
 		$total = 0;
 		foreach ($options as $o) { $total += (int)$o['votes']; }
@@ -61,6 +67,8 @@ class Index extends Controller_Module
 		{
 			$results_label = $this->lang('Résultats — %d vote(s) au total', $total);
 			if ($closed) $results_label .= ' — '.$this->lang('sondage fermé');
+			// Un gestionnaire voit des résultats que le réglage cache aux autres : il doit le savoir.
+			if (!$public) $results_label .= ' — '.$this->lang('visibles par les gestionnaires seulement');
 			$body .= '<div class="mb-2"><small class="text-muted">'.$results_label.'</small></div>';
 			foreach ($options as $o)
 			{
@@ -74,6 +82,18 @@ class Index extends Controller_Module
 			{
 				$body .= '<a class="btn btn-primary mt-3" href="'.url('surveys/vote/'.$survey['id'].'/'.url_title($survey['title'])).'">'.$this->lang('Voter').'</a>';
 			}
+		}
+		else if ($user_voted || $closed)
+		{
+			// Résultats cachés à un visiteur qui ne peut plus voter : lui dire pourquoi, plutôt que de
+			// lui resservir un formulaire que le vote refusera (« Tu as déjà voté », sondage fermé).
+			$body .= '<div class="alert alert-info">'
+				.($user_voted ? $this->lang('Ton vote est enregistré.').' ' : '')
+				.($closed ? $this->lang('Ce sondage est fermé.').' ' : '')
+				.($survey['show_results'] === 'closed' && !$closed
+					? $this->lang('Les résultats seront visibles à la fermeture du sondage.')
+					: $this->lang('Les résultats de ce sondage ne sont pas publics.'))
+				.'</div>';
 		}
 		else
 		{

@@ -75,6 +75,6 @@ return [
 	'32c126c4' => 'Arrière-plan',
 	'abe737fd' => 'Réseaux sociaux',
 	'c77f6c43' => 'Propulsé par',
-	'6da7fc68' => 'Thème gaming épuré « roche & sommet », accent teal sur ardoise. Mode jour et mode nuit, titres condensés, entièrement personnalisable.',
+	'b1ceee54' => 'Thème sobre « roche et sommet » : bleu canard sur ardoise, titres condensés Oswald, mode nuit au choix du visiteur ; couleurs, images et logo réglables.',
 	'4f376417' => 'Retour en haut',
 ];

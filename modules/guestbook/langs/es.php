@@ -32,7 +32,7 @@ return [
 	'e2c8f589' => 'Estado',
 	'f44b974c' => 'Moderar mensajes',
 	'f54740ce' => '¡Gracias! Tu mensaje está pendiente de moderación.',
-	'24f787c4' => 'Libro de visitas con moderación admin y rate-limit antispam.',
+	'dd9f83aa' => 'Libro de visitas abierto a visitantes y miembros: cada mensaje espera la aprobación de un moderador; los envíos repetidos desde una misma dirección IP se limitan.',
 	// i18n 2026-06-11
 	'cb208159' => 'Ningún mensaje coincide con estos criterios.',
 	'362b5dc7' => 'Buscar un mensaje o un nombre…',

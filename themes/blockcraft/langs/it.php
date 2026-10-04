@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Sfondo',
 	'abe737fd' => 'Social network',
 	'c77f6c43' => 'Realizzato con',
-	'5c6b7f18' => 'Tema gaming ispirato ai mondi a cubi. Modalità giorno «bioma» e notte «caverna», accento verde erba, completamente personalizzabile.',
+	'c040bba0' => 'Tema ispirato ai giochi a blocchi: giorno «bioma» chiaro, accento verde erba, notte «caverna» a scelta del visitatore; colori, immagini e logo regolabili.',
 	'4f376417' => 'Torna su',
 ];

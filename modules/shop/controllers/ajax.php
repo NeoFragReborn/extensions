@@ -2,7 +2,10 @@
 declare(strict_types=1);
 /**
  * https://neofr.ag
- * Boutique — endpoint AJAX d'achat : /shop/ajax/buy/{id}.
+ * Boutique — endpoint AJAX d'achat : /ajax/shop/buy/{id}.
+ * L'adresse commence par `ajax/` : c'est ce qui fait choisir CE contrôleur. Écrite
+ * `shop/ajax/buy/{id}`, elle désignait le contrôleur public, qui n'a pas `_buy` : le bouton
+ * « Acheter » recevait un 404 (relevé le 2026-10-04).
  */
 
 namespace NF\Modules\Shop\Controllers;
@@ -17,8 +20,15 @@ class Ajax extends Controller_Module
 
 		if (!$this->user())
 		{
-			echo json_encode(['ok' => FALSE, 'error' => 'login']);
-			exit;
+			$this->_refus('login');
+		}
+
+		// Un achat dépense des points : il exige le jeton de session des actions qui modifient
+		// (`csrf_token()`), que la page de la boutique pose dans l'adresse du bouton. Sans lui, une page
+		// tierce pouvait faire acheter un membre connecté à son insu (relevé le 2026-10-04).
+		if (!$this->csrf_valide())
+		{
+			$this->_refus('csrf');
 		}
 
 		$id      = (int)$id;
@@ -28,50 +38,82 @@ class Ajax extends Controller_Module
 
 		if (!$item)
 		{
-			echo json_encode(['ok' => FALSE, 'error' => 'not_found']);
-			exit;
-		}
-
-		if (!empty($item['unique_per_user']) && !$this->db->from('nf_shop_purchases')->where('user_id', $user_id)->where('item_id', $id)->empty())
-		{
-			echo json_encode(['ok' => FALSE, 'error' => 'owned']);
-			exit;
-		}
-
-		if ((int)$item['stock'] === 0)
-		{
-			echo json_encode(['ok' => FALSE, 'error' => 'stock']);
-			exit;
+			$this->_refus('not_found');
 		}
 
 		$gam = $this->module('gamification');
 
-		if (!$gam)
+		// couplage(gamification): facultatif — sans le module, `instanceof` est faux et l'achat est refusé (« unavailable »).
+		if (!$gam instanceof \NF\Modules\Gamification\Gamification || !$gam->is_enabled())
 		{
-			echo json_encode(['ok' => FALSE, 'error' => 'unavailable']);
-			exit;
+			$this->_refus('unavailable');
 		}
 
-		if (!$gam->spend_points($user_id, (int)$item['price'], $this->lang('Achat boutique : %s', $item['title'])))
+		$prix = max(0, (int)$item['price']);
+
+		/*
+		 * L'achat se fait en UNE transaction, et chaque écriture qui peut manquer est jugée par la base.
+		 *
+		 * Avant, tout était lu puis réécrit : le solde vérifié puis débité, le stock lu puis remplacé
+		 * par « stock - 1 », la possession vérifiée avant le paiement. Deux achats simultanés passaient
+		 * tous les deux — deux objets pour un solde qui n'en payait qu'un, un stock qui ne descendait
+		 * que d'une unité, un objet « unique » acheté deux fois.
+		 */
+		$this->db->transaction();
+
+		try
 		{
-			echo json_encode(['ok' => FALSE, 'error' => 'insufficient', 'balance' => $gam->get_points($user_id)]);
-			exit;
+			// 1. Le débit, vérifié et fait par la même requête (Gamification::spend_points). La ligne de
+			//    points du membre reste verrouillée jusqu'à la fin : ses achats simultanés passent l'un
+			//    après l'autre. Un objet gratuit ne débite rien.
+			if ($prix > 0 && !$gam->spend_points($user_id, $prix, $this->lang('Achat boutique : %s', $item['title'])))
+			{
+				$this->db->rollback();
+				$this->_refus('insufficient', ['balance' => $gam->get_points($user_id)]);
+			}
+
+			// 2. Déjà possédé ? Lu APRÈS le verrou : un second achat simultané voit le premier.
+			if (!empty($item['unique_per_user']) && !$this->db->from('nf_shop_purchases')->where('user_id', $user_id)->where('item_id', $id)->empty())
+			{
+				$this->db->rollback();
+				$this->_refus('owned');
+			}
+
+			// 3. Le stock, s'il est compté (-1 = illimité) : décrémenté par la base, jamais sous zéro.
+			if ((int)$item['stock'] >= 0 && !$this->db->where('id', $id)->where('stock >', 0)->update('nf_shop_items', 'stock = stock - 1'))
+			{
+				$this->db->rollback();
+				$this->_refus('stock');
+			}
+
+			$this->db->insert('nf_shop_purchases', [
+				'user_id'    => $user_id,
+				'item_id'    => $id,
+				'price_paid' => $prix
+			]);
+
+			$this->_apply_effect($user_id, $item, $gam);
+
+			$this->db->commit();
 		}
-
-		$this->db->insert('nf_shop_purchases', [
-			'user_id'    => $user_id,
-			'item_id'    => $id,
-			'price_paid' => (int)$item['price']
-		]);
-
-		if ((int)$item['stock'] > 0)
+		catch (\Throwable $e)
 		{
-			$this->db->where('id', $id)->update('nf_shop_items', ['stock' => (int)$item['stock'] - 1]);
+			$this->db->rollback();
+			throw $e;
 		}
-
-		$this->_apply_effect($user_id, $item, $gam);
 
 		echo json_encode(['ok' => TRUE, 'balance' => $gam->get_points($user_id)]);
+		exit;
+	}
+
+	/**
+	 * Refuse l'achat : la raison en JSON, que `shop.js` traduit pour le membre.
+	 *
+	 * @param array<string, mixed> $plus
+	 */
+	private function _refus(string $erreur, array $plus = []): never
+	{
+		echo json_encode(['ok' => FALSE, 'error' => $erreur] + $plus);
 		exit;
 	}
 

@@ -8,7 +8,8 @@ class Checker extends Module_Checker
 {
 	public function index()
 	{
-		$surveys = NeoFrag()->db	->select('s.id', 's.title', 's.description', 's.closed_at', 'COUNT(DISTINCT v.id) AS total_votes')
+		// `show_results` : la liste ne montre le total des votes que si les résultats sont visibles.
+		$surveys = NeoFrag()->db	->select('s.id', 's.title', 's.description', 's.closed_at', 's.show_results', 'COUNT(DISTINCT v.id) AS total_votes')
 									->from('nf_surveys s')
 									->join('nf_surveys_votes v', 's.id = v.survey_id', 'LEFT')
 									->where('s.published', '1')
@@ -31,20 +32,8 @@ class Checker extends Module_Checker
 									->order_by('o.sort_order ASC')
 									->get();
 
-		$user = NeoFrag()->user();
-		$ip_hash = Surveys::ip_hash();
-
-		$user_voted = FALSE;
-		if ($user)
-		{
-			$user_voted = !NeoFrag()->db->from('nf_surveys_votes')->where('survey_id', $survey_id)->where('user_id', $user->id)->empty();
-		}
-		else
-		{
-			$user_voted = !NeoFrag()->db->from('nf_surveys_votes')->where('survey_id', $survey_id)->where('ip_hash', $ip_hash)->empty();
-		}
-
-		return [$survey, $options, $user_voted];
+		// Même lecture que le widget (Surveys::a_vote) : par le compte, sinon par l'empreinte de l'IP.
+		return [$survey, $options, Surveys::a_vote((int) $survey_id)];
 	}
 
 	public function _vote($survey_id, $title)

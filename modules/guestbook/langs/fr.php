@@ -44,6 +44,6 @@ return [
 	'33da0436' => 'Appliquer l\'action aux messages sélectionnés ?',
 	'bfd1e0de' => '%d message supprimé.|%d messages supprimés.',
 	'a20de5a0' => '%d message mis à jour.|%d messages mis à jour.',
-	'24f787c4' => 'Livre d\'or avec modération admin et rate-limit anti-spam.',
+	'dd9f83aa' => 'Livre d\'or ouvert aux visiteurs comme aux membres : chaque message attend l\'accord d\'un modérateur ; les envois répétés depuis une même adresse IP sont limités.',
 	'7bc610bc' => 'Modérer les messages',
 ];

@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Hintergrund',
 	'abe737fd' => 'Soziale Netzwerke',
 	'c77f6c43' => 'Bereitgestellt von',
-	'6da7fc68' => 'Cleanes Gaming-Theme „Fels & Gipfel", Teal-Akzent auf Schiefer. Tag- und Nachtmodus, schmale Überschriften, vollständig anpassbar.',
+	'b1ceee54' => 'Schlichtes Theme „Fels und Gipfel“: Petrol auf Schiefer, schmale Oswald-Überschriften, Nachtmodus nach Wahl des Besuchers; Farben, Bilder und Logo einstellbar.',
 	'4f376417' => 'Nach oben',
 ];

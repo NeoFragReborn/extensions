@@ -32,7 +32,7 @@ return [
 	'e2c8f589' => 'Stato',
 	'f44b974c' => 'Modera messaggi',
 	'f54740ce' => 'Grazie! Il tuo messaggio è in attesa di moderazione.',
-	'24f787c4' => 'Guestbook con moderazione admin e rate-limit anti-spam.',
+	'dd9f83aa' => 'Libro degli ospiti aperto a visitatori e membri: ogni messaggio attende l\'approvazione di un moderatore; gli invii ripetuti dallo stesso indirizzo IP vengono limitati.',
 	// i18n 2026-06-11
 	'cb208159' => 'Nessun messaggio corrisponde a questi criteri.',
 	'362b5dc7' => 'Cerca un messaggio o un nome…',

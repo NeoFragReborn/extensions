@@ -66,4 +66,9 @@ return [
 	'f9c3c87a' => 'Umfrage bearbeiten',
 	'0aac9844' => 'Datum',
 	'ca7a89fb' => 'Umfragen verwalten',
+	'532df5f3' => 'nur für Verwalter sichtbar',
+	'6f7cfa66' => 'Deine Stimme wurde gespeichert.',
+	'01730157' => 'Diese Umfrage ist geschlossen.',
+	'38441190' => 'Die Ergebnisse werden sichtbar, sobald die Umfrage geschlossen ist.',
+	'afd2aa15' => 'Die Ergebnisse dieser Umfrage sind nicht öffentlich.',
 ];

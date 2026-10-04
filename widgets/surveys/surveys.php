@@ -9,7 +9,7 @@ class Surveys extends Widget
 	{
 		return [
 			'title'   => $this->lang('Sondages'),
-			'description' => $this->lang('Sondage en cours sur le site.'),
+			'description' => $this->lang('Met en avant le sondage ouvert le plus récent : sa question, ses réponses et la part des votes de chacune, avec un lien pour participer.'),
 			'icon'        => 'fas fa-poll',
 			'author'  => 'NeoFrag Reborn',
 			'license' => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

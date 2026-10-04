@@ -9,5 +9,5 @@ return [
 	'42c9cea8' => 'Descargas populares',
 	'611df4ac' => 'Sin archivo',
 	'edde8114' => 'Descargas',
-	'f6f05817' => 'Lista de los últimos archivos para descargar.'
+	'f47437d0' => 'Los archivos más descargados de la biblioteca, con su tamaño y su número de descargas, y un enlace a todos los archivos.'
 ];

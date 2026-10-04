@@ -72,6 +72,6 @@ return [
 	'32c126c4' => 'Hintergrund',
 	'abe737fd' => 'Soziale Netzwerke',
 	'c77f6c43' => 'Bereitgestellt von',
-	'275eec43' => 'Gaming-Theme „geschmolzenes Metall": Lavarot auf Anthrazit, Nacht als Standard plus Tagmodus, Glut-Schein, Rajdhani-Überschriften. Vollständig anpassbar.',
+	'c22d6473' => 'Theme „geschmolzenes Eisen“: Lavarot auf Kohle, Glutschein, Rajdhani-Überschriften, Tagmodus nach Wahl des Besuchers; Farben, Bilder und Logo einstellbar.',
 	'4f376417' => 'Nach oben',
 ];

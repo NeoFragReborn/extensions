@@ -37,6 +37,7 @@
 					else if (d.error === 'owned') msg = '<?php echo addslashes($this->lang('Tu possèdes déjà cet item.')) ?>';
 					else if (d.error === 'login') msg = '<?php echo addslashes($this->lang('Connecte-toi pour acheter.')) ?>';
 					else if (d.error === 'stock') msg = '<?php echo addslashes($this->lang('Stock épuisé.')) ?>';
+					else if (d.error === 'csrf') msg = '<?php echo addslashes($this->lang('La page a expiré : recharge-la, puis réessaie.')) ?>';
 				}
 				window.alert(msg);
 			}

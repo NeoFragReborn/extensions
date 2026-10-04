@@ -22,7 +22,7 @@ class Payments extends Module
 	{
 		return [
 			'title'       => $this->lang('Paiements'),
-			'description' => $this->lang('Recharge de points et packs VIP via Stripe (argent réel).'),
+			'description' => $this->lang('Packs de points ou de jours VIP (module Gamification) payés via Stripe Checkout, crédités après confirmation signée de Stripe, une seule fois par paiement.'),
 			'icon'        => 'fas fa-credit-card',
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
@@ -30,7 +30,10 @@ class Payments extends Module
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
-			'requires'    => [],
+			// Les points et le VIP qu'il vend vivent dans Gamification : sans elle, un paiement serait
+			// encaissé sans rien créditer. Déclarée, la dépendance s'installe avec le module (profils,
+			// place de marché) ; `vente_possible()` couvre un site où elle manque ou a été désactivée.
+			'requires'    => ['gamification'],
 			'version'     => '1.0',
 			'admin'       => TRUE,
 			'depends'     => ['neofrag' => '1.0.0'],
@@ -54,6 +57,26 @@ class Payments extends Module
 		return (bool)$this->config->pay_stripe_enabled && !empty($this->config->pay_stripe_secret);
 	}
 
+	/**
+	 * Le module qui crédite : points et VIP vivent dans Gamification. NULL s'il est absent ou éteint.
+	 *
+	 * `requires` le fait installer avec ce module, mais n'empêche ni un site plus ancien de tourner
+	 * sans lui, ni qu'on le désactive ensuite. Avant ce contrôle, `fulfill()` enregistrait le paiement
+	 * comme traité puis ne créditait rien : l'argent était encaissé, le membre ne recevait rien.
+	 */
+	public function gamification()
+	{
+		$gam = \NF\NeoFrag\Addons\Module::__load(\NeoFrag(), ['gamification']);
+
+		return ($gam && $gam->is_enabled()) ? $gam : NULL;
+	}
+
+	/** Peut-on vendre ? Stripe prêt ET de quoi créditer l'achat. */
+	public function vente_possible()
+	{
+		return $this->is_configured() && $this->gamification() !== NULL;
+	}
+
 	/** Packs achetables actifs. */
 	public function packs()
 	{
@@ -74,7 +97,7 @@ class Payments extends Module
 	/** Crée une session Stripe Checkout (API directe). @return string|null URL de paiement */
 	public function create_checkout_session($pack, $user_id)
 	{
-		if (!$this->is_configured() || !$pack)
+		if (!$this->vente_possible() || !$pack)
 		{
 			return NULL;
 		}
@@ -163,6 +186,14 @@ class Payments extends Module
 			return FALSE;
 		}
 
+		// Rien pour créditer : le paiement n'est PAS marqué traité. Le webhook répond alors une erreur
+		// (cf. Index::_webhook), et Stripe représente l'événement plus tard — une fois Gamification
+		// rétablie, le crédit part. Marqué traité ici, il était perdu pour de bon.
+		if (!($gam = $this->gamification()))
+		{
+			return FALSE;
+		}
+
 		// Idempotence : déjà traité ?
 		if (!$this->db->from('nf_payments')->where('event_id', $event_id)->empty())
 		{
@@ -186,18 +217,13 @@ class Payments extends Module
 			return FALSE; // inséré entre-temps → pas de double crédit
 		}
 
-		$gam = \NF\NeoFrag\Addons\Module::__load(\NeoFrag(), ['gamification']);
-
-		if ($gam)
+		if ($kind === 'points')
 		{
-			if ($kind === 'points')
-			{
-				$gam->add_points($user_id, $units, 'stripe', $this->lang('Recharge Stripe'));
-			}
-			else
-			{
-				$gam->grant_vip($user_id, $units, 'stripe');
-			}
+			$gam->add_points($user_id, $units, 'stripe', $this->lang('Recharge Stripe'));
+		}
+		else
+		{
+			$gam->grant_vip($user_id, $units, 'stripe');
 		}
 
 		return TRUE;

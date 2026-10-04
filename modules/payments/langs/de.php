@@ -28,7 +28,7 @@ return [
 	'468b6c4f' => 'Paket gelöscht',
 	'dcab7e66' => 'Zahlung erhalten! Dein Konto wird in Kürze gutgeschrieben.',
 	'2b32e568' => 'Zahlung abgebrochen.',
-	'5bd81a75' => 'Aufladung von Punkten und VIP-Paketen über Stripe (echtes Geld).',
+	'a004e692' => 'Pakete mit Punkten oder VIP-Tagen (Modul Gamification), bezahlt über Stripe Checkout, gutgeschrieben nach signierter Bestätigung durch Stripe, nur einmal pro Zahlung.',
 	'7a1834da' => 'Stripe-Aufladung',
 	'99f71fd4' => 'Aufladung & VIP',
 	'182fb3e4' => 'Zahlungen sind derzeit nicht verfügbar.',
@@ -46,4 +46,6 @@ return [
 	'4441a1e9' => 'Währung',
 	'51692a67' => 'Zahlung nicht verfügbar.',
 	'4ceb7801' => 'Zahlungsfehler.',
+	'e8567c20' => 'Die hier verkauften Punkte und VIP-Tage werden vom Modul Gamification gutgeschrieben, das fehlt oder deaktiviert ist: Käufe bleiben geschlossen, bis es installiert und aktiviert ist.',
+	'e0c070fd' => 'Die Seite ist abgelaufen: Lade sie neu und versuche es dann erneut.',
 ];

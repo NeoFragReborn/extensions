@@ -15,7 +15,7 @@ class Guestbook extends Module
 	{
 		return [
 			'title'       => $this->lang('Livre d\'or'),
-			'description' => $this->lang('Livre d\'or avec modération admin et rate-limit anti-spam.'),
+			'description' => $this->lang('Livre d\'or ouvert aux visiteurs comme aux membres : chaque message attend l\'accord d\'un modérateur ; les envois répétés depuis une même adresse IP sont limités.'),
 			'icon'        => 'far fa-comment-dots',
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',

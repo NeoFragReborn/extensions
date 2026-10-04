@@ -18,7 +18,7 @@ class Feeds extends Module
 	{
 		return [
 			'title'       => $this->lang('Flux RSS'),
-			'description' => $this->lang('Flux RSS 2.0 des actualités et articles.'),
+			'description' => $this->lang('Flux RSS 2.0 des actualités et des billets du Blog, dans la langue du site : titre, résumé et date, pour suivre les parutions depuis un lecteur de flux.'),
 			'icon'        => 'fas fa-rss',
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',

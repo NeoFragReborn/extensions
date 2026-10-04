@@ -7,7 +7,7 @@ declare(strict_types=1);
 return [
 	'4cd691cc' => 'No message',
 	'7a841f3e' => 'All messages',
-	'bc0c9fa8' => 'Latest messages from the guestbook.',
+	'3af41f74' => 'The latest approved messages of the guestbook, with their author and date, and a link to the full guestbook; the number of messages shown is adjustable.',
 	'cad40716' => 'Guestbook',
 	'f3530fd8' => 'Latest messages',
 	// i18n 2026-06-11 (code strings)

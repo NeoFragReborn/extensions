@@ -24,7 +24,7 @@
 					} else {
 						btn.disabled = false;
 						btn.innerHTML = original;
-						window.alert(d && d.error === 'disabled' ? '<?php echo addslashes($this->lang('Paiement indisponible.')) ?>' : (d && d.error === 'login' ? '<?php echo addslashes($this->lang('Connecte-toi pour acheter.')) ?>' : '<?php echo addslashes($this->lang('Erreur de paiement.')) ?>'));
+						window.alert(d && d.error === 'csrf' ? '<?php echo addslashes($this->lang('La page a expiré : recharge-la, puis réessaie.')) ?>' : d && d.error === 'disabled' ? '<?php echo addslashes($this->lang('Paiement indisponible.')) ?>' : (d && d.error === 'login' ? '<?php echo addslashes($this->lang('Connecte-toi pour acheter.')) ?>' : '<?php echo addslashes($this->lang('Erreur de paiement.')) ?>'));
 					}
 				})
 				.catch(function() {

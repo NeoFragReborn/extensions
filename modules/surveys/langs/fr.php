@@ -64,4 +64,9 @@ return [
 	'0aac9844' => 'Date',
 	'7f838b1b' => 'Sondages publics à choix unique ou multiple avec résultats configurables.',
 	'ca7a89fb' => 'Gérer les sondages',
+	'532df5f3' => 'visibles par les gestionnaires seulement',
+	'6f7cfa66' => 'Ton vote est enregistré.',
+	'01730157' => 'Ce sondage est fermé.',
+	'38441190' => 'Les résultats seront visibles à la fermeture du sondage.',
+	'afd2aa15' => 'Les résultats de ce sondage ne sont pas publics.',
 ];

@@ -44,4 +44,5 @@ return [
 	'360924c6' => 'Perk',
 	'4539b307' => 'VIP (payload = days)',
 	'5a7a9517' => 'Physical product (merch)',
+	'e0c070fd' => 'The page has expired: reload it, then try again.',
 ];

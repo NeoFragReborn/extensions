@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 return [
 	'04a2586c' => 'Liens populaires',
-	'2a580e11' => 'Liens populaires de l\'annuaire.',
+	'a9ed63fa' => 'Les liens les plus cliqués de l\'annuaire, avec leur nombre de clics, et un lien vers l\'annuaire complet ; le nombre de liens affichés se règle.',
 	'616195b8' => 'Liens',
 	'bfbbf021' => 'Aucun lien',
 	'cc19ada2' => 'Tous les liens',

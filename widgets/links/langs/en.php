@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 return [
 	'04a2586c' => 'Popular links',
-	'2a580e11' => 'Popular links from the directory.',
+	'a9ed63fa' => 'The most clicked links of the directory, with their number of clicks, and a link to the full directory; the number of links shown is adjustable.',
 	'616195b8' => 'Links',
 	'bfbbf021' => 'No link',
 	'cc19ada2' => 'All links',

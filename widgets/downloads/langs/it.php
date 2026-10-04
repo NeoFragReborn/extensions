@@ -9,5 +9,5 @@ return [
 	'42c9cea8' => 'Download più popolari',
 	'611df4ac' => 'Nessun file',
 	'edde8114' => 'Download',
-	'f6f05817' => 'Elenco degli ultimi file da scaricare.'
+	'f47437d0' => 'I file più scaricati della libreria, con la loro dimensione e il numero di download, e un link a tutti i file.'
 ];

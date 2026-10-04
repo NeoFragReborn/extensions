@@ -66,4 +66,9 @@ return [
 	'f9c3c87a' => 'Editar la encuesta',
 	'0aac9844' => 'Fecha',
 	'ca7a89fb' => 'Gestionar las encuestas',
+	'532df5f3' => 'visibles solo para los gestores',
+	'6f7cfa66' => 'Tu voto ha quedado registrado.',
+	'01730157' => 'Esta encuesta está cerrada.',
+	'38441190' => 'Los resultados serán visibles cuando se cierre la encuesta.',
+	'afd2aa15' => 'Los resultados de esta encuesta no son públicos.',
 ];

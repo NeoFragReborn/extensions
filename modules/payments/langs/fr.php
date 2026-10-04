@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 return [
 	'6341acb1' => 'Paiements',
-	'5bd81a75' => 'Recharge de points et packs VIP via Stripe (argent réel).',
+	'a004e692' => 'Packs de points ou de jours VIP (module Gamification) payés via Stripe Checkout, crédités après confirmation signée de Stripe, une seule fois par paiement.',
 	'7a1834da' => 'Recharge Stripe',
 	'dcab7e66' => 'Paiement reçu ! Ton compte sera crédité sous peu.',
 	'2b32e568' => 'Paiement annulé.',
@@ -49,4 +49,6 @@ return [
 	'840437e1' => 'Aucun pack disponible.',
 	'51692a67' => 'Paiement indisponible.',
 	'4ceb7801' => 'Erreur de paiement.',
+	'e8567c20' => 'Les points et le VIP vendus ici sont crédités par le module Gamification, absent ou désactivé : les achats restent fermés tant qu\'il n\'est pas installé et activé.',
+	'e0c070fd' => 'La page a expiré : recharge-la, puis réessaie.',
 ];

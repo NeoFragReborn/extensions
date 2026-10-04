@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Fondo',
 	'abe737fd' => 'Redes sociales',
 	'c77f6c43' => 'Desarrollado con',
-	'5c6b7f18' => 'Tema gaming inspirado en mundos de cubos. Modo día «bioma» y modo noche «cueva», acento verde hierba, totalmente personalizable.',
+	'c040bba0' => 'Tema inspirado en los juegos de bloques: día «bioma» claro, acento verde hierba, noche «cueva» a elección del visitante; colores, imágenes y logo ajustables.',
 	'4f376417' => 'Volver arriba',
 ];

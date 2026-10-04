@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 return [
 	'04a2586c' => 'Beliebte Links',
-	'2a580e11' => 'Beliebte Links aus dem Verzeichnis.',
+	'a9ed63fa' => 'Die meistgeklickten Links des Verzeichnisses, mit ihrer Klickzahl, und ein Link zum vollständigen Verzeichnis; die Anzahl der angezeigten Links ist einstellbar.',
 	'616195b8' => 'Links',
 	'bfbbf021' => 'Kein Link',
 	'cc19ada2' => 'Alle Links',

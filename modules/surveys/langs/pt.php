@@ -66,4 +66,9 @@ return [
 	'f9c3c87a' => 'Editar a sondagem',
 	'0aac9844' => 'Data',
 	'ca7a89fb' => 'Gerir as sondagens',
+	'532df5f3' => 'visíveis apenas para os gestores',
+	'6f7cfa66' => 'O teu voto foi registado.',
+	'01730157' => 'Esta sondagem está fechada.',
+	'38441190' => 'Os resultados ficarão visíveis quando a sondagem fechar.',
+	'afd2aa15' => 'Os resultados desta sondagem não são públicos.',
 ];

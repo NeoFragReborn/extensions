@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Fundo',
 	'abe737fd' => 'Redes sociais',
 	'c77f6c43' => 'Desenvolvido com',
-	'6da7fc68' => 'Tema gaming depurado «rocha e cume», acento teal sobre ardósia. Modo dia e noite, títulos condensados, totalmente personalizável.',
+	'b1ceee54' => 'Tema sóbrio «rocha e cume»: azul-petróleo sobre ardósia, títulos condensados em Oswald, modo noite à escolha do visitante; cores, imagens e logótipo ajustáveis.',
 	'4f376417' => 'Voltar ao topo',
 ];

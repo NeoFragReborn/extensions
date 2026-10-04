@@ -19,7 +19,7 @@
 					</div>
 					<div class="card-footer">
 						<?php if ($enabled && $logged): ?>
-							<button type="button" class="btn btn-sm btn-primary" data-pay-buy data-url="<?php echo url('payments/ajax/checkout/'.(int)$p['id']) ?>"><?php echo icon('fas fa-credit-card').' '.$this->lang('Payer') ?></button>
+							<button type="button" class="btn btn-sm btn-primary" data-pay-buy data-url="<?php echo htmlspecialchars(url('ajax/payments/checkout/'.(int)$p['id']).'?_='.rawurlencode((string) ($jeton ?? ''))) ?>"><?php echo icon('fas fa-credit-card').' '.$this->lang('Payer') ?></button>
 						<?php else: ?>
 							<span class="btn btn-sm btn-secondary disabled"><?php echo $this->lang('Indisponible') ?></span>
 						<?php endif ?>

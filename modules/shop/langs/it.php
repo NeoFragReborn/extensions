@@ -44,4 +44,5 @@ return [
 	'360924c6' => 'Vantaggio (perk)',
 	'4539b307' => 'VIP (payload = giorni)',
 	'5a7a9517' => 'Prodotto fisico (merch)',
+	'e0c070fd' => 'La pagina è scaduta: ricaricala, poi riprova.',
 ];

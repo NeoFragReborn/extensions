@@ -65,4 +65,9 @@ return [
 	'f9c3c87a' => 'Edit the survey',
 	'0aac9844' => 'Date',
 	'ca7a89fb' => 'Manage surveys',
+	'532df5f3' => 'visible to managers only',
+	'6f7cfa66' => 'Your vote has been recorded.',
+	'01730157' => 'This survey is closed.',
+	'38441190' => 'The results will be visible when the survey closes.',
+	'afd2aa15' => 'The results of this survey are not public.',
 ];

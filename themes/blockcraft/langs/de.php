@@ -71,6 +71,6 @@ return [
 	'32c126c4' => 'Hintergrund',
 	'abe737fd' => 'Soziale Netzwerke',
 	'c77f6c43' => 'Bereitgestellt von',
-	'5c6b7f18' => 'Gaming-Theme inspiriert von würfelbasierten Welten. Tagmodus „Biom" und Nachtmodus „Höhle", grasgrüner Akzent, vollständig anpassbar.',
+	'c040bba0' => 'Ein von Blockspielen inspiriertes Theme: heller Tag „Biom“, grasgrüner Akzent, Nacht „Höhle“ nach Wahl des Besuchers; Farben, Bilder und Logo einstellbar.',
 	'4f376417' => 'Nach oben',
 ];

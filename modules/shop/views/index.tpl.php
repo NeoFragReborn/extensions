@@ -24,7 +24,7 @@
 						<?php elseif ($balance < $price): ?>
 							<span class="btn btn-sm btn-outline-secondary disabled"><?php echo $this->lang('Points insuffisants') ?></span>
 						<?php else: ?>
-							<button type="button" class="btn btn-sm btn-primary" data-shop-buy data-buy-url="<?php echo url('shop/ajax/buy/'.$id) ?>"><?php echo icon('fas fa-shopping-cart').' '.$this->lang('Acheter') ?></button>
+							<button type="button" class="btn btn-sm btn-primary" data-shop-buy data-buy-url="<?php echo htmlspecialchars(url('ajax/shop/buy/'.$id).'?_='.rawurlencode((string) ($jeton ?? ''))) ?>"><?php echo icon('fas fa-shopping-cart').' '.$this->lang('Acheter') ?></button>
 						<?php endif ?>
 					</div>
 				</div>

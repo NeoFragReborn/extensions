@@ -16,7 +16,7 @@ class Granite extends Theme
 	{
 		return [
 			'title'       => 'Granite',
-			'description' => $this->lang('Thème gaming épuré « roche & sommet », accent teal sur ardoise. Mode jour et mode nuit, titres condensés, entièrement personnalisable.'),
+			'description' => $this->lang('Thème sobre « roche et sommet » : bleu canard sur ardoise, titres condensés Oswald, mode nuit au choix du visiteur ; couleurs, images et logo réglables.'),
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

@@ -14,7 +14,7 @@ class Downloads extends Widget
 	{
 		return [
 			'title'       => $this->lang('Téléchargements'),
-			'description' => $this->lang('Liste des derniers fichiers à télécharger.'),
+			'description' => $this->lang('Les fichiers les plus téléchargés de la bibliothèque, avec leur taille et leur nombre de téléchargements, et un lien vers tous les fichiers.'),
 			'icon'        => 'fas fa-download',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',

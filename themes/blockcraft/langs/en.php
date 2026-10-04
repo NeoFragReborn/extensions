@@ -75,6 +75,6 @@ return [
 	'32c126c4' => 'Background',
 	'abe737fd' => 'Social networks',
 	'c77f6c43' => 'Powered by',
-	'5c6b7f18' => 'Gaming theme inspired by cube-based worlds. Day "biome" mode and night "cave" mode, grass-green accent, fully customizable.',
+	'c040bba0' => 'A theme inspired by block-building games: light "biome" day, grass-green accent, "cave" night at the visitor\'s choice; adjustable colors, images and logo.',
 	'4f376417' => 'Back to top',
 ];

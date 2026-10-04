@@ -65,7 +65,14 @@ class Admin extends Controller_Module
 			? '<div class="table-responsive"><table class="table table-hover"><thead><tr><th>'.$this->lang('Pack').'</th><th>'.$this->lang('Contenu').'</th><th class="text-end">'.$this->lang('Prix').'</th><th class="text-center">'.$this->lang('Statut').'</th><th></th></tr></thead><tbody>'.$rows.'</tbody></table></div>'
 			: $this->admin_empty('fas fa-box', $this->lang('Aucun pack.'));
 
-		return $this->admin_card('fas fa-credit-card', $this->lang('Réglages Stripe'), $form->display())
+		// Sans Gamification, rien ne crédite un achat : la vente est fermée (Payments::vente_possible),
+		// et l'administrateur doit savoir pourquoi la page publique dit « indisponible ».
+		$alerte = ($pay = $this->module('payments')) instanceof \NF\Modules\Payments\Payments && !$pay->gamification()
+			? '<div class="alert alert-warning">'.icon('fas fa-exclamation-triangle').' '.$this->lang('Les points et le VIP vendus ici sont crédités par le module Gamification, absent ou désactivé : les achats restent fermés tant qu\'il n\'est pas installé et activé.').'</div>'
+			: '';
+
+		return $alerte
+			.$this->admin_card('fas fa-credit-card', $this->lang('Réglages Stripe'), $form->display())
 			.$this->admin_card('fas fa-box', $this->lang('Packs'), $packs_body, '', $this->admin_create('admin/payments/packs/new', $this->lang('Nouveau pack')));
 	}
 

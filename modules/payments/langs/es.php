@@ -28,7 +28,7 @@ return [
 	'468b6c4f' => 'Paquete eliminado',
 	'dcab7e66' => '¡Pago recibido! Tu cuenta se acreditará en breve.',
 	'2b32e568' => 'Pago cancelado.',
-	'5bd81a75' => 'Recarga de puntos y paquetes VIP vía Stripe (dinero real).',
+	'a004e692' => 'Packs de puntos o de días VIP (módulo Gamificación) pagados con Stripe Checkout, acreditados tras la confirmación firmada de Stripe, una sola vez por pago.',
 	'7a1834da' => 'Recarga Stripe',
 	'99f71fd4' => 'Recarga y VIP',
 	'182fb3e4' => 'Los pagos no están disponibles por el momento.',
@@ -46,4 +46,6 @@ return [
 	'4441a1e9' => 'Divisa',
 	'51692a67' => 'Pago no disponible.',
 	'4ceb7801' => 'Error de pago.',
+	'e8567c20' => 'Los puntos y el VIP que se venden aquí los acredita el módulo Gamificación, ausente o desactivado: las compras siguen cerradas mientras no esté instalado y activado.',
+	'e0c070fd' => 'La página ha caducado: recárgala y vuelve a intentarlo.',
 ];

@@ -7,7 +7,7 @@ declare(strict_types=1);
 return [
 	'4cd691cc' => 'Aucun message',
 	'7a841f3e' => 'Tous les messages',
-	'bc0c9fa8' => 'Derniers messages du livre d\'or.',
+	'3af41f74' => 'Les derniers messages validés du livre d\'or, avec leur auteur et leur date, et un lien vers le livre complet ; le nombre de messages affichés se règle.',
 	'cad40716' => 'Livre d\'or',
 	'f3530fd8' => 'Derniers messages',
 	'40915e5c' => 'Nombre de messages',

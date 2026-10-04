@@ -32,7 +32,7 @@ return [
 	'e2c8f589' => 'Status',
 	'f44b974c' => 'Moderate messages',
 	'f54740ce' => 'Thanks! Your message is awaiting moderation.',
-	'24f787c4' => 'Guestbook with admin moderation and anti-spam rate-limit.',
+	'dd9f83aa' => 'A guestbook open to visitors and members alike: each message waits for a moderator\'s approval; repeated posts from the same IP address are limited.',
 	'cb208159' => 'No message matches these criteria.',
 	'362b5dc7' => 'Search a message or a name…',
 	'17a7d347' => 'All statuses',

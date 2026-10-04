@@ -75,6 +75,6 @@ return [
 	'32c126c4' => 'Background',
 	'abe737fd' => 'Social networks',
 	'c77f6c43' => 'Powered by',
-	'6da7fc68' => 'Clean "rock & summit" gaming theme, teal accent on slate. Day and night modes, condensed headings, fully customizable.',
+	'b1ceee54' => 'A restrained "rock and summit" theme: teal on slate, condensed Oswald headings, night mode at the visitor\'s choice; adjustable colors, images and logo.',
 	'4f376417' => 'Back to top',
 ];
