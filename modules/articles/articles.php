@@ -129,6 +129,39 @@ class Articles extends Module
 		];
 	}
 
+	/**
+	 * L'onglet « Blog » du profil public d'un membre (User::onglets_profil(), chantier A, étape A2) : ses billets
+	 * publiés, dans la langue de la page, la règle de son activité (controllers/activity.php). Aucun : pas d'onglet.
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	public function profil_membre($membre): array
+	{
+		$publies = fn () => $this->db	->from('nf_articles a')
+										->join('nf_articles_lang al', 'al.article_id = a.article_id')
+										->where('al.lang', $this->config->lang->info()->name)
+										->where('a.user_id', (int) $membre->id)
+										->where('a.published', '1')
+										->where('a.deleted_at IS NULL')
+										->where('a.date <=', date('Y-m-d H:i:s'));
+
+		if (!($nombre = (int) $publies()->count()))
+		{
+			return [];
+		}
+
+		return [[
+			'onglet'  => 'blog',
+			'titre'   => (string) $this->lang('Blog'),
+			'icone'   => 'far fa-newspaper',
+			'ordre'   => 25,
+			'nombre'  => $nombre,
+			'contenu' => fn () => $this->view('profil-membre', [
+				'billets' => (array) $publies()->select('a.article_id', 'al.title', 'UNIX_TIMESTAMP(a.date) AS date')->order_by('a.date DESC')->limit(20)->get(),
+			]),
+		]];
+	}
+
 	public function permissions()
 	{
 		return [

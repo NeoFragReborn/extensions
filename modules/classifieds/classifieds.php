@@ -99,4 +99,36 @@ class Classifieds extends Module
 		}
 		return '<strong>'.number_format($p, 2, ',', ' ').' €</strong>';
 	}
+
+	/**
+	 * L'onglet « Petites annonces » du profil public d'un membre (User::onglets_profil(), chantier A, étape A2) : ses
+	 * annonces publiées, les plus récentes d'abord. Aucune : pas d'onglet.
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	public function profil_membre($membre): array
+	{
+		$annonces = (array) $this->db	->select('a.id', 'a.title', 'a.ad_type', 'a.price', 'a.created_at', 'c.title AS categorie')
+										->from('nf_classifieds a')
+										->join('nf_classifieds_categories c', 'c.id = a.category_id')
+										->where('a.user_id', (int) $membre->id)
+										->where('a.status', 'published')
+										->order_by('a.created_at DESC')
+										->limit(20)
+										->get();
+
+		if (!$annonces)
+		{
+			return [];
+		}
+
+		return [[
+			'onglet'  => 'annonces',
+			'titre'   => (string) $this->lang('Petites annonces'),
+			'icone'   => 'fas fa-bullhorn',
+			'ordre'   => 40,
+			'nombre'  => (int) $this->db->from('nf_classifieds')->where('user_id', (int) $membre->id)->where('status', 'published')->count(),
+			'contenu' => fn () => $this->view('profil-membre', ['annonces' => $annonces]),
+		]];
+	}
 }
