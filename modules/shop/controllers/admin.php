@@ -28,16 +28,16 @@ class Admin extends Controller_Module
 		$rows = '';
 		foreach ($items as $it)
 		{
-			$type = $libelles[$it['type']] ?? htmlspecialchars((string) ($it['type']));
+			$type = $libelles[$it['type']] ?? nf_texte($it['type']);
 			$rows .= '<tr>'
-				.'<td><i class="'.htmlspecialchars((string) ($it['icon'] ?: 'fas fa-gift')).'"></i> '.htmlspecialchars((string) ($it['title'])).'</td>'
+				.'<td><i class="'.nf_texte($it['icon'] ?: 'fas fa-gift').'"></i> '.nf_texte($it['title']).'</td>'
 				.'<td>'.$type.'</td>'
 				.'<td class="text-end"><i class="fas fa-coins"></i> '.(int)$it['price'].'</td>'
 				.'<td class="text-center">'.((int)$it['stock'] < 0 ? '∞' : (int)$it['stock']).'</td>'
 				.'<td class="text-center">'.(!empty($it['active']) ? '<span class="badge text-bg-success">'.$this->lang('Actif').'</span>' : '<span class="badge text-bg-secondary">'.$this->lang('Inactif').'</span>').'</td>'
 				.'<td class="text-end">'
 					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/shop/edit/'.(int)$it['id']).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet item ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/shop/delete/'.(int)$it['id']).'" data-confirm="'.nf_texte($this->lang('Supprimer cet item ?')).'"><i class="far fa-trash-alt"></i></a>'
 				.'</td>'
 				.'</tr>';
 		}

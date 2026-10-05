@@ -7,7 +7,7 @@ $extrait = !empty($billet['excerpt']) ? (string) $billet['excerpt'] : mb_strimwi
 ?>
 <article class="widget-blog-une">
 	<a class="widget-blog-une-image<?php echo $image ? '' : ' vide' ?>" href="<?php echo $adresse ?>" tabindex="-1" aria-hidden="true"><?php if ($image): ?><img src="<?php echo $image ?>" alt="" loading="lazy" /><?php endif ?></a>
-	<span class="widget-blog-pastille"><?php echo htmlspecialchars((string) $billet['category_title']) ?></span>
-	<h3><a href="<?php echo $adresse ?>"><?php echo htmlspecialchars((string) $billet['title']) ?></a></h3>
-	<p><?php echo htmlspecialchars($extrait) ?></p>
+	<span class="widget-blog-pastille"><?php echo nf_texte($billet['category_title']) ?></span>
+	<h3><a href="<?php echo $adresse ?>"><?php echo nf_texte($billet['title']) ?></a></h3>
+	<p><?php echo nf_texte($extrait) ?></p>
 </article>

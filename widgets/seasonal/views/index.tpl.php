@@ -11,5 +11,5 @@
  */
 ?>
 <canvas class="nf-seasonal" role="presentation" aria-hidden="true"
-        data-seasonal-effect="<?php echo htmlspecialchars($effet, ENT_QUOTES) ?>"
+        data-seasonal-effect="<?php echo nf_texte($effet) ?>"
         data-seasonal-count="<?php echo (int) $particules ?>"></canvas>

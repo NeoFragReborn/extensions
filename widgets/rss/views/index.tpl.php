@@ -12,16 +12,16 @@
 	<?php if ($titre !== ''): ?>
 	<div class="nf-rss-head">
 		<i class="fas fa-rss" aria-hidden="true"></i>
-		<a href="<?php echo htmlspecialchars($lien, ENT_QUOTES) ?>" target="_blank" rel="noopener nofollow"><?php echo htmlspecialchars($titre) ?></a>
+		<a href="<?php echo nf_texte($lien) ?>" target="_blank" rel="noopener nofollow"><?php echo nf_texte($titre) ?></a>
 	</div>
 	<?php endif ?>
 	<ul class="nf-rss-list">
 		<?php foreach ($articles as $nf_article): ?>
 		<li class="nf-rss-item">
 			<?php if ($nf_article['link'] !== ''): ?>
-			<a class="nf-rss-title" href="<?php echo htmlspecialchars(nf_url_sure((string) $nf_article['link']) ? (string) $nf_article['link'] : '#', ENT_QUOTES) ?>" target="_blank" rel="noopener nofollow"><?php echo htmlspecialchars($nf_article['title']) ?></a>
+			<a class="nf-rss-title" href="<?php echo nf_texte(nf_url_sure((string) $nf_article['link']) ? (string) $nf_article['link'] : '#') ?>" target="_blank" rel="noopener nofollow"><?php echo nf_texte($nf_article['title']) ?></a>
 			<?php else: ?>
-			<span class="nf-rss-title"><?php echo htmlspecialchars($nf_article['title']) ?></span>
+			<span class="nf-rss-title"><?php echo nf_texte($nf_article['title']) ?></span>
 			<?php endif ?>
 			<?php if (($avec_date || $nf_article['author'] !== '') && ($nf_article['date'] || $nf_article['author'] !== '')): ?>
 			<div class="nf-rss-meta">
@@ -34,12 +34,12 @@
 				<?php echo time_span((int) $nf_article['date']) ?>
 				<?php endif ?>
 				<?php if ($nf_article['author'] !== ''): ?>
-				<span class="nf-rss-author"><?php echo htmlspecialchars($nf_article['author']) ?></span>
+				<span class="nf-rss-author"><?php echo nf_texte($nf_article['author']) ?></span>
 				<?php endif ?>
 			</div>
 			<?php endif ?>
 			<?php if ($avec_resume && $nf_article['summary'] !== ''): ?>
-			<p class="nf-rss-summary"><?php echo htmlspecialchars($nf_article['summary']) ?></p>
+			<p class="nf-rss-summary"><?php echo nf_texte($nf_article['summary']) ?></p>
 			<?php endif ?>
 		</li>
 		<?php endforeach ?>

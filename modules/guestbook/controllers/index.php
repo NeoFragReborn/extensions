@@ -72,7 +72,7 @@ class Index extends Controller_Module
 			{
 				$display_name = $m['user_id'] && $m['username']
 					? $this->user->link($m['user_id'], $m['username'])
-					: '<strong>'.htmlspecialchars((string) ($m['name'])).'</strong>';
+					: '<strong>'.nf_texte($m['name']).'</strong>';
 
 				$body .= '<div class="card mb-2">'
 					.'<div class="card-body">'
@@ -80,7 +80,7 @@ class Index extends Controller_Module
 					.'<span>'.$display_name.'</span>'
 					.'<small class="text-muted">'.timetostr('j M Y H:i', $m['ts']).'</small>'
 					.'</div>'
-					.'<p class="mb-0">'.nl2br(htmlspecialchars((string) ($m['message']))).'</p>'
+					.'<p class="mb-0">'.nl2br(nf_texte($m['message'])).'</p>'
 					.'</div>'
 					.'</div>';
 			}

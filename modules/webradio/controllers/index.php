@@ -59,11 +59,11 @@ class Index extends Controller_Module
 		}
 
 		// L'adresse du fragment est posée par le gabarit : le script ne construit aucune URL.
-		$html = '<div class="nf-webradio" data-webradio-refresh="60" data-webradio-endpoint="'.htmlspecialchars((string) (url('ajax/webradio/now')), ENT_QUOTES).'">';
+		$html = '<div class="nf-webradio" data-webradio-refresh="60" data-webradio-endpoint="'.nf_texte(url('ajax/webradio/now')).'">';
 		$html .= '<div class="nf-webradio-player">';
-		$html .= '<audio controls preload="none" src="'.htmlspecialchars((string) ($station['stream']), ENT_QUOTES).'">';
+		$html .= '<audio controls preload="none" src="'.nf_texte($station['stream']).'">';
 		// Le repli du `<audio>` : un navigateur qui ne sait pas lire le flux propose au moins le lien.
-		$html .= '<a href="'.htmlspecialchars((string) ($station['stream']), ENT_QUOTES).'" rel="noopener">'.$this->lang('Écouter le flux').'</a>';
+		$html .= '<a href="'.nf_texte($station['stream']).'" rel="noopener">'.$this->lang('Écouter le flux').'</a>';
 		$html .= '</audio>';
 		$html .= '</div>';
 
@@ -73,7 +73,7 @@ class Index extends Controller_Module
 
 		if ($station['site'] !== '')
 		{
-			$html .= '<div class="nf-webradio-site"><a href="'.htmlspecialchars((string) ($station['site']), ENT_QUOTES).'" target="_blank" rel="noopener">'
+			$html .= '<div class="nf-webradio-site"><a href="'.nf_texte($station['site']).'" target="_blank" rel="noopener">'
 				.'<i class="fas fa-external-link-alt"></i> '.$this->lang('Site de la station').'</a></div>';
 		}
 
@@ -96,14 +96,14 @@ class Index extends Controller_Module
 		}
 
 		$html = '<span class="nf-webradio-live"><i class="fas fa-circle"></i> '.$this->lang('À l\'antenne').'</span> ';
-		$html .= '<strong>'.htmlspecialchars((string) ($en_cours['title'])).'</strong>';
+		$html .= '<strong>'.nf_texte($en_cours['title']).'</strong>';
 
 		if (trim((string) $en_cours['host']) !== '')
 		{
-			$html .= ' <span class="nf-webradio-host">'.$this->lang('avec %s', htmlspecialchars((string) ($en_cours['host']))).'</span>';
+			$html .= ' <span class="nf-webradio-host">'.$this->lang('avec %s', nf_texte($en_cours['host'])).'</span>';
 		}
 
-		return $html.' <span class="nf-webradio-hours">'.htmlspecialchars((string) ($en_cours['start_time'].' – '.$en_cours['end_time'])).'</span>';
+		return $html.' <span class="nf-webradio-hours">'.nf_texte($en_cours['start_time'].' – '.$en_cours['end_time']).'</span>';
 	}
 
 	protected function _grille($creneaux, $en_cours): string
@@ -126,7 +126,7 @@ class Index extends Controller_Module
 		foreach (self::JOURS as $numero)
 		{
 			$html .= '<div class="nf-webradio-day'.($numero === $aujourdhui ? ' is-today' : '').'">';
-			$html .= '<h3 class="nf-webradio-day-title">'.htmlspecialchars((string) (self::nom_jour($numero))).'</h3>';
+			$html .= '<h3 class="nf-webradio-day-title">'.nf_texte(self::nom_jour($numero)).'</h3>';
 
 			if (!$par_jour[$numero])
 			{
@@ -141,17 +141,17 @@ class Index extends Controller_Module
 					$direct = $en_cours && (int) $en_cours['id'] === (int) $creneau['id'];
 
 					$html .= '<li'.($direct ? ' class="is-live"' : '').'>';
-					$html .= '<span class="nf-webradio-time">'.htmlspecialchars((string) ($creneau['start_time'].' – '.$creneau['end_time'])).'</span> ';
-					$html .= '<strong>'.htmlspecialchars((string) ($creneau['title'])).'</strong>';
+					$html .= '<span class="nf-webradio-time">'.nf_texte($creneau['start_time'].' – '.$creneau['end_time']).'</span> ';
+					$html .= '<strong>'.nf_texte($creneau['title']).'</strong>';
 
 					if (trim((string) $creneau['host']) !== '')
 					{
-						$html .= ' <span class="nf-webradio-host">'.$this->lang('avec %s', htmlspecialchars((string) ($creneau['host']))).'</span>';
+						$html .= ' <span class="nf-webradio-host">'.$this->lang('avec %s', nf_texte($creneau['host'])).'</span>';
 					}
 
 					if (trim((string) $creneau['description']) !== '')
 					{
-						$html .= '<p class="nf-webradio-desc">'.nl2br(htmlspecialchars((string) ($creneau['description']))).'</p>';
+						$html .= '<p class="nf-webradio-desc">'.nl2br(nf_texte($creneau['description'])).'</p>';
 					}
 
 					$html .= '</li>';

@@ -28,19 +28,19 @@ class Admin extends Controller_Module
 
 				$body .= '<div class="nf-content-card">';
 				$body .= '<div class="nf-content-card-head">';
-				$body .= '<div class="nf-content-card-title"><a href="'.url('bugtracker/'.$t['id'].'/'.$slug).'"><span class="text-muted" style="font-family:monospace;font-size:11px;">#'.(int)$t['id'].'</span> '.htmlspecialchars((string) $t['title'], ENT_QUOTES, 'UTF-8', FALSE).'</a></div>';
+				$body .= '<div class="nf-content-card-title"><a href="'.url('bugtracker/'.$t['id'].'/'.$slug).'"><span class="text-muted" style="font-family:monospace;font-size:11px;">#'.(int)$t['id'].'</span> '.nf_texte($t['title']).'</a></div>';
 				$body .= '<span class="nf-content-card-status '.($is_closed ? 'draft' : 'published').'">'.Bugtracker::status_label($t['status']).'</span>';
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-meta">';
 				$body .= '<span><i class="fas fa-tag"></i> '.Bugtracker::type_label($t['type']).'</span>';
 				$body .= '<span><i class="fas fa-flag"></i> '.Bugtracker::priority_label($t['priority']).'</span>';
-				$body .= '<span><i class="fas fa-user"></i> '.htmlspecialchars((string) ($t['reporter'] ?? '—'), ENT_QUOTES, 'UTF-8', FALSE).'</span>';
+				$body .= '<span><i class="fas fa-user"></i> '.nf_texte($t['reporter'] ?? '—').'</span>';
 				$body .= '<span title="'.$this->lang('Commentaires').'"><i class="far fa-comments"></i> '.(int)$t['nb_comments'].'</span>';
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				$body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/bugtracker/'.$t['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/bugtracker/delete/'.$t['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/bugtracker/delete/'.$t['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}

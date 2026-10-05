@@ -26,8 +26,8 @@ class Admin extends Controller_Module
 				$url   = NeoFrag()->model2('file', $e['image_id'])->path();
 				$body .= '<tr>'
 					.'<td>'.($url ? '<img src="'.$url.'" alt="" style="height:24px;width:auto;">' : '').'</td>'
-					.'<td><code>:'.htmlspecialchars((string) ($e['name'])).':</code></td>'
-					.'<td class="text-end"><a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/emojis/delete/'.$e['id'].'/'.url_title($e['name'])).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet emoji ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a></td>'
+					.'<td><code>:'.nf_texte($e['name']).':</code></td>'
+					.'<td class="text-end"><a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/emojis/delete/'.$e['id'].'/'.url_title($e['name'])).'" data-confirm="'.nf_texte($this->lang('Supprimer cet emoji ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a></td>'
 					.'</tr>';
 			}
 			$body .= '</tbody></table>';

@@ -1,14 +1,14 @@
 <div class="nf-field row">
 	<label for="settings-url" class="col-12 col-lg-4 col-form-label"><i class="fas fa-rss"></i> <?php echo $this->lang('Adresse du flux') ?></label>
 	<div class="col-12 col-lg-7">
-		<input type="url" class="form-control" name="settings[url]" id="settings-url" value="<?php echo htmlspecialchars($url, ENT_QUOTES) ?>" placeholder="https://exemple.org/feed.xml" />
+		<input type="url" class="form-control" name="settings[url]" id="settings-url" value="<?php echo nf_texte($url) ?>" placeholder="https://exemple.org/feed.xml" />
 		<small class="form-text text-muted"><?php echo $this->lang('Flux RSS 2.0 ou Atom, en http ou https. Le serveur refuse les adresses internes au réseau.') ?></small>
 	</div>
 </div>
 <div class="nf-field row">
 	<label for="settings-title" class="col-12 col-lg-4 col-form-label"><i class="fas fa-heading"></i> <?php echo $this->lang('Titre affiché') ?></label>
 	<div class="col-12 col-lg-7">
-		<input type="text" class="form-control" name="settings[title]" id="settings-title" value="<?php echo htmlspecialchars($title, ENT_QUOTES) ?>" maxlength="80" />
+		<input type="text" class="form-control" name="settings[title]" id="settings-title" value="<?php echo nf_texte($title) ?>" maxlength="80" />
 		<small class="form-text text-muted"><?php echo $this->lang('Laissez vide pour reprendre le titre annoncé par le flux.') ?></small>
 	</div>
 </div>

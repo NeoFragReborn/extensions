@@ -12,10 +12,10 @@ $appliquer = $appliquer ?? '#';
 	<tbody>
 	<?php foreach ($lignes as $l): ?>
 	<tr>
-		<td><?php echo htmlspecialchars((string) $l['quoi']) ?></td>
-		<td><code><?php echo htmlspecialchars((string) $l['nom']) ?></code></td>
+		<td><?php echo nf_texte($l['quoi']) ?></td>
+		<td><code><?php echo nf_texte($l['nom']) ?></code></td>
 		<td><?php if ($l['repris']): ?><span class="badge text-bg-secondary"><?php echo $this->lang('Repris') ?></span><?php else: ?><span class="badge text-bg-success"><?php echo $this->lang('Créé') ?></span><?php endif ?></td>
-		<td class="small text-muted"><?php echo htmlspecialchars((string) $l['detail']) ?></td>
+		<td class="small text-muted"><?php echo nf_texte($l['detail']) ?></td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>

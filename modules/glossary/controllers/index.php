@@ -27,15 +27,15 @@ class Index extends Controller_Module
 
 		$this->css('glossary');
 
-		$corps  = '<nav class="nf-glossary-index" aria-label="'.htmlspecialchars((string) ($this->lang('Index alphabétique')), ENT_QUOTES).'">';
+		$corps  = '<nav class="nf-glossary-index" aria-label="'.nf_texte($this->lang('Index alphabétique')).'">';
 
 		foreach (Term::alphabet() as $lettre)
 		{
 			// Une lettre sans terme n'est pas un lien : elle reste affichée, en grisé, pour que
 			// l'index garde sa forme d'un dictionnaire à l'autre.
 			$corps .= isset($par_lettre[$lettre])
-				? '<a href="#'.Term::ancre($lettre).'">'.htmlspecialchars((string) ($lettre)).'</a>'
-				: '<span class="nf-glossary-index-off">'.htmlspecialchars((string) ($lettre)).'</span>';
+				? '<a href="#'.Term::ancre($lettre).'">'.nf_texte($lettre).'</a>'
+				: '<span class="nf-glossary-index-off">'.nf_texte($lettre).'</span>';
 		}
 
 		$corps .= '</nav>';
@@ -43,21 +43,21 @@ class Index extends Controller_Module
 
 		foreach ($par_lettre as $lettre => $termes)
 		{
-			$corps .= '<h2 class="h4 mt-4" id="'.Term::ancre((string) $lettre).'">'.htmlspecialchars((string) $lettre).'</h2>';
+			$corps .= '<h2 class="h4 mt-4" id="'.Term::ancre((string) $lettre).'">'.nf_texte($lettre).'</h2>';
 			$corps .= '<dl class="nf-glossary">';
 
 			foreach ($termes as $terme)
 			{
-				$corps .= '<dt>'.htmlspecialchars((string) ($terme['term']));
+				$corps .= '<dt>'.nf_texte($terme['term']);
 
 				if (($synonymes = Term::synonymes($terme['synonyms'])))
 				{
-					$corps .= ' <span class="nf-glossary-synonyms">('.htmlspecialchars((string) (implode(', ', $synonymes))).')</span>';
+					$corps .= ' <span class="nf-glossary-synonyms">('.nf_texte(implode(', ', $synonymes)).')</span>';
 				}
 
 				$corps .= '</dt>';
-				$corps .= '<dd>'.nl2br(htmlspecialchars((string) ($terme['definition'])));
-				$corps .= ' <span class="nf-glossary-cat"><i class="fas fa-folder"></i> '.htmlspecialchars((string) ($terme['cat_title'])).'</span>';
+				$corps .= '<dd>'.nl2br(nf_texte($terme['definition']));
+				$corps .= ' <span class="nf-glossary-cat"><i class="fas fa-folder"></i> '.nf_texte($terme['cat_title']).'</span>';
 				$corps .= '</dd>';
 			}
 

@@ -7,7 +7,7 @@ $billets = $billets ?? [];
 	<li>
 		<a class="widget-blog-vignette<?php echo $image ? '' : ' vide' ?>" href="<?php echo $adresse ?>" tabindex="-1" aria-hidden="true"><?php if ($image): ?><img src="<?php echo $image ?>" alt="" loading="lazy" /><?php endif ?></a>
 		<div>
-			<a href="<?php echo $adresse ?>"><?php echo htmlspecialchars((string) $b['title']) ?></a>
+			<a href="<?php echo $adresse ?>"><?php echo nf_texte($b['title']) ?></a>
 			<small><?php echo timetostr('j M Y', $b['date']) ?></small>
 		</div>
 	</li>

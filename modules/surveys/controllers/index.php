@@ -30,12 +30,12 @@ class Index extends Controller_Module
 				$visible = Surveys::resultats_visibles((string) $s['show_results'], isset($votes[(int) $s['id']]), (bool) $closed, (bool) $gestionnaire);
 				$body .= '<a href="'.url('surveys/'.$s['id'].'/'.url_title($s['title'])).'" class="list-group-item list-group-item-action">';
 				$body .= '<div class="d-flex justify-content-between">';
-				$body .= '<strong>'.htmlspecialchars((string) ($s['title'])).$status.'</strong>';
+				$body .= '<strong>'.nf_texte($s['title']).$status.'</strong>';
 				$body .= $visible ? '<small class="text-muted">'.$this->lang('%d vote|%d votes', $total, $total).'</small>' : '';
 				$body .= '</div>';
 				if (!empty($s['description']))
 				{
-					$body .= '<small class="text-muted">'.htmlspecialchars((string) ($s['description'])).'</small>';
+					$body .= '<small class="text-muted">'.nf_texte($s['description']).'</small>';
 				}
 				$body .= '</a>';
 			}
@@ -60,7 +60,7 @@ class Index extends Controller_Module
 		$body = '';
 		if (!empty($survey['description']))
 		{
-			$body .= '<p>'.htmlspecialchars((string) ($survey['description'])).'</p>';
+			$body .= '<p>'.nf_texte($survey['description']).'</p>';
 		}
 
 		if ($show_results)
@@ -74,7 +74,7 @@ class Index extends Controller_Module
 			{
 				$pct = $total > 0 ? round((int)$o['votes'] / $total * 100, 1) : 0;
 				$body .= '<div class="mb-2">'
-					.'<div class="d-flex justify-content-between"><span>'.htmlspecialchars((string) ($o['label'])).'</span><span><strong>'.$pct.'%</strong> ('.(int)$o['votes'].')</span></div>'
+					.'<div class="d-flex justify-content-between"><span>'.nf_texte($o['label']).'</span><span><strong>'.$pct.'%</strong> ('.(int)$o['votes'].')</span></div>'
 					.'<div class="progress" style="height:8px"><div class="progress-bar" role="progressbar" style="width:'.$pct.'%"></div></div>'
 					.'</div>';
 			}
@@ -106,7 +106,7 @@ class Index extends Controller_Module
 				$name = $survey['multiple_choice'] ? 'option_ids[]' : 'option_ids';
 				$body .= '<div class="form-check">';
 				$body .= '<input class="form-check-input" type="'.$type.'" name="'.$name.'" id="opt-'.(int)$o['id'].'" value="'.(int)$o['id'].'" required>';
-				$body .= '<label class="form-check-label" for="opt-'.(int)$o['id'].'">'.htmlspecialchars((string) ($o['label'])).'</label>';
+				$body .= '<label class="form-check-label" for="opt-'.(int)$o['id'].'">'.nf_texte($o['label']).'</label>';
 				$body .= '</div>';
 			}
 

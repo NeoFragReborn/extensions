@@ -128,6 +128,6 @@ class Index extends Controller_Module
 
 	private function _x($s)
 	{
-		return htmlspecialchars((string)$s, ENT_QUOTES | ENT_XML1, 'UTF-8');
+		return nf_texte($s);
 	}
 }

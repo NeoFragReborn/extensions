@@ -25,11 +25,11 @@ class Admin extends Controller_Module
 				$icone = trim((string) $c['icon']) !== '' ? $c['icon'] : 'fas fa-map-marker-alt';
 
 				$cats_corps .= '<tr>'
-					.'<td>'.icon($icone).' <strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
+					.'<td>'.icon($icone).' <strong>'.nf_texte($c['title']).'</strong></td>'
 					.'<td class="text-end">'.(int) $c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/places/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/places/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette catégorie ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/places/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer cette catégorie ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 
@@ -63,22 +63,22 @@ class Admin extends Controller_Module
 				$lon    = Place::longitude($l['longitude']);
 
 				$corps .= '<tr>'
-					.'<td><strong>'.htmlspecialchars((string) ($l['title'])).'</strong>'
+					.'<td><strong>'.nf_texte($l['title']).'</strong>'
 					.(!$publie ? ' <span class="badge text-bg-light">'.$this->lang('Brouillon').'</span>' : '')
 					.'</td>'
-					.'<td class="text-muted">'.htmlspecialchars((string) ($l['address'])).'</td>'
+					.'<td class="text-muted">'.nf_texte($l['address']).'</td>'
 					.'<td class="text-muted">'
 					.($lat !== NULL && $lon !== NULL
-						? '<a href="'.htmlspecialchars((string) (Place::lien_osm($lat, $lon)), ENT_QUOTES).'" target="_blank" rel="noopener">'
-							.htmlspecialchars((string) (Place::nombre($lat).', '.Place::nombre($lon))).'</a>'
+						? '<a href="'.nf_texte(Place::lien_osm($lat, $lon)).'" target="_blank" rel="noopener">'
+							.nf_texte(Place::nombre($lat).', '.Place::nombre($lon)).'</a>'
 						// Une ligne dont les coordonnées ne sont pas exploitables est invisible sur la
 						// page publique : l'administration doit le dire, sinon le lieu disparaît sans mot.
 						: '<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> '.$this->lang('Coordonnées illisibles').'</span>')
 					.'</td>'
-					.'<td>'.htmlspecialchars((string) ($l['cat_title'])).'</td>'
+					.'<td>'.nf_texte($l['cat_title']).'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/places/p/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/places/p/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ce lieu ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/places/p/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ce lieu ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 
@@ -88,13 +88,13 @@ class Admin extends Controller_Module
 		// ── Barre de recherche et de filtre (GET, préservé par la pagination) ──
 		$action = url($this->module->pagination->get_url());
 		$barre  = '<form method="get" action="'.$action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$barre .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filtres['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un lieu, une adresse, une description…')), ENT_QUOTES).'" style="max-width:260px;">';
+		$barre .= '<input type="text" name="q" value="'.nf_texte($filtres['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher un lieu, une adresse, une description…')).'" style="max-width:260px;">';
 		$barre .= '<select name="category" class="form-select form-select-sm" style="width:auto;">';
 		$barre .= '<option value="0">'.$this->lang('Toutes les catégories').'</option>';
 
 		foreach ($cats as $c)
 		{
-			$barre .= '<option value="'.(int) $c['id'].'"'.((int) $filtres['category'] === (int) $c['id'] ? ' selected' : '').'>'.htmlspecialchars((string) ($c['title'])).'</option>';
+			$barre .= '<option value="'.(int) $c['id'].'"'.((int) $filtres['category'] === (int) $c['id'] ? ' selected' : '').'>'.nf_texte($c['title']).'</option>';
 		}
 
 		$barre .= '</select>';
@@ -102,7 +102,7 @@ class Admin extends Controller_Module
 
 		foreach (['' => $this->lang('Tous les statuts'), 'published' => $this->lang('Publiés'), 'draft' => $this->lang('Brouillons')] as $valeur => $libelle)
 		{
-			$barre .= '<option value="'.$valeur.'"'.($filtres['status'] === $valeur ? ' selected' : '').'>'.htmlspecialchars((string) ($libelle)).'</option>';
+			$barre .= '<option value="'.$valeur.'"'.($filtres['status'] === $valeur ? ' selected' : '').'>'.nf_texte($libelle).'</option>';
 		}
 
 		$barre .= '</select>';

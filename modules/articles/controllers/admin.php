@@ -49,7 +49,7 @@ class Admin extends Controller_Module
 
 				$body .= '<div class="nf-content-card">';
 				$body .= '<div class="nf-content-card-head">';
-				$body .= '<div class="nf-content-card-title"><input type="checkbox" name="selected[]" value="'.(int)$a['article_id'].'" class="nf-bulk-cb" style="margin-right:6px;vertical-align:middle;"><a href="'.url('articles/'.$a['article_id'].'/'.$slug).'">'.htmlspecialchars((string) ($a['title'])).'</a></div>';
+				$body .= '<div class="nf-content-card-title"><input type="checkbox" name="selected[]" value="'.(int)$a['article_id'].'" class="nf-bulk-cb" style="margin-right:6px;vertical-align:middle;"><a href="'.url('articles/'.$a['article_id'].'/'.$slug).'">'.nf_texte($a['title']).'</a></div>';
 				$is_scheduled = $published && !empty($a['date']) && strtotime($a['date']) > time();
 				if (!$published)       { $st_cls = 'draft';     $st_icon = 'fa-clock';        $st_lbl = $this->lang('Brouillon'); }
 				elseif ($is_scheduled) { $st_cls = 'scheduled'; $st_icon = 'fa-calendar-alt'; $st_lbl = $this->lang('Programmé le %s', timetostr($this->lang('d/m/Y H:i'), $a['date'])); }
@@ -61,12 +61,12 @@ class Admin extends Controller_Module
 
 				if ($excerpt)
 				{
-					$body .= '<div class="nf-content-card-desc">'.htmlspecialchars((string) ($excerpt)).'</div>';
+					$body .= '<div class="nf-content-card-desc">'.nf_texte($excerpt).'</div>';
 				}
 
 				$body .= '<div class="nf-content-card-meta">';
-				$body .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars((string) ($a['category_title'] ?? '—')).'</span>';
-				$body .= '<span><i class="fas fa-user"></i> '.htmlspecialchars((string) ($a['username'] ?? '—')).'</span>';
+				$body .= '<span><i class="fas fa-folder"></i> '.nf_texte($a['category_title'] ?? '—').'</span>';
+				$body .= '<span><i class="fas fa-user"></i> '.nf_texte($a['username'] ?? '—').'</span>';
 				$body .= '<span><i class="far fa-clock"></i> '.timetostr('j M Y', $a['date']).'</span>';
 				$body .= '<span title="'.$this->lang('Vues').'"><i class="far fa-eye"></i> '.number_format((int)$a['views'], 0, ',', ' ').'</span>';
 				$body .= '</div>';
@@ -74,7 +74,7 @@ class Admin extends Controller_Module
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				$body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/articles/'.$a['article_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/delete/'.$a['article_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cet article ? Action irréversible.')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/delete/'.$a['article_id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer cet article ? Action irréversible.')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -84,18 +84,18 @@ class Admin extends Controller_Module
 		// Barre recherche / filtre (GET). $_GET préservé à travers la pagination par get_pagination().
 		$form_action = url($this->module->pagination->get_url());
 		$toolbar  = '<form method="get" action="'.$form_action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filters['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un titre…')), ENT_QUOTES).'" style="max-width:240px;">';
+		$toolbar .= '<input type="text" name="q" value="'.nf_texte($filters['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher un titre…')).'" style="max-width:240px;">';
 		$toolbar .= '<select name="category" class="form-select form-select-sm" style="width:auto;">';
 		$toolbar .= '<option value="0">'.$this->lang('Toutes les catégories').'</option>';
 		foreach ($filters['categories'] as $cid => $ctitle)
 		{
-			$toolbar .= '<option value="'.(int)$cid.'"'.((int)$filters['category'] === (int)$cid ? ' selected' : '').'>'.htmlspecialchars((string) ($ctitle)).'</option>';
+			$toolbar .= '<option value="'.(int)$cid.'"'.((int)$filters['category'] === (int)$cid ? ' selected' : '').'>'.nf_texte($ctitle).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= '<select name="status" class="form-select form-select-sm" style="width:auto;">';
 		foreach (['' => $this->lang('Tous les statuts'), 'published' => $this->lang('Publiés'), 'draft' => $this->lang('Brouillons')] as $val => $label)
 		{
-			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars((string) ($label)).'</option>';
+			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.nf_texte($label).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
@@ -126,7 +126,7 @@ class Admin extends Controller_Module
 				.'<button type="submit" class="btn btn-sm btn-primary">'.$this->lang('Appliquer').'</button>'
 				.'</div>';
 
-			$body = '<form method="post" action="'.htmlspecialchars((string) (url($this->url->request)), ENT_QUOTES).'">'.$bulk_bar.$body.'</form>'
+			$body = '<form method="post" action="'.nf_texte(url($this->url->request)).'">'.$bulk_bar.$body.'</form>'
 				.'<script>(function(){var a=document.getElementById("nf-bulk-all-articles");if(a){a.addEventListener("change",function(){document.querySelectorAll(".nf-bulk-cb").forEach(function(c){c.checked=a.checked;});});}})();</script>';
 		}
 
@@ -493,9 +493,9 @@ class Admin extends Controller_Module
 		foreach ($categories as $c)
 		{
 			$slug    = url_title((string) $c['title']);
-			$lignes .= '<tr><td>'.htmlspecialchars((string) $c['title']).' <small class="text-muted">/'.htmlspecialchars((string) $c['name']).'</small></td><td>'.(int) $c['articles_count'].'</td><td class="text-end">'
+			$lignes .= '<tr><td>'.nf_texte($c['title']).' <small class="text-muted">/'.nf_texte($c['name']).'</small></td><td>'.(int) $c['articles_count'].'</td><td class="text-end">'
 				.($this->is_authorized('modify_categories') ? '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/articles/categories/'.$c['category_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> ' : '')
-				.($this->is_authorized('delete_categories') && !(int) $c['articles_count'] ? '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/categories/delete/'.$c['category_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) $this->lang('Supprimer cette catégorie ?'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>' : '')
+				.($this->is_authorized('delete_categories') && !(int) $c['articles_count'] ? '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/categories/delete/'.$c['category_id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer cette catégorie ?')).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>' : '')
 				.'</td></tr>';
 		}
 
@@ -518,9 +518,9 @@ class Admin extends Controller_Module
 		foreach ($series as $s)
 		{
 			$slug    = url_title($s['title']);
-			$lignes .= '<tr><td>'.htmlspecialchars($s['title']).'</td><td>'.$this->lang('%d partie|%d parties', $s['parts'], $s['parts']).'</td><td class="text-end">'
+			$lignes .= '<tr><td>'.nf_texte($s['title']).'</td><td>'.$this->lang('%d partie|%d parties', $s['parts'], $s['parts']).'</td><td class="text-end">'
 				.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/articles/series/'.$s['series_id'].'/'.$slug).'" title="'.$this->lang('Éditer').'">'.icon('fas fa-pen').'</a> '
-				.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/series/delete/'.$s['series_id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) $this->lang('Supprimer cette série ? Ses billets restent publiés.'), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>'
+				.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/articles/series/delete/'.$s['series_id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer cette série ? Ses billets restent publiés.')).'" title="'.$this->lang('Supprimer').'">'.icon('far fa-trash-alt').'</a>'
 				.'</td></tr>';
 		}
 

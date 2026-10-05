@@ -9,10 +9,10 @@ $basculer    = $basculer ?? '#';
 ?>
 <div class="d-flex flex-wrap align-items-center gap-3 border-top py-3">
 	<div style="flex:1 1 14rem;min-width:0">
-		<div class="fw-semibold"><?php echo htmlspecialchars((string) $titre) ?>
+		<div class="fw-semibold"><?php echo nf_texte($titre) ?>
 			<?php if ($active): ?><span class="badge text-bg-success ms-1"><?php echo $this->lang('Allumée') ?></span><?php else: ?><span class="badge text-bg-secondary ms-1"><?php echo $this->lang('Éteinte') ?></span><?php endif ?>
 		</div>
-		<div class="small text-muted"><?php echo htmlspecialchars((string) $description) ?></div>
+		<div class="small text-muted"><?php echo nf_texte($description) ?></div>
 	</div>
 	<div class="d-flex flex-wrap flex-shrink-0 gap-2">
 		<?php if ($reglages): ?>

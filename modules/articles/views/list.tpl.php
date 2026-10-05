@@ -18,7 +18,7 @@ $pagination = $pagination ?? '';
 
 $lien     = static fn (array $a): string => url('articles/'.$a['article_id'].'/'.url_title($a['title']));
 $couv     = static fn (array $a): string => !empty($a['image']) ? (string) NeoFrag()->model2('file', $a['image'])->path() : '';
-$extrait  = static fn (array $a): string => htmlspecialchars(!empty($a['excerpt']) ? (string) $a['excerpt'] : mb_strimwidth(trim(preg_replace('/\s+/', ' ', strip_tags((string) render_content($a['content'])))), 0, 180, '…'));
+$extrait  = static fn (array $a): string => nf_texte(!empty($a['excerpt']) ? (string) $a['excerpt'] : mb_strimwidth(trim(preg_replace('/\s+/', ' ', strip_tags((string) render_content($a['content'])))), 0, 180, '…'));
 $comments = ($m = $this->module('comments')) && $m->is_enabled() ? $m : NULL;
 $auteur   = function (array $a): string {
 	if (empty($a['user_id']))
@@ -27,15 +27,15 @@ $auteur   = function (array $a): string {
 	}
 
 	// Le nom mène à la page de l'auteur dans le Blog : ses autres billets.
-	return '<span class="blog-auteur">'.$this->module('user')->model2('user', $a['user_id'])->avatar()->append_attr('class', 'blog-avatar').' <a href="'.url('articles/auteur/'.(int) $a['user_id'].'/'.url_title((string) $a['username'])).'">'.htmlspecialchars((string) $a['username']).'</a></span>';
+	return '<span class="blog-auteur">'.$this->module('user')->model2('user', $a['user_id'])->avatar()->append_attr('class', 'blog-avatar').' <a href="'.url('articles/auteur/'.(int) $a['user_id'].'/'.url_title((string) $a['username'])).'">'.nf_texte($a['username']).'</a></span>';
 };
 
 $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): string {
 	$html  = '<article class="blog-carte">';
 	$html .= ($image = $couv($a)) ? '<a class="blog-couverture" href="'.$lien($a).'"><img src="'.$image.'" alt="" loading="lazy" /></a>' : '<a class="blog-couverture blog-couverture-vide" href="'.$lien($a).'" aria-hidden="true" tabindex="-1"></a>';
 	$html .= '<div class="blog-carte-corps">';
-	$html .= '<a class="blog-pastille" href="'.url('articles/category/'.$a['category_id'].'/'.url_title($a['category_name'])).'">'.htmlspecialchars((string) $a['category_title']).'</a>';
-	$html .= '<h2 class="blog-carte-titre"><a href="'.$lien($a).'">'.htmlspecialchars((string) $a['title']).'</a></h2>';
+	$html .= '<a class="blog-pastille" href="'.url('articles/category/'.$a['category_id'].'/'.url_title($a['category_name'])).'">'.nf_texte($a['category_title']).'</a>';
+	$html .= '<h2 class="blog-carte-titre"><a href="'.$lien($a).'">'.nf_texte($a['title']).'</a></h2>';
 	$html .= '<p class="blog-extrait">'.$extrait($a).'</p>';
 	$html .= '<div class="blog-meta">'.$auteur($a).'<span>'.timetostr('j M Y', $a['date']).'</span><span>'.$this->lang('%d min de lecture', Articles::read_time_minutes((string) $a['content'])).'</span>';
 	$html .= $comments ? '<span>'.$comments->link('articles', $a['article_id'], 'articles/'.$a['article_id'].'/'.url_title($a['title'])).'</span>' : '';
@@ -52,8 +52,8 @@ $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): s
 		<?php endif ?>
 		<div class="blog-une-corps">
 			<span class="blog-une-mention"><?php echo icon('fas fa-star').' '.$this->lang('À la une') ?></span>
-			<a class="blog-pastille" href="<?php echo url('articles/category/'.$une['category_id'].'/'.url_title($une['category_name'])) ?>"><?php echo htmlspecialchars((string) $une['category_title']) ?></a>
-			<h2 class="blog-une-titre"><a href="<?php echo $lien($une) ?>"><?php echo htmlspecialchars((string) $une['title']) ?></a></h2>
+			<a class="blog-pastille" href="<?php echo url('articles/category/'.$une['category_id'].'/'.url_title($une['category_name'])) ?>"><?php echo nf_texte($une['category_title']) ?></a>
+			<h2 class="blog-une-titre"><a href="<?php echo $lien($une) ?>"><?php echo nf_texte($une['title']) ?></a></h2>
 			<p class="blog-extrait"><?php echo $extrait($une) ?></p>
 			<div class="blog-meta"><?php echo $auteur($une) ?><span><?php echo timetostr('j M Y', $une['date']) ?></span><span><?php echo $this->lang('%d min de lecture', Articles::read_time_minutes((string) $une['content'])) ?></span></div>
 		</div>
@@ -67,7 +67,7 @@ $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): s
 				<nav class="blog-filtres" aria-label="<?php echo $this->lang('Catégories') ?>">
 					<a class="<?php echo !$categorie ? 'actif' : '' ?>" href="<?php echo url('articles') ?>"><?php echo $this->lang('Tout') ?></a>
 					<?php foreach ($barre['categories'] as $c): ?>
-					<a class="<?php echo $categorie === (int) $c['category_id'] ? 'actif' : '' ?>" href="<?php echo url('articles/category/'.$c['category_id'].'/'.url_title($c['name'])) ?>"><?php echo htmlspecialchars((string) $c['title']) ?></a>
+					<a class="<?php echo $categorie === (int) $c['category_id'] ? 'actif' : '' ?>" href="<?php echo url('articles/category/'.$c['category_id'].'/'.url_title($c['name'])) ?>"><?php echo nf_texte($c['title']) ?></a>
 					<?php endforeach ?>
 				</nav>
 				<?php endif ?>
@@ -105,7 +105,7 @@ $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): s
 				<h3><?php echo $this->lang('Les plus lus') ?></h3>
 				<ol class="blog-populaires">
 					<?php foreach ($barre['populaires'] as $p): ?>
-					<li><a href="<?php echo $lien($p) ?>"><?php echo htmlspecialchars((string) $p['title']) ?></a></li>
+					<li><a href="<?php echo $lien($p) ?>"><?php echo nf_texte($p['title']) ?></a></li>
 					<?php endforeach ?>
 				</ol>
 			</div>
@@ -114,7 +114,7 @@ $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): s
 				<h3><?php echo $this->lang('Catégories') ?></h3>
 				<ul class="blog-categories">
 					<?php foreach ($barre['categories'] as $c): ?>
-					<li><a href="<?php echo url('articles/category/'.$c['category_id'].'/'.url_title($c['name'])) ?>"><?php echo htmlspecialchars((string) $c['title']) ?></a> <span><?php echo (int) $c['total'] ?></span></li>
+					<li><a href="<?php echo url('articles/category/'.$c['category_id'].'/'.url_title($c['name'])) ?>"><?php echo nf_texte($c['title']) ?></a> <span><?php echo (int) $c['total'] ?></span></li>
 					<?php endforeach ?>
 				</ul>
 			</div>
@@ -123,7 +123,7 @@ $carte = function (array $a) use ($lien, $couv, $extrait, $comments, $auteur): s
 				<h3><?php echo $this->lang('Tags') ?></h3>
 				<div class="blog-tags">
 					<?php foreach ($barre['tags'] as $tag => $n): ?>
-					<a href="<?php echo url('articles/tag/'.url_title((string) $tag)) ?>">#<?php echo htmlspecialchars((string) $tag) ?></a>
+					<a href="<?php echo url('articles/tag/'.url_title((string) $tag)) ?>">#<?php echo nf_texte($tag) ?></a>
 					<?php endforeach ?>
 				</div>
 			</div>

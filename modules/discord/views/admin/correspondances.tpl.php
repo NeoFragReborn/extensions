@@ -8,11 +8,11 @@ $titres = $titres ?? ['', '', ''];
 	<tbody>
 	<?php foreach ($lignes as $l): ?>
 	<tr>
-		<td class="ps-3"><?php echo htmlspecialchars((string) $l['gauche']) ?></td>
+		<td class="ps-3"><?php echo nf_texte($l['gauche']) ?></td>
 		<td class="text-muted"><?php echo icon('fas fa-exchange-alt') ?></td>
-		<td><?php echo htmlspecialchars((string) $l['droite']) ?></td>
-		<td class="small text-muted"><?php echo htmlspecialchars((string) $l['detail']) ?></td>
-		<td class="text-end pe-3 text-nowrap"><?php if (!empty($l['etiquettes'])): ?><a class="btn btn-sm btn-outline-secondary me-1" href="<?php echo $l['etiquettes'] ?>" title="<?php echo htmlspecialchars((string) $this->lang('Préfixes et étiquettes'), ENT_QUOTES) ?>"><?php echo icon('fas fa-tags') ?></a><?php endif ?><a class="btn btn-sm btn-outline-danger" href="<?php echo $l['supprimer'] ?>" title="<?php echo htmlspecialchars((string) $this->lang('Défaire cette correspondance ?'), ENT_QUOTES) ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Défaire cette correspondance ?'), ENT_QUOTES) ?>"><?php echo icon('fas fa-unlink') ?></a></td>
+		<td><?php echo nf_texte($l['droite']) ?></td>
+		<td class="small text-muted"><?php echo nf_texte($l['detail']) ?></td>
+		<td class="text-end pe-3 text-nowrap"><?php if (!empty($l['etiquettes'])): ?><a class="btn btn-sm btn-outline-secondary me-1" href="<?php echo $l['etiquettes'] ?>" title="<?php echo nf_texte($this->lang('Préfixes et étiquettes')) ?>"><?php echo icon('fas fa-tags') ?></a><?php endif ?><a class="btn btn-sm btn-outline-danger" href="<?php echo $l['supprimer'] ?>" title="<?php echo nf_texte($this->lang('Défaire cette correspondance ?')) ?>" data-confirm="<?php echo nf_texte($this->lang('Défaire cette correspondance ?')) ?>"><?php echo icon('fas fa-unlink') ?></a></td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>

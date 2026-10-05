@@ -51,15 +51,15 @@ class Admin extends Controller_Module
 				$cls = $status_class[$m['status']] ?? 'draft';
 				$icn = $status_icon[$m['status']] ?? 'fa-question';
 				$display_name = $m['user_id'] && $m['username']
-					? '<a href="'.url('user/'.$m['user_id'].'/'.url_title($m['username'])).'">'.htmlspecialchars((string) ($m['username'])).'</a>'
-					: htmlspecialchars((string) ($m['name']));
+					? '<a href="'.url('user/'.$m['user_id'].'/'.url_title($m['username'])).'">'.nf_texte($m['username']).'</a>'
+					: nf_texte($m['name']);
 
 				$body .= '<div class="nf-content-card">';
 				$body .= '<div class="nf-content-card-head">';
 				$body .= '<div class="nf-content-card-title"><input type="checkbox" name="selected[]" value="'.(int)$m['id'].'" class="nf-bulk-cb" style="margin-right:6px;vertical-align:middle;"><span class="text-muted" style="font-family:monospace;font-size:11px;">#'.(int)$m['id'].'</span> '.$display_name.'</div>';
 				$body .= '<span class="nf-content-card-status '.$cls.'"><i class="fas '.$icn.'"></i> '.$lbl.'</span>';
 				$body .= '</div>';
-				$body .= '<div class="nf-content-card-desc">'.htmlspecialchars((string) ($m['message'])).'</div>';
+				$body .= '<div class="nf-content-card-desc">'.nf_texte($m['message']).'</div>';
 				$body .= '<div class="nf-content-card-meta">';
 				$body .= '<span><i class="far fa-clock"></i> '.nf_date_heure($m['ts']).'</span>';
 				$body .= '</div>';
@@ -67,7 +67,7 @@ class Admin extends Controller_Module
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				if ($m['status'] !== 'approved') $body .= '<a class="btn btn-sm btn-outline-success" href="'.url('admin/guestbook/approve/'.$m['id']).'" title="'.$this->lang('Approuver').'"><i class="fas fa-check"></i></a>';
 				if ($m['status'] !== 'rejected') $body .= '<a class="btn btn-sm btn-outline-warning" href="'.url('admin/guestbook/reject/'.$m['id']).'" title="'.$this->lang('Rejeter').'"><i class="fas fa-ban"></i></a>';
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/guestbook/delete/'.$m['id']).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/guestbook/delete/'.$m['id']).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -78,11 +78,11 @@ class Admin extends Controller_Module
 		$form_action = url($this->module->pagination->get_url());
 		$status_options = ['' => $this->lang('Tous les statuts'), 'pending' => $this->lang('En attente'), 'approved' => $this->lang('Approuvé'), 'rejected' => $this->lang('Rejeté')];
 		$toolbar  = '<form method="get" action="'.$form_action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filters['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un message ou un nom…')), ENT_QUOTES).'" style="max-width:260px;">';
+		$toolbar .= '<input type="text" name="q" value="'.nf_texte($filters['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher un message ou un nom…')).'" style="max-width:260px;">';
 		$toolbar .= '<select name="status" class="form-select form-select-sm" style="width:auto;">';
 		foreach ($status_options as $val => $label)
 		{
-			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars((string) ($label)).'</option>';
+			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.nf_texte($label).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);
@@ -111,10 +111,10 @@ class Admin extends Controller_Module
 					.'<option value="reject">'.$this->lang('Rejeter').'</option>'
 					.'<option value="delete">'.$this->lang('Supprimer').'</option>'
 				.'</select>'
-				.'<button type="submit" class="btn btn-sm btn-primary" data-confirm="'.htmlspecialchars((string) ($this->lang('Appliquer l\'action aux messages sélectionnés ?')), ENT_QUOTES).'">'.$this->lang('Appliquer').'</button>'
+				.'<button type="submit" class="btn btn-sm btn-primary" data-confirm="'.nf_texte($this->lang('Appliquer l\'action aux messages sélectionnés ?')).'">'.$this->lang('Appliquer').'</button>'
 				.'</div>';
 
-			$body = '<form method="post" action="'.htmlspecialchars((string) (url($this->url->request)), ENT_QUOTES).'">'.$bulk_bar.$body.'</form>'
+			$body = '<form method="post" action="'.nf_texte(url($this->url->request)).'">'.$bulk_bar.$body.'</form>'
 				.'<script>(function(){var a=document.getElementById("nf-bulk-all");if(a){a.addEventListener("change",function(){document.querySelectorAll(".nf-bulk-cb").forEach(function(c){c.checked=a.checked;});});}})();</script>';
 		}
 

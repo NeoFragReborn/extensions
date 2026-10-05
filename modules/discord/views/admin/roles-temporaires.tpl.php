@@ -19,11 +19,11 @@ $lignes = $lignes ?? [];
 	<?php foreach ($lignes as $l): ?>
 	<tr>
 		<td class="ps-3"><?php echo $l['membre'] ?></td>
-		<td><?php echo htmlspecialchars((string) $l['role']) ?></td>
-		<td class="text-nowrap"><?php echo $l['echu'] ? '<span class="badge text-bg-warning">'.$this->lang('Retrait en cours').'</span>' : htmlspecialchars((string) $l['fin']) ?></td>
-		<td class="small"><?php echo htmlspecialchars((string) $l['par']) ?></td>
-		<td class="small text-muted"><?php echo htmlspecialchars((string) $l['raison']) ?></td>
-		<td class="text-end pe-3 text-nowrap"><?php if (!$l['echu']): ?><a class="btn btn-sm btn-outline-danger" href="<?php echo $l['retirer'] ?>" data-confirm="<?php echo htmlspecialchars((string) $this->lang('Retirer ce rôle maintenant ? Le bot le retirera d’ici une minute.'), ENT_QUOTES) ?>"><?php echo icon('fas fa-user-minus').' '.$this->lang('Retirer maintenant') ?></a><?php endif ?></td>
+		<td><?php echo nf_texte($l['role']) ?></td>
+		<td class="text-nowrap"><?php echo $l['echu'] ? '<span class="badge text-bg-warning">'.$this->lang('Retrait en cours').'</span>' : nf_texte($l['fin']) ?></td>
+		<td class="small"><?php echo nf_texte($l['par']) ?></td>
+		<td class="small text-muted"><?php echo nf_texte($l['raison']) ?></td>
+		<td class="text-end pe-3 text-nowrap"><?php if (!$l['echu']): ?><a class="btn btn-sm btn-outline-danger" href="<?php echo $l['retirer'] ?>" data-confirm="<?php echo nf_texte($this->lang('Retirer ce rôle maintenant ? Le bot le retirera d’ici une minute.')) ?>"><?php echo icon('fas fa-user-minus').' '.$this->lang('Retirer maintenant') ?></a><?php endif ?></td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>

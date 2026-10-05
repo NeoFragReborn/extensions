@@ -69,7 +69,7 @@ class Index extends Controller_Module
 
 		$entete = '<header class="blog-page-entete">'
 			.($membre instanceof \NF\NeoFrag\Models\User ? $membre->avatar()->append_attr('class', 'blog-avatar-grand') : '')
-			.'<div><h1>'.htmlspecialchars($auteur['username']).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', $auteur['total'], $auteur['total'])
+			.'<div><h1>'.nf_texte($auteur['username']).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', $auteur['total'], $auteur['total'])
 			// Pas user->link() : son deuxième argument est le NOM du membre, qui fait aussi l'adresse — le
 			// libellé y donnait /user/<id>/voir-son-profil, une page introuvable (check-liens, 2026-10-03).
 			.' · <a href="'.url('user/'.(int) $auteur['user_id'].'/'.url_title($auteur['username'])).'">'.$this->lang('Voir son profil').'</a></p></div></header>';
@@ -85,7 +85,7 @@ class Index extends Controller_Module
 				->icon('far fa-calendar-alt')
 				->breadcrumb();
 
-		return $this->_liste($articles, NULL, $barre, $pagination, '<header class="blog-page-entete"><div><h1>'.htmlspecialchars($libelle).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', count($articles), count($articles)).'</p></div></header>', 0, $mois);
+		return $this->_liste($articles, NULL, $barre, $pagination, '<header class="blog-page-entete"><div><h1>'.nf_texte($libelle).'</h1><p>'.$this->lang('%d billet publié|%d billets publiés', count($articles), count($articles)).'</p></div></header>', 0, $mois);
 	}
 
 	public function _serie($serie, $parties)
@@ -121,10 +121,10 @@ class Index extends Controller_Module
 		$donnees = array_filter([
 			'@context'         => 'https://schema.org',
 			'@type'            => 'BlogPosting',
-			'headline'         => mb_substr((string) $article['title'], 0, 110),
-			'description'      => mb_strimwidth(trim((string) preg_replace('/\s+/', ' ', strip_tags(!empty($article['excerpt']) ? (string) $article['excerpt'] : $content))), 0, 300, '…'),
+			'headline'         => mb_substr(nf_texte_brut($article['title']), 0, 110),
+			'description'      => mb_strimwidth(trim((string) preg_replace('/\s+/', ' ', nf_texte_brut(strip_tags(!empty($article['excerpt']) ? (string) $article['excerpt'] : $content)))), 0, 300, '…'),
 			'datePublished'    => date('c', (int) strtotime((string) $article['date'])),
-			'author'           => !empty($article['username']) ? ['@type' => 'Person', 'name' => (string) $article['username']] : NULL,
+			'author'           => !empty($article['username']) ? ['@type' => 'Person', 'name' => nf_texte_brut($article['username'])] : NULL,
 			'image'            => $image ?: NULL,
 			'mainEntityOfPage' => $adresse,
 			'wordCount'        => count(preg_split('/\s+/', strip_tags($content), -1, PREG_SPLIT_NO_EMPTY) ?: []),

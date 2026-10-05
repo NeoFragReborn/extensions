@@ -1,7 +1,7 @@
 name: CI
 
-# Un addon de ce dépôt ne tourne que posé dans un arbre de neofrag. La CI clone donc neofrag (sa
-# branche main : la version publiée la plus récente), y pose les addons de ce dépôt
+# Un addon de ce dépôt ne tourne que posé dans un arbre de neofrag. La CI clone donc neofrag (la même
+# version pour une version publiée, sa branche main sinon), y pose les addons de ce dépôt
 # (tools/assembler.php), puis joue la batterie du CMS sur le produit entier : ses contrôles statiques et
 # sa suite unitaire, sur la plus ancienne et la plus récente des versions de PHP prises en charge.
 on:
@@ -42,9 +42,38 @@ jobs:
           owner: NeoFragReborn
           repositories: neofrag
 
+      # Une VERSION publiée (une étiquette vX.Y.Z sur ce commit) se juge avec le neofrag de la même version :
+      # les deux dépôts partent l'un après l'autre, et main peut porter encore la précédente (neofrag 1.2.26
+      # testé avec les addons de la 1.2.25, le 2026-10-04). On attend l'étiquette jumelle, un quart d'heure
+      # au plus ; hors version (une pull request), main.
+      - name: La version de neofrag à cloner
+        id: partenaire
+        env:
+          JETON: ${{ steps.jeton.outputs.token }}
+        run: |
+          acces="https://github.com"
+          [ -n "$JETON" ] && acces="https://x-access-token:${JETON}@github.com"
+          version=$(git ls-remote --tags "https://github.com/${GITHUB_REPOSITORY}.git" 'v*' \
+            | awk -v sha="$GITHUB_SHA" '$1 == sha { sub("refs/tags/", "", $2); sub(/\^\{\}$/, "", $2); print $2; exit }')
+          ref=main
+          if [ -n "$version" ]; then
+            for i in $(seq 1 30); do
+              if git ls-remote --exit-code --tags "${acces}/NeoFragReborn/neofrag.git" "refs/tags/${version}" > /dev/null; then
+                ref="$version"
+                break
+              fi
+              echo "neofrag n'a pas encore ${version} : on l'attend (${i}/30)…"
+              sleep 30
+            done
+            [ "$ref" = main ] && echo "::warning::neofrag n'a pas reçu ${version} en un quart d'heure : sa branche main est clonée."
+          fi
+          echo "neofrag cloné : ${ref}"
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v7
         with:
           repository: NeoFragReborn/neofrag
+          ref: ${{ steps.partenaire.outputs.ref }}
           path: neofrag
           token: ${{ steps.jeton.outputs.token || github.token }}
 

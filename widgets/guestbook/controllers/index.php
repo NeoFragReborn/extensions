@@ -32,10 +32,10 @@ class Index extends Controller_Widget
 			foreach ($msgs as $m)
 			{
 				$author = $m['user_id'] && $m['username']
-					? htmlspecialchars((string) ($m['username']))
-					: htmlspecialchars((string) ($m['name']));
+					? nf_texte($m['username'])
+					: nf_texte($m['name']);
 				$body .= '<div class="mb-2"><strong>'.$author.'</strong> <small class="text-muted">'.timetostr('j M', $m['ts']).'</small>';
-				$body .= '<br><small>'.htmlspecialchars((string) (mb_substr($m['message'], 0, 80))).(mb_strlen($m['message']) > 80 ? '…' : '').'</small></div>';
+				$body .= '<br><small>'.nf_texte($m['message'], 80).(mb_strlen($m['message']) > 80 ? '…' : '').'</small></div>';
 			}
 		}
 

@@ -16,7 +16,7 @@ class Admin extends Controller_Module
 		// ── L'état de la station, en tête : c'est ce qu'on vient vérifier ─────
 		$etat = '<table class="table" style="margin:0;"><tbody>';
 		$etat .= '<tr><th style="width:11rem;">'.$this->lang('Nom de la station').'</th><td>'
-			.($station['name'] !== '' ? htmlspecialchars((string) ($station['name'])) : '<span class="text-muted">'.$this->lang('non renseigné').'</span>').'</td></tr>';
+			.($station['name'] !== '' ? nf_texte($station['name']) : '<span class="text-muted">'.$this->lang('non renseigné').'</span>').'</td></tr>';
 
 		$etat .= '<tr><th>'.$this->lang('Flux').'</th><td>';
 
@@ -26,7 +26,7 @@ class Admin extends Controller_Module
 		}
 		else
 		{
-			$etat .= '<code>'.htmlspecialchars((string) ($station['stream'])).'</code>';
+			$etat .= '<code>'.nf_texte($station['stream']).'</code>';
 
 			if (Schedule::contenu_mixte($station['stream']))
 			{
@@ -41,7 +41,7 @@ class Admin extends Controller_Module
 		// dont le flux ne démarre pas n'a aucun moyen de savoir si c'est elle qui le bloque.
 		$etat .= '<tr><th>'.$this->lang('Origine autorisée').'</th><td>'
 			.($station['origin'] !== ''
-				? '<code>'.htmlspecialchars((string) ($station['origin'])).'</code> <span class="text-muted">'.$this->lang('ajoutée à la politique de sécurité du site').'</span>'
+				? '<code>'.nf_texte($station['origin']).'</code> <span class="text-muted">'.$this->lang('ajoutée à la politique de sécurité du site').'</span>'
 				: '<span class="text-muted">'.$this->lang('aucune — le site ne déclare aucune origine tierce pour les médias').'</span>')
 			.'</td></tr>';
 
@@ -81,19 +81,19 @@ class Admin extends Controller_Module
 				$nuit   = Schedule::heure($c['start_time']) > Schedule::heure($c['end_time']) && Schedule::heure($c['end_time']) !== '';
 
 				$corps .= '<tr>'
-					.'<td>'.htmlspecialchars((string) (Index::nom_jour($jour))).'</td>'
-					.'<td style="white-space:nowrap;">'.htmlspecialchars((string) ($c['start_time'].' – '.$c['end_time']))
+					.'<td>'.nf_texte(Index::nom_jour($jour)).'</td>'
+					.'<td style="white-space:nowrap;">'.nf_texte($c['start_time'].' – '.$c['end_time'])
 					// Un créneau qui enjambe minuit se lit mal : on le dit, plutôt que de laisser
 					// croire à une faute de saisie.
-					.($nuit ? ' <span class="badge text-bg-light" title="'.htmlspecialchars((string) ($this->lang('Ce créneau se termine le lendemain.')), ENT_QUOTES).'"><i class="fas fa-moon"></i></span>' : '')
+					.($nuit ? ' <span class="badge text-bg-light" title="'.nf_texte($this->lang('Ce créneau se termine le lendemain.')).'"><i class="fas fa-moon"></i></span>' : '')
 					.'</td>'
-					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong>'
+					.'<td><strong>'.nf_texte($c['title']).'</strong>'
 					.(!$publie ? ' <span class="badge text-bg-light">'.$this->lang('Brouillon').'</span>' : '')
 					.'</td>'
-					.'<td class="text-muted">'.htmlspecialchars((string) ($c['host'])).'</td>'
+					.'<td class="text-muted">'.nf_texte($c['host']).'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/webradio/s/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/webradio/s/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer cette émission ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/webradio/s/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer cette émission ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 
@@ -103,13 +103,13 @@ class Admin extends Controller_Module
 		// ── Barre de recherche et de filtre (GET, préservé par la pagination) ──
 		$action = url($this->module->pagination->get_url());
 		$barre  = '<form method="get" action="'.$action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$barre .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filtres['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher une émission, un animateur…')), ENT_QUOTES).'" style="max-width:260px;">';
+		$barre .= '<input type="text" name="q" value="'.nf_texte($filtres['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher une émission, un animateur…')).'" style="max-width:260px;">';
 		$barre .= '<select name="day" class="form-select form-select-sm" style="width:auto;">';
 		$barre .= '<option value="0">'.$this->lang('Tous les jours').'</option>';
 
 		foreach (self::JOURS as $numero)
 		{
-			$barre .= '<option value="'.$numero.'"'.((int) $filtres['day'] === $numero ? ' selected' : '').'>'.htmlspecialchars((string) (Index::nom_jour($numero))).'</option>';
+			$barre .= '<option value="'.$numero.'"'.((int) $filtres['day'] === $numero ? ' selected' : '').'>'.nf_texte(Index::nom_jour($numero)).'</option>';
 		}
 
 		$barre .= '</select>';
@@ -117,7 +117,7 @@ class Admin extends Controller_Module
 
 		foreach (['' => $this->lang('Tous les statuts'), 'published' => $this->lang('Publiées'), 'draft' => $this->lang('Brouillons')] as $valeur => $libelle)
 		{
-			$barre .= '<option value="'.$valeur.'"'.($filtres['status'] === $valeur ? ' selected' : '').'>'.htmlspecialchars((string) ($libelle)).'</option>';
+			$barre .= '<option value="'.$valeur.'"'.($filtres['status'] === $valeur ? ' selected' : '').'>'.nf_texte($libelle).'</option>';
 		}
 
 		$barre .= '</select>';

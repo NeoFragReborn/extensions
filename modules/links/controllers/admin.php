@@ -17,11 +17,11 @@ class Admin extends Controller_Module
 			foreach ($cats as $c) {
 				$slug = url_title($c['title']);
 				$cats_body .= '<tr>'
-					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
+					.'<td><strong>'.nf_texte($c['title']).'</strong></td>'
 					.'<td class="text-end">'.(int)$c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/links/cat/'.$c['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 			$cats_body .= '</tbody></table>';
@@ -44,20 +44,20 @@ class Admin extends Controller_Module
 
 				$ls_body .= '<div class="nf-content-card">';
 				$ls_body .= '<div class="nf-content-card-head">';
-				$ls_body .= '<div class="nf-content-card-title"><a href="'.htmlspecialchars(nf_url_sure((string) $l['url']) ? (string) $l['url'] : '#').'" target="_blank" rel="noopener">'.htmlspecialchars((string) ($l['title'])).'</a></div>';
+				$ls_body .= '<div class="nf-content-card-title"><a href="'.nf_texte(nf_url_sure((string) $l['url']) ? (string) $l['url'] : '#').'" target="_blank" rel="noopener">'.nf_texte($l['title']).'</a></div>';
 				$ls_body .= '<span class="nf-content-card-status '.($published ? 'published' : 'draft').'">';
 				$ls_body .= '<i class="fas '.($published ? 'fa-check' : 'fa-clock').'"></i> '.($published ? $this->lang('Publié') : $this->lang('Brouillon'));
 				$ls_body .= '</span>';
 				$ls_body .= '</div>';
 				$ls_body .= '<div class="nf-content-card-meta">';
-				$ls_body .= '<span><i class="fas fa-external-link-alt"></i> '.htmlspecialchars((string) ($host)).'</span>';
-				$ls_body .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars((string) ($l['cat_title'])).'</span>';
+				$ls_body .= '<span><i class="fas fa-external-link-alt"></i> '.nf_texte($host).'</span>';
+				$ls_body .= '<span><i class="fas fa-folder"></i> '.nf_texte($l['cat_title']).'</span>';
 				$ls_body .= '<span title="'.$this->lang('Clics').'"><i class="fas fa-mouse-pointer"></i> '.(int)$l['clicks'].'</span>';
 				$ls_body .= '</div>';
 				$ls_body .= '<div class="nf-content-card-foot">';
 				$ls_body .= '<span class="nf-content-card-spacer"></span>';
 				$ls_body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/links/link/'.$l['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
-				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$ls_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/links/link/delete/'.$l['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$ls_body .= '</div>';
 				$ls_body .= '</div>';
 			}
@@ -67,18 +67,18 @@ class Admin extends Controller_Module
 		// Barre recherche / filtre (GET). $_GET préservé à travers la pagination par get_pagination().
 		$form_action = url($this->module->pagination->get_url());
 		$toolbar  = '<form method="get" action="'.$form_action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filters['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un titre ou une URL…')), ENT_QUOTES).'" style="max-width:240px;">';
+		$toolbar .= '<input type="text" name="q" value="'.nf_texte($filters['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher un titre ou une URL…')).'" style="max-width:240px;">';
 		$toolbar .= '<select name="category" class="form-select form-select-sm" style="width:auto;">';
 		$toolbar .= '<option value="0">'.$this->lang('Toutes les catégories').'</option>';
 		foreach ($cats as $c)
 		{
-			$toolbar .= '<option value="'.(int)$c['id'].'"'.((int)$filters['category'] === (int)$c['id'] ? ' selected' : '').'>'.htmlspecialchars((string) ($c['title'])).'</option>';
+			$toolbar .= '<option value="'.(int)$c['id'].'"'.((int)$filters['category'] === (int)$c['id'] ? ' selected' : '').'>'.nf_texte($c['title']).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= '<select name="status" class="form-select form-select-sm" style="width:auto;">';
 		foreach (['' => $this->lang('Tous les statuts'), 'published' => $this->lang('Publiés'), 'draft' => $this->lang('Brouillons')] as $val => $label)
 		{
-			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars((string) ($label)).'</option>';
+			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.nf_texte($label).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);

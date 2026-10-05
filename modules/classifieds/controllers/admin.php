@@ -36,11 +36,11 @@ class Admin extends Controller_Module
 			{
 				$slug = url_title($c['title']);
 				$cats_body .= '<tr>'
-					.'<td><strong>'.htmlspecialchars((string) ($c['title'])).'</strong></td>'
+					.'<td><strong>'.nf_texte($c['title']).'</strong></td>'
 					.'<td class="text-end">'.(int)$c['nb'].'</td>'
 					.'<td class="text-end" style="white-space:nowrap;">'
 					.'<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/classifieds/cat/'.$c['id'].'/'.$slug).'"><i class="fas fa-pen"></i></a> '
-					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>'
+					.'<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/cat/delete/'.$c['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'"><i class="far fa-trash-alt"></i></a>'
 					.'</td></tr>';
 			}
 			$cats_body .= '</tbody></table>';
@@ -61,12 +61,12 @@ class Admin extends Controller_Module
 				$slug = url_title($a['title']);
 				$ads_body .= '<div class="nf-content-card">';
 				$ads_body .= '<div class="nf-content-card-head">';
-				$ads_body .= '<div class="nf-content-card-title"><a href="'.url('classifieds/'.$a['id'].'/'.$slug).'" target="_blank">'.htmlspecialchars((string) ($a['title'])).'</a></div>';
+				$ads_body .= '<div class="nf-content-card-title"><a href="'.url('classifieds/'.$a['id'].'/'.$slug).'" target="_blank">'.nf_texte($a['title']).'</a></div>';
 				$ads_body .= Classifieds::status_label($a['status']);
 				$ads_body .= '</div>';
 				$ads_body .= '<div class="nf-content-card-meta">';
 				$ads_body .= '<span>'.Classifieds::type_label($a['ad_type']).'</span>';
-				$ads_body .= '<span><i class="fas fa-folder"></i> '.htmlspecialchars((string) ($a['cat_title'])).'</span>';
+				$ads_body .= '<span><i class="fas fa-folder"></i> '.nf_texte($a['cat_title']).'</span>';
 				$ads_body .= '<span>'.Classifieds::format_price($a['price'], $this).'</span>';
 				$ads_body .= '</div>';
 				$ads_body .= '<div class="nf-content-card-meta">';
@@ -81,7 +81,7 @@ class Admin extends Controller_Module
 					$ads_body .= '<a class="btn btn-sm btn-outline-success" href="'.$this->csrf_url('admin/classifieds/'.$a['id'].'/'.$slug.'/approve').'" title="'.$this->lang('Valider').'"><i class="fas fa-check"></i></a> ';
 					$ads_body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/classifieds/'.$a['id'].'/'.$slug.'/reject').'" title="'.$this->lang('Refuser').'"><i class="fas fa-ban"></i></a> ';
 				}
-				$ads_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/delete/'.$a['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'"><i class="far fa-trash-alt"></i></a>';
+				$ads_body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/classifieds/delete/'.$a['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'"><i class="far fa-trash-alt"></i></a>';
 				$ads_body .= '</div>';
 				$ads_body .= '</div>';
 			}
@@ -91,18 +91,18 @@ class Admin extends Controller_Module
 		// Barre de recherche / filtre (GET).
 		$form_action = url($this->module->pagination->get_url());
 		$toolbar  = '<form method="get" action="'.$form_action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filters['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un titre…')), ENT_QUOTES).'" style="max-width:240px;">';
+		$toolbar .= '<input type="text" name="q" value="'.nf_texte($filters['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher un titre…')).'" style="max-width:240px;">';
 		$toolbar .= '<select name="category" class="form-select form-select-sm" style="width:auto;">';
 		$toolbar .= '<option value="0">'.$this->lang('Toutes les catégories').'</option>';
 		foreach ($cats as $c)
 		{
-			$toolbar .= '<option value="'.(int)$c['id'].'"'.((int)$filters['category'] === (int)$c['id'] ? ' selected' : '').'>'.htmlspecialchars((string) ($c['title'])).'</option>';
+			$toolbar .= '<option value="'.(int)$c['id'].'"'.((int)$filters['category'] === (int)$c['id'] ? ' selected' : '').'>'.nf_texte($c['title']).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= '<select name="status" class="form-select form-select-sm" style="width:auto;">';
 		foreach (['' => $this->lang('Tous les statuts'), 'pending' => $this->lang('En attente'), 'published' => $this->lang('Publiées'), 'closed' => $this->lang('Clôturées'), 'rejected' => $this->lang('Refusées')] as $val => $label)
 		{
-			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars((string) ($label)).'</option>';
+			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.nf_texte($label).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);

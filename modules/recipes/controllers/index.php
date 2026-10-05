@@ -30,7 +30,7 @@ class Index extends Controller_Module
 			}
 
 			$vide   = FALSE;
-			$corps .= '<h2 class="h4 mt-4 mb-3">'.htmlspecialchars((string) ($groupe['cat']['title'])).'</h2>';
+			$corps .= '<h2 class="h4 mt-4 mb-3">'.nf_texte($groupe['cat']['title']).'</h2>';
 			$corps .= '<div class="nf-card-grid">';
 
 			foreach ($groupe['recipes'] as $recette)
@@ -60,11 +60,11 @@ class Index extends Controller_Module
 		$total = (int) $recette['prep_minutes'] + (int) $recette['cook_minutes'];
 
 		$corps  = '<div itemscope itemtype="https://schema.org/Recipe">';
-		$corps .= '<meta itemprop="name" content="'.htmlspecialchars((string) ($recette['title']), ENT_QUOTES).'" />';
+		$corps .= '<meta itemprop="name" content="'.nf_texte($recette['title']).'" />';
 
 		if (trim((string) $recette['intro']) !== '')
 		{
-			$corps .= '<p class="lead" itemprop="description">'.htmlspecialchars((string) ($recette['intro'])).'</p>';
+			$corps .= '<p class="lead" itemprop="description">'.nf_texte($recette['intro']).'</p>';
 		}
 
 		$corps .= $this->_entete($recette, $total);
@@ -78,7 +78,7 @@ class Index extends Controller_Module
 
 			foreach ($ingredients as $ingredient)
 			{
-				$corps .= '<li itemprop="recipeIngredient">'.htmlspecialchars((string) ($ingredient)).'</li>';
+				$corps .= '<li itemprop="recipeIngredient">'.nf_texte($ingredient).'</li>';
 			}
 
 			$corps .= '</ul>';
@@ -90,7 +90,7 @@ class Index extends Controller_Module
 
 			foreach ($etapes as $etape)
 			{
-				$corps .= '<li itemprop="recipeInstructions">'.htmlspecialchars((string) ($etape)).'</li>';
+				$corps .= '<li itemprop="recipeInstructions">'.nf_texte($etape).'</li>';
 			}
 
 			$corps .= '</ol>';
@@ -118,14 +118,14 @@ class Index extends Controller_Module
 		{
 			if (($minutes = (int) $recette[$champ]) > 0)
 			{
-				$morceaux[] = '<span><i class="'.$icone.'"></i> '.htmlspecialchars((string) ($libelle)).' '.htmlspecialchars((string) (Recipe::duree($minutes)))
+				$morceaux[] = '<span><i class="'.$icone.'"></i> '.nf_texte($libelle).' '.nf_texte(Recipe::duree($minutes))
 					.'<meta itemprop="'.$propriete.'" content="'.Recipe::duree_iso($minutes).'" /></span>';
 			}
 		}
 
 		if ($total > 0)
 		{
-			$morceaux[] = '<span><i class="fas fa-hourglass-half"></i> '.$this->lang('Total').' '.htmlspecialchars((string) (Recipe::duree($total)))
+			$morceaux[] = '<span><i class="fas fa-hourglass-half"></i> '.$this->lang('Total').' '.nf_texte(Recipe::duree($total))
 				.'<meta itemprop="totalTime" content="'.Recipe::duree_iso($total).'" /></span>';
 		}
 
@@ -139,12 +139,12 @@ class Index extends Controller_Module
 
 		$html  = '<div class="nf-content-card">';
 		$html .= '<div class="nf-content-card-head"><div class="nf-content-card-title">';
-		$html .= '<a href="'.url('recipes/'.(int) $recette['id'].'/'.$slug).'">'.htmlspecialchars((string) ($recette['title'])).'</a>';
+		$html .= '<a href="'.url('recipes/'.(int) $recette['id'].'/'.$slug).'">'.nf_texte($recette['title']).'</a>';
 		$html .= '</div></div>';
 
 		if (trim((string) $recette['intro']) !== '')
 		{
-			$html .= '<div class="nf-content-card-desc">'.htmlspecialchars((string) (Recipe::apercu($recette['intro']))).'</div>';
+			$html .= '<div class="nf-content-card-desc">'.nf_texte(Recipe::apercu($recette['intro'])).'</div>';
 		}
 
 		$meta = [];
@@ -156,7 +156,7 @@ class Index extends Controller_Module
 
 		if ($total > 0)
 		{
-			$meta[] = '<span><i class="far fa-clock"></i> '.htmlspecialchars((string) (Recipe::duree($total))).'</span>';
+			$meta[] = '<span><i class="far fa-clock"></i> '.nf_texte(Recipe::duree($total)).'</span>';
 		}
 
 		if ($meta)

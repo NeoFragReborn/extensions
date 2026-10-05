@@ -198,7 +198,7 @@ class Admin extends Controller_Module
 		return $this->admin_back('admin/discord').$this->admin_card('fas fa-key', $this->lang('Clé d’accès du bot'),
 			'<div class="alert alert-warning">'.icon('fas fa-exclamation-triangle').' '.$this->lang('Copiez ces deux lignes maintenant : la clé ne sera plus jamais affichée. L’ancienne clé du bot, s’il y en avait une, est révoquée.').'</div>'
 			.'<p>'.$this->lang('Sur la machine qui fait tourner le bot, ces deux lignes vont dans son fichier de configuration (%s) :', '<code>.env</code>').'</p>'
-			.'<textarea class="form-control font-monospace mb-3" rows="3" readonly="readonly" aria-label="'.$this->lang('Configuration du bot').'">'.htmlspecialchars($fichier).'</textarea>'
+			.'<textarea class="form-control font-monospace mb-3" rows="3" readonly="readonly" aria-label="'.$this->lang('Configuration du bot').'">'.nf_texte($fichier).'</textarea>'
 			.'<a class="btn btn-light" href="'.url('admin/discord').'">'.$this->lang('Retour').'</a>');
 	}
 
@@ -481,7 +481,7 @@ class Admin extends Controller_Module
 			$lie = $modele->membre_lie($r['discord_id']);
 
 			$lignes[] = [
-				'membre'  => htmlspecialchars($r['username'] !== '' ? $r['username'] : $r['discord_id']).($lie ? ' <span class="text-muted small">('.$this->user->link($lie['user_id'], $lie['username']).')</span>' : ''),
+				'membre'  => nf_texte($r['username'] !== '' ? $r['username'] : $r['discord_id']).($lie ? ' <span class="text-muted small">('.$this->user->link($lie['user_id'], $lie['username']).')</span>' : ''),
 				'role'    => (string) ($roles[$r['role_id']] ?? '@'.$r['role_id']),
 				'fin'     => timetostr($this->lang('d/m/Y H:i'), $r['expires_at']),
 				'echu'    => $r['expires_at'] <= time(),

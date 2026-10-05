@@ -88,14 +88,14 @@ class Index extends Controller_Module
 			if ($retire['tags'])
 			{
 				$html .= '<div>'.$this->lang('Balises').' : ';
-				$html .= implode(' ', array_map(static fn ($t) => '<code>&lt;'.htmlspecialchars((string) ($t)).'&gt;</code>', $retire['tags']));
+				$html .= implode(' ', array_map(static fn ($t) => '<code>&lt;'.nf_texte($t).'&gt;</code>', $retire['tags']));
 				$html .= '</div>';
 			}
 
 			if ($retire['attributes'])
 			{
 				$html .= '<div>'.$this->lang('Attributs').' : ';
-				$html .= implode(' ', array_map(static fn ($a) => '<code>'.htmlspecialchars((string) ($a)).'</code>', $retire['attributes']));
+				$html .= implode(' ', array_map(static fn ($a) => '<code>'.nf_texte($a).'</code>', $retire['attributes']));
 				$html .= '</div>';
 			}
 
@@ -131,7 +131,7 @@ class Index extends Controller_Module
 		{
 			$exemples = array_slice($emojis, 0, 8);
 			$html .= '<li>'.$this->lang('Les émojis du site s\'écrivent entre deux-points : %s.',
-				implode(' ', array_map(static fn ($n) => '<code>:'.htmlspecialchars((string) ($n)).':</code>', $exemples))).'</li>';
+				implode(' ', array_map(static fn ($n) => '<code>:'.nf_texte($n).':</code>', $exemples))).'</li>';
 		}
 		else
 		{

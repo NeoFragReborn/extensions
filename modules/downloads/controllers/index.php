@@ -21,25 +21,25 @@ class Index extends Controller_Module
 			$body = '';
 			foreach ($groups as $g)
 			{
-				$body .= '<h2 class="h4 mt-3 mb-1"><i class="far fa-folder-open"></i> '.htmlspecialchars((string) ($g['cat']['title'])).'</h2>';
+				$body .= '<h2 class="h4 mt-3 mb-1"><i class="far fa-folder-open"></i> '.nf_texte($g['cat']['title']).'</h2>';
 				if (!empty($g['cat']['description']))
 				{
-					$body .= '<p class="text-muted small">'.htmlspecialchars((string) ($g['cat']['description'])).'</p>';
+					$body .= '<p class="text-muted small">'.nf_texte($g['cat']['description']).'</p>';
 				}
 				$body .= '<div class="table-responsive mb-3"><table class="table table-sm mb-0"><thead><tr><th>'.$this->lang('Titre').'</th><th>'.$this->lang('Version').'</th><th>'.$this->lang('Taille').'</th><th>'.$this->lang('Type').'</th><th>'.$this->lang('Téléchargements').'</th><th></th></tr></thead><tbody>';
 
 				foreach ($g['files'] as $f)
 				{
 					$body .= '<tr>'
-						.'<td><strong>'.htmlspecialchars((string) ($f['title'])).'</strong>';
+						.'<td><strong>'.nf_texte($f['title']).'</strong>';
 					if (!empty($f['description']))
 					{
-						$body .= '<br><small class="text-muted">'.htmlspecialchars((string) ($f['description'])).'</small>';
+						$body .= '<br><small class="text-muted">'.nf_texte($f['description']).'</small>';
 					}
 					$body .= '</td>'
-						.'<td>'.htmlspecialchars((string) ($f['version'] ?? '-')).'</td>'
+						.'<td>'.nf_texte($f['version'] ?? '-').'</td>'
 						.'<td>'.Downloads::format_size($f['file_size_bytes']).'</td>'
-						.'<td><small>'.htmlspecialchars((string) ($f['file_type'] ?? '-')).'</small></td>'
+						.'<td><small>'.nf_texte($f['file_type'] ?? '-').'</small></td>'
 						.'<td>'.(int)$f['downloads_count'].'</td>'
 						.'<td><a class="btn btn-sm btn-primary" href="'.url('downloads/go/'.$f['id']).'"><i class="fas fa-download"></i> '.$this->lang('Télécharger').'</a></td>'
 						.'</tr>';

@@ -50,17 +50,17 @@ class Index extends Controller_Widget
 		$gestionnaire = $module->is_authorized();
 		$visibles     = \NF\Modules\Surveys\Surveys::resultats_visibles((string) $survey['show_results'], \NF\Modules\Surveys\Surveys::a_vote((int) $survey['id']), FALSE, (bool) $gestionnaire);
 
-		$body = '<p class="mb-2"><strong>'.htmlspecialchars((string) ($survey['title'])).'</strong></p>';
+		$body = '<p class="mb-2"><strong>'.nf_texte($survey['title']).'</strong></p>';
 		foreach ($options as $o)
 		{
 			if (!$visibles)
 			{
-				$body .= '<div class="mb-1"><small>'.htmlspecialchars((string) ($o['label'])).'</small></div>';
+				$body .= '<div class="mb-1"><small>'.nf_texte($o['label']).'</small></div>';
 				continue;
 			}
 
 			$pct = $total > 0 ? round((int)$o['votes'] / $total * 100, 1) : 0;
-			$body .= '<div class="mb-1"><small>'.htmlspecialchars((string) ($o['label'])).' — '.$pct.'%</small>';
+			$body .= '<div class="mb-1"><small>'.nf_texte($o['label']).' — '.$pct.'%</small>';
 			$body .= '<div class="progress" style="height:5px"><div class="progress-bar" style="width:'.$pct.'%"></div></div></div>';
 		}
 

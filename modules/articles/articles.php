@@ -217,7 +217,7 @@ class Articles extends Module
 			}
 			else
 			{
-				$existing_attrs .= ' id="'.htmlspecialchars((string) ($slug)).'"';
+				$existing_attrs .= ' id="'.nf_texte($slug).'"';
 			}
 
 			$entries[] = ['level' => $level, 'slug' => $slug, 'title' => trim(strip_tags($inner))];
@@ -241,7 +241,7 @@ class Articles extends Module
 		foreach ($entries as $e)
 		{
 			$indent = $e['level'] === 'h3' ? ' style="padding-left:2rem"' : '';
-			$out .= '<li class="list-group-item border-0 py-1"'.$indent.'><a href="#'.htmlspecialchars((string) ($e['slug'])).'">'.htmlspecialchars((string) ($e['title'])).'</a></li>';
+			$out .= '<li class="list-group-item border-0 py-1"'.$indent.'><a href="#'.nf_texte($e['slug']).'">'.nf_texte($e['title']).'</a></li>';
 		}
 		$out .= '</ul></div>';
 		return $out;

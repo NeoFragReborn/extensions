@@ -36,7 +36,7 @@ class Index extends Controller_Module
 			{
 				$body .= '<tr>'
 					.'<td>#'.(int)$t['id'].'</td>'
-					.'<td><a href="'.url('bugtracker/'.$t['id'].'/'.url_title($t['title'])).'">'.htmlspecialchars((string) $t['title'], ENT_QUOTES, 'UTF-8', FALSE).'</a></td>'
+					.'<td><a href="'.url('bugtracker/'.$t['id'].'/'.url_title($t['title'])).'">'.nf_texte($t['title']).'</a></td>'
 					.'<td>'.Bugtracker::type_label($t['type']).'</td>'
 					.'<td>'.Bugtracker::priority_label($t['priority']).'</td>'
 					.'<td>'.Bugtracker::status_label($t['status']).'</td>'
@@ -76,9 +76,9 @@ class Index extends Controller_Module
 		$this->js('similaires');
 
 		$similaires = '<div id="bt-similaires" class="alert alert-warning mt-2" hidden'
-			.' data-adresse="'.htmlspecialchars(url('ajax/bugtracker/similaires'), ENT_QUOTES).'"'
-			.' data-titre="'.htmlspecialchars((string) $this->lang('Déjà signalé ?'), ENT_QUOTES).'"'
-			.' data-aide="'.htmlspecialchars((string) $this->lang('Ces tickets ouverts ressemblent au vôtre : s’il s’agit du même sujet, ajoutez-y plutôt un commentaire.'), ENT_QUOTES).'"></div>';
+			.' data-adresse="'.nf_texte(url('ajax/bugtracker/similaires')).'"'
+			.' data-titre="'.nf_texte($this->lang('Déjà signalé ?')).'"'
+			.' data-aide="'.nf_texte($this->lang('Ces tickets ouverts ressemblent au vôtre : s’il s’agit du même sujet, ajoutez-y plutôt un commentaire.')).'"></div>';
 
 		return $this->row($this->col($this->panel()->heading()->body($this->form()->display().$similaires))->size('col-12'));
 	}
@@ -91,7 +91,7 @@ class Index extends Controller_Module
 
 		if ($ticket['status'] === 'duplicate' && !empty($ticket['duplicate_of']) && ($origine = NeoFrag()->db->select('id', 'title')->from('nf_bug_tickets')->where('id', (int) $ticket['duplicate_of'])->row()))
 		{
-			$lien  = '<a href="'.url('bugtracker/'.$origine['id'].'/'.url_title($origine['title'])).'">#'.(int) $origine['id'].' — '.htmlspecialchars((string) $origine['title'], ENT_QUOTES, 'UTF-8', FALSE).'</a>';
+			$lien  = '<a href="'.url('bugtracker/'.$origine['id'].'/'.url_title($origine['title'])).'">#'.(int) $origine['id'].' — '.nf_texte($origine['title']).'</a>';
 			$body .= '<div class="alert alert-info">'.icon('fas fa-clone').' '.$this->lang('Ce ticket est un doublon de %s : la suite se passe là-bas.', $lien).'</div>';
 		}
 
@@ -110,7 +110,7 @@ class Index extends Controller_Module
 			$body .= ' — '.$this->lang('Assigné à %s', $this->user->link($ticket['assignee_id'], $ticket['assignee']));
 		}
 		$body .= '</div>';
-		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(htmlspecialchars((string) $ticket['description'], ENT_QUOTES, 'UTF-8', FALSE)).'</div></div>';
+		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(nf_texte($ticket['description'])).'</div></div>';
 		$body .= '</div>';
 
 		// Comments
@@ -123,10 +123,10 @@ class Index extends Controller_Module
 		{
 			foreach ($comments as $c)
 			{
-				$author = $c['user_id'] ? $this->user->link($c['user_id'], $c['username']) : (!empty($c['author_name']) ? icon('fab fa-discord').' '.htmlspecialchars((string) $c['author_name'], ENT_QUOTES, 'UTF-8', FALSE) : '<i>'.$this->lang('Anonyme').'</i>');
+				$author = $c['user_id'] ? $this->user->link($c['user_id'], $c['username']) : (!empty($c['author_name']) ? icon('fab fa-discord').' '.nf_texte($c['author_name']) : '<i>'.$this->lang('Anonyme').'</i>');
 				$body .= '<div class="card mb-2"><div class="card-body py-2">';
 				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.nf_date_heure($c['ts']).'</small></div>';
-				$body .= '<div>'.nl2br(htmlspecialchars((string) $c['content'], ENT_QUOTES, 'UTF-8', FALSE)).'</div>';
+				$body .= '<div>'.nl2br(nf_texte($c['content'])).'</div>';
 				$body .= '</div></div>';
 			}
 		}

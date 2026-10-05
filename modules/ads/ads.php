@@ -101,8 +101,8 @@ class Ads extends Module
 			return '<div class="nf-ad nf-ad-html">'.$ad['html'].'</div>';
 		}
 
-		return '<a class="nf-ad nf-ad-image" href="'.url('ads/click/'.(int)$ad['id']).'" target="_blank" rel="noopener sponsored" title="'.htmlspecialchars((string) ($ad['title'])).'">'
-			.'<img src="'.htmlspecialchars((string) ($ad['image_url'])).'" alt="'.htmlspecialchars((string) ($ad['title'])).'" style="max-width:100%;height:auto;" />'
+		return '<a class="nf-ad nf-ad-image" href="'.url('ads/click/'.(int)$ad['id']).'" target="_blank" rel="noopener sponsored" title="'.nf_texte($ad['title']).'">'
+			.'<img src="'.nf_texte($ad['image_url']).'" alt="'.nf_texte($ad['title']).'" style="max-width:100%;height:auto;" />'
 			.'</a>';
 	}
 }

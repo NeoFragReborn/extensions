@@ -30,11 +30,11 @@ class Admin extends Controller_Module
 
 				$body .= '<div class="nf-content-card">';
 				$body .= '<div class="nf-content-card-head">';
-				$body .= '<div class="nf-content-card-title">'.htmlspecialchars((string) ($s['title'])).'</div>';
+				$body .= '<div class="nf-content-card-title">'.nf_texte($s['title']).'</div>';
 				$body .= '<span class="nf-content-card-status '.$status_class.'"><i class="fas '.$status_icon.'"></i> '.$status_text.'</span>';
 				$body .= '</div>';
 				if (!empty($s['description'])) {
-					$body .= '<div class="nf-content-card-desc">'.htmlspecialchars((string) (strip_tags($s['description']))).'</div>';
+					$body .= '<div class="nf-content-card-desc">'.nf_texte(strip_tags($s['description'])).'</div>';
 				}
 				$body .= '<div class="nf-content-card-meta">';
 				$body .= '<span title="'.$this->lang('Options').'"><i class="fas fa-list"></i> '.(int)$s['nb_options'].'</span>';
@@ -44,9 +44,9 @@ class Admin extends Controller_Module
 				$body .= '<span class="nf-content-card-spacer"></span>';
 				$body .= '<a class="btn btn-sm btn-outline-secondary" href="'.url('admin/surveys/'.$s['id'].'/'.$slug).'" title="'.$this->lang('Éditer').'"><i class="fas fa-pen"></i></a>';
 				if (!$is_closed && $published) {
-					$body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/surveys/close/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Fermer ce sondage ?')), ENT_QUOTES).'" title="'.$this->lang('Fermer').'"><i class="fas fa-lock"></i></a>';
+					$body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/surveys/close/'.$s['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Fermer ce sondage ?')).'" title="'.$this->lang('Fermer').'"><i class="fas fa-lock"></i></a>';
 				}
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/surveys/delete/'.$s['id'].'/'.$slug).'" data-confirm="'.htmlspecialchars((string) ($this->lang('Supprimer ?')), ENT_QUOTES).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/surveys/delete/'.$s['id'].'/'.$slug).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -56,11 +56,11 @@ class Admin extends Controller_Module
 		// Barre recherche / filtre (GET). $_GET préservé à travers la pagination par get_pagination().
 		$form_action = url($this->module->pagination->get_url());
 		$toolbar  = '<form method="get" action="'.$form_action.'" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">';
-		$toolbar .= '<input type="text" name="q" value="'.htmlspecialchars((string) ($filters['q'])).'" class="form-control form-control-sm" placeholder="'.htmlspecialchars((string) ($this->lang('Rechercher un sondage…')), ENT_QUOTES).'" style="max-width:240px;">';
+		$toolbar .= '<input type="text" name="q" value="'.nf_texte($filters['q']).'" class="form-control form-control-sm" placeholder="'.nf_texte($this->lang('Rechercher un sondage…')).'" style="max-width:240px;">';
 		$toolbar .= '<select name="status" class="form-select form-select-sm" style="width:auto;">';
 		foreach (['' => $this->lang('Tous les statuts'), 'open' => $this->lang('Ouvert'), 'closed' => $this->lang('Fermé'), 'draft' => $this->lang('Brouillon')] as $val => $label)
 		{
-			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.htmlspecialchars((string) ($label)).'</option>';
+			$toolbar .= '<option value="'.$val.'"'.($filters['status'] === $val ? ' selected' : '').'>'.nf_texte($label).'</option>';
 		}
 		$toolbar .= '</select>';
 		$toolbar .= $this->sort_select($filters['sort_cols'], $filters['sort']);

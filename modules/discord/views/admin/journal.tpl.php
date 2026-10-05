@@ -13,7 +13,7 @@ $niveaux = [
 	<?php foreach ($journal as $l): [$classe, $icone] = $niveaux[$l['level']] ?? $niveaux['info'] ?>
 	<tr>
 		<td class="text-nowrap small text-muted ps-3"><?php echo timetostr($this->lang('d/m/Y H:i'), $l['created_at']) ?></td>
-		<td class="small w-100" style="overflow-wrap:anywhere"><span class="<?php echo $classe ?> me-1"><?php echo icon($icone) ?></span><?php echo htmlspecialchars((string) $l['message']) ?></td>
+		<td class="small w-100" style="overflow-wrap:anywhere"><span class="<?php echo $classe ?> me-1"><?php echo icon($icone) ?></span><?php echo nf_texte($l['message']) ?></td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>

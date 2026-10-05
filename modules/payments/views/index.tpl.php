@@ -13,13 +13,13 @@
 				<div class="card h-100 text-center">
 					<div class="card-body">
 						<div style="font-size:30px;opacity:.85;"><?php echo icon($p['kind'] === 'vip' ? 'fas fa-crown' : 'fas fa-coins') ?></div>
-						<h5 class="card-title"><?php echo htmlspecialchars($p['label']) ?></h5>
+						<h5 class="card-title"><?php echo nf_texte($p['label']) ?></h5>
 						<p class="card-text text-muted"><?php echo $p['kind'] === 'vip' ? $this->lang('%d jours de VIP', (int)$p['units']) : $this->lang('%d points', (int)$p['units']) ?></p>
 						<div style="font-weight:700;font-size:18px;"><?php echo number_format((int)$p['price_cents'] / 100, 2).' '.strtoupper($p['currency']) ?></div>
 					</div>
 					<div class="card-footer">
 						<?php if ($enabled && $logged): ?>
-							<button type="button" class="btn btn-sm btn-primary" data-pay-buy data-url="<?php echo htmlspecialchars(url('ajax/payments/checkout/'.(int)$p['id']).'?_='.rawurlencode((string) ($jeton ?? ''))) ?>"><?php echo icon('fas fa-credit-card').' '.$this->lang('Payer') ?></button>
+							<button type="button" class="btn btn-sm btn-primary" data-pay-buy data-url="<?php echo nf_texte(url('ajax/payments/checkout/'.(int)$p['id']).'?_='.rawurlencode((string) ($jeton ?? ''))) ?>"><?php echo icon('fas fa-credit-card').' '.$this->lang('Payer') ?></button>
 						<?php else: ?>
 							<span class="btn btn-sm btn-secondary disabled"><?php echo $this->lang('Indisponible') ?></span>
 						<?php endif ?>

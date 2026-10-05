@@ -38,8 +38,8 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 	<header class="blog-entete<?php echo $couv ? ' blog-entete-image' : '' ?>">
 		<?php if ($couv): ?><img class="blog-entete-fond" src="<?php echo $couv ?>" alt="" /><?php endif ?>
 		<div class="blog-entete-texte">
-			<a class="blog-pastille" href="<?php echo $categorie ?>"><?php echo htmlspecialchars((string) $article['category_title']) ?></a>
-			<h1><?php echo htmlspecialchars((string) $article['title']) ?></h1>
+			<a class="blog-pastille" href="<?php echo $categorie ?>"><?php echo nf_texte($article['category_title']) ?></a>
+			<h1><?php echo nf_texte($article['title']) ?></h1>
 			<div class="blog-meta">
 				<?php if ($auteur): ?><span class="blog-auteur"><?php echo $auteur ?></span><?php endif ?>
 				<span><?php echo timetostr('j M Y', $article['date']) ?></span>
@@ -68,12 +68,12 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 			<aside class="blog-serie" aria-label="<?php echo $this->lang('Série') ?>">
 				<div class="blog-serie-titre">
 					<small><?php echo icon('fas fa-layer-group').' '.$this->lang('Série') ?></small>
-					<a href="<?php echo url('articles/serie/'.$serie['serie']['series_id'].'/'.url_title($serie['serie']['title'])) ?>"><?php echo htmlspecialchars($serie['serie']['title']) ?></a>
+					<a href="<?php echo url('articles/serie/'.$serie['serie']['series_id'].'/'.url_title($serie['serie']['title'])) ?>"><?php echo nf_texte($serie['serie']['title']) ?></a>
 					<?php if ($rang_serie): ?><span><?php echo $this->lang('Partie %d sur %d', $rang_serie, count($serie['parties'])) ?></span><?php endif ?>
 				</div>
 				<ol>
 					<?php foreach ($serie['parties'] as $partie): ?>
-					<li><?php if ((int) $partie['article_id'] === (int) $article['article_id']): ?><strong aria-current="page"><?php echo htmlspecialchars((string) $partie['title']) ?></strong><?php else: ?><a href="<?php echo $lien($partie) ?>"><?php echo htmlspecialchars((string) $partie['title']) ?></a><?php endif ?></li>
+					<li><?php if ((int) $partie['article_id'] === (int) $article['article_id']): ?><strong aria-current="page"><?php echo nf_texte($partie['title']) ?></strong><?php else: ?><a href="<?php echo $lien($partie) ?>"><?php echo nf_texte($partie['title']) ?></a><?php endif ?></li>
 					<?php endforeach ?>
 				</ol>
 			</aside>
@@ -90,7 +90,7 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 			<?php if (!empty($article['tags'])): ?>
 			<div class="blog-tags mt-3">
 				<?php foreach (array_filter(array_map('trim', explode(',', $article['tags']))) as $tag): ?>
-				<a href="<?php echo url('articles/tag/'.url_title($tag)) ?>">#<?php echo htmlspecialchars($tag) ?></a>
+				<a href="<?php echo url('articles/tag/'.url_title($tag)) ?>">#<?php echo nf_texte($tag) ?></a>
 				<?php endforeach ?>
 			</div>
 			<?php endif ?>
@@ -115,10 +115,10 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 			<?php if (!empty($autour['precedent']) || !empty($autour['suivant'])): ?>
 			<nav class="blog-voisins" aria-label="<?php echo $this->lang('Billets voisins') ?>">
 				<?php if (!empty($autour['precedent'])): ?>
-				<a href="<?php echo $lien($autour['precedent']) ?>"><small><?php echo icon('fas fa-arrow-left').' '.$this->lang('Billet précédent') ?></small><?php echo htmlspecialchars((string) $autour['precedent']['title']) ?></a>
+				<a href="<?php echo $lien($autour['precedent']) ?>"><small><?php echo icon('fas fa-arrow-left').' '.$this->lang('Billet précédent') ?></small><?php echo nf_texte($autour['precedent']['title']) ?></a>
 				<?php else: ?><span></span><?php endif ?>
 				<?php if (!empty($autour['suivant'])): ?>
-				<a class="suivant" href="<?php echo $lien($autour['suivant']) ?>"><small><?php echo $this->lang('Billet suivant').' '.icon('fas fa-arrow-right') ?></small><?php echo htmlspecialchars((string) $autour['suivant']['title']) ?></a>
+				<a class="suivant" href="<?php echo $lien($autour['suivant']) ?>"><small><?php echo $this->lang('Billet suivant').' '.icon('fas fa-arrow-right') ?></small><?php echo nf_texte($autour['suivant']['title']) ?></a>
 				<?php endif ?>
 			</nav>
 			<?php endif ?>
@@ -130,7 +130,7 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 					<?php foreach ($autour['lies'] as $lie): ?>
 					<a href="<?php echo $lien($lie) ?>">
 						<?php if (!empty($lie['image'])): ?><img src="<?php echo NeoFrag()->model2('file', $lie['image'])->path() ?>" alt="" loading="lazy" /><?php else: ?><span class="blog-couverture-vide"></span><?php endif ?>
-						<span><?php echo htmlspecialchars((string) $lie['title']) ?></span>
+						<span><?php echo nf_texte($lie['title']) ?></span>
 					</a>
 					<?php endforeach ?>
 				</div>
@@ -162,7 +162,7 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 				<h3><?php echo $this->lang('Dans la catégorie') ?></h3>
 				<ul class="blog-categories">
 					<?php foreach ($autour['lies'] as $lie): if ((int) $lie['category_id'] !== (int) $article['category_id']) continue; ?>
-					<li><a href="<?php echo $lien($lie) ?>"><?php echo htmlspecialchars((string) $lie['title']) ?></a></li>
+					<li><a href="<?php echo $lien($lie) ?>"><?php echo nf_texte($lie['title']) ?></a></li>
 					<?php endforeach ?>
 				</ul>
 			</div>

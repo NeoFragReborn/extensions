@@ -9,19 +9,19 @@ $reprendre = $reprendre ?? '';
 ?>
 <div class="d-flex align-items-center gap-3 mb-3">
 	<?php if (!empty($liaison['avatar'])): ?>
-	<img src="<?php echo htmlspecialchars((string) $liaison['avatar']) ?>" alt="" width="56" height="56" class="rounded-circle" loading="lazy" />
+	<img src="<?php echo nf_texte($liaison['avatar']) ?>" alt="" width="56" height="56" class="rounded-circle" loading="lazy" />
 	<?php else: ?>
 	<span class="fs-1 text-muted"><?php echo icon('fab fa-discord') ?></span>
 	<?php endif ?>
 	<div>
 		<div class="small text-muted"><?php echo $this->lang('Compte Discord') ?></div>
-		<div class="fw-semibold"><?php echo htmlspecialchars((string) ($liaison['username'] ?? '')) ?></div>
+		<div class="fw-semibold"><?php echo nf_texte($liaison['username'] ?? '') ?></div>
 	</div>
 	<?php if ($connecte): ?>
 	<span class="text-muted fs-4"><?php echo icon('fas fa-link') ?></span>
 	<div>
 		<div class="small text-muted"><?php echo $this->lang('Compte du site') ?></div>
-		<div class="fw-semibold"><?php echo htmlspecialchars((string) $membre) ?></div>
+		<div class="fw-semibold"><?php echo nf_texte($membre) ?></div>
 	</div>
 	<?php endif ?>
 </div>

@@ -12,8 +12,8 @@
 				<div class="card shop-item h-100" data-shop-item="<?php echo $id ?>">
 					<div class="card-body text-center">
 						<div class="shop-item-icon"><?php echo icon($it['icon'] ?: 'fas fa-gift') ?></div>
-						<h5 class="card-title"><?php echo htmlspecialchars($it['title']) ?></h5>
-						<?php if (!empty($it['description'])): ?><p class="card-text text-muted"><?php echo htmlspecialchars((string)$it['description']) ?></p><?php endif ?>
+						<h5 class="card-title"><?php echo nf_texte($it['title']) ?></h5>
+						<?php if (!empty($it['description'])): ?><p class="card-text text-muted"><?php echo nf_texte($it['description']) ?></p><?php endif ?>
 						<div class="shop-item-price"><?php echo icon('fas fa-coins').' '.$price ?></div>
 					</div>
 					<div class="card-footer text-center">
@@ -24,7 +24,7 @@
 						<?php elseif ($balance < $price): ?>
 							<span class="btn btn-sm btn-outline-secondary disabled"><?php echo $this->lang('Points insuffisants') ?></span>
 						<?php else: ?>
-							<button type="button" class="btn btn-sm btn-primary" data-shop-buy data-buy-url="<?php echo htmlspecialchars(url('ajax/shop/buy/'.$id).'?_='.rawurlencode((string) ($jeton ?? ''))) ?>"><?php echo icon('fas fa-shopping-cart').' '.$this->lang('Acheter') ?></button>
+							<button type="button" class="btn btn-sm btn-primary" data-shop-buy data-buy-url="<?php echo nf_texte(url('ajax/shop/buy/'.$id).'?_='.rawurlencode((string) ($jeton ?? ''))) ?>"><?php echo icon('fas fa-shopping-cart').' '.$this->lang('Acheter') ?></button>
 						<?php endif ?>
 					</div>
 				</div>

@@ -22,13 +22,13 @@
 <div class="nf-field row">
 	<label for="settings-from" class="col-12 col-lg-4 col-form-label"><i class="far fa-calendar-alt"></i> <?php echo $this->lang('Du') ?></label>
 	<div class="col-12 col-lg-7">
-		<input type="text" class="form-control" name="settings[from]" id="settings-from" value="<?php echo htmlspecialchars($from, ENT_QUOTES) ?>" placeholder="12-15" pattern="\d{2}-\d{2}" />
+		<input type="text" class="form-control" name="settings[from]" id="settings-from" value="<?php echo nf_texte($from) ?>" placeholder="12-15" pattern="\d{2}-\d{2}" />
 	</div>
 </div>
 <div class="nf-field row">
 	<label for="settings-to" class="col-12 col-lg-4 col-form-label"><i class="far fa-calendar-alt"></i> <?php echo $this->lang('Au') ?></label>
 	<div class="col-12 col-lg-7">
-		<input type="text" class="form-control" name="settings[to]" id="settings-to" value="<?php echo htmlspecialchars($to, ENT_QUOTES) ?>" placeholder="01-06" pattern="\d{2}-\d{2}" />
+		<input type="text" class="form-control" name="settings[to]" id="settings-to" value="<?php echo nf_texte($to) ?>" placeholder="01-06" pattern="\d{2}-\d{2}" />
 		<small class="form-text text-muted"><?php echo $this->lang('Au format MM-JJ, sans année : la plage revient chaque année. Laissez les deux vides pour un effet permanent. Une plage peut enjamber le Nouvel An (du 12-15 au 01-06).') ?></small>
 	</div>
 </div>
