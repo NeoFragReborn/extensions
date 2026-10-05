@@ -364,4 +364,5 @@ return [
 	'f0cde957' => 'Diese Rolle jetzt entfernen? Der Bot entfernt sie innerhalb einer Minute.',
 	'9c36e3f1' => 'Jetzt entfernen',
 	'4831760d' => 'Übersicht',
+	'8f39631c' => 'Bot verbinden',
 ];

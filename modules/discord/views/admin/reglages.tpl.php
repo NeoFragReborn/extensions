@@ -15,7 +15,7 @@ $cle_bot  = $cle_bot ?? FALSE;
 <div class="alert alert-warning small"><?php echo icon('fas fa-key').' '.$this->lang('La clé d’accès du bot date d’une version précédente : il lui manque des droits (%s). Créez-en une nouvelle, puis remplacez-la sur la machine du bot.', nf_texte(implode(', ', (array) $droits_manquants))) ?></div>
 <?php endif ?>
 <div class="d-flex flex-wrap gap-2">
-	<a class="btn btn-primary btn-sm" href="<?php echo url('admin/discord/connexion') ?>"><?php echo icon('fas fa-plug').' '.$this->lang('Connexion') ?></a>
+	<a class="btn btn-primary btn-sm" href="<?php echo url('admin/discord/connexion') ?>"><?php echo icon('fas fa-plug').' '.$this->lang('Connecter le bot') ?></a>
 	<?php if ($cle_bot): ?>
 	<a class="btn btn-outline-secondary btn-sm" href="<?php echo url('admin/discord/cle').'?_='.$jeton ?>" data-confirm="<?php echo nf_texte($this->lang('Créer une nouvelle clé d’accès pour le bot ? L’ancienne sera révoquée : il faudra la remplacer sur la machine du bot.')) ?>"><?php echo icon('fas fa-key').' '.$this->lang('Nouvelle clé d’accès') ?></a>
 	<?php else: ?>

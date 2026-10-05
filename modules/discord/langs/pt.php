@@ -364,4 +364,5 @@ return [
 	'f0cde957' => 'Retirar este cargo agora? O bot retirá-lo-á dentro de um minuto.',
 	'9c36e3f1' => 'Retirar agora',
 	'4831760d' => 'Visão geral',
+	'8f39631c' => 'Ligar o bot',
 ];

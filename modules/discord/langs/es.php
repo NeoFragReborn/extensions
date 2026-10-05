@@ -364,4 +364,5 @@ return [
 	'f0cde957' => '¿Quitar este rol ahora? El bot lo quitará en menos de un minuto.',
 	'9c36e3f1' => 'Quitar ahora',
 	'4831760d' => 'Resumen',
+	'8f39631c' => 'Conectar el bot',
 ];
