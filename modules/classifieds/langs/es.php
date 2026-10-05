@@ -81,4 +81,6 @@ return [
 	'57dd4560' => 'Precio',
 	'36d699e5' => 'Búsqueda',
 	'0070e5d9' => 'Publicada',
+	'18755269' => 'La aprobación o el rechazo de mis anuncios',
+	'fdd78d66' => 'Un miembro interesado en uno de mis anuncios',
 ];

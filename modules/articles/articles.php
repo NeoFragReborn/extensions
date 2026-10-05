@@ -279,4 +279,17 @@ class Articles extends Module
 		$out .= '</ul></div>';
 		return $out;
 	}
+
+	/**
+	 * Les notifications que ce module envoie, pour les préférences de chaque membre (Notifications::types(),
+	 * chantier A, étape A4).
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	public function types_de_notification(): array
+	{
+		return [
+			['type' => 'article', 'titre' => (string) $this->lang('Un billet dans une catégorie que je suis'), 'ordre' => 61],
+		];
+	}
 }

@@ -150,4 +150,5 @@ return [
 	'253a97ff' => 'Archiv: %s',
 	'c1e70843' => 'Teil %d von %d',
 	'25537dc4' => 'Alle Beiträge',
+	'2bce194d' => 'Ein Beitrag in einer Kategorie, der ich folge',
 ];

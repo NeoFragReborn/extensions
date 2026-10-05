@@ -84,4 +84,6 @@ return [
 	'ec4e7e74' => 'Refusée',
 	'35dc7549' => 'À débattre',
 	'ab489e05' => 'Gratuit',
+	'18755269' => 'La validation ou le refus de mes annonces',
+	'fdd78d66' => 'Un membre intéressé par l’une de mes annonces',
 ];

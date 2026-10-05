@@ -147,4 +147,5 @@ return [
 	'253a97ff' => 'Archives : %s',
 	'c1e70843' => 'Partie %d sur %d',
 	'25537dc4' => 'Tous ses billets',
+	'2bce194d' => 'Un billet dans une catégorie que je suis',
 ];

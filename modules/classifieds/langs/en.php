@@ -81,4 +81,6 @@ return [
 	'57dd4560' => 'Price',
 	'36d699e5' => 'Search',
 	'0070e5d9' => 'Published',
+	'18755269' => 'When my ads are approved or rejected',
+	'fdd78d66' => 'A member interested in one of my ads',
 ];

@@ -150,4 +150,5 @@ return [
 	'253a97ff' => 'Archives: %s',
 	'c1e70843' => 'Part %d of %d',
 	'25537dc4' => 'All their posts',
+	'2bce194d' => 'A post in a category I follow',
 ];

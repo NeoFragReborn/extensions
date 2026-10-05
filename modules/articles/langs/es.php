@@ -150,4 +150,5 @@ return [
 	'253a97ff' => 'Archivo: %s',
 	'c1e70843' => 'Parte %d de %d',
 	'25537dc4' => 'Todas sus entradas',
+	'2bce194d' => 'Una entrada en una categoría que sigo',
 ];

@@ -131,4 +131,18 @@ class Classifieds extends Module
 			'contenu' => fn () => $this->view('profil-membre', ['annonces' => $annonces]),
 		]];
 	}
+
+	/**
+	 * Les notifications que ce module envoie, pour les préférences de chaque membre (Notifications::types(),
+	 * chantier A, étape A4).
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	public function types_de_notification(): array
+	{
+		return [
+			['type' => 'classifieds-status',  'titre' => (string) $this->lang('La validation ou le refus de mes annonces'), 'ordre' => 50],
+			['type' => 'classifieds-contact', 'titre' => (string) $this->lang('Un membre intéressé par l’une de mes annonces'), 'ordre' => 51],
+		];
+	}
 }

@@ -81,4 +81,6 @@ return [
 	'57dd4560' => 'Preis',
 	'36d699e5' => 'Suche',
 	'0070e5d9' => 'Veröffentlicht',
+	'18755269' => 'Freigabe oder Ablehnung meiner Anzeigen',
+	'fdd78d66' => 'Ein Mitglied, das sich für eine meiner Anzeigen interessiert',
 ];

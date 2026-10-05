@@ -150,4 +150,5 @@ return [
 	'253a97ff' => 'Archivio: %s',
 	'c1e70843' => 'Parte %d di %d',
 	'25537dc4' => 'Tutti i suoi articoli',
+	'2bce194d' => 'Un articolo in una categoria che seguo',
 ];
