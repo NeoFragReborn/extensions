@@ -16,15 +16,11 @@
 					<li class="nav-item dropdown">
 						<span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">
 							<?php echo $this->user->avatar($this->user->avatar, $this->user->sex) ?>
-							<span class="ms-2"><?php echo $this->lang('Mon compte') ?></span>
+							<span class="ms-2"><?php echo nf_texte($this->user->username) ?></span>
 						</span>
 						<div class="dropdown-menu dropdown-menu-end">
-							<a class="dropdown-item" href="<?php echo url('user') ?>"><?php echo icon('fas fa-user').' '.$this->lang('Mon espace') ?></a>
-							<a class="dropdown-item" href="<?php echo url('user/account') ?>"><?php echo icon('fas fa-cog').' '.$this->lang('Gérer mon compte') ?></a>
-							<?php if ($this->access->effective_admin()): ?>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="<?php echo url('admin') ?>"><?php echo icon('fas fa-tachometer-alt').' '.$this->lang('Administration') ?></a>
-							<?php endif ?>
+							<?php /* Le menu de l'espace membre, le même partout (User::menu_espace()) ; la déconnexion a son bouton à côté. */ ?>
+							<?php echo $this->module('user')->menu_deroulant(FALSE) ?>
 						</div>
 					</li>
 					<li class="nav-item">
