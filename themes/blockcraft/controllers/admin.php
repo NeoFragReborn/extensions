@@ -278,7 +278,7 @@ class Admin extends Controller
 					->size('col-12 col-md-4 col-lg-3'),
 			$this	->col(
 						$this	->panel()
-								->heading($this->lang('Dashboard'), 'fas fa-cog')
+								->heading($this->__caller->info()->title, 'fas fa-paint-brush')
 								->body($this->view('admin/index', [
 									'theme'           => $this->__caller,
 									'form_header'     => $form_header->display(),

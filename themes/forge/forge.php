@@ -1,8 +1,15 @@
 <?php
 /**
  * https://neofr.ag
- * Forge — thème gaming « fonte en fusion ». Rouge lave, nuit par défaut
- * (+ mode jour), titres Rajdhani, signature lueur de braise. LGPLv3.
+ * Forge 2.0 « Coulée » — le thème des clans compétitifs (chantier B, étape B2, maquette retenue le 2026-10-06).
+ * La navigation quitte le haut de la page pour un rail d'acier sur le côté (une barre d'onglets en bas au
+ * téléphone) ; l'accueil s'ouvre sur un foyer de lave où montent des braises ; les blocs sont des plaques aux
+ * coins coupés qui rougeoient au survol. Nuit par défaut, jour au choix du visiteur. LGPLv3.
+ *
+ * couplage(events): les blocs des matchs (le foyer, le tableau de bord) ne sont posés par install() que si le module
+ *   Événements est installé — sinon le diaporama prend toute la largeur du foyer.
+ * couplage(awards): le palmarès du tableau de bord, de même : seulement si le module Palmarès est installé.
+ * couplage(partners): les partenaires du pied de page, de même : seulement si le module Partenaires est installé.
  */
 
 namespace NF\Themes\Forge;
@@ -15,7 +22,7 @@ class Forge extends Theme
 	{
 		return [
 			'title'       => 'Forge',
-			'description' => $this->lang('Thème « fonte en fusion » : rouge lave sur charbon, lueur de braise, titres Rajdhani, mode jour au choix du visiteur ; couleurs, images et logo réglables.'),
+			'description' => $this->lang('Thème « Coulée », pour les clans compétitifs : la navigation dans un rail d’acier sur le côté (une barre d’onglets en bas au téléphone), un foyer de lave où montent des braises en haut de l’accueil, des plaques aux coins coupés qui rougeoient au survol ; titres Rajdhani, mode jour au choix du visiteur ; couleurs, images, logo et braises réglables.'),
 			'link'        => 'https://neofrag-reborn.xyz',
 			'author'      => 'NeoFrag Reborn',
 			'license'     => 'LGPLv3 <https://www.gnu.org/licenses/lgpl-3.0.html>',
@@ -23,18 +30,21 @@ class Forge extends Theme
 			'core'        => FALSE,
 			'presets'     => [],
 			'requires'    => [],
-			'version'     => '1.1.0',
-			// Le socle commun des thèmes (css/nf-socle-themes.css) est arrivé avec la 1.2.32 du cœur.
+			'version'     => '2.0.0',
+			// Le socle commun des thèmes (css/nf-socle-themes.css) est arrivé avec la 1.2.32 du cœur ; la version
+			// d'une feuille de thème suit ses réglages (nf_version_asset()) depuis la 1.2.34.
 			'depends' => [
-				'neofrag' => '1.2.32'
+				'neofrag' => '1.2.34'
 			],
-			'zones'       => ['Header', 'Avant-contenu', 'Contenu', 'Post-contenu', 'Footer'],
+			// Les zones se lisent par leur RANG (0 à 4) : une disposition enregistrée garde sa place si l'on
+			// renomme une zone. Leurs noms se traduisent (langs/*.php).
+			'zones'       => ['Rail de navigation', 'Haut de page', 'Contenu', 'Après le contenu', 'Pied de page'],
 			'regions'     => [
-				'header'         => 'Header',
-				'before_content' => 'Avant-contenu',
-				'content'        => 'Contenu',
-				'after_content'  => 'Post-contenu',
-				'footer'         => 'Footer',
+				'rail'          => 'Rail de navigation',
+				'foyer'         => 'Haut de page',
+				'content'       => 'Contenu',
+				'after_content' => 'Après le contenu',
+				'footer'        => 'Pied de page',
 			]
 		];
 	}
@@ -75,127 +85,105 @@ class Forge extends Theme
 				->config('forge_background_repeat',     'repeat')
 				->config('forge_background_attachment', 'scroll')
 				->config('forge_background_position',   'center top')
-				->config('forge_background_color',      '#16100e')
+				->config('forge_background_color',      '#120d0b')
 				->config('forge_header',                0,             'int')
 				->config('forge_header_repeat',         'no-repeat')
 				->config('forge_header_attachment',     'scroll')
-				->config('forge_header_position',       'center top')
-				->config('forge_header_color',          '#e2502b')
+				->config('forge_header_position',       'center center')
+				->config('forge_header_color',          '#160f0c')
 				->config('forge_logo',                  0,             'int')
-				->config('forge_theme_color',           '#e2502b')
-				->config('forge_text_color',            '#e8d8d0')
-				->config('forge_navbar_display',        FALSE,         'bool');
+				->config('forge_theme_color',           '#ff5a1f')
+				->config('forge_text_color',            '#eaddd5')
+				// Les braises du foyer : 0 aucune, 1 douces, 2 vives. En ENTIER : un réglage jamais enregistré
+				// se lit FALSE, comme un booléen éteint.
+				->config('forge_braises',               1,             'int');
 
 		$dispositions = $this->array();
 
-		$dispositions->set('*', 'Header', $this->array([
-			$this->row(
-					$this->col(
-						$this->widget($this->db->insert('nf_widgets', [
-							'widget'   => 'header',
-							'type'     => 'index',
-							'settings' => serialize([
-								'display'           => 'logo',
-								'align'             => 'text-start',
-								'title'             => '',
-								'description'       => '',
-								'color_title'       => '#ffffff',
-								'color_description' => '#f3d9cf'
-							])
-						]))
-					)
-				)
-				->style('row-default'),
-			$this->row(
-					$this->col(
-						$this	->widget($this->db->insert('nf_widgets', [
-									'widget'   => 'navigation',
-									'type'     => 'index',
-									'settings' => serialize([
-										'links'   => [
-											[
-												'title' => utf8_htmlentities($this->lang('Accueil')),
-												'url'   => ''
-											],
-											[
-												'title' => utf8_htmlentities($this->lang('Actualités')),
-												'url'   => 'news'
-											],
-											[
-												'title' => utf8_htmlentities($this->lang('Forum')),
-												'url'   => 'forum'
-											],
-											[
-												'title' => utf8_htmlentities($this->lang('Équipes')),
-												'url'   => 'teams'
-											],
-											[
-												'title' => utf8_htmlentities($this->lang('Galerie')),
-												'url'   => 'gallery'
-											],
-											[
-												'title' => utf8_htmlentities($this->lang('Membres')),
-												'url'   => 'members'
-											],
-											[
-												'title' => utf8_htmlentities($this->lang('Contact')),
-												'url'   => 'contact'
-											]
-										]
-									])
-								]))
-					)
-				)
-				->style('row-dark')
-		]));
+		// Un widget dont le module manque laisserait sa case vide et sa ligne de nf_widgets orpheline : les blocs des
+		// matchs, du palmarès et des partenaires ne se posent que si leur module est là (les `couplage(…)` en tête).
+		$present = function (string $module): bool {
+			return ($addon = @NeoFrag()->module($module)) && $addon->is_enabled();
+		};
+		$bloc = function (string $nom, string $type, ?string $style = NULL) {
+			$widget = $this->widget($this->db->insert('nf_widgets', [
+				'widget' => $nom,
+				'type'   => $type
+			]));
 
-		$dispositions->set('/', 'Avant-contenu', $this->array([
+			return $style ? $widget->style($style) : $widget;
+		};
+
+		// Le rail : la navigation, en colonne, chaque entrée avec son pictogramme.
+		$liens = [];
+
+		foreach ([
+			[$this->lang('Accueil'),        '',               'fas fa-house'],
+			[$this->lang('Actualités'),     'news',           'far fa-newspaper'],
+			[$this->lang('Forum'),          'forum',          'far fa-comments'],
+			[$this->lang('Matchs'),         'events/matches', 'fas fa-crosshairs'],
+			[$this->lang('Équipes'),        'teams',          'fas fa-users'],
+			[$this->lang('Galerie'),        'gallery',        'far fa-images'],
+			[$this->lang('Nous rejoindre'), 'recruits',       'fas fa-user-plus'],
+			[$this->lang('Contact'),        'contact',        'far fa-envelope']
+		] as [$titre, $url, $icone])
+		{
+			$liens[] = [
+				'title' => utf8_htmlentities($titre),
+				'url'   => $url,
+				'icon'  => $icone
+			];
+		}
+
+		$dispositions->set('*', 'Rail de navigation', $this->array([
 			$this->row(
 					$this->col(
 						$this->widget($this->db->insert('nf_widgets', [
-							'widget' => 'slider',
-							'type'   => 'index'
+							'widget'   => 'navigation',
+							'type'     => 'vertical',
+							// En JSON, le format courant des réglages de widget (Fields\Json) ; le `serialize()` des
+							// autres thèmes est l'ancien, relu seulement jusqu'au prochain enregistrement.
+							'settings' => \NF\NeoFrag\Fields\Json::encode([
+								'links' => $liens,
+								'panel' => 0
+							])
 						]))
 					)
 				)
 				->style('row-default')
 		]));
 
+		// Le foyer de l'accueil : le diaporama, et la plaque des derniers résultats à côté.
+		$foyer = [$this->col($bloc('slider', 'index'))->size($present('events') ? 'col-lg-8' : 'col-12')];
+
+		if ($present('events'))
+		{
+			$foyer[] = $this->col($bloc('events', 'matches', 'panel-default'))->size('col-lg-4');
+		}
+
+		$dispositions->set('/', 'Haut de page', $this->array([
+			$this->row(...$foyer)->style('row-default')
+		]));
+
+		// Le tableau de bord : le module à gauche ; les matchs à venir, le palmarès et qui est en ligne à droite.
+		$colonne = [];
+
+		if ($present('events'))
+		{
+			$colonne[] = $bloc('events', 'upcoming', 'panel-default');
+		}
+
+		if ($present('awards'))
+		{
+			$colonne[] = $bloc('awards', 'index', 'panel-default');
+		}
+
+		$colonne[] = $bloc('members', 'online', 'panel-default');
+
 		$dispositions->set('*', 'Contenu', $this->array([
 			$this->row(
-					$this->col(
-							$this->widget($this->db->insert('nf_widgets', [
-								'widget' => 'module',
-								'type'   => 'index'
-							]))
-						)
-						->size('col-md-8'),
-					$this->col(
-							$this	->widget($this->db->insert('nf_widgets', [
-										'widget' => 'user',
-										'type'   => 'index'
-									]))
-									->style('panel-color'),
-							$this	->widget($this->db->insert('nf_widgets', [
-										'widget' => 'members',
-										'type'   => 'online'
-									]))
-									->style('panel-default'),
-							$this	->widget($this->db->insert('nf_widgets', [
-										'widget' => 'news',
-										'type'   => 'categories'
-									]))
-									->style('panel-default'),
-							$this	->widget($this->db->insert('nf_widgets', [
-										'widget'   => 'talks',
-										'type'     => 'index',
-										'settings' => serialize([
-											'talk_id' => 2
-										])
-									]))
-									->style('panel-header')
-						)
-						->size('col-md-4')
+					$this->col($bloc('module', 'index'))->size('col-lg-8'),
+					$this->col(...$colonne)->size('col-lg-4')
 				)
 				->style('row-default')
 		]));
@@ -224,14 +212,14 @@ class Forge extends Theme
 			]));
 		}
 
-		$dispositions->set('forum/*', 'Post-contenu', $this->array([
+		$dispositions->set('forum/*', 'Après le contenu', $this->array([
 			$this->row(
 					$this->col(
 						$this	->widget($this->db->insert('nf_widgets', [
 									'widget' => 'forum',
 									'type'   => 'statistics'
 								]))
-								->style('panel-header')
+								->style('panel-default')
 					)
 					->size('col-md-4'),
 					$this->col(
@@ -239,12 +227,20 @@ class Forge extends Theme
 									'widget' => 'forum',
 									'type'   => 'activity'
 								]))
-								->style('panel-header')
+								->style('panel-default')
 					)
 					->size('col-md-8')
 				)
 				->style('row-default')
 		]));
+
+		// Le pied riveté : les partenaires, en ligne.
+		if ($present('partners'))
+		{
+			$dispositions->set('*', 'Pied de page', $this->array([
+				$this->row($this->col($bloc('partners', 'column')))->style('row-default')
+			]));
+		}
 
 		return parent::install($dispositions);
 	}
@@ -260,7 +256,9 @@ class Forge extends Theme
 			'forge_background_position', 'forge_background_color',
 			'forge_header', 'forge_header_repeat', 'forge_header_attachment',
 			'forge_header_position', 'forge_header_color',
-			'forge_logo', 'forge_theme_color', 'forge_text_color', 'forge_navbar_display'
+			'forge_logo', 'forge_theme_color', 'forge_text_color', 'forge_braises',
+			// Le réglage de la barre du haut fixe, retiré avec la 2.0.0 (le rail est toujours là).
+			'forge_navbar_display'
 		] as $key)
 		{
 			$this->config->unset($key);

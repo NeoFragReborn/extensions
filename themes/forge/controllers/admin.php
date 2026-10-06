@@ -1,7 +1,8 @@
 <?php
 /**
  * https://neofr.ag
- * Forge — panneau d'administration du thème.
+ * Forge — panneau d'administration du thème. Depuis la 2.0.0 (« Coulée ») : l'image du foyer (le haut de l'accueil),
+ * le logo du rail, l'arrière-plan, les couleurs, les braises du foyer et les réseaux sociaux.
  */
 
 namespace NF\Themes\Forge\Controllers;
@@ -26,7 +27,7 @@ class Admin extends Controller
 		$form_header = $this->form()
 			->add_rules([
 				'header' => [
-					'label'       => $this->lang('Image de bannière'),
+					'label'       => $this->lang('Image du foyer'),
 					'value'       => $this->config->forge_header,
 					'type'        => 'file',
 					'upload'      => 'themes/forge/headers',
@@ -86,7 +87,7 @@ class Admin extends Controller
 					'upload'      => 'themes/forge/logos',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Affiché dans le widget header en remplacement du titre.')
+					'description' => $this->lang('Le blason du rail. Laissé vide : le logo du site (réglages généraux), sinon les initiales de son nom.')
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -174,10 +175,18 @@ class Admin extends Controller
 					'rules'       => 'required',
 					'size'        => 'col-3'
 				],
-				'navbar' => [
-					'checked' => ['on' => $this->config->forge_navbar_display],
-					'values'  => ['on' => $this->lang('Garder la barre du haut visible en permanence')],
-					'type'    => 'checkbox'
+				// Les braises qui montent dans le foyer (le haut de l'accueil).
+				'braises' => [
+					'label'  => $this->lang('Braises du foyer'),
+					// Jamais enregistré, un réglage se lit FALSE : les braises « douces » par défaut.
+					'value'  => $this->config->forge_braises === FALSE ? '1' : (string) max(0, min(2, (int) $this->config->forge_braises)),
+					'values' => [
+						'0' => $this->lang('Aucune'),
+						'1' => $this->lang('Douces'),
+						'2' => $this->lang('Vives')
+					],
+					'type'   => 'radio',
+					'rules'  => 'required'
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -230,7 +239,7 @@ class Admin extends Controller
 					->config('forge_header_color',      $post['color'])
 					->config('nf_version_css',          time());
 
-			notify($this->lang('Bannière du site mise à jour !'));
+			notify($this->lang('Foyer mis à jour !'));
 			redirect($this->url->location.'#header');
 		}
 		else if ($form_background->is_valid($post))
@@ -251,7 +260,7 @@ class Admin extends Controller
 		{
 			$this	->config('forge_theme_color',    $post['theme_color'])
 					->config('forge_text_color',     $post['text_color'])
-					->config('forge_navbar_display', in_array('on', $post['navbar']), 'bool')
+					->config('forge_braises',        max(0, min(2, (int) $post['braises'])), 'int')
 					->config('nf_version_css',       time());
 
 			notify($this->lang('Configuration mise à jour !'));
@@ -278,7 +287,7 @@ class Admin extends Controller
 					->size('col-12 col-md-4 col-lg-3'),
 			$this	->col(
 						$this	->panel()
-								->heading($this->lang('Dashboard'), 'fas fa-cog')
+								->heading($this->__caller->info()->title, 'fas fa-paint-brush')
 								->body($this->view('admin/index', [
 									'theme'           => $this->__caller,
 									'form_header'     => $form_header->display(),
