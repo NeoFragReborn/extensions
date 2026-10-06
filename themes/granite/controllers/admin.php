@@ -1,7 +1,8 @@
 <?php
 /**
  * https://neofr.ag
- * Granite — panneau d'administration du thème.
+ * Granite — panneau d'administration du thème : le titre du journal (son image, sa couleur, le logo), l'arrière-plan,
+ * les couleurs, les lettrines et les réseaux sociaux.
  */
 
 namespace NF\Themes\Granite\Controllers;
@@ -21,18 +22,18 @@ class Admin extends Controller
 			}
 		};
 
-		/* ---------------------------------------------------------------- Header */
+		/* ------------------------------------------------------ Le titre (header) */
 
 		$form_header = $this->form()
 			->add_rules([
 				'header' => [
-					'label'       => $this->lang('Image de bannière'),
+					'label'       => $this->lang('Image du titre'),
 					'value'       => $this->config->granite_header,
 					'type'        => 'file',
 					'upload'      => 'themes/granite/headers',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Laisser vide pour utiliser le dégradé du thème.')
+					'description' => $this->lang('Posée derrière le nom du site, éclaircie pour qu’il reste lisible. Laisser vide : le papier seul.')
 				],
 				'repeat' => [
 					'label'  => $this->lang('Répétition'),
@@ -73,11 +74,13 @@ class Admin extends Controller
 					'type'    => 'checkbox'
 				],
 				'color' => [
-					'label' => $this->lang('Couleur de fond'),
-					'value' => $this->config->granite_header_color,
-					'type'  => 'colorpicker',
-					'rules' => 'required',
-					'size'  => 'col-3'
+					'label'       => $this->lang('Couleur du titre'),
+					// Le défaut de Granite 1.x (#0e7c86) se lit comme celui de la 2.0.0 : la couleur du papier.
+					'value'       => in_array(strtolower((string) $this->config->granite_header_color), ['', '#0e7c86'], TRUE) ? '#f4efe4' : $this->config->granite_header_color,
+					'type'        => 'colorpicker',
+					'description' => $this->lang('Un bandeau de couleur derrière le nom du site, comme la manchette d’un quotidien. Laisser la couleur du papier (#f4efe4) pour n’en mettre aucun.'),
+					'rules'       => 'required',
+					'size'        => 'col-3'
 				],
 				'logo' => [
 					'label'       => $this->lang('Logo du site'),
@@ -86,7 +89,7 @@ class Admin extends Controller
 					'upload'      => 'themes/granite/logos',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Affiché dans le widget header en remplacement du titre.')
+					'description' => $this->lang('Imprimé au-dessus du nom du site. Laissé vide : le logo du site (réglages généraux), s’il y en a un.')
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -174,9 +177,11 @@ class Admin extends Controller
 					'rules'       => 'required',
 					'size'        => 'col-3'
 				],
-				'navbar' => [
-					'checked' => ['on' => $this->config->granite_navbar_display],
-					'values'  => ['on' => $this->lang('Garder la barre du haut visible en permanence')],
+				// Les capitales ornées de la une et des articles. Jamais enregistré, le réglage se lit FALSE : allumées.
+				'lettrines' => [
+					'label'   => $this->lang('Lettrines'),
+					'checked' => ['on' => $this->config->granite_lettrines === FALSE || (bool) $this->config->granite_lettrines],
+					'values'  => ['on' => $this->lang('Orner d’une capitale la première lettre de la une et des articles')],
 					'type'    => 'checkbox'
 				]
 			])
@@ -230,7 +235,7 @@ class Admin extends Controller
 					->config('granite_header_color',      $post['color'])
 					->config('nf_version_css',            time());
 
-			notify($this->lang('Bannière du site mise à jour !'));
+			notify($this->lang('Titre du journal mis à jour !'));
 			redirect($this->url->location.'#header');
 		}
 		else if ($form_background->is_valid($post))
@@ -249,10 +254,13 @@ class Admin extends Controller
 		}
 		else if ($form_settings->is_valid($post))
 		{
-			$this	->config('granite_theme_color',    $post['theme_color'])
-					->config('granite_text_color',     $post['text_color'])
-					->config('granite_navbar_display', in_array('on', $post['navbar']), 'bool')
-					->config('nf_version_css',         time());
+			$this	->config('granite_theme_color', $post['theme_color'])
+					->config('granite_text_color',  $post['text_color'])
+					->config('granite_lettrines',   in_array('on', $post['lettrines']) ? 1 : 0, 'int')
+					->config('nf_version_css',      time());
+
+			// Le réglage de la barre du haut fixe, retiré avec la 2.0.0.
+			$this->config->unset('granite_navbar_display');
 
 			notify($this->lang('Configuration mise à jour !'));
 			redirect($this->url->location.'#settings');
