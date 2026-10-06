@@ -24,9 +24,10 @@ class Blockcraft extends Theme
 			'core'        => FALSE,
 			'presets'     => [],
 			'requires'    => [],
-			'version'     => '1.0.0',
+			'version'     => '1.1.0',
+			// Le socle commun des thèmes (css/nf-socle-themes.css) est arrivé avec la 1.2.32 du cœur.
 			'depends' => [
-				'neofrag' => '0.2.1'
+				'neofrag' => '1.2.32'
 			],
 			'zones'       => ['Header', 'Avant-contenu', 'Contenu', 'Post-contenu', 'Footer'],
 			'regions'     => [
@@ -43,6 +44,9 @@ class Blockcraft extends Theme
 	{
 		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
+				// Le socle commun des thèmes (chantier B, étape B1) : ce que les quatre thèmes clones avaient
+				// d'identique. AVANT la feuille du thème, qui garde son identité et peut tout redéfinir.
+				->css('nf-socle-themes')
 				->css('style')
 				// APRES la feuille du theme, et jamais avant : elle retablit ce que le theme
 				// ecrase sans le vouloir — cadre des boutons « contour », coins des cartes.
