@@ -359,6 +359,11 @@ h1, h2, h3, h4, h5, h6 {
 .card.panel-color .text-muted,
 .card.panel-color .list-group-item { color: var(--ex-on-accent); }
 
+/* Les icônes des champs gardent la couleur du champ : sur leur case claire, le blanc du panneau les effaçait (le pseudo
+   et le mot de passe de l'espace membre, vus sur la démo le 2026-10-06). */
+.card.panel-color .input-group-text,
+.card.panel-color .input-group-text i,
+.card.panel-color .input-group-text .icon { color: var(--nf-muted); }
 .card.panel-color a:hover { opacity: 0.8; }
 .card.panel-color .list-group-item { background: transparent; border-color: color-mix(in srgb, #fff 18%, transparent); }
 .card.panel-color .badge { background: rgba(255, 255, 255, 0.9); color: var(--ex-accent); border: 0; }

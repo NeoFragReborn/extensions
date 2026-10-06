@@ -27,7 +27,9 @@
 			<button type="button" class="nav-link theme-toggle" title="<?php echo $this->lang('Mode nuit') ?>" aria-label="<?php echo $this->lang('Mode nuit') ?>"><i class="fas fa-moon"></i></button>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link ch-connexion" href="<?php echo url('user/login') ?>" data-modal-ajax="<?php echo url('ajax/user/login') ?>"><?php echo $this->lang('Connexion') ?></a>
+			<?php /* Au téléphone, une icône : le mot ne tient plus, et la connexion ne doit pas disparaître de l'en-tête
+			         (2026-10-06 — elle n'était plus qu'au bas des pages, dans le panneau de l'espace membre). */ ?>
+			<a class="nav-link ch-connexion" href="<?php echo url('user/login') ?>" data-modal-ajax="<?php echo url('ajax/user/login') ?>"><i class="fas fa-user" aria-hidden="true"></i><span class="ch-connexion-texte"><?php echo $this->lang('Connexion') ?></span></a>
 		</li>
 	<?php endif ?>
 </ul>
