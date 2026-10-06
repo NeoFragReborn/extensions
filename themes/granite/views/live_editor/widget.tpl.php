@@ -22,9 +22,8 @@ $accent = $this->config->granite_theme_color ?: '#0e7c86';
 				<svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<rect width="200" height="110" rx="6" fill="#f3f5f7"/>
 					<rect x="20" y="16" width="160" height="78" rx="6" fill="#ffffff" stroke="#e1e6ea"/>
-					<rect x="20" y="16" width="160" height="22" rx="6" fill="<?php echo $accent ?>"/>
-					<rect x="20" y="32" width="160" height="6" fill="<?php echo $accent ?>"/>
-					<rect x="32" y="22" width="80" height="8" rx="2" fill="#ffffff"/>
+					<rect x="32" y="24" width="80" height="8" rx="2" fill="<?php echo $accent ?>"/>
+					<rect x="32" y="38" width="136" height="2" fill="<?php echo $accent ?>"/>
 					<rect x="32" y="50" width="136" height="5" rx="2" fill="#c2c9d0"/>
 					<rect x="32" y="62" width="120" height="5" rx="2" fill="#c2c9d0"/>
 					<rect x="32" y="74" width="100" height="5" rx="2" fill="#c2c9d0"/>

@@ -97,7 +97,9 @@ $text_is_custom   = ($text_color !== $text_default);
 	--bc-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
 	/* Dégradé de bannière par défaut — herbe → terre */
-	--bc-banner-gradient: linear-gradient(135deg, #7cba5d 0%, #5d9544 52%, #8a6d4b 100%);
+	/* Le titre blanc et la devise de la bannière se lisent sur tout le dégradé (4,8:1 au moins) : son vert clair d'origine,
+	   #7cba5d, ne leur laissait que 2,32:1 et 1,98:1 (check-contraste, qui mesure le texte sur un dégradé, 2026-10-06). */
+	--bc-banner-gradient: linear-gradient(135deg, #3f7330 0%, #34622a 52%, #7a5f40 100%);
 
 	/* Pont --nf-* : voir explication dans le thème granite. Mappe les tokens
 	   génériques des CSS partagés sur l'identité du thème (jour + nuit). */

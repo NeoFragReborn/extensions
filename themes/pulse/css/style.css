@@ -1,0 +1,847 @@
+<?php
+/* =========================================================================
+   Pulse — feuille de style (gabarit PHP servi par NeoFrag)
+
+   La maison commune des associations, des clubs et des communautés (chantier B, étape B3 ; maquette « Dallage » du
+   2026-10-06, https://claude.ai/artifact/26X3oCXMJCRyRfdnP3uvRR). Un fond de pierre claire tramé de joints blancs, des
+   dalles aux coins très arrondis, l'ardoise pour la rubrique active et les dalles fortes, la mousse pour l'appel
+   « Adhérer », le soleil pour la dalle chaude, la brique pour les documents. Titres Bricolage Grotesque, texte Manrope.
+
+   Jour (clair) par défaut ; la nuit (« ardoise ») au choix du visiteur ou de son système (js/theme.js).
+   Tout mouvement s'arrête si le visiteur a demandé moins d'animations (§13).
+   ======================================================================== */
+
+$accent_default = '#3d5566';   /* ardoise */
+$bg_default     = '#e8e6e1';   /* pierre claire */
+$text_default   = '#23282b';   /* encre */
+
+$bg_image   = ($this->config->pulse_background && ($f = NeoFrag()->model2('file', $this->config->pulse_background)->path())) ? $f : '';
+$accueil    = ($this->config->pulse_accueil    && ($f = NeoFrag()->model2('file', $this->config->pulse_accueil)->path()))    ? $f : '';
+$accent     = $this->config->pulse_theme_color      ?: $accent_default;
+$bg_color   = $this->config->pulse_background_color ?: $bg_default;
+$text_color = $this->config->pulse_text_color       ?: $text_default;
+$bg_repeat  = $this->config->pulse_background_repeat     ?: 'repeat';
+$bg_attach  = $this->config->pulse_background_attachment ?: 'scroll';
+$bg_pos     = $this->config->pulse_background_position   ?: 'center top';
+
+$accent_is_custom = (strtolower($accent) !== $accent_default);
+$bg_is_custom     = (strtolower($bg_color) !== $bg_default);
+$text_is_custom   = (strtolower($text_color) !== $text_default);
+?>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================================
+   §1 — Jetons — JOUR (la pierre claire)
+   ======================================================================== */
+
+:root,
+[data-theme="light"] {
+	--pl-fond:        <?php echo $bg_color ?>;
+	--pl-trame:       rgba(255, 255, 255, 0.38);
+	--pl-texte:       <?php echo $text_color ?>;
+	--pl-ardoise:     <?php echo $accent ?>;
+	--pl-sur-ardoise: <?php echo couleur_lisible_sur($accent) ?>;
+	--pl-ardoise-texte: color-mix(in srgb, <?php echo $accent ?> 90%, #000 10%);
+	--pl-ardoise-doux: color-mix(in srgb, <?php echo $accent ?> 10%, transparent);
+	--pl-dalle-forte: <?php echo $accent ?>;
+	--pl-mousse:      #4f7a45;
+	--pl-mousse-texte: #3f6537;
+	--pl-soleil:      #e3a72a;
+	--pl-sur-soleil:  #2a2208;
+	--pl-brique:      #b2533a;
+	--pl-doux:        #5b6266;
+	--pl-trait:       rgba(35, 40, 43, 0.1);
+	--pl-dalle:       #fbfaf7;
+	--pl-dalle-2:     #f1efe9;
+	--pl-dalle-3:     #e7e4dc;
+	--pl-voile:       rgba(251, 250, 247, 0.93);
+	--pl-ombre:       0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 10px 24px -18px rgba(30, 40, 45, 0.45);
+	--pl-ombre-haute: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 18px 30px -18px rgba(30, 40, 45, 0.5);
+	--pl-paysage:     linear-gradient(180deg, transparent 55%, rgba(40, 48, 44, 0.55)),
+	                  radial-gradient(120% 60% at 30% 110%, #6f7d63 0 45%, transparent 46%),
+	                  radial-gradient(90% 55% at 85% 105%, #5a6a52 0 50%, transparent 51%),
+	                  radial-gradient(70% 45% at 55% 92%, #8b8f86 0 50%, transparent 51%),
+	                  linear-gradient(180deg, #c9d6dc 0%, #e8e2d3 70%);
+
+	--pl-succes:      #2e7d4f;
+	--pl-danger:      #b3402f;
+	--pl-alerte:      #94600f;
+	--pl-info:        #2c6a86;
+
+	--pl-titre:       "Bricolage Grotesque", "Manrope", system-ui, sans-serif;
+	--nf-font:        "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--nf-font-display: var(--pl-titre);
+
+	/* Pont --nf-* : les feuilles partagées (socle, modules, widgets) sont écrites pour n'importe quel thème ; ce
+	   pont leur donne l'allure des dalles. Contrôlé par tools/check-css-variables.php. */
+	--nf-accent:        var(--pl-ardoise);
+	--nf-accent-soft:   var(--pl-ardoise-doux);
+	--nf-accent-text:   var(--pl-ardoise-texte);
+	--nf-accent-strong: color-mix(in srgb, var(--pl-ardoise) 80%, #000 20%);
+	--nf-on-accent:     var(--pl-sur-ardoise);
+	--nf-bg:            var(--pl-fond);
+	--nf-bg-elevated:   var(--pl-dalle);
+	--nf-surface:       var(--pl-dalle);
+	--nf-surface-2:     var(--pl-dalle-2);
+	--nf-surface-3:     var(--pl-dalle-3);
+	--nf-border:        var(--pl-trait);
+	--nf-border-strong: var(--pl-doux);
+	--nf-text:          var(--pl-texte);
+	--nf-text-strong:   var(--pl-texte);
+	--nf-text-muted:    var(--pl-doux);
+	--nf-text-soft:     var(--pl-doux);
+	--nf-muted:         var(--pl-doux);
+	--nf-muted-2:       color-mix(in srgb, var(--pl-doux) 75%, var(--pl-dalle));
+	--nf-hover:         var(--pl-dalle-2);
+	--nf-danger:        var(--pl-danger);
+	--nf-danger-soft:   color-mix(in srgb, var(--pl-danger) 12%, transparent);
+	--nf-success:       var(--pl-succes);
+	--nf-success-soft:  color-mix(in srgb, var(--pl-succes) 12%, transparent);
+	--nf-warning:       var(--pl-alerte);
+	--nf-warning-soft:  color-mix(in srgb, var(--pl-soleil) 18%, transparent);
+	--nf-info:          var(--pl-info);
+	--nf-info-soft:     color-mix(in srgb, var(--pl-info) 12%, transparent);
+	--nf-radius:        22px;
+	--nf-radius-sm:     14px;
+	--nf-radius-xs:     8px;
+	--nf-shadow:        var(--pl-ombre);
+	--nf-shadow-sm:     var(--pl-ombre);
+	--nf-shadow-md:     0 18px 40px -22px rgba(30, 40, 45, 0.45);
+	--nf-link:          var(--pl-ardoise-texte);
+	--nf-link-hover:    var(--pl-texte);
+	--nf-font-mono:     ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	color-scheme: light;
+}
+
+/* =========================================================================
+   §2 — Jetons — NUIT (l'ardoise)
+   ======================================================================== */
+
+[data-theme="dark"] {
+	<?php if (!$bg_is_custom): ?>
+	--pl-fond:        #161a1c;
+	<?php endif ?>
+	--pl-trame:       rgba(255, 255, 255, 0.035);
+	<?php if (!$text_is_custom): ?>
+	--pl-texte:       #e8e5df;
+	<?php endif ?>
+	<?php if (!$accent_is_custom): ?>
+	--pl-ardoise:     #8fb3c9;
+	--pl-sur-ardoise: <?php echo couleur_lisible_sur('#8fb3c9') ?>;
+	<?php endif ?>
+	--pl-ardoise-texte: color-mix(in srgb, var(--pl-ardoise) 85%, #fff 15%);
+	--pl-ardoise-doux: color-mix(in srgb, var(--pl-ardoise) 16%, transparent);
+	/* Une dalle forte reste sombre la nuit : l'ardoise, assourdie. */
+	--pl-dalle-forte: color-mix(in srgb, <?php echo $accent_is_custom ? $accent : '#3d5566' ?> 70%, #161a1c);
+	--pl-mousse-texte: #8cc07c;
+	--pl-brique:      #c4664c;
+	--pl-doux:        #a9b0b4;
+	--pl-trait:       rgba(255, 255, 255, 0.09);
+	--pl-dalle:       #212729;
+	--pl-dalle-2:     #2a3134;
+	--pl-dalle-3:     #323a3e;
+	--pl-voile:       rgba(22, 26, 28, 0.93);
+	--pl-ombre:       0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 26px -18px rgba(0, 0, 0, 0.8);
+	--pl-ombre-haute: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 20px 32px -18px rgba(0, 0, 0, 0.9);
+	--pl-paysage:     linear-gradient(180deg, transparent 50%, rgba(8, 12, 12, 0.7)),
+	                  radial-gradient(120% 60% at 30% 110%, #3f4a39 0 45%, transparent 46%),
+	                  radial-gradient(90% 55% at 85% 105%, #34402f 0 50%, transparent 51%),
+	                  radial-gradient(70% 45% at 55% 92%, #4d514b 0 50%, transparent 51%),
+	                  linear-gradient(180deg, #2b3a44 0%, #4a4a44 70%);
+	--pl-succes:      #6cc58f;
+	--pl-danger:      #ef8a78;
+	--pl-alerte:      #e3a72a;
+	--pl-info:        #7fbbd9;
+	--nf-shadow-md:   0 18px 40px -20px rgba(0, 0, 0, 0.85);
+	color-scheme: dark;
+}
+
+/* =========================================================================
+   §3 — Base
+   ======================================================================== */
+
+html { scroll-padding-top: 90px; }
+
+body {
+	background-color: var(--pl-fond);
+	/* La trame : des joints blancs tous les 46 px, comme un dallage. */
+	background-image: linear-gradient(var(--pl-trame) 2px, transparent 2px), linear-gradient(90deg, var(--pl-trame) 2px, transparent 2px);
+	background-size: 46px 46px;
+<?php if ($bg_image): ?>
+	background-image: url('<?php echo $bg_image ?>');
+	background-size: auto;
+	background-position: <?php echo $bg_pos ?>;
+	background-repeat: <?php echo $bg_repeat ?>;
+	background-attachment: <?php echo $bg_attach ?>;
+<?php endif ?>
+	color: var(--pl-texte);
+	font-family: var(--nf-font);
+	font-size: 15.5px;
+	line-height: 1.55;
+}
+
+h1, h2, h3, h4, h5, h6 { margin-top: 0; color: var(--pl-texte); font-family: var(--pl-titre); font-weight: 800; line-height: 1.12; letter-spacing: -0.01em; }
+h1 { font-size: 40px; }
+h2 { font-size: 31px; }
+h3 { font-size: 25px; }
+h4 { font-size: 21px; }
+h5 { font-size: 18px; }
+h6 { font: 700 12.5px/1.4 var(--nf-font); letter-spacing: 0.12em; text-transform: uppercase; color: var(--pl-doux); }
+
+a { color: var(--pl-ardoise-texte); text-decoration: none; }
+a:hover { color: var(--pl-texte); }
+
+.pl-evitement {
+	position: fixed; left: 12px; top: -60px; z-index: 2000;
+	padding: 10px 16px; border-radius: 999px;
+	background: var(--pl-texte); color: var(--pl-fond);
+	font: 700 14px var(--nf-font);
+	transition: top 160ms ease;
+}
+.pl-evitement:focus { top: 12px; color: var(--pl-fond); }
+.pl-page:focus { outline: none; }
+
+/* =========================================================================
+   §4 — La barre : le nom, les rubriques en pastilles, le compte, « Adhérer »
+   ======================================================================== */
+
+.pl-barre {
+	position: sticky; top: 0; z-index: 1030;
+	border-bottom: 1px solid var(--pl-trait);
+	transition: box-shadow 200ms ease;
+}
+/* Le voile vit sur un pseudo-élément : un `backdrop-filter` posé sur la barre ferait d'elle le cadre des positions
+   fixes de ses descendants (la leçon de Chronique, 2026-10-06). */
+.pl-barre::before {
+	content: "";
+	position: absolute; inset: 0; z-index: -1;
+	background: var(--pl-voile);
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+}
+html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55); }
+.pl-barre-ligne {
+	display: flex; align-items: center; gap: 18px;
+	max-width: 1320px; margin: 0 auto;
+	padding: 12px clamp(16px, 3vw, 34px);
+}
+.pl-marque { display: inline-flex; align-items: center; gap: 10px; min-width: 0; color: var(--pl-texte); }
+.pl-marque:hover { color: var(--pl-texte); }
+.pl-logo { max-height: 40px; max-width: 150px; object-fit: contain; border-radius: 10px; }
+.pl-tuile {
+	flex: none;
+	display: grid; place-items: center;
+	width: 40px; height: 40px;
+	border-radius: 12px;
+	/* Le blanc des initiales se lit sur chaque teinte du dégradé (4,78:1 au moins) : la teinte claire d'origine,
+	   #8a969b, ne lui laissait que 3,04:1 (check-contraste, qui mesure maintenant le texte sur un dégradé). */
+	background: conic-gradient(from 210deg, #5d6c73, #3d5566, #677479, #5d6c73);
+	box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+	color: #fff;
+	font: 800 16px/1 var(--pl-titre);
+	font-style: normal;
+	letter-spacing: 0.02em;
+}
+.pl-nom { font: 800 18px/1.15 var(--pl-titre); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+
+/* Les rubriques : la navigation posée dans la zone « Barre de navigation », en pastilles. */
+.pl-nav { flex: 1 1 auto; min-width: 0; display: flex; justify-content: center; }
+.pl-nav .row { margin: 0; }
+.pl-nav .row > [class*="col-"], .pl-nav .row > .col { padding: 0; }
+.pl-nav .card { background: none; border: 0; box-shadow: none; margin: 0; }
+.pl-nav .card-body { padding: 0; }
+.pl-nav .widget { margin: 0 !important; }
+.pl-nav .nf-nav-repliable > .nf-nav-toggle { display: none !important; }
+.pl-nav .nf-nav-repliable > .nav { display: flex !important; }
+.pl-nav .widget-navigation .nav { flex-wrap: wrap; justify-content: center; gap: 4px; }
+.pl-nav .widget-navigation .nav-link {
+	padding: 8px 14px;
+	border-radius: 999px;
+	background: none;
+	color: var(--pl-doux);
+	font: 700 14.5px var(--nf-font);
+	transition: background-color 200ms ease, color 200ms ease;
+}
+.pl-nav .widget-navigation .nav-link:hover { background: var(--pl-ardoise-doux); color: var(--pl-texte); }
+.pl-nav .widget-navigation .nav-link.active { background: var(--pl-ardoise); color: var(--pl-sur-ardoise); }
+.pl-nav .widget-navigation .nav-link:focus-visible { outline: 2px solid var(--pl-ardoise); outline-offset: 2px; }
+.pl-nav .widget-navigation .nav-link > .icon:empty { display: none; }
+.pl-nav .widget-navigation .nav-link .d-none.d-sm-inline { display: inline !important; }
+.pl-nav .widget-navigation .dropdown-menu { margin-top: 6px; }
+
+.pl-barre-droite { display: flex; align-items: center; gap: 8px; margin-left: auto; flex: none; }
+
+/* Le compte */
+.pl-compte { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.pl-compte .nav-link {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 7px 10px;
+	border: 0; border-radius: 999px; background: none;
+	color: var(--pl-texte);
+	font: 700 14px var(--nf-font);
+	cursor: pointer;
+}
+.pl-compte .nav-link:hover, .pl-compte .nav-link:focus-visible, .pl-compte .show > .nav-link { background: var(--pl-dalle-2); color: var(--pl-texte); }
+.pl-compte .nav-link:focus-visible { outline: 2px solid var(--pl-ardoise); outline-offset: 1px; }
+.pl-compte .avatar { width: 30px; height: 30px; }
+.pl-compte .nf-notif .nav-link { position: relative; }
+.pl-compte .nf-notif-badge { position: absolute; top: 0; right: 0; background: var(--pl-brique) !important; color: #fff !important; }
+.pl-compte .dropdown-menu { min-width: 230px; }
+.pl-compte .fa-angle-down { font-size: 11px; color: var(--pl-doux); }
+/* « Se connecter » : un bouton au contour ; au téléphone, une icône qui garde son nom. */
+.pl-connexion {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 9px 18px;
+	border-radius: 999px;
+	box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pl-texte) 28%, transparent);
+	color: var(--pl-texte);
+	font: 700 14px var(--nf-font);
+	white-space: nowrap;
+	transition: box-shadow 160ms ease, background-color 160ms ease;
+}
+.pl-connexion:hover, .pl-connexion:focus-visible { background: var(--pl-dalle); box-shadow: inset 0 0 0 1.5px var(--pl-texte); color: var(--pl-texte); }
+.pl-connexion .fa-user { display: none; }
+
+/* « Adhérer » : la mousse, et un reflet qui passe. */
+.pl-appel {
+	position: relative; overflow: hidden;
+	display: inline-flex; align-items: center;
+	padding: 10px 18px;
+	border-radius: 999px;
+	background: var(--pl-mousse); color: #fff;
+	font: 700 14px var(--nf-font);
+	white-space: nowrap;
+	transition: background-color 160ms ease;
+}
+.pl-appel::after {
+	content: "";
+	position: absolute; inset: 0;
+	background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+	transform: translateX(-100%);
+	animation: pl-reflet 3.8s ease-in-out infinite;
+}
+@keyframes pl-reflet { 0%, 60% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.pl-appel:hover, .pl-appel:focus-visible { background: color-mix(in srgb, var(--pl-mousse) 85%, #000); color: #fff; }
+
+/* Le bouton « Menu », au téléphone */
+.pl-menu {
+	display: none;
+	align-items: center; gap: 8px;
+	padding: 9px 12px;
+	border: 0; border-radius: 12px;
+	background: var(--pl-dalle-2);
+	color: var(--pl-texte);
+	font: 700 14px var(--nf-font);
+	cursor: pointer;
+}
+.pl-menu:focus-visible { outline: 2px solid var(--pl-ardoise); outline-offset: 2px; }
+.pl-menu i { display: grid; gap: 3px; }
+.pl-menu i::before, .pl-menu i::after { content: ""; display: block; width: 16px; height: 2px; border-radius: 2px; background: currentColor; }
+.pl-menu span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* =========================================================================
+   §5 — La page : le corps, la colonne
+   ======================================================================== */
+
+/* `width: 100%` : le corps de page est une colonne flexible, où un bloc centré par ses marges se réduisait à la
+   largeur de son contenu (la leçon de Chronique). */
+.pl-page { flex: 1 0 auto; width: 100%; max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 34px); }
+
+.pl-corps { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; padding: 26px 0 40px; }
+.pl-corps.pl-corps-seul { grid-template-columns: minmax(0, 1fr); }
+.pl-mosaique + .pl-corps { padding-top: 0; }
+.pl-cote { position: sticky; top: 88px; align-self: start; display: grid; gap: 16px; }
+.pl-cote .row { margin: 0; }
+.pl-cote .row > [class*="col-"], .pl-cote .row > .col { padding: 0; display: grid; gap: 16px; }
+.pl-cote .row > [class*="col-"] > .widget, .pl-cote .row > .col > .widget { margin: 0; }
+
+.row.row-default { margin-top: 0; margin-bottom: 0; }
+.row.row-default + .row.row-default { margin-top: 4px; }
+.row > [class*="col-"] > .card, .row > .col > .card, .row > [class*="col-"] > .widget, .row > .col > .widget { margin-bottom: 18px; }
+.row.row-dark { background: var(--pl-dalle-forte); color: #fff; border-radius: 26px; padding: 18px 8px 0; margin: 10px 0 24px; }
+.row.row-space { margin-top: 32px; }
+
+/* =========================================================================
+   §6 — La mosaïque de l'accueil : douze colonnes, chaque colonne de la zone est une dalle
+   ======================================================================== */
+
+.pl-mosaique {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	grid-auto-flow: dense;
+	gap: 16px;
+	padding: 22px 0 26px;
+}
+/* Les rangées s'effacent : leurs colonnes deviennent les dalles de la grille. Dans l'éditeur en direct, la zone est
+   enveloppée (`.nf-le-zone`) et reste une grille ordinaire, pleine largeur, pour qu'on la règle. */
+.pl-mosaique > .row { display: contents; }
+.pl-mosaique > :not(.pl-accueil):not(.row) { grid-column: 1 / -1; }
+.pl-mosaique:has(> .nf-le-zone) .pl-accueil { grid-column: 1 / -1; grid-row: auto; min-height: 240px; }
+.pl-mosaique > .row > [class*="col"] {
+	grid-column: span 12;
+	display: flex; flex-direction: column; gap: 16px;
+	width: auto; max-width: none; min-width: 0;
+	margin: 0; padding: 0;
+	flex: none;
+}
+.pl-mosaique > .row > [class*="col"] > .widget { flex: 1 1 auto; display: flex; flex-direction: column; margin: 0; }
+.pl-mosaique > .row > [class*="col"] > .widget > .card { flex: 1 1 auto; margin: 0; }
+<?php foreach (['col-', 'col-md-', 'col-lg-'] as $prefixe): for ($n = 1; $n <= 12; $n++): ?>
+.pl-mosaique > .row > .<?php echo $prefixe.$n ?> { grid-column: span <?php echo $n ?>; }
+<?php endfor; endforeach ?>
+
+/* La grande dalle d'accueil : six colonnes, deux rangs ; une photo (le réglage « Image d'accueil ») ou un paysage
+   dessiné ; le nom du site, sa devise, « Adhérer » et un second chemin. */
+.pl-accueil {
+	position: relative; isolation: isolate; overflow: hidden;
+	grid-column: span 6; grid-row: span 2;
+	display: flex; align-items: flex-end;
+	min-height: 380px;
+	border-radius: 22px;
+	background: <?php echo $accueil ? "linear-gradient(180deg, transparent 35%, rgba(16, 22, 26, 0.78)), url('".$accueil."') center / cover no-repeat" : 'var(--pl-paysage)' ?>;
+	box-shadow: var(--pl-ombre);
+	color: #fff;
+}
+.pl-accueil-texte { position: relative; width: 100%; padding: 26px 28px; background: linear-gradient(transparent, rgba(16, 22, 26, 0.6)); }
+.pl-titre { margin: 0 0 8px; color: #fff; font: 800 clamp(32px, 3.6vw, 46px)/1.02 var(--pl-titre); letter-spacing: -0.015em; text-wrap: balance; }
+.pl-devise { margin: 0 0 16px; max-width: 46ch; color: rgba(255, 255, 255, 0.92); font-size: 15.5px; }
+.pl-accueil-boutons { display: flex; flex-wrap: wrap; gap: 10px; }
+.pl-bouton-creux {
+	display: inline-flex; align-items: center;
+	padding: 10px 18px;
+	border-radius: 999px;
+	box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.75);
+	color: #fff;
+	font: 700 14px var(--nf-font);
+	transition: background-color 160ms ease;
+}
+.pl-bouton-creux:hover, .pl-bouton-creux:focus-visible { background: rgba(255, 255, 255, 0.14); color: #fff; }
+
+/* =========================================================================
+   §7 — Les dalles : les blocs
+   ======================================================================== */
+
+.card {
+	background: var(--pl-dalle);
+	border: 0;
+	border-radius: 22px;
+	box-shadow: var(--pl-ombre);
+	color: var(--pl-texte);
+}
+.pl-mosaique .card { transition: transform 300ms ease, box-shadow 300ms ease; }
+.pl-mosaique .card:hover { transform: translateY(-3px); box-shadow: var(--pl-ombre-haute); }
+.card + .card, .widget + .widget { margin-top: 16px; }
+.card .card-header {
+	display: flex; align-items: center; justify-content: space-between; gap: 8px;
+	padding: 18px 22px 0;
+	background: none; border: 0;
+	color: var(--pl-doux);
+	font: 800 12.5px/1.5 var(--nf-font);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.card .card-header i.icon, .card .card-header .fas, .card .card-header .far { display: none; }
+.card .card-body { padding: 12px 22px 18px; }
+.card .card-footer { padding: 0 22px 16px; background: none; border: 0; font-size: 14px; }
+.card .card-footer a { font-weight: 700; }
+.card .card-footer a .icon, .card .card-footer a .fas, .card .card-footer a .far { display: none; }
+.card .card-footer a::after { content: " →"; }
+.card .card-footer a.btn::after { content: none; }
+
+/* « Dalle soleil » (panel-header) : la dalle chaude, l'adhésion de la maquette. */
+.card.panel-header { background: var(--pl-soleil); color: var(--pl-sur-soleil); }
+.card.panel-header > .card-header { background: none; border: 0; color: color-mix(in srgb, var(--pl-sur-soleil) 72%, transparent); }
+.card.panel-header > .card-body, .card.panel-header > .card-footer, .card.panel-header a:not(.btn) { color: var(--pl-sur-soleil); }
+.card.panel-header .text-muted, .card.panel-header small { color: color-mix(in srgb, var(--pl-sur-soleil) 80%, transparent) !important; }
+.card.panel-header .progress { background: rgba(42, 34, 8, 0.16); }
+.card.panel-header .progress-bar { background: var(--pl-sur-soleil); }
+.card.panel-header .btn-primary { background: var(--pl-sur-soleil); border-color: var(--pl-sur-soleil); color: var(--pl-soleil); }
+.card.panel-header .btn-primary:hover, .card.panel-header .btn-primary:focus-visible { background: #000; border-color: #000; color: var(--pl-soleil); }
+.card.panel-header .form-check-label, .card.panel-header label { color: var(--pl-sur-soleil); }
+/* Un bouton-lien (« Mot de passe oublié ? ») gardait la couleur des liens : 1,10:1 sur le soleil, la nuit. */
+.card.panel-header .btn-link, .card.panel-header .btn-link:hover, .card.panel-header .btn-link:focus-visible { color: var(--pl-sur-soleil); text-decoration: underline; text-underline-offset: 3px; }
+
+/* « Dalle ardoise » (panel-color) : la dalle forte, le prochain rendez-vous de la maquette. Le socle la suppose de la
+   couleur d'accent : ici, son texte et ses boutons ont leurs propres couleurs, de jour comme de nuit. */
+.card.panel-color { background: var(--pl-dalle-forte); color: #fff; }
+.card.panel-color > .card-header { background: none; border: 0; color: rgba(255, 255, 255, 0.72); }
+.card.panel-color .nf-prochain-vide, .card.panel-color .nf-chiffres-vide, .card.panel-color .nf-semaine-prochain { color: rgba(255, 255, 255, 0.82); }
+.card.panel-color > .card-body, .card.panel-color > .card-footer { color: #fff; }
+.card.panel-color a:not(.btn) { color: #fff; }
+.card.panel-color .text-muted, .card.panel-color small { color: rgba(255, 255, 255, 0.8) !important; }
+.card.panel-color .form-check-label, .card.panel-color label { color: #fff; }
+.card.panel-color .btn-primary { background: var(--pl-soleil); border-color: var(--pl-soleil); color: var(--pl-sur-soleil); }
+.card.panel-color .btn-primary:hover, .card.panel-color .btn-primary:focus-visible { background: #f0bd4f; border-color: #f0bd4f; color: var(--pl-sur-soleil); }
+.card.panel-color .list-group-item { color: #fff; border-color: rgba(255, 255, 255, 0.16); }
+.card.panel-color .list-group-item > .icon { color: rgba(255, 255, 255, 0.75); }
+.card.panel-color .progress { background: rgba(255, 255, 255, 0.18); }
+.card.panel-color .progress-bar { background: var(--pl-soleil); }
+.card.panel-color .input-group-text, .card.panel-color .input-group-text i, .card.panel-color .input-group-text .icon { color: var(--nf-muted); }
+/* L'espace membre posé sur l'ardoise (un administrateur peut l'y mettre) : des liens blancs, un seul bouton plein,
+   un écart dans les deux sens — la famille corrigée sur Chronique en 1.2.37. */
+.widget-user .card.panel-color .card-footer.text-end { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px 18px; }
+.widget-user .card.panel-color .card-footer a:not(.btn-primary):not(.btn-secondary),
+.widget-user .card.panel-color .card-footer a:not(.btn-primary):not(.btn-secondary):hover { background: none; border-color: transparent; color: #fff; padding: 0; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.widget-user .card.panel-color .card-footer .btn-secondary { background: transparent; border-color: rgba(255, 255, 255, 0.6); color: #fff; }
+.card.panel-color .nf-user-menu a { text-decoration: none; }
+.card.panel-color .nf-user-menu a:hover, .card.panel-color .nf-user-menu a:focus-visible { text-decoration: underline; }
+
+/* =========================================================================
+   §8 — Les widgets dans leurs dalles
+   ======================================================================== */
+
+/* Le prochain rendez-vous : la date dans une case blanche, le titre en grand, « Voir le rendez-vous » au soleil. */
+.nf-prochain-date { width: 86px; min-height: 92px; border-radius: 18px; background: var(--pl-dalle-2); }
+.nf-prochain-jour { color: var(--pl-brique); }
+.nf-prochain-quantieme { font: 800 40px/0.9 var(--pl-titre); }
+.nf-prochain-titre { font: 800 23px/1.15 var(--pl-titre); }
+.nf-prochain-titre a { color: var(--pl-texte); }
+.card.panel-color .nf-prochain-date { background: #fff; color: #23282b; }
+.card.panel-color .nf-prochain-jour { color: #b2533a; }
+.card.panel-color .nf-prochain-titre a { color: #fff; }
+.card.panel-color .nf-prochain-quand, .card.panel-color .nf-prochain-texte { color: rgba(255, 255, 255, 0.82); }
+.card.panel-header .nf-prochain-quand, .card.panel-header .nf-prochain-texte, .card.panel-header .nf-prochain-vide { color: color-mix(in srgb, var(--pl-sur-soleil) 82%, transparent); }
+.nf-prochain-lien { margin-top: 2px; }
+
+/* Le site en chiffres : de grands nombres mousse ; blancs sur l'ardoise, sombres au soleil. */
+.nf-chiffres { gap: 14px; }
+.nf-chiffre-valeur { color: var(--pl-mousse-texte); font: 800 42px/1 var(--pl-titre); }
+.nf-chiffre-libelle { color: var(--pl-doux); font-size: 13px; }
+.card.panel-color .nf-chiffre-valeur, .card.panel-color .nf-chiffre-libelle { color: #fff; }
+.card.panel-header .nf-chiffre-valeur, .card.panel-header .nf-chiffre-libelle { color: var(--pl-sur-soleil); }
+
+/* Les actualités, dans la mosaïque : trois cartes, l'image en haut — un paysage dessiné quand il n'y en a pas. */
+.pl-mosaique .widget-news .card-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
+.pl-mosaique .widget-news .card-body > .d-flex { flex-direction: column; align-items: stretch !important; gap: 8px; }
+.pl-mosaique .widget-news .card-body > .d-flex > .me-3 { margin: 0 !important; }
+.pl-mosaique .widget-news .img-cover { width: 100%; height: 120px; border-radius: 14px; }
+.pl-mosaique .widget-news .card-body > .d-flex:not(:has(.img-cover))::before { content: ""; display: block; height: 120px; border-radius: 14px; background: var(--pl-paysage); }
+.pl-mosaique .widget-news .badge { padding: 0; background: none !important; color: var(--pl-mousse-texte) !important; font: 800 11.5px var(--nf-font); letter-spacing: 0.08em; text-transform: uppercase; }
+.pl-mosaique .widget-news .flex-grow-1 > a:not(.badge) { color: var(--pl-texte); font: 800 17px/1.25 var(--pl-titre); }
+.pl-mosaique .widget-news .flex-grow-1 > a:not(.badge):hover { color: var(--pl-ardoise-texte); }
+
+/* L'agenda : chaque rendez-vous sur sa ligne, sa couleur en pastille. */
+.widget-calendar ul.list-unstyled > li { padding: 10px 0 10px 12px !important; border-bottom: 1px solid var(--pl-trait) !important; border-left-width: 4px !important; border-radius: 0; }
+.widget-calendar ul.list-unstyled > li:last-child { border-bottom: 0 !important; }
+.widget-calendar ul.list-unstyled > li a { color: var(--pl-texte); font-weight: 700; }
+.widget-calendar ul.list-unstyled > li .fa-calendar { display: none; }
+
+/* La semaine (si on la pose) : des jours en pastilles. */
+.nf-semaine-jour { border-radius: 12px; }
+.nf-semaine-numero { font: 800 20px/1.1 var(--pl-titre); }
+
+/* Le sondage : des barres arrondies qui se remplissent. */
+.progress { height: 8px !important; border-radius: 999px; background: var(--pl-dalle-3); overflow: hidden; }
+.progress-bar { border-radius: 999px; background: var(--pl-ardoise); animation: pl-barre 1.4s ease-out both; }
+@keyframes pl-barre { from { width: 0; } }
+
+/* Les documents : une pastille brique devant chaque fichier. */
+.widget-downloads li { padding: 8px 0 !important; border-bottom: 1px solid var(--pl-trait); }
+.widget-downloads li:last-child { border-bottom: 0; }
+.widget-downloads li .fa-download { display: inline-grid; place-items: center; width: 28px; height: 32px; margin-right: 10px !important; border-radius: 7px; background: var(--pl-brique); color: #fff; font-size: 12px; vertical-align: middle; }
+.widget-downloads li a { color: var(--pl-texte); font-weight: 700; }
+
+/* Les partenaires : des pastilles, côte à côte. */
+.widget-partners .column-partners { display: flex; flex-wrap: wrap; gap: 8px; }
+.widget-partners .column-partners > .row { margin: 0; }
+.widget-partners .column-partners > .row > [class*="col-"] { width: auto; padding: 0; }
+.widget-partners .column-partners hr { display: none; }
+.widget-partners .column-partners h4 { display: inline-block; margin: 0 !important; padding: 8px 12px; border-radius: 12px; background: var(--pl-dalle-2); color: var(--pl-texte); font: 700 13px var(--nf-font); }
+.widget-partners .column-partners a:hover h4 { background: var(--pl-dalle-3); }
+.widget-partners .column-partners img.logo { max-height: 40px; width: auto; }
+
+/* Les dernières photos */
+.nf-photos { grid-auto-rows: 92px; }
+.nf-photo { border-radius: 12px; }
+
+/* Qui est en ligne, les statistiques du forum */
+.widget-members h3 { font: 800 30px/1 var(--pl-titre); }
+.widget-members .row.text-center { flex-wrap: nowrap; }
+.widget-members .row.text-center > [class*="col-"] { flex: 1 1 0; width: auto; color: var(--pl-doux); font-size: 13px; }
+.widget-slider { border-radius: 22px; overflow: hidden; }
+.widget-slider .carousel-caption { left: 0; right: 0; bottom: 0; padding: 30px 22px 16px; text-align: left; background: linear-gradient(transparent, rgba(16, 22, 26, 0.75)); }
+.widget-slider .carousel-caption h3 { color: #fff; font: 800 28px/1.05 var(--pl-titre); }
+
+/* La navigation, si on la pose ailleurs que dans la barre */
+.pl-contenu .widget-navigation .nav-link, .pl-cote .widget-navigation .nav-link { color: var(--pl-texte); font-weight: 700; border-radius: 999px; }
+.pl-contenu .widget-navigation .nav-link.active, .pl-contenu .widget-navigation .nav-link:hover,
+.pl-cote .widget-navigation .nav-link.active, .pl-cote .widget-navigation .nav-link:hover { background: var(--pl-dalle-2); color: var(--pl-texte); }
+
+/* =========================================================================
+   §9 — Listes, tableaux, badges, alertes, boutons, formulaires
+   ======================================================================== */
+
+.list-group-item { background: transparent; border-color: var(--pl-trait); color: var(--pl-texte); }
+.list-group-item-action:hover, .list-group-item-action:focus { background: var(--pl-ardoise-doux); }
+
+.table { color: var(--pl-texte); }
+.table thead th { border-bottom: 1px solid var(--pl-trait); color: var(--pl-doux); font: 800 12px var(--nf-font); letter-spacing: 0.1em; text-transform: uppercase; }
+.table tbody td { border-top-color: var(--pl-trait); }
+.table-hover tbody tr:hover { background: var(--pl-ardoise-doux); }
+
+.badge { border-radius: 999px; font: 800 11.5px var(--nf-font); }
+.alert { border: 0; border-radius: 16px; background: var(--pl-dalle); box-shadow: var(--pl-ombre); color: var(--pl-texte); border-left: 5px solid; }
+.alert-success { border-left-color: var(--pl-succes); }
+.alert-danger { border-left-color: var(--pl-danger); }
+.alert-warning { border-left-color: var(--pl-soleil); }
+.alert-info { border-left-color: var(--pl-info); }
+
+.btn { padding: 9px 18px; border-radius: 999px; font: 700 14px/1.4 var(--nf-font); transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
+.btn-sm { padding: 5px 13px; font-size: 13px; }
+.btn-lg { padding: 13px 26px; font-size: 16px; }
+.btn-primary { background: var(--pl-ardoise); border-color: var(--pl-ardoise); color: var(--pl-sur-ardoise); }
+.btn-primary:hover, .btn-primary:focus-visible { background: var(--nf-accent-strong); border-color: var(--nf-accent-strong); color: var(--pl-sur-ardoise); }
+.btn-secondary, .btn-light { background: transparent; border-color: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pl-texte) 25%, transparent); color: var(--pl-texte); }
+.btn-secondary:hover, .btn-light:hover { background: var(--pl-dalle-2); box-shadow: inset 0 0 0 1.5px var(--pl-texte); color: var(--pl-texte); }
+.btn-dark { background: var(--pl-texte); border-color: var(--pl-texte); color: var(--pl-fond); }
+.btn-dark:hover, .btn-dark:focus-visible { background: color-mix(in srgb, var(--pl-texte) 85%, var(--pl-fond)); border-color: transparent; color: var(--pl-fond); }
+.btn-link { color: var(--pl-ardoise-texte); }
+.btn.btn-outline-primary { border-color: var(--pl-ardoise); color: var(--pl-ardoise-texte); }
+.btn.btn-outline-primary:hover { background: var(--pl-ardoise); color: var(--pl-sur-ardoise); }
+.btn:focus-visible { outline: 2px solid var(--pl-ardoise); outline-offset: 2px; box-shadow: none; }
+.btn-danger { background: var(--pl-danger); border-color: var(--pl-danger); color: #fff; }
+.btn-success { background: var(--pl-succes); border-color: var(--pl-succes); color: #fff; }
+.btn-warning { background: var(--pl-soleil); border-color: var(--pl-soleil); color: var(--pl-sur-soleil); }
+.btn-info { background: var(--pl-info); border-color: var(--pl-info); color: #fff; }
+[data-theme="dark"] .btn-danger, [data-theme="dark"] .btn-success, [data-theme="dark"] .btn-info { color: #161a1c; }
+
+.form-control, .form-select, textarea.form-control { background: var(--pl-dalle); border: 1px solid var(--pl-trait); border-radius: 12px; color: var(--pl-texte); }
+.form-control:focus, .form-select:focus { background: var(--pl-dalle); border-color: var(--pl-ardoise); box-shadow: 0 0 0 3px var(--pl-ardoise-doux); color: var(--pl-texte); }
+.input-group-text { background: var(--pl-dalle-2); border-color: var(--pl-trait); color: var(--pl-doux); }
+.form-text, .text-muted { color: var(--pl-doux) !important; }
+
+.nav-tabs { border-bottom: 0; gap: 6px; }
+.nav-tabs .nav-link { border: 0; border-radius: 999px; background: var(--pl-dalle); color: var(--pl-doux); font-weight: 700; box-shadow: var(--pl-ombre); }
+.nav-tabs .nav-link:hover { color: var(--pl-texte); }
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link { background: var(--pl-ardoise); color: var(--pl-sur-ardoise); }
+
+.page-link { border: 0; border-radius: 999px !important; background: var(--pl-dalle); color: var(--pl-texte); font-weight: 700; box-shadow: var(--pl-ombre); }
+.page-link:hover { background: var(--pl-dalle-2); color: var(--pl-texte); }
+.page-item.active .page-link { background: var(--pl-ardoise); color: var(--pl-sur-ardoise); }
+.pagination { gap: 6px; }
+
+.breadcrumb { margin: 0; padding: 0; background: none; border: 0; font: 700 13px var(--nf-font); }
+.breadcrumb-item, .breadcrumb-item a { color: var(--pl-doux); }
+.breadcrumb-item b { color: var(--pl-texte); font-weight: 800; }
+.breadcrumb-item a:hover { color: var(--pl-ardoise-texte); }
+.breadcrumb-item .icon { display: none; }
+.breadcrumb-item + .breadcrumb-item::before { content: "›"; color: var(--pl-doux); }
+.pl-contenu .widget-breadcrumb { margin-bottom: 14px !important; }
+.pl-contenu .widget-breadcrumb .card { background: none; box-shadow: none; }
+.pl-contenu .widget-breadcrumb .card:hover { transform: none; }
+.pl-contenu .widget-breadcrumb .card-body { padding: 0; }
+
+.dropdown-menu { background: var(--pl-dalle); border: 1px solid var(--pl-trait); border-radius: 16px; box-shadow: var(--nf-shadow-md); padding: 6px; }
+.dropdown-item { border-radius: 10px; color: var(--pl-texte); }
+.dropdown-item:hover, .dropdown-item:focus { background: var(--pl-dalle-2); color: var(--pl-texte); }
+.dropdown-item.active { background: var(--pl-ardoise); color: var(--pl-sur-ardoise); }
+.modal-content { border: 0; border-radius: 22px; background: var(--pl-dalle); }
+.modal-title { font: 800 22px var(--pl-titre); }
+
+.avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 999px; background: var(--pl-dalle-2); vertical-align: middle; }
+.module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; border-radius: 30px; box-shadow: 0 0 0 4px var(--pl-dalle), 0 0 0 6px var(--pl-ardoise); }
+.module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+
+/* =========================================================================
+   §10 — Les modules : actualités, forum en cartes, espace membre
+   ======================================================================== */
+
+/* Les actualités : des dalles ; la première en grand. */
+.module-news > .card { margin-bottom: 16px; }
+.module-news .card-title { margin: 0 0 6px; font: 800 24px/1.18 var(--pl-titre); }
+.module-news .card-title a { color: var(--pl-texte); }
+.module-news .card-title a:hover { color: var(--pl-ardoise-texte); }
+.module-news .card-img-top { border-radius: 22px 22px 0 0; }
+.module-news .nf-news-meta { color: var(--pl-doux) !important; font: 700 12.5px var(--nf-font); }
+.module-news > .card:first-child .card-title { font-size: clamp(28px, 3.2vw, 36px); }
+/* L'article est dans une dalle claire, pas à même le papier comme dans Chronique : il garde une marge intérieure (sans
+   elle, le titre et le texte touchaient le bord de la dalle, et l'étiquette de rubrique chevauchait son coin). */
+.pl-page .news-article { padding: 30px 34px 28px; }
+.pl-page .news-article-cover img { border-radius: 22px; }
+.pl-page .news-article-cat { padding: 3px 10px; border-radius: 999px; background: var(--pl-mousse); color: #fff; font: 800 12px var(--nf-font); }
+.pl-page .news-article-title { font: 800 clamp(34px, 4.4vw, 52px)/1.02 var(--pl-titre); letter-spacing: -0.02em; text-wrap: balance; }
+.pl-page .news-article-meta { font: 700 13px var(--nf-font); border-bottom-color: var(--pl-trait); }
+.pl-page .news-article-body { font-size: 17px; line-height: 1.75; color: var(--pl-texte); }
+.pl-page .news-article-body h2, .pl-page .news-article-body h3 { font-family: var(--pl-titre); }
+
+/* Le forum : chaque forum d'une catégorie devient une carte, deux par rang. */
+.module-forum table[data-forum-view] > thead > tr > th { border: 0; background: none; padding: 18px 22px 8px; }
+.module-forum table[data-forum-view] > thead h5 { color: var(--pl-doux) !important; font: 800 12.5px var(--nf-font) !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.module-forum table[data-forum-view] > thead .icon { display: none; }
+.module-forum table[data-forum-view] > tbody > tr > td { border-top: 0; border-bottom: 1px solid var(--pl-trait); padding: 14px 12px; background: none; }
+.module-forum table[data-forum-view] .forum-icone { color: var(--pl-ardoise); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 800 19px/1.25 var(--pl-titre); margin-bottom: 2px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--pl-texte); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--pl-ardoise-texte); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--pl-doux); font-size: 14px; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(3),
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(4) { color: var(--pl-doux); font-size: 13px; }
+.module-forum .subforums > li, .module-forum .forum-groups > a { border-radius: 999px; border: 0; background: var(--pl-dalle-2); font-size: 12px; }
+@media (min-width: 768px) {
+	.module-forum table[data-forum-view="categories"] { display: block; }
+	.module-forum table[data-forum-view="categories"] > thead { display: block; }
+	.module-forum table[data-forum-view="categories"] > thead > tr { display: flex; }
+	.module-forum table[data-forum-view="categories"] > thead > tr > th:not(:first-child) { display: none; }
+	.module-forum table[data-forum-view="categories"] > thead > tr > th:first-child { flex: 1 1 auto; }
+	.module-forum table[data-forum-view="categories"] > tbody { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 4px 18px 20px; }
+	.module-forum table[data-forum-view="categories"] > tbody > tr {
+		display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; gap: 6px 14px;
+		padding: 16px 18px;
+		border-radius: 18px;
+		background: var(--pl-dalle-2);
+		transition: transform 300ms ease, background-color 300ms ease;
+	}
+	.module-forum table[data-forum-view="categories"] > tbody > tr:hover { transform: translateY(-2px); background: var(--pl-dalle-3); }
+	.module-forum table[data-forum-view="categories"] > tbody > tr > td { display: block; width: auto !important; padding: 0 !important; border: 0 !important; text-align: left !important; background: none !important; }
+	.module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(n+3) { grid-column: 2; }
+	.module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(3) { padding-top: 6px !important; border-top: 1px solid var(--pl-trait) !important; }
+}
+
+/* L'espace membre : la carte d'adhérent en dalle forte, le menu en dalle. */
+.pl-page .card:has(> .card-body > .nf-espace-accueil) { background: none; box-shadow: none; }
+.pl-page .card:has(> .card-body > .nf-espace-accueil) > .card-body { padding: 0; }
+.pl-page .nf-espace-accueil { position: relative; overflow: hidden; padding: 24px 24px 22px; border: 0; border-radius: 22px; background: linear-gradient(135deg, var(--pl-dalle-forte), color-mix(in srgb, var(--pl-dalle-forte) 70%, #000)); color: #fff; box-shadow: var(--pl-ombre); }
+.pl-page .nf-espace-accueil * { color: inherit; }
+.pl-page .nf-espace-accueil-nom h2 { color: #fff; font: 800 32px/1.02 var(--pl-titre); margin-bottom: 6px; }
+.pl-page .nf-espace-accueil .avatar { border-radius: 24px; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2); }
+.pl-page .nf-espace-accueil .btn-primary { background: var(--pl-soleil); border-color: var(--pl-soleil); color: var(--pl-sur-soleil); }
+/* « Voir mon profil » est un bouton à contour (btn-outline-secondary) : son contour gris disparaissait sur l'ardoise, de
+   jour ; et la date d'inscription (text-muted, en !important dans le socle) y tombait gris sur ardoise (2026-10-06). */
+.pl-page .nf-espace-accueil .btn-light, .pl-page .nf-espace-accueil .btn-secondary, .pl-page .nf-espace-accueil .btn-outline-secondary { border-color: transparent; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6); color: #fff; }
+.pl-page .nf-espace-accueil .btn-light:hover, .pl-page .nf-espace-accueil .btn-secondary:hover, .pl-page .nf-espace-accueil .btn-outline-secondary:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.pl-page .nf-espace-accueil .text-muted { color: rgba(255, 255, 255, 0.78) !important; }
+.pl-page .nf-espace-accueil .badge { background: rgba(255, 255, 255, 0.16) !important; color: #fff !important; }
+.pl-page .nf-espace-menu { background: var(--pl-dalle); border: 0; border-radius: 22px; box-shadow: var(--pl-ombre); }
+.pl-page .nf-espace-menu .nf-espace-titre { color: var(--pl-doux); font: 800 11.5px var(--nf-font); letter-spacing: 0.14em; }
+.pl-page .nf-espace-menu .nf-espace-lien { border-radius: 999px; color: var(--pl-texte); font-weight: 700; }
+.pl-page .nf-espace-menu .nf-espace-lien:hover { background: var(--pl-dalle-2); color: var(--pl-texte); }
+.pl-page .nf-espace-menu .nf-espace-lien.actif { background: var(--pl-texte); color: var(--pl-fond); }
+.pl-page .nf-espace-menu .nf-espace-badge { background: var(--pl-brique); color: #fff; }
+.pl-page .nf-membre-couverture-vide { background: var(--pl-paysage) !important; }
+.pl-page .nf-membre-onglet.is-actif { color: var(--pl-texte); box-shadow: inset 0 -3px 0 var(--pl-ardoise); }
+
+/* =========================================================================
+   §11 — Le pied : une dalle sombre, le plan où bat le point
+   ======================================================================== */
+
+.pl-pied { width: 100%; max-width: 1320px; margin: 10px auto 0; padding: 0 clamp(16px, 3vw, 34px); }
+.pl-pied-dalle {
+	display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 26px;
+	padding: 28px 30px 18px;
+	border-radius: 26px 26px 0 0;
+	background: #2c3438;
+	color: #d8dde0;
+	font-size: 14px;
+}
+.pl-pied-dalle.pl-pied-sans-reseaux { grid-template-columns: 1.3fr 1fr; }
+.pl-pied-nom, .pl-pied-titre { margin: 0 0 8px; color: #fff; font: 800 16px var(--pl-titre); }
+.pl-pied-devise { margin: 0 0 10px; color: #c3cacd; }
+.pl-pied-zone .row { margin: 0; }
+.pl-pied-zone .row > [class*="col-"], .pl-pied-zone .row > .col { padding: 0; }
+.pl-pied-zone .card { background: none; box-shadow: none; margin: 0; }
+.pl-pied-zone .card:hover { transform: none; }
+.pl-pied-zone .card-body { padding: 0; }
+.pl-pied-zone .nf-nav-repliable > .nf-nav-toggle { display: none !important; }
+.pl-pied-zone .nf-nav-repliable > .nav { display: flex !important; }
+.pl-pied-zone .widget-navigation .nav { gap: 2px; }
+.pl-pied-zone .widget-navigation .nav-link { padding: 3px 0; background: none; color: #e8eced; font-weight: 600; }
+.pl-pied-zone .widget-navigation .nav-link:hover, .pl-pied-zone .widget-navigation .nav-link.active { background: none; color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.pl-pied-zone .widget-navigation .nav-link > .icon:empty { display: none; }
+.pl-plan {
+	position: relative; min-height: 110px;
+	border-radius: 16px;
+	background: repeating-linear-gradient(30deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 22px), repeating-linear-gradient(-40deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 30px), #3a454a;
+}
+.pl-plan i {
+	position: absolute; left: 58%; top: 42%;
+	width: 14px; height: 14px;
+	border-radius: 50%;
+	background: var(--pl-soleil);
+	box-shadow: 0 0 0 0 rgba(227, 167, 42, 0.6);
+	animation: pl-pouls 2s ease-out infinite;
+}
+@keyframes pl-pouls { to { box-shadow: 0 0 0 18px rgba(227, 167, 42, 0); } }
+.pl-socials { display: flex; flex-wrap: wrap; gap: 8px; }
+.pl-social { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); color: #fff; transition: background-color 160ms ease; }
+.pl-social:hover, .pl-social:focus-visible { background: rgba(255, 255, 255, 0.18); color: #fff; }
+.pl-pied-barre { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #a9b2b6; font-size: 13px; }
+.pl-copy { margin-right: auto; }
+.pl-copy a, .pl-site-name { color: #fff; font-weight: 700; }
+.pl-copy a:hover { color: var(--pl-soleil); }
+.pl-pied .btn-light { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25); color: #fff; }
+.pl-pied .btn-light:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+/* =========================================================================
+   §12 — Tablette et téléphone
+   ======================================================================== */
+
+@media (max-width: 1199.98px) {
+	.pl-nom { max-width: 180px; }
+	.pl-nav .widget-navigation .nav-link { padding: 8px 10px; }
+}
+@media (max-width: 991.98px) {
+	/* Les rubriques s'ouvrent par « Menu », sous la barre. */
+	.pl-menu { display: inline-flex; }
+	.pl-nav {
+		display: none;
+		position: absolute; left: 12px; right: 12px; top: calc(100% + 8px);
+		padding: 10px;
+		border-radius: 20px;
+		background: var(--pl-dalle);
+		box-shadow: var(--nf-shadow-md);
+	}
+	.pl-barre.is-menu-ouvert .pl-nav { display: block; }
+	.pl-nav .widget-navigation .nav { flex-direction: column; align-items: stretch; gap: 2px; }
+	.pl-nav .widget-navigation .nav-link { padding: 11px 16px; color: var(--pl-texte); }
+	.pl-barre-droite { margin-left: auto; }
+	/* La mosaïque sur deux colonnes : une dalle étroite en prend une, une large les deux. */
+	.pl-mosaique { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.pl-mosaique > .row > [class*="col"] { grid-column: span 2; }
+<?php foreach (['col-', 'col-md-', 'col-lg-'] as $prefixe): for ($n = 1; $n <= 6; $n++): ?>
+	.pl-mosaique > .row > .<?php echo $prefixe.$n ?> { grid-column: span 1; }
+<?php endfor; endforeach ?>
+	.pl-accueil { grid-column: 1 / -1; grid-row: auto; min-height: 320px; }
+	.pl-corps { grid-template-columns: minmax(0, 1fr); }
+	.pl-cote { position: static; }
+	.pl-pied-dalle, .pl-pied-dalle.pl-pied-sans-reseaux { grid-template-columns: 1fr 1fr; }
+	.pl-plan { grid-column: 1 / -1; order: 3; }
+}
+@media (max-width: 767.98px) {
+	.pl-page .news-article { padding: 22px 20px 20px; }
+	.pl-barre-ligne { gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+	.pl-nom { font-size: 16px; max-width: 46vw; white-space: normal; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+	.pl-tuile, .pl-logo { width: 36px; height: 36px; }
+	.pl-compte .pl-compte-nom, .pl-compte .fa-angle-down { display: none; }
+	.pl-compte .pl-compte-membre { padding: 4px; }
+	.pl-connexion { padding: 9px 11px; box-shadow: none; }
+	.pl-connexion .fa-user { display: inline-block; }
+	.pl-connexion-texte { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	.pl-appel { padding: 8px 14px; font-size: 13px; }
+	/* Une seule colonne. */
+	.pl-mosaique { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+	.pl-mosaique > .row > [class*="col"] { grid-column: 1 / -1 !important; }
+	.pl-accueil { min-height: 300px; }
+	.pl-titre { font-size: clamp(30px, 9vw, 38px); }
+	.pl-accueil-texte { padding: 22px 20px; }
+	.card .card-header { padding: 16px 18px 0; }
+	.card .card-body { padding: 10px 18px 16px; }
+	.card .card-footer { padding: 0 18px 14px; }
+	.pl-pied-dalle, .pl-pied-dalle.pl-pied-sans-reseaux { grid-template-columns: minmax(0, 1fr); padding: 24px 20px 16px; }
+	.module-forum table[data-forum-view] > tbody > tr > td:not(:last-child) { border-bottom-width: 0; }
+	.module-forum table[data-forum-view] > tbody > tr > td:nth-child(n+3) { padding-top: 0; }
+}
+
+/* =========================================================================
+   §13 — Moins d'animations demandé : les dalles ne bougent plus
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+	.pl-appel::after { animation: none; display: none; }
+	.pl-plan i { animation: none; }
+	.progress-bar { animation: none; }
+	.pl-mosaique .card, .pl-mosaique .card:hover,
+	.module-forum table[data-forum-view="categories"] > tbody > tr,
+	.module-forum table[data-forum-view="categories"] > tbody > tr:hover { transition: none; transform: none; }
+	.pl-barre, .pl-appel, .pl-connexion, .pl-nav .widget-navigation .nav-link { transition: none; }
+}

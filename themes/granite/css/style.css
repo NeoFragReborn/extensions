@@ -417,12 +417,21 @@ a:hover { color: var(--gz-encre); }
 .card:has(> form) > form > .card-body { padding: 14px; }
 .card:has(> form) > form > .card-footer { padding: 10px 14px 12px; }
 
-/* « Titre coloré » : le titre en rouge, sur un filet rouge */
-.card.panel-header > .card-header { color: var(--gz-rouge-texte); border-bottom-color: var(--gz-rouge); }
+/* « Titre coloré » : le titre en rouge, sur un filet rouge — le socle peint l'en-tête à l'accent : sans ce fond retiré,
+   le titre était rouge sur rouge, invisible (1,11:1 ; check-contraste --widget, 2026-10-06). */
+.card.panel-header > .card-header { background: none; color: var(--gz-rouge-texte); border-bottom-color: var(--gz-rouge); }
 /* « Widget coloré » : une petite annonce, cadre en pointillé */
 .card.panel-color { border: 1.5px dashed var(--gz-encre); background: color-mix(in srgb, var(--gz-carte) 70%, transparent); padding: 14px 16px; text-align: center; }
 .card.panel-color > .card-header { justify-content: center; border-bottom: 0; font: 900 22px/1.2 var(--gz-titre); letter-spacing: 0; text-transform: none; padding: 0; }
 .card.panel-color .card-footer { border-top: 0; text-align: center; }
+/* La petite annonce est sur le papier, pas peinte à l'accent comme le socle le suppose : son texte, ses libellés et son
+   bouton restent ceux du journal. Sinon le socle les passait à la couleur « sur l'accent » — blanc sur papier le jour
+   (1,15:1), encre sur encre la nuit (1,02:1) ; check-contraste --widget, 2026-10-06. */
+.card.panel-color, .card.panel-color > .card-body, .card.panel-color > .card-footer,
+.card.panel-color label, .card.panel-color .form-label, .card.panel-color .col-form-label,
+.card.panel-color .form-check, .card.panel-color .form-check-label { color: var(--gz-encre); }
+.card.panel-color .btn-primary { background: var(--gz-encre); border-color: var(--gz-encre); color: var(--gz-papier); }
+.card.panel-color .btn-primary:hover, .card.panel-color .btn-primary:focus-visible { background: var(--gz-rouge); border-color: var(--gz-rouge); color: var(--gz-sur-rouge); }
 
 /* =========================================================================
    §8 — Listes, tableaux, badges, alertes, boutons, formulaires

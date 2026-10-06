@@ -351,7 +351,9 @@ a:hover { color: var(--fg-link-hover); }
 .fg-blason-sigle {
 	flex: none; width: 42px; height: 42px;
 	display: grid; place-items: center;
-	background: linear-gradient(135deg, var(--fg-accent), color-mix(in srgb, var(--fg-accent) 55%, #2a0c04));
+	/* Le sigle, sombre, se lit sur tout le dégradé (5:1 au moins) : descendu à 55 % d'accent, son bout brun ne lui
+	   laissait que 2,69:1 (check-contraste, qui mesure le texte sur un dégradé, 2026-10-06). */
+	background: linear-gradient(135deg, var(--fg-accent), color-mix(in srgb, var(--fg-accent) 90%, #2a0c04));
 	clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 	color: var(--fg-on-accent);
 	font: 700 17px/1 var(--fg-font-display);

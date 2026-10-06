@@ -188,7 +188,7 @@ class Forge extends Theme
 				->style('row-default')
 		]));
 
-		foreach (['forum/*', 'news/_news/*', 'user/*'] as $page)
+		foreach (['forum/*', 'news/*', 'user/*'] as $page)
 		{
 			$dispositions->set($page, 'Contenu', $this->array([
 				$this->row(

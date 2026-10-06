@@ -97,6 +97,11 @@
 .blog-lecture { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
 .blog-fiche-fusion .blog-lecture { grid-template-columns: 200px minmax(0, 1fr) 210px; }
 .blog-fiche-sommaire .blog-lecture { grid-template-columns: 220px minmax(0, 1fr); }
+/* Sans sommaire — un billet à un seul intertitre n'en a pas —, sa colonne disparaît : le texte tombait dans ses 200 px
+   et l'encart prenait la place du texte (billets 1.2.32, 1.2.33 et 1.2.37 de la vitrine, signalés par Blober,
+   2026-10-06). `:where()` garde le poids des règles d'à côté : les écrans plus étroits, plus bas, l'emportent. */
+.blog-fiche-fusion .blog-lecture:where(:not(:has(> .blog-sommaire))) { grid-template-columns: minmax(0, 1fr) 210px; }
+.blog-fiche-sommaire .blog-lecture:where(:not(:has(> .blog-sommaire))) { grid-template-columns: minmax(0, 1fr); }
 .blog-fiche-centree .blog-lecture, .blog-fiche-centree .blog-entete-texte { max-width: 760px; margin-inline: auto; width: 100%; }
 .blog-texte { min-width: 0; max-width: 72ch; width: 100%; margin-inline: auto; }
 .blog-contenu { font-size: 1.04rem; line-height: 1.75; }
@@ -169,6 +174,7 @@
    chevauchaient, et l'éditeur des commentaires débordait (check-mise-en-page, 2026-10-01). */
 @media (max-width: 1199.98px) {
 	.blog-fiche-fusion .blog-lecture { grid-template-columns: 200px minmax(0, 1fr); }
+	.blog-fiche-fusion .blog-lecture:where(:not(:has(> .blog-sommaire))) { grid-template-columns: minmax(0, 1fr); }
 	.blog-fiche-fusion .blog-encart { display: none; }
 }
 
