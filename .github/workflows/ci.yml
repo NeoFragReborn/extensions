@@ -53,8 +53,10 @@ jobs:
         run: |
           acces="https://github.com"
           [ -n "$JETON" ] && acces="https://x-access-token:${JETON}@github.com"
+          # awk lit TOUTE la liste (sans `exit`) : sinon git reçoit SIGPIPE et `pipefail` fait échouer l'étape, au
+          # hasard du débit (CI publique de neofrag rouge à la 1.2.32, 2026-10-06).
           version=$(git ls-remote --tags "https://github.com/${GITHUB_REPOSITORY}.git" 'v*' \
-            | awk -v sha="$GITHUB_SHA" '$1 == sha { sub("refs/tags/", "", $2); sub(/\^\{\}$/, "", $2); print $2; exit }')
+            | awk -v sha="$GITHUB_SHA" '$1 == sha && !vu { sub("refs/tags/", "", $2); sub(/\^\{\}$/, "", $2); print $2; vu = 1 }')
           ref=main
           if [ -n "$version" ]; then
             for i in $(seq 1 30); do
