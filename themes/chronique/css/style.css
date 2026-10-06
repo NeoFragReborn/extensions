@@ -1,0 +1,691 @@
+<?php
+/* =========================================================================
+   Chronique — feuille de style (gabarit PHP servi par NeoFrag)
+
+   Le carnet de la saison des associations et des clubs (chantier B, étape B3 ; maquette C du 2026-10-06,
+   https://claude.ai/artifact/26X3oCXMJCRyRfdnP3uvRR). Un papier clair, un trait sarcelle, de l'ocre pour les
+   dates ; des bornes de pierre pour les mois de la frise. Titres Fraunces, texte Work Sans, dates IBM Plex Mono.
+
+   Jour (papier) par défaut ; la nuit (« à la lampe ») au choix du visiteur ou de son système (js/theme.js).
+   Tout mouvement s'arrête si le visiteur a demandé moins d'animations (§13).
+   ======================================================================== */
+
+$accent_default = '#0e6f78';   /* sarcelle */
+$bg_default     = '#f6f4ef';   /* papier */
+$text_default   = '#22282c';   /* encre */
+
+$bg_image   = ($this->config->chronique_background && ($f = NeoFrag()->model2('file', $this->config->chronique_background)->path())) ? $f : '';
+$header_img = ($this->config->chronique_header     && ($f = NeoFrag()->model2('file', $this->config->chronique_header)->path()))     ? $f : '';
+$accent     = $this->config->chronique_theme_color      ?: $accent_default;
+$bg_color   = $this->config->chronique_background_color ?: $bg_default;
+$text_color = $this->config->chronique_text_color       ?: $text_default;
+$bg_repeat  = $this->config->chronique_background_repeat     ?: 'repeat';
+$bg_attach  = $this->config->chronique_background_attachment ?: 'scroll';
+$bg_pos     = $this->config->chronique_background_position   ?: 'center top';
+$header_repeat = $this->config->chronique_header_repeat     ?: 'no-repeat';
+$header_attach = $this->config->chronique_header_attachment ?: 'scroll';
+$header_pos    = $this->config->chronique_header_position   ?: 'center center';
+
+$accent_is_custom = (strtolower($accent) !== $accent_default);
+$bg_is_custom     = (strtolower($bg_color) !== $bg_default);
+$text_is_custom   = (strtolower($text_color) !== $text_default);
+?>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,800;1,9..144,500;1,9..144,800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+/* =========================================================================
+   §1 — Jetons — JOUR (le papier)
+   ======================================================================== */
+
+:root,
+[data-theme="light"] {
+	--ch-fond:        <?php echo $bg_color ?>;
+	--ch-texte:       <?php echo $text_color ?>;
+	--ch-sarcelle:    <?php echo $accent ?>;
+	--ch-sur-sarcelle: <?php echo couleur_lisible_sur($accent) ?>;
+	--ch-sarcelle-texte: color-mix(in srgb, <?php echo $accent ?> 88%, #000 12%);
+	--ch-sarcelle-doux: color-mix(in srgb, <?php echo $accent ?> 11%, transparent);
+	--ch-ocre:        #9a6020;
+	--ch-ocre-trait:  #b9772b;
+	--ch-doux:        #5f686e;
+	--ch-trait:       #d9d4c9;
+	--ch-granit:      #4c565d;
+	--ch-pierre:      linear-gradient(145deg, #7b858b, #4c565d);
+	--ch-carte:       #fbfaf7;
+	--ch-surface-2:   #ebe7dd;
+	--ch-surface-3:   #e2ddd1;
+	--ch-voile:       rgba(246, 244, 239, 0.94);
+
+	--ch-succes:      #2e7d4f;
+	--ch-danger:      #b3402f;
+	--ch-alerte:      #9a6020;
+	--ch-info:        #2c6a86;
+
+	--ch-titre:       "Fraunces", Georgia, "Times New Roman", serif;
+	--nf-font:        "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--nf-font-display: var(--ch-titre);
+	--ch-mono:        "IBM Plex Mono", ui-monospace, monospace;
+
+	/* Pont --nf-* : les feuilles partagées (socle, modules, widgets) sont écrites pour n'importe quel thème ; ce
+	   pont leur donne l'allure du carnet. Contrôlé par tools/check-css-variables.php. */
+	--nf-accent:        var(--ch-sarcelle);
+	--nf-accent-soft:   var(--ch-sarcelle-doux);
+	--nf-accent-text:   var(--ch-sarcelle-texte);
+	--nf-accent-strong: color-mix(in srgb, var(--ch-sarcelle) 80%, #000 20%);
+	--nf-on-accent:     var(--ch-sur-sarcelle);
+	--nf-bg:            var(--ch-fond);
+	--nf-bg-elevated:   var(--ch-carte);
+	--nf-surface:       var(--ch-carte);
+	--nf-surface-2:     var(--ch-surface-2);
+	--nf-surface-3:     var(--ch-surface-3);
+	--nf-border:        var(--ch-trait);
+	--nf-border-strong: var(--ch-granit);
+	--nf-text:          var(--ch-texte);
+	--nf-text-strong:   var(--ch-texte);
+	--nf-text-muted:    var(--ch-doux);
+	--nf-text-soft:     var(--ch-doux);
+	--nf-muted:         var(--ch-doux);
+	--nf-muted-2:       color-mix(in srgb, var(--ch-doux) 75%, var(--ch-fond));
+	--nf-hover:         var(--ch-surface-2);
+	--nf-danger:        var(--ch-danger);
+	--nf-danger-soft:   color-mix(in srgb, var(--ch-danger) 12%, transparent);
+	--nf-success:       var(--ch-succes);
+	--nf-success-soft:  color-mix(in srgb, var(--ch-succes) 12%, transparent);
+	--nf-warning:       var(--ch-alerte);
+	--nf-warning-soft:  color-mix(in srgb, var(--ch-alerte) 14%, transparent);
+	--nf-info:          var(--ch-info);
+	--nf-info-soft:     color-mix(in srgb, var(--ch-info) 12%, transparent);
+	--nf-radius:        14px;
+	--nf-radius-sm:     10px;
+	--nf-radius-xs:     6px;
+	--nf-shadow:        none;
+	--nf-shadow-sm:     none;
+	--nf-shadow-md:     0 18px 40px -22px rgba(34, 40, 44, 0.35);
+	--nf-link:          var(--ch-sarcelle-texte);
+	--nf-link-hover:    var(--ch-texte);
+	--nf-font-mono:     var(--ch-mono);
+	color-scheme: light;
+}
+
+/* =========================================================================
+   §2 — Jetons — NUIT (« à la lampe »)
+   ======================================================================== */
+
+[data-theme="dark"] {
+	<?php if (!$bg_is_custom): ?>
+	--ch-fond:        #15191b;
+	<?php endif ?>
+	<?php if (!$text_is_custom): ?>
+	--ch-texte:       #e6e2d8;
+	<?php endif ?>
+	<?php if (!$accent_is_custom): ?>
+	--ch-sarcelle:    #4cb5bf;
+	--ch-sur-sarcelle: <?php echo couleur_lisible_sur('#4cb5bf') ?>;
+	<?php endif ?>
+	--ch-sarcelle-texte: color-mix(in srgb, var(--ch-sarcelle) 85%, #fff 15%);
+	--ch-sarcelle-doux: color-mix(in srgb, var(--ch-sarcelle) 16%, transparent);
+	--ch-ocre:        #e3a85f;
+	--ch-ocre-trait:  #e3a85f;
+	--ch-doux:        #a3abb0;
+	--ch-trait:       #2f363a;
+	--ch-granit:      #a8b2b8;
+	--ch-pierre:      linear-gradient(145deg, #8d979d, #56616a);
+	--ch-carte:       #1b2023;
+	--ch-surface-2:   #252b2f;
+	--ch-surface-3:   #2f363b;
+	--ch-voile:       rgba(21, 25, 27, 0.94);
+	--ch-succes:      #6cc58f;
+	--ch-danger:      #ef8a78;
+	--ch-alerte:      #e3a85f;
+	--ch-info:        #7fbbd9;
+	--nf-shadow-md:   0 18px 40px -20px rgba(0, 0, 0, 0.8);
+	color-scheme: dark;
+}
+
+/* =========================================================================
+   §3 — Base
+   ======================================================================== */
+
+html { scroll-padding-top: 90px; }
+
+body {
+	background-color: var(--ch-fond);
+<?php if ($bg_image): ?>
+	background-image: url('<?php echo $bg_image ?>');
+	background-position: <?php echo $bg_pos ?>;
+	background-repeat: <?php echo $bg_repeat ?>;
+	background-attachment: <?php echo $bg_attach ?>;
+<?php endif ?>
+	color: var(--ch-texte);
+	font-family: var(--nf-font);
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 { margin-top: 0; color: var(--ch-texte); font-family: var(--ch-titre); font-weight: 800; line-height: 1.12; letter-spacing: -0.01em; }
+h1 { font-size: 40px; }
+h2 { font-size: 30px; }
+h3 { font-size: 25px; }
+h4 { font-size: 21px; }
+h5 { font-size: 18px; }
+h6 { font: 500 12px/1.4 var(--ch-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ch-doux); }
+
+a { color: var(--ch-sarcelle-texte); text-decoration: none; }
+a:hover { color: var(--ch-texte); }
+
+.ch-evitement {
+	position: fixed; left: 12px; top: -60px; z-index: 2000;
+	padding: 10px 16px; border-radius: 999px;
+	background: var(--ch-texte); color: var(--ch-fond);
+	font: 600 14px var(--nf-font);
+	transition: top 160ms ease;
+}
+.ch-evitement:focus { top: 12px; color: var(--ch-fond); }
+.ch-page:focus { outline: none; }
+
+/* =========================================================================
+   §4 — L'en-tête discret, collé en haut, et son trait de progression
+   ======================================================================== */
+
+.ch-tete {
+	position: sticky; top: 0; z-index: 1030;
+	border-bottom: 1px solid var(--ch-trait);
+}
+/* Le voile flouté vit sur un pseudo-élément, pas sur l'en-tête : un `backdrop-filter` fait de l'élément qui le
+   porte le cadre des positions fixes de ses descendants, et le sommaire « plein écran » restait enfermé dans la
+   hauteur de l'en-tête (vu le 2026-10-06). */
+.ch-tete::before {
+	content: "";
+	position: absolute; inset: 0; z-index: -1;
+	background: var(--ch-voile);
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+}
+.ch-tete-ligne {
+	display: flex; align-items: center; gap: 20px;
+	max-width: 1240px; margin: 0 auto;
+	padding: 14px clamp(16px, 4vw, 56px);
+}
+.ch-marque { display: inline-flex; align-items: center; gap: 10px; min-width: 0; color: var(--ch-texte); }
+.ch-marque:hover { color: var(--ch-texte); }
+.ch-logo { max-height: 38px; max-width: 160px; object-fit: contain; }
+.ch-nom { font: italic 500 21px/1.2 var(--ch-titre); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ch-tete-droite { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+.ch-progression {
+	position: absolute; left: 0; right: 0; bottom: -1px;
+	height: 2px;
+	background: var(--ch-sarcelle);
+	transform: scaleX(var(--ch-lu, 0)); transform-origin: 0 50%;
+	pointer-events: none;
+}
+
+/* Le compte */
+.ch-compte { display: flex; align-items: center; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.ch-compte .nav-link {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 6px 10px;
+	border: 0; border-radius: 999px; background: none;
+	color: var(--ch-texte);
+	font: 600 14px var(--nf-font);
+	cursor: pointer;
+}
+.ch-compte .nav-link:hover, .ch-compte .nav-link:focus-visible, .ch-compte .show > .nav-link { background: var(--ch-surface-2); color: var(--ch-texte); }
+.ch-compte .nav-link:focus-visible { outline: 2px solid var(--ch-sarcelle); outline-offset: 1px; }
+.ch-compte .avatar { width: 28px; height: 28px; }
+.ch-compte .nf-notif .nav-link { position: relative; }
+.ch-compte .nf-notif-badge { position: absolute; top: 0; right: 0; background: var(--ch-ocre-trait) !important; color: #fff !important; }
+.ch-compte .dropdown-menu { min-width: 230px; }
+.ch-compte .fa-angle-down { font-size: 11px; color: var(--ch-doux); }
+
+/* Le bouton « Sommaire » (le résumé du <details>) et l'appel à adhérer */
+.ch-sommaire > summary { list-style: none; }
+.ch-sommaire > summary::-webkit-details-marker { display: none; }
+.ch-bouton-sommaire {
+	display: inline-flex; align-items: center; gap: 10px;
+	padding: 7px 16px;
+	border: 1px solid var(--ch-texte); border-radius: 999px;
+	color: var(--ch-texte);
+	font: 600 14px var(--nf-font);
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 160ms ease, color 160ms ease;
+}
+.ch-bouton-sommaire:hover { background: var(--ch-texte); color: var(--ch-fond); }
+.ch-bouton-sommaire:focus-visible { outline: 2px solid var(--ch-sarcelle); outline-offset: 2px; }
+.ch-bouton-sommaire i { display: grid; gap: 3px; }
+.ch-bouton-sommaire i::before, .ch-bouton-sommaire i::after { content: ""; display: block; width: 16px; height: 1.5px; background: currentColor; }
+.ch-appel {
+	padding: 8px 16px;
+	border-radius: 999px;
+	background: var(--ch-sarcelle); color: var(--ch-sur-sarcelle);
+	font: 600 14px var(--nf-font);
+	white-space: nowrap;
+	transition: background-color 160ms ease;
+}
+.ch-appel:hover, .ch-appel:focus-visible { background: var(--nf-accent-strong); color: var(--ch-sur-sarcelle); }
+
+/* =========================================================================
+   §5 — Le sommaire : tout le site, en plein écran
+   ======================================================================== */
+
+.ch-sommaire-cadre {
+	position: fixed; inset: 0; z-index: 1070;
+	display: flex; flex-direction: column;
+	padding: clamp(20px, 5vw, 64px) clamp(16px, 8vw, 120px);
+	overflow-y: auto;
+	background: var(--ch-voile);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	animation: ch-apparaitre 220ms ease-out;
+}
+@keyframes ch-apparaitre { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+html.ch-sommaire-ouvert { overflow: hidden; }
+.ch-sommaire-tete { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+.ch-sommaire-titre { margin: 0; font: 500 13px var(--ch-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ch-ocre); }
+.ch-sommaire-fermer {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 7px 16px;
+	border: 1px solid var(--ch-texte); border-radius: 999px;
+	background: none; color: var(--ch-texte);
+	font: 600 14px var(--nf-font);
+	cursor: pointer;
+}
+.ch-sommaire-fermer:hover, .ch-sommaire-fermer:focus-visible { background: var(--ch-texte); color: var(--ch-fond); }
+.ch-sommaire-zone { counter-reset: chapitre; }
+.ch-sommaire-zone .row { margin: 0; }
+.ch-sommaire-zone .row > [class*="col-"], .ch-sommaire-zone .row > .col { padding: 0; }
+.ch-sommaire-zone .card { background: none; border: 0; }
+.ch-sommaire-zone .card-body { padding: 0; }
+.ch-sommaire-zone .widget-navigation .nav { gap: 0; }
+.ch-sommaire-zone .widget-navigation .nav > .nav-item { border-bottom: 1px solid var(--ch-trait); }
+.ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link {
+	display: flex; align-items: baseline; gap: 18px;
+	padding: 14px 0;
+	border-radius: 0; background: none;
+	color: var(--ch-texte);
+	font: 800 clamp(26px, 4vw, 42px)/1.1 var(--ch-titre);
+	letter-spacing: -0.01em;
+}
+.ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link::before {
+	counter-increment: chapitre;
+	content: counter(chapitre, decimal-leading-zero);
+	min-width: 2.2em;
+	font: 500 14px var(--ch-mono);
+	letter-spacing: 0.1em;
+	color: var(--ch-ocre);
+}
+.ch-sommaire-zone .widget-navigation .nav-link > .icon:empty { display: none; }
+.ch-sommaire-zone .widget-navigation .nav-link .icon { font-size: 0.6em; color: var(--ch-doux); }
+.ch-sommaire-zone .widget-navigation .nav-link .d-none.d-sm-inline { display: inline !important; }
+.ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link:hover,
+.ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link.active { color: var(--ch-sarcelle-texte); }
+.ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link.active { font-style: italic; }
+.ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link:focus-visible { outline: 2px solid var(--ch-sarcelle); outline-offset: 2px; }
+.ch-sommaire-zone .widget-navigation .nav .nav { padding: 0 0 12px calc(2.2em + 18px); }
+.ch-sommaire-zone .widget-navigation .nav .nav .nav-link { padding: 6px 0; color: var(--ch-doux); font: 600 17px var(--nf-font); }
+.ch-sommaire-zone .widget-navigation .nav .nav .nav-link:hover { color: var(--ch-texte); }
+/* Dans l'éditeur en direct, le sommaire reste ouvert, à sa place, pour qu'on règle ce qu'il porte. */
+.ch-tete-ligne:has(.ch-sommaire.is-editeur) { flex-wrap: wrap; }
+.ch-tete-ligne:has(.ch-sommaire.is-editeur) .ch-tete-droite { flex: 1 1 100%; flex-wrap: wrap; justify-content: flex-end; }
+.ch-sommaire.is-editeur { flex: 1 1 100%; order: 10; }
+.ch-sommaire.is-editeur > summary { display: none; }
+.ch-sommaire.is-editeur .ch-sommaire-cadre { position: static; padding: 12px 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; animation: none; overflow: visible; }
+.ch-sommaire.is-editeur .ch-sommaire-tete { display: none; }
+.ch-sommaire.is-editeur .ch-sommaire-zone .widget-navigation .nav > .nav-item > .nav-link { padding: 6px 0; font-size: 20px; }
+
+/* =========================================================================
+   §6 — La page : l'ouverture, le corps, la colonne
+   ======================================================================== */
+
+/* `width: 100%` : le corps de page est une colonne flexible, où un bloc centré par ses marges se réduisait à la
+   largeur de son contenu. */
+.ch-page { flex: 1 0 auto; width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 56px); }
+
+.ch-ouverture {
+	display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 50px; align-items: end;
+	padding: 54px 0 40px;
+}
+.ch-ouverture.ch-ouverture-seule { grid-template-columns: minmax(0, 1fr); }
+.ch-saison { font: 500 12px var(--ch-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ch-ocre); }
+.ch-titre { margin: 10px 0 14px; font: 800 clamp(40px, 6vw, 66px)/1 var(--ch-titre); letter-spacing: -0.02em; text-wrap: balance; }
+.ch-devise { margin: 0; max-width: 52ch; color: color-mix(in srgb, var(--ch-texte) 85%, var(--ch-fond)); font-size: 17px; }
+<?php if ($header_img): ?>
+/* L'image d'ouverture (réglage) : derrière la grande phrase, éclaircie pour qu'elle reste lisible. */
+.ch-ouverture {
+	position: relative; isolation: isolate;
+	padding-left: 28px; padding-right: 28px; margin-top: 20px;
+	border-radius: 18px;
+	background-image: linear-gradient(color-mix(in srgb, var(--ch-fond) 80%, transparent), color-mix(in srgb, var(--ch-fond) 80%, transparent)), url('<?php echo $header_img ?>');
+	background-position: center, <?php echo $header_pos ?>;
+	background-repeat: no-repeat, <?php echo $header_repeat ?>;
+	background-attachment: scroll, <?php echo $header_attach ?>;
+	background-size: cover, <?php echo $header_repeat === 'no-repeat' ? 'cover' : 'auto' ?>;
+}
+<?php endif ?>
+.ch-ouverture-zone .card { margin: 0; }
+
+.ch-corps { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 50px; padding: 10px 0 48px; }
+.ch-corps.ch-corps-seul { grid-template-columns: minmax(0, 1fr); }
+.ch-page > .ch-corps:first-child { padding-top: 36px; }
+.ch-cote { position: sticky; top: 88px; align-self: start; display: grid; gap: 18px; }
+.ch-cote .row { margin: 0; }
+.ch-cote .row > [class*="col-"], .ch-cote .row > .col { padding: 0; display: grid; gap: 18px; }
+.ch-cote .row > [class*="col-"] > .widget, .ch-cote .row > .col > .widget { margin: 0; }
+
+.row.row-default { margin-top: 0; margin-bottom: 0; }
+.row.row-default + .row.row-default { margin-top: 10px; }
+.row > [class*="col-"] > .card, .row > .col > .card, .row > [class*="col-"] > .widget, .row > .col > .widget { margin-bottom: 22px; }
+.row.row-dark { background: var(--ch-granit); color: #fff; border-radius: 18px; padding: 18px 8px 0; margin: 10px 0 24px; }
+.row.row-space { margin-top: 32px; }
+
+/* =========================================================================
+   §7 — Les blocs : des fiches de carnet
+   ======================================================================== */
+
+.card { background: var(--ch-carte); border: 1px solid var(--ch-trait); border-radius: 14px; box-shadow: none; color: var(--ch-texte); }
+.card + .card, .widget + .widget { margin-top: 18px; }
+.card .card-header {
+	display: flex; align-items: center; justify-content: space-between; gap: 8px;
+	padding: 16px 18px 0;
+	background: none; border: 0;
+	color: var(--ch-doux);
+	font: 500 12px/1.5 var(--ch-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+.card .card-header i.icon, .card .card-header .fas, .card .card-header .far { display: none; }
+.card .card-body { padding: 12px 18px 16px; }
+.card .card-footer { padding: 10px 18px 14px; background: none; border-top: 1px dashed var(--ch-trait); font-size: 14px; }
+.card .card-footer a { font-weight: 600; }
+.card .card-footer a .icon, .card .card-footer a .fas, .card .card-footer a .far { display: none; }
+.card .card-footer a::after { content: " →"; }
+.card .card-footer a.btn::after { content: none; }
+/* « Titre coloré » : le titre en sarcelle */
+.card.panel-header > .card-header { color: var(--ch-sarcelle-texte); }
+/* « Widget coloré » : la fiche de pierre (l'adhésion, dans la maquette) */
+.card.panel-color { background: var(--ch-granit); border-color: var(--ch-granit); color: #fff; }
+.card.panel-color > .card-header { color: rgba(255, 255, 255, 0.75); }
+.card.panel-color > .card-body, .card.panel-color > .card-footer { color: #fff; }
+.card.panel-color .card-footer { border-top-color: rgba(255, 255, 255, 0.25); }
+.card.panel-color a:not(.btn) { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+/* La fiche de pierre n'est pas couleur d'accent, comme le socle le suppose : son texte et ses boutons ont leurs
+   propres couleurs, les mêmes de jour et de nuit (« Se souvenir de moi » et « Se connecter » tombaient sous le
+   seuil de contraste, la nuit). */
+.card.panel-color .form-check-label { color: #fff; }
+.card.panel-color .btn-primary { background: #fff; border-color: #fff; color: #2f383d; }
+.card.panel-color .btn-primary:hover, .card.panel-color .btn-primary:focus-visible { background: #e8ecee; border-color: #e8ecee; color: #2f383d; }
+[data-theme="dark"] .card.panel-color { background: #2c3439; border-color: #3a444a; }
+/* Un bloc sans cadre, pour ce qui est la matière même de la page : la frise, le module de l'accueil */
+.ch-contenu > .row > [class*="col-"] > .widget-frise > .card,
+.ch-contenu > .row > .col > .widget-frise > .card { background: none; border: 0; }
+.ch-contenu .widget-frise .card-header { display: none; }
+.ch-contenu .widget-frise .card-body { padding: 0; }
+
+/* =========================================================================
+   §8 — La frise de la saison (le widget) : des bornes de pierre, un trait sarcelle
+   ======================================================================== */
+
+.ch-page .nf-frise { padding-left: 46px; }
+.ch-page .nf-frise::before { left: 14px; background: linear-gradient(var(--ch-sarcelle) 0 22%, var(--ch-trait) 22%); }
+.ch-page .nf-frise-borne {
+	display: flex; align-items: center; gap: 14px;
+	margin: 6px 0 18px -46px; padding-left: 0;
+	color: var(--ch-granit);
+	font: 500 12px var(--ch-mono); letter-spacing: 0.18em;
+}
+.ch-page .nf-frise-borne::before {
+	position: static; flex: none;
+	width: 30px; height: 30px;
+	transform: none;
+	border-radius: 8px;
+	background: var(--ch-pierre);
+	box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 0 0 4px var(--ch-fond);
+}
+.ch-page .nf-frise-entree { margin-bottom: 26px; }
+.ch-page .nf-frise-entree::before { left: -38px; top: 8px; width: 14px; height: 14px; border-color: var(--ch-granit); background: var(--ch-fond); }
+.ch-page .nf-frise-entree.is-a-venir::before { border-color: var(--ch-sarcelle); background: var(--ch-sarcelle); }
+.ch-page .nf-frise-entree time { font: 500 12px var(--ch-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ch-doux); }
+.ch-page .nf-frise-bientot { margin-left: 8px; color: var(--ch-sarcelle-texte); font-weight: 600; }
+.ch-page .nf-frise-genre { margin: 6px 8px 0 0; background: var(--ch-surface-2); color: var(--ch-granit); font: 600 12px var(--nf-font); }
+.ch-page .nf-frise-titre { margin: 4px 0 6px; font: 800 26px/1.15 var(--ch-titre); letter-spacing: -0.01em; }
+.ch-page .nf-frise-titre a {
+	color: var(--ch-texte);
+	background: linear-gradient(var(--ch-sarcelle), var(--ch-sarcelle)) 0 100% / 0 2px no-repeat;
+	transition: background-size 350ms ease, color 200ms ease;
+}
+.ch-page .nf-frise-titre a:hover { background-size: 100% 2px; color: var(--ch-texte); }
+.ch-page .nf-frise-texte { max-width: 60ch; color: color-mix(in srgb, var(--ch-texte) 82%, var(--ch-fond)); font-size: 15.5px; }
+.ch-page .nf-frise-image img { height: 200px; max-height: none; border-radius: 14px; }
+/* Une discussion : un filet ocre, comme une note en marge */
+.ch-page .nf-frise-discussion { padding: 14px 16px; border-left: 3px solid var(--ch-ocre-trait); border-radius: 0 12px 12px 0; background: var(--ch-carte); }
+.ch-page .nf-frise-discussion::before { left: -38px; }
+.ch-page .nf-frise-discussion .nf-frise-titre { font-size: 22px; }
+
+/* =========================================================================
+   §9 — Listes, tableaux, badges, alertes, boutons, formulaires
+   ======================================================================== */
+
+.list-group-item { background: transparent; border-color: var(--ch-trait); color: var(--ch-texte); }
+.list-group-item-action:hover, .list-group-item-action:focus { background: var(--ch-sarcelle-doux); }
+
+.table { color: var(--ch-texte); }
+.table thead th { border-bottom: 1px solid var(--ch-granit); color: var(--ch-doux); font: 500 12px var(--ch-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.table tbody td { border-top-color: var(--ch-trait); }
+.table-hover tbody tr:hover { background: var(--ch-sarcelle-doux); }
+
+.badge { border-radius: 999px; font: 600 11.5px var(--nf-font); }
+.alert { border: 1px solid var(--ch-trait); border-left: 4px solid; border-radius: 12px; background: var(--ch-carte); color: var(--ch-texte); }
+.alert-success { border-left-color: var(--ch-succes); }
+.alert-danger { border-left-color: var(--ch-danger); }
+.alert-warning { border-left-color: var(--ch-alerte); }
+.alert-info { border-left-color: var(--ch-info); }
+
+.btn { padding: 8px 18px; border-radius: 999px; font: 600 14px/1.4 var(--nf-font); transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease; }
+.btn-sm { padding: 4px 12px; font-size: 13px; }
+.btn-lg { padding: 12px 24px; font-size: 16px; }
+.btn-primary { background: var(--ch-sarcelle); border-color: var(--ch-sarcelle); color: var(--ch-sur-sarcelle); }
+.btn-primary:hover, .btn-primary:focus-visible { background: var(--nf-accent-strong); border-color: var(--nf-accent-strong); color: var(--ch-sur-sarcelle); }
+.btn-secondary, .btn-light { background: transparent; border-color: var(--ch-texte); color: var(--ch-texte); }
+.btn-secondary:hover, .btn-light:hover { background: var(--ch-texte); border-color: var(--ch-texte); color: var(--ch-fond); }
+.btn-link { color: var(--ch-sarcelle-texte); }
+.btn.btn-outline-primary { border-color: var(--ch-sarcelle); color: var(--ch-sarcelle-texte); }
+.btn.btn-outline-primary:hover { background: var(--ch-sarcelle); color: var(--ch-sur-sarcelle); }
+.btn:focus-visible { outline: 2px solid var(--ch-sarcelle); outline-offset: 2px; box-shadow: none; }
+.btn-danger { background: var(--ch-danger); border-color: var(--ch-danger); color: #fff; }
+.btn-success { background: var(--ch-succes); border-color: var(--ch-succes); color: #fff; }
+.btn-warning { background: var(--ch-alerte); border-color: var(--ch-alerte); color: #fff; }
+.btn-info { background: var(--ch-info); border-color: var(--ch-info); color: #fff; }
+[data-theme="dark"] .btn-danger, [data-theme="dark"] .btn-success, [data-theme="dark"] .btn-warning, [data-theme="dark"] .btn-info { color: #15191b; }
+
+.form-control, .form-select, textarea.form-control { background: var(--ch-carte); border: 1px solid var(--ch-trait); border-radius: 10px; color: var(--ch-texte); }
+.form-control:focus, .form-select:focus { background: var(--ch-carte); border-color: var(--ch-sarcelle); box-shadow: 0 0 0 3px var(--ch-sarcelle-doux); color: var(--ch-texte); }
+.input-group-text { background: var(--ch-surface-2); border-color: var(--ch-trait); color: var(--ch-doux); }
+.form-text, .text-muted { color: var(--ch-doux) !important; }
+
+.nav-tabs { border-bottom: 1px solid var(--ch-trait); }
+.nav-tabs .nav-link { border: 0; border-radius: 0; color: var(--ch-doux); font-weight: 600; background: none; }
+.nav-tabs .nav-link:hover { color: var(--ch-texte); }
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link { color: var(--ch-texte); background: none; box-shadow: inset 0 -2px 0 var(--ch-sarcelle); }
+
+.page-link { border-radius: 999px !important; border-color: var(--ch-trait); background: var(--ch-carte); color: var(--ch-texte); font-weight: 600; }
+.page-link:hover { background: var(--ch-surface-2); color: var(--ch-texte); }
+.page-item.active .page-link { background: var(--ch-texte); border-color: var(--ch-texte); color: var(--ch-fond); }
+.pagination { gap: 6px; }
+
+.breadcrumb { margin: 0; padding: 0; background: none; border: 0; font: 500 12px var(--ch-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.breadcrumb-item, .breadcrumb-item a { color: var(--ch-doux); }
+.breadcrumb-item b { color: var(--ch-texte); font-weight: 600; }
+.breadcrumb-item a:hover { color: var(--ch-sarcelle-texte); }
+.breadcrumb-item .icon { display: none; }
+.breadcrumb-item + .breadcrumb-item::before { content: "·"; color: var(--ch-ocre); }
+.ch-contenu .widget-breadcrumb { margin-bottom: 14px !important; }
+.ch-contenu .widget-breadcrumb .card { background: none; border: 0; }
+.ch-contenu .widget-breadcrumb .card-body { padding: 0; }
+
+.dropdown-menu { background: var(--ch-carte); border: 1px solid var(--ch-trait); border-radius: 12px; box-shadow: var(--nf-shadow-md); padding: 6px; }
+.dropdown-item { border-radius: 8px; color: var(--ch-texte); }
+.dropdown-item:hover, .dropdown-item:focus { background: var(--ch-surface-2); color: var(--ch-texte); }
+.dropdown-item.active { background: var(--ch-sarcelle); color: var(--ch-sur-sarcelle); }
+.modal-content { border: 1px solid var(--ch-trait); border-radius: 18px; background: var(--ch-carte); }
+.modal-title { font: 800 22px var(--ch-titre); }
+
+.progress { --bs-progress-border-radius: 999px; }
+
+.avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 999px; background: var(--ch-surface-2); vertical-align: middle; }
+.module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; box-shadow: 0 0 0 3px var(--ch-fond), 0 0 0 5px var(--ch-sarcelle); }
+.module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+
+/* =========================================================================
+   §10 — Les modules : actualités, forum en chapitres, carnet du membre
+   ======================================================================== */
+
+/* Les actualités */
+.module-news > .card { margin-bottom: 18px; }
+.module-news .card-title { margin: 0 0 6px; font: 800 24px/1.15 var(--ch-titre); }
+.module-news .card-title a { color: var(--ch-texte); }
+.module-news .card-title a:hover { color: var(--ch-sarcelle-texte); }
+.module-news .card-img-top { border-radius: 14px 14px 0 0; }
+.module-news .nf-news-meta { color: var(--ch-doux) !important; font: 500 12px var(--ch-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.module-news > .card:first-child .card-title { font-size: clamp(28px, 3.4vw, 38px); }
+.ch-page .news-article { padding: 0 0 10px; }
+.ch-page .news-article-cover img { border-radius: 18px; }
+.ch-page .news-article-cat { padding: 2px 10px; background: var(--ch-surface-2); color: var(--ch-granit); font: 600 12px var(--nf-font); }
+.ch-page .news-article-title { font: 800 clamp(34px, 4.4vw, 52px)/1.02 var(--ch-titre); letter-spacing: -0.02em; text-wrap: balance; }
+.ch-page .news-article-meta { font: 500 12px var(--ch-mono); letter-spacing: 0.08em; text-transform: uppercase; border-bottom-color: var(--ch-trait); }
+.ch-page .news-article-body { font-size: 17.5px; line-height: 1.75; color: var(--ch-texte); }
+.ch-page .news-article-body h2, .ch-page .news-article-body h3 { font-family: var(--ch-titre); }
+
+/* Le forum : des chapitres numérotés, à la suite d'une catégorie à l'autre */
+.module-forum { counter-reset: chapitre; }
+.module-forum table[data-forum-view] > thead > tr > th { border: 0; background: none; padding: 16px 12px 8px; }
+.module-forum table[data-forum-view] > thead > tr > th:first-child { padding-left: 18px; }
+.module-forum table[data-forum-view] > thead > tr > th:last-child { padding-right: 18px; }
+.module-forum table[data-forum-view] > thead h5 { color: var(--ch-ocre) !important; font: 500 12px var(--ch-mono) !important; letter-spacing: 0.18em; text-transform: uppercase; }
+.module-forum table[data-forum-view] > thead .icon { display: none; }
+.module-forum table[data-forum-view] > tbody > tr > td { border-top: 0; border-bottom: 1px solid var(--ch-trait); padding: 16px 12px; background: none; }
+.module-forum table[data-forum-view] > tbody > tr > td:first-child { padding-left: 18px; }
+.module-forum table[data-forum-view] > tbody > tr > td:last-child { padding-right: 18px; }
+.module-forum table[data-forum-view] > tbody > tr:last-child > td { border-bottom: 0; }
+.module-forum table[data-forum-view] > tbody > tr:hover > td { background: var(--ch-sarcelle-doux); }
+.module-forum table[data-forum-view] .forum-icone { color: var(--ch-granit); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 800 22px/1.2 var(--ch-titre); margin-bottom: 2px !important; }
+.module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(2) h5::before {
+	counter-increment: chapitre;
+	content: counter(chapitre, decimal-leading-zero);
+	display: block;
+	margin-bottom: 2px;
+	color: var(--ch-ocre);
+	font: 500 11.5px var(--ch-mono);
+	letter-spacing: 0.16em;
+}
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--ch-texte); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--ch-sarcelle-texte); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--ch-doux); font-size: 14.5px; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(3) { color: var(--ch-doux); font-size: 13.5px; text-align: right; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(4) { color: var(--ch-doux); font-size: 13.5px; }
+.module-forum .subforums > li, .module-forum .forum-groups > a { border-radius: 999px; border: 1px solid var(--ch-trait); background: var(--ch-carte); font-size: 12px; }
+
+/* L'espace membre : mon carnet (la carte de l'accueil porte son propre cadre : pas de second autour) */
+.ch-page .card:has(> .card-body > .nf-espace-accueil) { background: none; border: 0; }
+.ch-page .card:has(> .card-body > .nf-espace-accueil) > .card-body { padding: 0; }
+.ch-page .nf-espace-accueil { position: relative; overflow: hidden; padding: 22px 22px 20px; background: var(--ch-carte); border: 1px solid var(--ch-trait); border-radius: 18px; box-shadow: none; }
+.ch-page .nf-espace-accueil::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--ch-sarcelle); }
+.ch-page .nf-espace-accueil-nom h2 { font: 800 30px/1.05 var(--ch-titre); margin-bottom: 6px; }
+.ch-page .nf-espace-accueil .avatar { box-shadow: 0 0 0 3px var(--ch-carte), 0 0 0 5px var(--ch-sarcelle); }
+.ch-page .nf-espace-menu { background: var(--ch-carte); border: 1px solid var(--ch-trait); border-radius: 18px; box-shadow: none; }
+.ch-page .nf-espace-menu .nf-espace-titre { color: var(--ch-ocre); font: 500 11.5px var(--ch-mono); letter-spacing: 0.18em; }
+.ch-page .nf-espace-menu .nf-espace-lien { border-radius: 10px; color: var(--ch-texte); font-weight: 600; }
+.ch-page .nf-espace-menu .nf-espace-lien:hover { background: var(--ch-surface-2); color: var(--ch-texte); }
+.ch-page .nf-espace-menu .nf-espace-lien.actif { background: var(--ch-sarcelle-doux); color: var(--ch-sarcelle-texte); }
+.ch-page .nf-espace-menu .nf-espace-badge { background: var(--ch-sarcelle); color: var(--ch-sur-sarcelle); }
+.ch-page .nf-membre-couverture-vide { background: repeating-linear-gradient(115deg, var(--ch-surface-2) 0 2px, transparent 2px 12px), var(--ch-surface-3) !important; }
+.ch-page .nf-membre-onglet.is-actif { color: var(--ch-texte); box-shadow: inset 0 -2px 0 var(--ch-sarcelle); }
+
+/* Les widgets : la semaine du calendrier, qui est en ligne, les partenaires */
+.ch-page .nf-semaine-jour { border-radius: 10px; }
+.ch-page .nf-semaine-nom { font: 600 12px var(--nf-font); }
+.ch-page .nf-semaine-numero { font: 800 20px/1.1 var(--ch-titre); }
+.ch-page .nf-semaine-libelle { font: 500 11.5px var(--ch-mono); letter-spacing: 0.14em; }
+.ch-page .nf-semaine-prochain time { font: 500 12px var(--ch-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.ch-page .nf-semaine-prochain a { color: var(--ch-texte); font-weight: 600; }
+.widget-members h3 { font: 800 28px/1 var(--ch-titre); }
+.widget-members .row.text-center { flex-wrap: nowrap; }
+.widget-members .row.text-center > [class*="col-"] { flex: 1 1 0; width: auto; color: var(--ch-doux); font-size: 13px; }
+.ch-cote .column-partners h4 { margin: 0; font: 600 14px var(--nf-font); color: var(--ch-granit); }
+.ch-cote .column-partners hr { display: none; }
+.ch-cote .column-partners img.logo { max-height: 34px; width: auto; filter: grayscale(1); opacity: 0.85; }
+.ch-cote .column-partners a:hover img.logo { filter: none; opacity: 1; }
+.widget-slider { border-radius: 18px; overflow: hidden; }
+.widget-slider .carousel-caption { left: 0; right: 0; bottom: 0; padding: 30px 22px 16px; text-align: left; background: linear-gradient(transparent, rgba(21, 25, 27, 0.75)); }
+.widget-slider .carousel-caption h3 { color: #fff; font: 800 28px/1.05 var(--ch-titre); }
+
+/* La navigation, si on la pose ailleurs que dans le sommaire (le pied, par défaut) */
+.ch-contenu .widget-navigation .nav-link, .ch-cote .widget-navigation .nav-link { color: var(--ch-texte); font-weight: 600; border-radius: 999px; }
+.ch-contenu .widget-navigation .nav-link.active, .ch-contenu .widget-navigation .nav-link:hover,
+.ch-cote .widget-navigation .nav-link.active, .ch-cote .widget-navigation .nav-link:hover { background: var(--ch-surface-2); color: var(--ch-texte); }
+
+/* =========================================================================
+   §11 — Le pied, comme la fin d'un livre
+   ======================================================================== */
+
+.ch-pied { width: 100%; max-width: 1240px; margin: 0 auto; padding: 34px clamp(16px, 4vw, 56px) 40px; text-align: center; color: var(--ch-doux); font-size: 14px; }
+.ch-pied::before { content: ""; display: block; margin: 0 auto 34px; border-top: 1px solid var(--ch-trait); }
+.ch-ornement { width: 34px; height: 34px; margin: 0 auto 14px; border-radius: 9px; background: var(--ch-pierre); transform: rotate(45deg); }
+.ch-pied-nom { margin: 0 0 6px; color: var(--ch-texte); font: italic 500 22px var(--ch-titre); }
+.ch-pied-zone .row { margin: 0; justify-content: center; }
+.ch-pied-zone .row > [class*="col-"], .ch-pied-zone .row > .col { padding: 0; }
+.ch-pied-zone .card { background: none; border: 0; margin: 0; }
+.ch-pied-zone .card-body { padding: 0; }
+.ch-pied-zone .widget-navigation .nav { justify-content: center; gap: 4px 18px; }
+.ch-pied-zone .nf-nav-repliable > .nf-nav-toggle { display: none !important; }
+.ch-pied-zone .nf-nav-repliable > .nav { display: flex !important; flex-wrap: wrap; }
+.ch-pied-zone .widget-navigation .nav-link { padding: 4px 0; background: none; color: var(--ch-texte); font-weight: 600; }
+.ch-pied-zone .widget-navigation .nav-link:hover, .ch-pied-zone .widget-navigation .nav-link.active { background: none; color: var(--ch-sarcelle-texte); }
+.ch-pied-zone .widget-navigation .nav-link > .icon:empty { display: none; }
+.ch-pied-barre { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 18px; margin-top: 18px; }
+.ch-copy a, .ch-site-name { color: var(--ch-texte); font-weight: 600; }
+.ch-copy a:hover { color: var(--ch-sarcelle-texte); }
+.ch-socials { display: inline-flex; gap: 6px; }
+.ch-social { display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--ch-trait); border-radius: 999px; color: var(--ch-texte); transition: border-color 160ms ease, color 160ms ease; }
+.ch-social:hover, .ch-social:focus-visible { border-color: var(--ch-sarcelle); color: var(--ch-sarcelle-texte); }
+.ch-pied .btn-light { background: none; border-color: var(--ch-trait); color: var(--ch-texte); }
+.ch-pied .btn-light:hover { border-color: var(--ch-texte); background: none; color: var(--ch-sarcelle-texte); }
+
+/* =========================================================================
+   §12 — Téléphone et tablette
+   ======================================================================== */
+
+@media (max-width: 991.98px) {
+	.ch-ouverture { grid-template-columns: minmax(0, 1fr); gap: 26px; padding: 32px 0 26px; }
+	.ch-corps { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+	.ch-cote { position: static; }
+}
+@media (max-width: 767.98px) {
+	.ch-tete-ligne { gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+	.ch-nom { font-size: 18px; }
+	.ch-compte .ch-compte-nom, .ch-compte .fa-angle-down, .ch-compte .ch-connexion { display: none; }
+	.ch-compte .ch-compte-membre { padding: 4px; }
+	.ch-bouton-sommaire { padding: 7px 12px; }
+	.ch-bouton-sommaire span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	.ch-appel { padding: 7px 12px; font-size: 13px; }
+	.ch-titre { font-size: clamp(34px, 10vw, 44px); }
+	.ch-page .nf-frise { padding-left: 38px; }
+	.ch-page .nf-frise-borne { margin-left: -38px; }
+	.ch-page .nf-frise-titre { font-size: 22px; }
+	.ch-page .nf-frise-image img { height: 160px; }
+	.module-forum table[data-forum-view] > tbody > tr > td:nth-child(3) { text-align: left; }
+	/* Le forum en pile (forum.css) : un seul filet par forum, sous la dernière case. */
+	.module-forum table[data-forum-view] > tbody > tr > td:not(:last-child) { border-bottom-width: 0; }
+	.module-forum table[data-forum-view] > tbody > tr > td:nth-child(n+3) { padding-top: 0; }
+}
+
+/* =========================================================================
+   §13 — Moins d'animations demandé : le carnet ne bouge plus
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+	.ch-sommaire-cadre { animation: none; }
+	.ch-progression { display: none; }
+	.ch-page .nf-frise-titre a, .ch-bouton-sommaire, .ch-appel { transition: none; }
+}

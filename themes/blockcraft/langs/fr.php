@@ -77,4 +77,6 @@ return [
 	'c77f6c43' => 'Propulsé par',
 	'c040bba0' => 'Thème inspiré des jeux de blocs : jour « biome » clair, accent vert herbe, nuit « grotte » au choix du visiteur ; couleurs, images et logo réglables.',
 	'4f376417' => 'Retour en haut',
+	'dd4d9d2b' => 'Mode jour',
+	'4c8ad4b2' => 'Mode nuit',
 ];

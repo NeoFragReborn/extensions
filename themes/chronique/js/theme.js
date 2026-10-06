@@ -1,15 +1,16 @@
 /**
- * Forge theme — bascule nuit/jour.
- * - nuit (sombre, lave) par défaut ; jour via le bouton .theme-toggle
- * - localStorage 'nf-forge-theme'
+ * Chronique — bascule jour/nuit (jour « papier », nuit « à la lampe »).
+ * - jour (papier) par défaut ; nuit via le bouton .theme-toggle
+ * - localStorage 'nf-chronique-theme', suit la préférence système sans choix manuel
  */
 (function() {
 	'use strict';
 
-	var STORAGE_KEY = 'nf-forge-theme';
+	var STORAGE_KEY = 'nf-chronique-theme';
 
 	function getStored() { try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; } }
 	function setStored(v) { try { localStorage.setItem(STORAGE_KEY, v); } catch (e) {} }
+	function sysDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
 
 	function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); document.documentElement.setAttribute('data-bs-theme', t === 'dark' ? 'dark' : 'light'); }
 
@@ -30,7 +31,7 @@
 	}
 
 	function toggleTheme() {
-		var current = document.documentElement.getAttribute('data-theme') || 'dark';
+		var current = document.documentElement.getAttribute('data-theme') || 'light';
 		var next = current === 'dark' ? 'light' : 'dark';
 		document.documentElement.classList.add('no-transitions');
 		applyTheme(next);
@@ -41,11 +42,10 @@
 		});
 	}
 
-	// Nuit par défaut (sauf choix utilisateur explicite)
-	applyTheme(getStored() || 'dark');
+	applyTheme(getStored() || (sysDark() ? 'dark' : 'light'));
 
 	function init() {
-		syncButton(document.documentElement.getAttribute('data-theme') || 'dark');
+		syncButton(document.documentElement.getAttribute('data-theme') || 'light');
 
 		document.querySelectorAll('.theme-toggle').forEach(function(btn) {
 			btn.addEventListener('click', function(e) {
@@ -53,6 +53,18 @@
 				toggleTheme();
 			});
 		});
+
+		if (!getStored() && window.matchMedia) {
+			var mql = window.matchMedia('(prefers-color-scheme: dark)');
+			var handler = function(e) {
+				if (getStored()) return;
+				var t = e.matches ? 'dark' : 'light';
+				applyTheme(t);
+				syncButton(t);
+			};
+			if (mql.addEventListener) mql.addEventListener('change', handler);
+			else if (mql.addListener) mql.addListener(handler);
+		}
 	}
 
 	if (document.readyState === 'loading') {

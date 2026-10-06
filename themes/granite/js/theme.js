@@ -20,12 +20,12 @@
 			if (!icon) return;
 			if (t === 'dark') {
 				icon.className = 'fas fa-sun';
-				btn.setAttribute('title', 'Mode jour');
-				btn.setAttribute('aria-label', 'Mode jour');
+				btn.setAttribute('title', '<?php echo addslashes($this->lang('Mode jour')) ?>');
+				btn.setAttribute('aria-label', '<?php echo addslashes($this->lang('Mode jour')) ?>');
 			} else {
 				icon.className = 'fas fa-moon';
-				btn.setAttribute('title', 'Mode nuit');
-				btn.setAttribute('aria-label', 'Mode nuit');
+				btn.setAttribute('title', '<?php echo addslashes($this->lang('Mode nuit')) ?>');
+				btn.setAttribute('aria-label', '<?php echo addslashes($this->lang('Mode nuit')) ?>');
 			}
 		});
 	}

@@ -1,11 +1,11 @@
 <?php
 /**
  * https://neofr.ag
- * Granite — panneau d'administration du thème : le titre du journal (son image, sa couleur, le logo), l'arrière-plan,
- * les couleurs, les lettrines et les réseaux sociaux.
+ * Chronique — panneau d'administration du thème : l'ouverture de l'accueil (son image, le logo), l'arrière-plan,
+ * les couleurs, l'appel à adhérer et les réseaux sociaux.
  */
 
-namespace NF\Themes\Granite\Controllers;
+namespace NF\Themes\Chronique\Controllers;
 
 use NF\NeoFrag\Loadables\Controller;
 
@@ -22,22 +22,22 @@ class Admin extends Controller
 			}
 		};
 
-		/* ------------------------------------------------------ Le titre (header) */
+		/* ------------------------------------------------- L'ouverture (header) */
 
 		$form_header = $this->form()
 			->add_rules([
 				'header' => [
-					'label'       => $this->lang('Image du titre'),
-					'value'       => $this->config->granite_header,
+					'label'       => $this->lang('Image d’ouverture'),
+					'value'       => $this->config->chronique_header,
 					'type'        => 'file',
-					'upload'      => 'themes/granite/headers',
+					'upload'      => 'themes/chronique/headers',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Posée derrière le nom du site, éclaircie pour qu’il reste lisible. Laisser vide : le papier seul.')
+					'description' => $this->lang('Posée derrière la grande phrase de l’accueil, éclaircie pour qu’elle reste lisible. Laisser vide : le papier seul.')
 				],
 				'repeat' => [
 					'label'  => $this->lang('Répétition'),
-					'value'  => $this->config->granite_header_repeat,
+					'value'  => $this->config->chronique_header_repeat,
 					'values' => [
 						'no-repeat' => $this->lang('Non'),
 						'repeat-x'  => $this->lang('Horizontalement'),
@@ -49,7 +49,7 @@ class Admin extends Controller
 				],
 				'positionX' => [
 					'label'  => $this->lang('Position'),
-					'value'  => explode(' ', (string) $this->config->granite_header_position ?: 'center center')[0],
+					'value'  => explode(' ', (string) $this->config->chronique_header_position ?: 'center center')[0],
 					'values' => [
 						'left'   => $this->lang('Gauche'),
 						'center' => $this->lang('Centré'),
@@ -59,7 +59,7 @@ class Admin extends Controller
 					'rules'  => 'required'
 				],
 				'positionY' => [
-					'value'  => explode(' ', (string) $this->config->granite_header_position ?: 'center center')[1] ?? 'center',
+					'value'  => explode(' ', (string) $this->config->chronique_header_position ?: 'center center')[1] ?? 'center',
 					'values' => [
 						'top'    => $this->lang('Haut'),
 						'center' => $this->lang('Milieu'),
@@ -69,27 +69,18 @@ class Admin extends Controller
 					'rules'  => 'required'
 				],
 				'fixed' => [
-					'checked' => ['on' => $this->config->granite_header_attachment == 'fixed'],
+					'checked' => ['on' => $this->config->chronique_header_attachment == 'fixed'],
 					'values'  => ['on' => $this->lang('Image fixe (parallax)')],
 					'type'    => 'checkbox'
 				],
-				'color' => [
-					'label'       => $this->lang('Couleur du titre'),
-					// Le défaut de Granite 1.x (#0e7c86) se lit comme celui de la 2.0.0 : la couleur du papier.
-					'value'       => in_array(strtolower((string) $this->config->granite_header_color), ['', '#0e7c86'], TRUE) ? '#f4efe4' : $this->config->granite_header_color,
-					'type'        => 'colorpicker',
-					'description' => $this->lang('Un bandeau de couleur derrière le nom du site, comme la manchette d’un quotidien. Laisser la couleur du papier (#f4efe4) pour n’en mettre aucun.'),
-					'rules'       => 'required',
-					'size'        => 'col-3'
-				],
 				'logo' => [
 					'label'       => $this->lang('Logo du site'),
-					'value'       => $this->config->granite_logo,
+					'value'       => $this->config->chronique_logo,
 					'type'        => 'file',
-					'upload'      => 'themes/granite/logos',
+					'upload'      => 'themes/chronique/logos',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Imprimé au-dessus du nom du site. Laissé vide : le logo du site (réglages généraux), s’il y en a un.')
+					'description' => $this->lang('Dans l’en-tête, devant le nom du site. Laissé vide : le logo du site (réglages généraux), s’il y en a un.')
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -101,16 +92,16 @@ class Admin extends Controller
 			->add_rules([
 				'background' => [
 					'label'       => $this->lang('Image de fond'),
-					'value'       => $this->config->granite_background,
+					'value'       => $this->config->chronique_background,
 					'type'        => 'file',
-					'upload'      => 'themes/granite/backgrounds',
+					'upload'      => 'themes/chronique/backgrounds',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
 					'description' => $this->lang('Laisser vide pour utiliser la couleur unie du thème.')
 				],
 				'repeat' => [
 					'label'  => $this->lang('Répétition'),
-					'value'  => $this->config->granite_background_repeat,
+					'value'  => $this->config->chronique_background_repeat,
 					'values' => [
 						'no-repeat' => $this->lang('Non'),
 						'repeat-x'  => $this->lang('Horizontalement'),
@@ -122,7 +113,7 @@ class Admin extends Controller
 				],
 				'positionX' => [
 					'label'  => $this->lang('Position'),
-					'value'  => explode(' ', (string) $this->config->granite_background_position ?: 'center top')[0],
+					'value'  => explode(' ', (string) $this->config->chronique_background_position ?: 'center top')[0],
 					'values' => [
 						'left'   => $this->lang('Gauche'),
 						'center' => $this->lang('Centré'),
@@ -132,7 +123,7 @@ class Admin extends Controller
 					'rules'  => 'required'
 				],
 				'positionY' => [
-					'value'  => explode(' ', (string) $this->config->granite_background_position ?: 'center top')[1] ?? 'top',
+					'value'  => explode(' ', (string) $this->config->chronique_background_position ?: 'center top')[1] ?? 'top',
 					'values' => [
 						'top'    => $this->lang('Haut'),
 						'center' => $this->lang('Milieu'),
@@ -142,13 +133,13 @@ class Admin extends Controller
 					'rules'  => 'required'
 				],
 				'fixed' => [
-					'checked' => ['on' => $this->config->granite_background_attachment == 'fixed'],
+					'checked' => ['on' => $this->config->chronique_background_attachment == 'fixed'],
 					'values'  => ['on' => $this->lang('Image fixe (parallax)')],
 					'type'    => 'checkbox'
 				],
 				'color' => [
 					'label' => $this->lang('Couleur de fond'),
-					'value' => $this->config->granite_background_color,
+					'value' => $this->config->chronique_background_color,
 					'type'  => 'colorpicker',
 					'rules' => 'required',
 					'size'  => 'col-3'
@@ -163,7 +154,7 @@ class Admin extends Controller
 			->add_rules([
 				'theme_color' => [
 					'label'       => $this->lang('Couleur d\'accent'),
-					'value'       => $this->config->granite_theme_color,
+					'value'       => $this->config->chronique_theme_color,
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur principale du thème (boutons, liens, accents)'),
 					'rules'       => 'required',
@@ -171,18 +162,18 @@ class Admin extends Controller
 				],
 				'text_color' => [
 					'label'       => $this->lang('Couleur du texte'),
-					'value'       => $this->config->granite_text_color,
+					'value'       => $this->config->chronique_text_color,
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur appliquée au texte principal'),
 					'rules'       => 'required',
 					'size'        => 'col-3'
 				],
-				// Les capitales ornées de la une et des articles. Jamais enregistré, le réglage se lit FALSE : allumées.
-				'lettrines' => [
-					'label'   => $this->lang('Lettrines'),
-					'checked' => ['on' => $this->config->granite_lettrines === FALSE || (bool) $this->config->granite_lettrines],
-					'values'  => ['on' => $this->lang('Orner d’une capitale la première lettre de la une et des articles')],
-					'type'    => 'checkbox'
+				// L'appel à adhérer, dans l'en-tête, pour un visiteur : une adresse au choix, sinon l'inscription du site.
+				'appel' => [
+					'label'       => $this->lang('Adresse du bouton « Adhérer »'),
+					'value'       => $this->config->chronique_appel,
+					'type'        => 'text',
+					'description' => $this->lang('Une page d’adhésion, un formulaire d’une autre plateforme… Laisser vide : l’inscription au site, quand elle est ouverte.')
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -223,30 +214,29 @@ class Admin extends Controller
 
 		if ($form_header->is_valid($post))
 		{
-			if ($post['header']) $this->config('granite_header', $post['header'], 'int');
-			else                 $this->config->unset('granite_header');
+			if ($post['header']) $this->config('chronique_header', $post['header'], 'int');
+			else                 $this->config->unset('chronique_header');
 
-			if ($post['logo'])   $this->config('granite_logo', $post['logo'], 'int');
-			else                 $this->config->unset('granite_logo');
+			if ($post['logo'])   $this->config('chronique_logo', $post['logo'], 'int');
+			else                 $this->config->unset('chronique_logo');
 
-			$this	->config('granite_header_repeat',     $post['repeat'])
-					->config('granite_header_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
-					->config('granite_header_position',   $post['positionX'].' '.$post['positionY'])
-					->config('granite_header_color',      $post['color'])
-					->config('nf_version_css',            time());
+			$this	->config('chronique_header_repeat',     $post['repeat'])
+					->config('chronique_header_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
+					->config('chronique_header_position',   $post['positionX'].' '.$post['positionY'])
+					->config('nf_version_css',              time());
 
-			notify($this->lang('Titre du journal mis à jour !'));
+			notify($this->lang('Ouverture mise à jour !'));
 			redirect($this->url->location.'#header');
 		}
 		else if ($form_background->is_valid($post))
 		{
-			if ($post['background']) $this->config('granite_background', $post['background'], 'int');
-			else                     $this->config->unset('granite_background');
+			if ($post['background']) $this->config('chronique_background', $post['background'], 'int');
+			else                     $this->config->unset('chronique_background');
 
-			$this	->config('granite_background_repeat',     $post['repeat'])
-					->config('granite_background_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
-					->config('granite_background_position',   $post['positionX'].' '.$post['positionY'])
-					->config('granite_background_color',      $post['color'])
+			$this	->config('chronique_background_repeat',     $post['repeat'])
+					->config('chronique_background_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
+					->config('chronique_background_position',   $post['positionX'].' '.$post['positionY'])
+					->config('chronique_background_color',      $post['color'])
 					->config('nf_version_css',                time());
 
 			notify($this->lang('Arrière-plan mis à jour !'));
@@ -254,13 +244,13 @@ class Admin extends Controller
 		}
 		else if ($form_settings->is_valid($post))
 		{
-			$this	->config('granite_theme_color', $post['theme_color'])
-					->config('granite_text_color',  $post['text_color'])
-					->config('granite_lettrines',   in_array('on', $post['lettrines']) ? 1 : 0, 'int')
-					->config('nf_version_css',      time());
+			// L'adresse de l'appel : une adresse du web, ou rien (l'inscription du site).
+			$appel = trim((string) $post['appel']);
 
-			// Le réglage de la barre du haut fixe, retiré avec la 2.0.0.
-			$this->config->unset('granite_navbar_display');
+			$this	->config('chronique_theme_color', $post['theme_color'])
+					->config('chronique_text_color',  $post['text_color'])
+					->config('chronique_appel',       preg_match('#^(https?://|/)#i', $appel) ? $appel : '')
+					->config('nf_version_css',        time());
 
 			notify($this->lang('Configuration mise à jour !'));
 			redirect($this->url->location.'#settings');

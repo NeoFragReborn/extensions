@@ -73,4 +73,6 @@ return [
 	'c77f6c43' => 'Bereitgestellt von',
 	'c040bba0' => 'Ein von Blockspielen inspiriertes Theme: heller Tag „Biom“, grasgrüner Akzent, Nacht „Höhle“ nach Wahl des Besuchers; Farben, Bilder und Logo einstellbar.',
 	'4f376417' => 'Nach oben',
+	'dd4d9d2b' => 'Tagmodus',
+	'4c8ad4b2' => 'Nachtmodus',
 ];

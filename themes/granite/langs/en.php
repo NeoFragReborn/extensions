@@ -80,4 +80,5 @@ return [
 	'467f39a3' => 'Content',
 	'70b046b8' => 'After content',
 	'704ff933' => 'Footer',
+	'dd4d9d2b' => 'Day mode',
 ];

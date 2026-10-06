@@ -80,4 +80,5 @@ return [
 	'467f39a3' => 'Contenu',
 	'70b046b8' => 'Après le contenu',
 	'704ff933' => 'Pied de page',
+	'dd4d9d2b' => 'Mode jour',
 ];

@@ -76,4 +76,5 @@ return [
 	'467f39a3' => 'Inhalt',
 	'70b046b8' => 'Nach-Inhalt',
 	'704ff933' => 'Fußzeile',
+	'dd4d9d2b' => 'Tagmodus',
 ];

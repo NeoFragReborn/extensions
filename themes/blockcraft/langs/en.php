@@ -77,4 +77,6 @@ return [
 	'c77f6c43' => 'Powered by',
 	'c040bba0' => 'A theme inspired by block-building games: light "biome" day, grass-green accent, "cave" night at the visitor\'s choice; adjustable colors, images and logo.',
 	'4f376417' => 'Back to top',
+	'dd4d9d2b' => 'Day mode',
+	'4c8ad4b2' => 'Night mode',
 ];

@@ -76,4 +76,5 @@ return [
 	'467f39a3' => 'Contenuto',
 	'70b046b8' => 'Post-contenuto',
 	'704ff933' => 'Piè di pagina',
+	'dd4d9d2b' => 'Modalità giorno',
 ];

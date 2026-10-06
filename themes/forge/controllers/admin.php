@@ -49,7 +49,7 @@ class Admin extends Controller
 				],
 				'positionX' => [
 					'label'  => $this->lang('Position'),
-					'value'  => explode(' ', $this->config->forge_header_position)[0],
+					'value'  => explode(' ', (string) $this->config->forge_header_position ?: 'center center')[0],
 					'values' => [
 						'left'   => $this->lang('Gauche'),
 						'center' => $this->lang('Centré'),
@@ -59,7 +59,7 @@ class Admin extends Controller
 					'rules'  => 'required'
 				],
 				'positionY' => [
-					'value'  => explode(' ', $this->config->forge_header_position)[1],
+					'value'  => explode(' ', (string) $this->config->forge_header_position ?: 'center center')[1] ?? 'center',
 					'values' => [
 						'top'    => $this->lang('Haut'),
 						'center' => $this->lang('Milieu'),
@@ -120,7 +120,7 @@ class Admin extends Controller
 				],
 				'positionX' => [
 					'label'  => $this->lang('Position'),
-					'value'  => explode(' ', $this->config->forge_background_position)[0],
+					'value'  => explode(' ', (string) $this->config->forge_background_position ?: 'center top')[0],
 					'values' => [
 						'left'   => $this->lang('Gauche'),
 						'center' => $this->lang('Centré'),
@@ -130,7 +130,7 @@ class Admin extends Controller
 					'rules'  => 'required'
 				],
 				'positionY' => [
-					'value'  => explode(' ', $this->config->forge_background_position)[1],
+					'value'  => explode(' ', (string) $this->config->forge_background_position ?: 'center top')[1] ?? 'top',
 					'values' => [
 						'top'    => $this->lang('Haut'),
 						'center' => $this->lang('Milieu'),

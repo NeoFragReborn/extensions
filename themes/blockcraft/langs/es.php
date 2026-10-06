@@ -73,4 +73,6 @@ return [
 	'c77f6c43' => 'Desarrollado con',
 	'c040bba0' => 'Tema inspirado en los juegos de bloques: día «bioma» claro, acento verde hierba, noche «cueva» a elección del visitante; colores, imágenes y logo ajustables.',
 	'4f376417' => 'Volver arriba',
+	'dd4d9d2b' => 'Modo día',
+	'4c8ad4b2' => 'Modo noche',
 ];

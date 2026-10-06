@@ -76,4 +76,5 @@ return [
 	'467f39a3' => 'Conteúdo',
 	'70b046b8' => 'Pós-conteúdo',
 	'704ff933' => 'Rodapé',
+	'dd4d9d2b' => 'Modo dia',
 ];

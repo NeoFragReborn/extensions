@@ -73,4 +73,6 @@ return [
 	'c77f6c43' => 'Realizzato con',
 	'c040bba0' => 'Tema ispirato ai giochi a blocchi: giorno «bioma» chiaro, accento verde erba, notte «caverna» a scelta del visitatore; colori, immagini e logo regolabili.',
 	'4f376417' => 'Torna su',
+	'dd4d9d2b' => 'Modalità giorno',
+	'4c8ad4b2' => 'Modalità notte',
 ];
