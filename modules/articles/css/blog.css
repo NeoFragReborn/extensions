@@ -178,6 +178,11 @@
 	.blog-fiche-fusion .blog-encart { display: none; }
 }
 
+/* Un tableau ou un bout de code trop large ne fait plus déborder le billet au téléphone : le code se coupe où il faut, et
+   un tableau qui reste trop large défile dans sa colonne (le billet 1.2.0 dépassait de 14 px à 390 px ; 2026-10-06). */
+.blog-contenu code { overflow-wrap: anywhere; }
+.blog-contenu table { display: block; max-width: 100%; overflow-x: auto; }
+
 /* ── Téléphone et tablette ───────────────────────────────────────────── */
 @media (max-width: 991.98px) {
 	.blog-liste-barre .blog-corps, .blog-fiche-fusion .blog-lecture, .blog-fiche-sommaire .blog-lecture { grid-template-columns: minmax(0, 1fr); }
