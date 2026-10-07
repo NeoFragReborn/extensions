@@ -22,6 +22,6 @@ class Sitemap extends Controller_Module
 			return [];
 		}
 
-		return [['adresse' => 'glossary', 'date' => $this->db->select('MAX(updated_at)')->from('nf_glossary_terms')->where('published', '1')->row()]];
+		return [['adresse' => 'glossary', 'date' => $this->db->select('MAX(updated_at)')->from('nf_glossary_terms')->where('published', '1')->row(), 'sans_langue' => TRUE]];
 	}
 }

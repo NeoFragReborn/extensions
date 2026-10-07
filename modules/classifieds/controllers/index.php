@@ -26,6 +26,9 @@ class Index extends Controller_Module
 
 	public function _show($ad)
 	{
+		// Une annonce n'a pas de langue à elle : sa canonique est dans la langue première du site.
+		nf_seo_sans_langue();
+
 		$this->title($ad['title'])->icon('fas fa-bullhorn')->breadcrumb();
 
 		$is_owner = $this->user() && (int)$this->user->id === (int)$ad['user_id'];

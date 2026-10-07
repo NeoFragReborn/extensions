@@ -47,6 +47,9 @@ class Index extends Controller_Module
 
 	public function _show($survey, $options, $user_voted)
 	{
+		// Un sondage n'a pas de langue à lui : sa canonique est dans la langue première du site.
+		nf_seo_sans_langue();
+
 		$this->title($survey['title'])->icon('fas fa-poll')->breadcrumb();
 
 		$closed       = $survey['closed_at'] && strtotime($survey['closed_at']) <= time();

@@ -20,7 +20,7 @@ class Sitemap extends Controller_Module
 
 		foreach ($this->db->select('id', 'title', 'created_at')->from('nf_surveys')->where('published', '1')->order_by('created_at DESC')->get() as $sondage)
 		{
-			$adresses[] = ['adresse' => 'surveys/'.$sondage['id'].'/'.url_title($sondage['title']), 'date' => $sondage['created_at']];
+			$adresses[] = ['adresse' => 'surveys/'.$sondage['id'].'/'.url_title($sondage['title']), 'date' => $sondage['created_at'], 'sans_langue' => TRUE];
 		}
 
 		// Une rubrique vide n'est pas annoncée aux moteurs : sa page ne dirait que « rien pour l'instant ».

@@ -40,6 +40,12 @@ class Index extends Controller_Module
 				->icon('fas fa-broadcast-tower')
 				->breadcrumb();
 
+		// Ni flux ni émission : une page vide, que les moteurs n'indexent pas (et que le plan du site tait).
+		if ($station['stream'] === '' && !$creneaux)
+		{
+			$this->output->data->set('module', 'robots', 'noindex, follow');
+		}
+
 		$corps = $this->_lecteur($station, $en_cours).$this->_grille($creneaux, $en_cours);
 
 		return $this	->css('webradio')

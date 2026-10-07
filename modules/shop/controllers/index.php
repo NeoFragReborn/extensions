@@ -13,6 +13,10 @@ class Index extends Controller_Module
 {
 	public function index()
 	{
+		// La page est faite des articles de la boutique, qui n'ont pas de langue à eux : sa canonique est
+		// dans la langue première du site.
+		nf_seo_sans_langue();
+
 		$this->css('shop')->js('shop');
 
 		$gam     = $this->module('gamification');

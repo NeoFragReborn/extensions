@@ -15,6 +15,10 @@ class Index extends Controller_Module
 {
 	public function index($groupes)
 	{
+		// La page est faite des citations, qui n'ont pas de langue à elles : sa canonique est dans la
+		// langue première du site.
+		nf_seo_sans_langue();
+
 		$this	->title($this->lang('Citations'))
 				->icon('fas fa-quote-right')
 				->breadcrumb();

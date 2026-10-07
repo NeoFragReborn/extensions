@@ -22,7 +22,7 @@ class Sitemap extends Controller_Module
 
 		foreach ($this->db->select('id', 'category_id', 'title', 'updated_at')->from('nf_classifieds')->where('status', 'published')->order_by('updated_at DESC')->get() as $annonce)
 		{
-			$adresses[] = ['adresse' => 'classifieds/'.$annonce['id'].'/'.url_title($annonce['title']), 'date' => $annonce['updated_at']];
+			$adresses[] = ['adresse' => 'classifieds/'.$annonce['id'].'/'.url_title($annonce['title']), 'date' => $annonce['updated_at'], 'sans_langue' => TRUE];
 
 			if ($annonce['category_id'])
 			{

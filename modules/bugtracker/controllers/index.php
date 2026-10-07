@@ -85,6 +85,9 @@ class Index extends Controller_Module
 
 	public function _show($ticket, $comments)
 	{
+		// Un ticket n'a pas de langue à lui : sa canonique est dans la langue première du site.
+		nf_seo_sans_langue();
+
 		$this->title('#'.$ticket['id'].' — '.$ticket['title'])->icon('fas fa-bug')->breadcrumb();
 
 		$body = '';

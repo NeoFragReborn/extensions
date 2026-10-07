@@ -7,6 +7,10 @@ class Index extends Controller_Module
 {
 	public function index($groups)
 	{
+		// La page est faite des liens, qui n'ont pas de langue à eux : sa canonique est dans la langue
+		// première du site.
+		nf_seo_sans_langue();
+
 		$this	->title($this->lang('Liens'))
 				->icon('fas fa-link')
 				->breadcrumb();

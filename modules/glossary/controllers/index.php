@@ -14,6 +14,10 @@ class Index extends Controller_Module
 {
 	public function index($par_lettre, $total)
 	{
+		// La page est faite des définitions, qui n'ont pas de langue à elles : sa canonique est dans la
+		// langue première du site.
+		nf_seo_sans_langue();
+
 		$this	->title($this->lang('Dictionnaire'))
 				->icon('fas fa-book')
 				->breadcrumb();

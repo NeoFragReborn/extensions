@@ -21,7 +21,7 @@ class Sitemap extends Controller_Module
 
 		foreach ($this->db->select('id', 'title', 'updated_at')->from('nf_bug_tickets')->order_by('updated_at DESC')->get() as $ticket)
 		{
-			$adresses[] = ['adresse' => 'bugtracker/'.$ticket['id'].'/'.url_title($ticket['title']), 'date' => $ticket['updated_at']];
+			$adresses[] = ['adresse' => 'bugtracker/'.$ticket['id'].'/'.url_title($ticket['title']), 'date' => $ticket['updated_at'], 'sans_langue' => TRUE];
 		}
 
 		// Une rubrique vide n'est pas annoncée aux moteurs : sa page ne dirait que « rien pour l'instant ».

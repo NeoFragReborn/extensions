@@ -21,6 +21,6 @@ class Sitemap extends Controller_Module
 			return [];
 		}
 
-		return [['adresse' => 'shop', 'date' => $this->db->select('MAX(created_at)')->from('nf_shop_items')->where('active', '1')->row()]];
+		return [['adresse' => 'shop', 'date' => $this->db->select('MAX(created_at)')->from('nf_shop_items')->where('active', '1')->row(), 'sans_langue' => TRUE]];
 	}
 }

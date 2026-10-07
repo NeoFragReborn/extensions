@@ -52,6 +52,9 @@ class Index extends Controller_Module
 	/** La fiche complète d'une recette. */
 	public function _recette($recette)
 	{
+		// Une recette n'a pas de langue à elle : sa canonique est dans la langue première du site.
+		nf_seo_sans_langue();
+
 		$this	->title($recette['title'])
 				->icon('fas fa-utensils')
 				->breadcrumb($this->lang('Recettes'), url('recipes'))

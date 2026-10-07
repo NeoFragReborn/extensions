@@ -64,6 +64,9 @@ class Index extends Controller_Module
 
 		if (empty($messages))
 		{
+			// Une page vide, que les moteurs n'indexent pas (et que le plan du site tait).
+			$this->output->data->set('module', 'robots', 'noindex, follow');
+
 			$body .= '<div class="alert alert-info text-center">'.$this->lang('Aucun message pour le moment. Sois le premier !').'</div>';
 		}
 		else
