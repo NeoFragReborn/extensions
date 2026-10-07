@@ -1,7 +1,9 @@
 <?php
 /**
  * https://neofr.ag
- * Extend — panneau d'administration du thème.
+ * Extend — panneau d'administration du thème (2.0.0 « Lanceur ») : la barre et la vitrine (le logo, l'image de la
+ * vitrine), l'arrière-plan, les couleurs et les réseaux sociaux. La barre reste en haut de l'écran : le réglage « barre
+ * fixe » d'Extend 1.x n'a plus d'objet, ni la couleur et la répétition de l'ancienne bannière.
  */
 
 namespace NF\Themes\Extend\Controllers;
@@ -13,6 +15,11 @@ class Admin extends Controller
 	public function index()
 	{
 		$this->js('admin');
+
+		// Les couleurs par défaut d'Extend 1.x valent celles de la 2.0 (cf. css/style.css) : le sélecteur montre la couleur
+		// que le thème rend.
+		$heritees = ['#11171a' => '#0a111c', '#c3cdd6' => '#c3d0de'];
+		$couleur  = static fn ($valeur): string => $heritees[strtolower((string) $valeur)] ?? (string) $valeur;
 
 		$image_check = function($filename, $ext){
 			if (!in_array($ext, ['gif', 'jpeg', 'jpg', 'png']))
@@ -26,25 +33,13 @@ class Admin extends Controller
 		$form_header = $this->form()
 			->add_rules([
 				'header' => [
-					'label'       => $this->lang('Image de bannière'),
+					'label'       => $this->lang('Image de la vitrine'),
 					'value'       => $this->config->extend_header,
 					'type'        => 'file',
 					'upload'      => 'themes/extend/headers',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Laisser vide pour utiliser le dégradé du thème.')
-				],
-				'repeat' => [
-					'label'  => $this->lang('Répétition'),
-					'value'  => $this->config->extend_header_repeat,
-					'values' => [
-						'no-repeat' => $this->lang('Non'),
-						'repeat-x'  => $this->lang('Horizontalement'),
-						'repeat-y'  => $this->lang('Verticalement'),
-						'repeat'    => $this->lang('Les deux')
-					],
-					'type'   => 'radio',
-					'rules'  => 'required'
+					'description' => $this->lang('Derrière le nom du site sur l’accueil (quand il n’y a pas de diaporama), derrière le titre des autres pages et en bannière de l’espace membre. Laisser vide : un paysage de nuit dessiné par le thème.')
 				],
 				'positionX' => [
 					'label'  => $this->lang('Position'),
@@ -67,18 +62,6 @@ class Admin extends Controller
 					'type'   => 'radio',
 					'rules'  => 'required'
 				],
-				'fixed' => [
-					'checked' => ['on' => $this->config->extend_header_attachment == 'fixed'],
-					'values'  => ['on' => $this->lang('Image fixe (parallax)')],
-					'type'    => 'checkbox'
-				],
-				'color' => [
-					'label' => $this->lang('Couleur de fond'),
-					'value' => $this->config->extend_header_color,
-					'type'  => 'colorpicker',
-					'rules' => 'required',
-					'size'  => 'col-3'
-				],
 				'logo' => [
 					'label'       => $this->lang('Logo du site'),
 					'value'       => $this->config->extend_logo,
@@ -86,7 +69,7 @@ class Admin extends Controller
 					'upload'      => 'themes/extend/logos',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Affiché dans le widget header en remplacement du titre.')
+					'description' => $this->lang('Dans la barre, devant le nom du site. Laissé vide : le logo du site (réglages généraux), s’il y en a un, sinon un emblème à ses initiales.')
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -145,7 +128,7 @@ class Admin extends Controller
 				],
 				'color' => [
 					'label' => $this->lang('Couleur de fond'),
-					'value' => $this->config->extend_background_color,
+					'value' => $couleur($this->config->extend_background_color),
 					'type'  => 'colorpicker',
 					'rules' => 'required',
 					'size'  => 'col-3'
@@ -160,7 +143,7 @@ class Admin extends Controller
 			->add_rules([
 				'theme_color' => [
 					'label'       => $this->lang('Couleur d\'accent'),
-					'value'       => $this->config->extend_theme_color,
+					'value'       => $couleur($this->config->extend_theme_color),
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur principale du thème (boutons, liens, accents)'),
 					'rules'       => 'required',
@@ -168,16 +151,11 @@ class Admin extends Controller
 				],
 				'text_color' => [
 					'label'       => $this->lang('Couleur du texte'),
-					'value'       => $this->config->extend_text_color,
+					'value'       => $couleur($this->config->extend_text_color),
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur appliquée au texte principal'),
 					'rules'       => 'required',
 					'size'        => 'col-3'
-				],
-				'navbar' => [
-					'checked' => ['on' => $this->config->extend_navbar_display],
-					'values'  => ['on' => $this->lang('Garder la barre du haut visible en permanence')],
-					'type'    => 'checkbox'
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -224,13 +202,10 @@ class Admin extends Controller
 			if ($post['logo'])   $this->config('extend_logo', $post['logo'], 'int');
 			else                 $this->config->unset('extend_logo');
 
-			$this	->config('extend_header_repeat',     $post['repeat'])
-					->config('extend_header_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
-					->config('extend_header_position',   $post['positionX'].' '.$post['positionY'])
-					->config('extend_header_color',      $post['color'])
-					->config('nf_version_css',           time());
+			$this	->config('extend_header_position', $post['positionX'].' '.$post['positionY'])
+					->config('nf_version_css',         time());
 
-			notify($this->lang('Bannière du site mise à jour !'));
+			notify($this->lang('Barre et vitrine mises à jour !'));
 			redirect($this->url->location.'#header');
 		}
 		else if ($form_background->is_valid($post))
@@ -249,10 +224,9 @@ class Admin extends Controller
 		}
 		else if ($form_settings->is_valid($post))
 		{
-			$this	->config('extend_theme_color',    $post['theme_color'])
-					->config('extend_text_color',     $post['text_color'])
-					->config('extend_navbar_display', in_array('on', $post['navbar']), 'bool')
-					->config('nf_version_css',        time());
+			$this	->config('extend_theme_color', $post['theme_color'])
+					->config('extend_text_color',  $post['text_color'])
+					->config('nf_version_css',     time());
 
 			notify($this->lang('Configuration mise à jour !'));
 			redirect($this->url->location.'#settings');

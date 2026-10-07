@@ -138,8 +138,11 @@
 .blog-lies { margin-top: 2rem; }
 .blog-lies h2 { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--nf-text-muted); font-weight: 700; }
 .blog-lies > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 14px; }
-.blog-lies a { display: grid; gap: .45rem; color: var(--nf-text); line-height: 1.35; min-width: 0; overflow-wrap: anywhere; }
-.blog-lies img, .blog-lies .blog-couverture-vide { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--nf-radius-sm); display: block; }
+/* Une colonne de largeur DÉFINIE : sans elle, la case vide d'un billet sans image (largeur 100 %, rapport 16:9) prenait
+   sa largeur de la hauteur de sa rangée, et dépassait de la grille — 4 px hors de l'écran à 414 px (check-mise-en-page,
+   2026-10-07). */
+.blog-lies a { display: grid; grid-template-columns: minmax(0, 1fr); gap: .45rem; color: var(--nf-text); line-height: 1.35; min-width: 0; overflow-wrap: anywhere; }
+.blog-lies img, .blog-lies .blog-couverture-vide { width: 100%; aspect-ratio: 16 / 9; align-self: start; object-fit: cover; border-radius: var(--nf-radius-sm); display: block; }
 .blog-encart { position: sticky; top: 90px; align-self: start; }
 .blog-boite-auteur a:not(:has(img)) { font-size: .88rem; color: var(--nf-accent-text); }
 .blog-categories a.actif { color: var(--nf-accent-text); font-weight: 600; }

@@ -1,649 +1,945 @@
 <?php
 /* =========================================================================
-   Extend — feuille de style (template PHP servi par NeoFrag)
-   Mode NUIT (navy) par défaut (:root / [data-theme="dark"])
-   Mode JOUR via [data-theme="light"]. Bleu acier, Economica, navy profond.
+   Extend 2.0.0 « Lanceur » — feuille de style (gabarit PHP servi par NeoFrag)
+
+   Le site comme le lanceur d'un jeu en ligne (chantier B ; direction A de la planche du 2026-10-07,
+   https://claude.ai/artifact/FxoEFTPNA2oyRcwEBUqHwC, celle qui a été choisie) : une barre d'onglets, une vitrine sur
+   l'accueil, la page au centre, le panneau des membres en ligne et du salon toujours ouvert à droite, une barre d'état
+   en bas. Bleu acier sur fond marine ; titres Saira Condensed, texte Albert Sans, chiffres JetBrains Mono. D'après le
+   thème « Extend » de Chewbaka (CC BY-NC-SA 4.0).
+
+   Nuit par défaut (comme Extend l'a toujours été) ; le jour au choix du visiteur (js/theme.js). L'image de la vitrine
+   est réglable ; sans elle, un paysage de nuit dessiné (ciel étoilé, aurore, montagnes). Tout mouvement s'arrête si le
+   visiteur a demandé moins d'animations (§14).
    ======================================================================== */
 
-$accent_default = '#236daf';   /* bleu acier */
-$bg_default     = '#11171a';   /* navy charbon */
-$text_default   = '#c3cdd6';   /* gris froid clair */
+$accent_default = '#236daf';   /* le bleu acier */
+$bg_default     = '#0a111c';   /* la nuit marine */
+$text_default   = '#c3d0de';   /* le gris froid */
 
-$bg_image    = ($this->config->extend_background && ($f = NeoFrag()->model2('file', $this->config->extend_background)->path())) ? $f : '';
-$header_img  = ($this->config->extend_header     && ($f = NeoFrag()->model2('file', $this->config->extend_header)->path()))     ? $f : '';
-$accent      = $this->config->extend_theme_color      ?: $accent_default;
-$bg_color    = $this->config->extend_background_color ?: $bg_default;
-$text_color  = $this->config->extend_text_color       ?: $text_default;
-$bg_repeat   = $this->config->extend_background_repeat     ?: 'repeat';
-$bg_attach   = $this->config->extend_background_attachment ?: 'scroll';
-$bg_pos      = $this->config->extend_background_position   ?: 'center top';
-$header_color  = $this->config->extend_header_color      ?: $accent_default;
-$header_repeat = $this->config->extend_header_repeat     ?: 'no-repeat';
-$header_attach = $this->config->extend_header_attachment ?: 'scroll';
-$header_pos    = $this->config->extend_header_position   ?: 'center top';
+// Les couleurs par défaut d'Extend 1.x sont celles d'un site qui n'a rien choisi : elles valent celles de la 2.0.
+$heritees      = ['#11171a' => $bg_default, '#c3cdd6' => $text_default];
+$couleur       = static fn ($valeur, string $defaut): string => $heritees[strtolower((string) $valeur)] ?? ((string) $valeur ?: $defaut);
+$bg_image      = ($this->config->extend_background && ($f = NeoFrag()->model2('file', $this->config->extend_background)->path())) ? $f : '';
+$vitrine_image = ($this->config->extend_header && ($f = NeoFrag()->model2('file', $this->config->extend_header)->path())) ? $f : '';
+$vitrine_pos   = $this->config->extend_header_position ?: 'center center';
+$accent        = $couleur($this->config->extend_theme_color,      $accent_default);
+$bg_color      = $couleur($this->config->extend_background_color, $bg_default);
+$text_color    = $couleur($this->config->extend_text_color,       $text_default);
+$bg_repeat     = $this->config->extend_background_repeat     ?: 'repeat';
+$bg_attach     = $this->config->extend_background_attachment ?: 'scroll';
+$bg_pos        = $this->config->extend_background_position   ?: 'center top';
 
-$accent_is_custom = ($accent !== $accent_default);
-$bg_is_custom     = ($bg_color !== $bg_default);
-$text_is_custom   = ($text_color !== $text_default);
+$accent_is_custom = (strtolower($accent) !== $accent_default);
+$bg_is_custom     = (strtolower($bg_color) !== $bg_default);
+$text_is_custom   = (strtolower($text_color) !== $text_default);
 ?>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Economica:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Albert+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 
 /* =========================================================================
-   §1 — Tokens — Mode NUIT (navy) — défaut
+   §1 — Jetons — NUIT (par défaut)
    ======================================================================== */
 
 :root,
 [data-theme="dark"] {
-	--ex-bg:             <?php echo $bg_color ?>;
-	--ex-text:           <?php echo $text_color ?>;
-	--ex-accent:         <?php echo $accent ?>;
+	--ex-fond:        <?php echo $bg_color ?>;
+	--ex-panneau:     #0f1926;
+	--ex-panneau-2:   #152231;
+	--ex-panneau-3:   #1c2c3f;
+	--ex-trait:       rgba(140, 180, 225, 0.14);
+	--ex-trait-fort:  rgba(140, 180, 225, 0.28);
+	--ex-texte:       <?php echo $text_color ?>;
+	--ex-fort:        #f0f5fa;
+	--ex-doux:        #8296ac;
+	--ex-accent:      <?php echo $accent ?>;
+	--ex-sur-accent:  <?php echo couleur_lisible_sur($accent) ?>;
+	/* Le bleu des liens et des onglets allumés, sur la nuit : l'accent éclairci (le bleu acier lui-même ne se lirait pas). */
+	--ex-vif:         <?php echo $accent_is_custom ? 'color-mix(in srgb, '.$accent.' 62%, #fff 38%)' : '#5aa5ec' ?>;
+	--ex-accent-doux: color-mix(in srgb, var(--ex-accent) 22%, transparent);
+	/* L'accent appuyé (survol des boutons, bas du « widget coloré ») : plus SOMBRE, de nuit aussi. Éclairci, il portait
+	   le blanc des boutons et des widgets colorés à 3,8:1 (check-contraste, 2026-10-07). */
+	--ex-accent-fort: color-mix(in srgb, var(--ex-accent) 80%, #000 20%);
+	--ex-vert:        #3ccf8e;
+	--ex-ambre:       #f2b450;
+	--ex-perdu:       #f08a8a;
+	--ex-rouge:       #c93636;
+	--ex-info:        #66b7e0;
+	--ex-ombre:       0 14px 34px -18px rgba(0, 0, 0, 0.8);
 
-	--ex-accent-strong:  color-mix(in srgb, <?php echo $accent ?> 80%, #fff 20%);
-	--ex-accent-soft:    color-mix(in srgb, <?php echo $accent ?> 18%, transparent);
-	--ex-accent-text:    color-mix(in srgb, <?php echo $accent ?> 72%, #fff 28%);
-	/* Calcule, et non fige : l'accent est reglable par l'administrateur, et du blanc sur un
-	   accent clair devient illisible (1,75:1 sur le turquoise par defaut). */
-	--ex-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
+	--ex-titre:       "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+	--ex-chiffre:     "JetBrains Mono", ui-monospace, monospace;
+	--nf-font:        "Albert Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--nf-font-display: var(--ex-titre);
 
-	--ex-link:           var(--ex-accent-text);
-	--ex-link-hover:     color-mix(in srgb, <?php echo $accent ?> 60%, #fff 40%);
-
-	/* Surfaces — navy froid */
-	--ex-surface:        #1a2229;
-	--ex-surface-2:      #212b33;
-	--ex-surface-3:      #2a363f;
-
-	--ex-border:         rgba(150, 185, 215, 0.10);
-	--ex-border-strong:  rgba(150, 185, 215, 0.20);
-
-	--ex-text-strong:    #eef3f7;
-	--ex-muted:          #8696a4;
-	--ex-muted-2:        #5a6b78;
-
-	--ex-success:        #36d07a;
-	--ex-success-soft:   rgba(54, 208, 122, 0.12);
-	--ex-danger:         #ff6b6b;
-	--ex-danger-soft:    rgba(255, 107, 107, 0.12);
-	--ex-warning:        #f6b352;
-	--ex-warning-soft:   rgba(246, 179, 82, 0.12);
-	--ex-info:           #4fb0d8;
-	--ex-info-soft:      rgba(79, 176, 216, 0.12);
-
-	--ex-shadow-sm:      0 1px 3px rgba(0, 0, 0, 0.40);
-	--ex-shadow:         0 6px 20px -8px rgba(0, 0, 0, 0.60), 0 2px 6px -2px rgba(0, 0, 0, 0.42);
-	--ex-shadow-md:      0 12px 32px -12px rgba(0, 0, 0, 0.72), 0 3px 8px -2px rgba(0, 0, 0, 0.52);
-
-	/* Halo bleu discret — signature */
-	--ex-glow:           0 0 16px -3px color-mix(in srgb, var(--ex-accent) 45%, transparent);
-	--ex-glow-soft:      0 0 10px -4px color-mix(in srgb, var(--ex-accent) 32%, transparent);
-
-	--ex-radius:         4px;
-	--ex-radius-sm:      3px;
-	--ex-radius-xs:      2px;
-
-	/* Police : déclarée dans le vocabulaire partagé `--nf-*` pour qu'un réglage d'administration
-	   puisse la surcharger sans toucher au thème. Les jetons propres au thème pointent
-	   dessus : changer `--nf-font` change toute la typographie, y compris les titres si le thème
-	   n'en distingue pas. `--nf-font-mono` reste fixe : du code se lit en chasse fixe, toujours. */
-	--nf-font:           "Open Sans", "Segoe UI", system-ui, sans-serif;
-	--nf-font-display:   "Economica", "Oswald", "Open Sans", "Segoe UI", sans-serif;
-	--ex-font:           var(--nf-font);
-	--ex-font-display:   var(--nf-font-display);
-	--ex-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
-
-	--ex-banner-gradient: linear-gradient(135deg, #2f86d4 0%, #236daf 48%, #0e151a 100%);
-
-	/* Pont --nf-* : mappe les tokens génériques des CSS partagés (widgets/modules)
-	   sur l'identité du thème (jour + nuit). Cf. thème granite/forge. */
+	/* Pont --nf-* : les feuilles partagées (socle, modules, widgets) sont écrites pour n'importe quel thème ; ce pont
+	   leur donne l'allure du lanceur. Contrôlé par tools/check-css-variables.php. */
 	--nf-accent:        var(--ex-accent);
-	--nf-accent-soft:   var(--ex-accent-soft);
-	--nf-accent-text:   var(--ex-accent-text);
-	--nf-accent-strong: var(--ex-accent-strong);
-	--nf-on-accent:     var(--ex-on-accent);
-	--nf-bg:            var(--ex-bg);
-	--nf-bg-elevated:   var(--ex-surface);
-	--nf-surface:       var(--ex-surface);
-	--nf-surface-2:     var(--ex-surface-2);
-	--nf-surface-3:     var(--ex-surface-3);
-	--nf-border:        var(--ex-border);
-	--nf-border-strong: var(--ex-border-strong);
-	--nf-text:          var(--ex-text);
-	--nf-text-strong:   var(--ex-text-strong);
-	--nf-text-muted:    var(--ex-muted);
-	--nf-text-soft:     var(--ex-muted);
-	--nf-muted:         var(--ex-muted);
-	--nf-hover:         var(--ex-surface-2);
-	--nf-danger:        var(--ex-danger);
-	/* Alias du vocabulaire partagé : les feuilles des MODULES sont écrites pour n'importe quel
-	   thème. Sans eux, `var(--nf-danger-soft, …)` retombait sur son repli — c'est ce qui posait
-	   des blocs blancs en thème sombre ailleurs dans le produit. Contrôlé par
-	   tools/check-css-variables.php. */
-	--nf-danger-soft:   color-mix(in srgb, var(--ex-danger) 18%, transparent);
-	--nf-muted-2:       var(--ex-muted);
-	--nf-success:       var(--ex-success);
-	--nf-warning:       var(--ex-warning);
+	--nf-accent-soft:   var(--ex-accent-doux);
+	--nf-accent-text:   var(--ex-vif);
+	--nf-accent-strong: var(--ex-accent-fort);
+	--nf-on-accent:     var(--ex-sur-accent);
+	--nf-bg:            var(--ex-fond);
+	--nf-bg-elevated:   var(--ex-panneau);
+	--nf-surface:       var(--ex-panneau);
+	--nf-surface-2:     var(--ex-panneau-2);
+	--nf-surface-3:     var(--ex-panneau-3);
+	--nf-border:        var(--ex-trait);
+	--nf-border-strong: var(--ex-trait-fort);
+	--nf-text:          var(--ex-texte);
+	--nf-text-strong:   var(--ex-fort);
+	--nf-text-muted:    var(--ex-doux);
+	--nf-text-soft:     var(--ex-texte);
+	--nf-muted:         var(--ex-doux);
+	--nf-muted-2:       color-mix(in srgb, var(--ex-doux) 70%, var(--ex-panneau));
+	--nf-hover:         var(--ex-panneau-2);
+	--nf-danger:        var(--ex-perdu);
+	--nf-danger-soft:   color-mix(in srgb, var(--ex-perdu) 14%, transparent);
+	--nf-success:       var(--ex-vert);
+	--nf-success-soft:  color-mix(in srgb, var(--ex-vert) 14%, transparent);
+	--nf-warning:       var(--ex-ambre);
+	--nf-warning-soft:  color-mix(in srgb, var(--ex-ambre) 16%, transparent);
 	--nf-info:          var(--ex-info);
-	--nf-radius:        var(--ex-radius);
-	--nf-radius-sm:     var(--ex-radius-sm);
-	/* Les jetons du socle commun des thèmes (css/nf-socle-themes.css), étape B1 du chantier B. */
-	--nf-radius-xs:   var(--ex-radius-xs);
-	--nf-shadow:      var(--ex-shadow);
-	--nf-shadow-sm:   var(--ex-shadow-sm);
-	--nf-shadow-md:   var(--ex-shadow-md);
-	--nf-success-soft: var(--ex-success-soft);
-	--nf-warning-soft: var(--ex-warning-soft);
-	--nf-info-soft:   var(--ex-info-soft);
-	--nf-link:        var(--ex-link);
-	--nf-link-hover:  var(--ex-link-hover);
-	--nf-font-mono:   var(--ex-font-mono);
+	--nf-info-soft:     color-mix(in srgb, var(--ex-info) 14%, transparent);
+	--nf-radius:        12px;
+	--nf-radius-sm:     8px;
+	--nf-radius-xs:     5px;
+	--nf-shadow:        var(--ex-ombre);
+	--nf-shadow-sm:     0 4px 12px -8px rgba(0, 0, 0, 0.7);
+	--nf-shadow-md:     0 20px 44px -20px rgba(0, 0, 0, 0.85);
+	--nf-link:          var(--ex-vif);
+	--nf-link-hover:    var(--ex-fort);
+	--nf-font-mono:     var(--ex-chiffre);
+	color-scheme: dark;
 }
 
 /* =========================================================================
-   §2 — Tokens — Mode JOUR
+   §2 — Jetons — JOUR
    ======================================================================== */
 
 [data-theme="light"] {
-	--ex-surface:        #ffffff;
-	--ex-surface-2:      #eef2f6;
-	--ex-surface-3:      #e1e8ef;
-	--ex-border:         #d6dee6;
-	--ex-border-strong:  #b9c6d2;
-	--ex-text-strong:    #14202b;
-	--ex-muted:          #5e6f7b;
-	--ex-muted-2:        #93a4b1;
-	--ex-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
-
-	--ex-success:        #1f9d57;
-	--ex-success-soft:   #e2f6ea;
-	--ex-danger:         #d6453f;
-	--ex-danger-soft:    #fbe6e5;
-	--ex-warning:        #c2790f;
-	--ex-warning-soft:   #fbefda;
-	--ex-info:           #1c7e9c;
-	--ex-info-soft:      #e2f1f6;
-
-	--ex-shadow-sm:      0 1px 2px rgba(20, 40, 60, 0.06);
-	--ex-shadow:         0 6px 20px -8px rgba(20, 40, 60, 0.16), 0 2px 5px -2px rgba(20, 40, 60, 0.08);
-	--ex-shadow-md:      0 12px 32px -12px rgba(20, 40, 60, 0.22), 0 3px 8px -2px rgba(20, 40, 60, 0.12);
-
-	--ex-banner-gradient: linear-gradient(135deg, #4f9bdd 0%, #236daf 52%, #163a5a 100%);
-
 	<?php if (!$bg_is_custom): ?>
-	--ex-bg:             #eef1f4;
+	--ex-fond:        #e7ecf2;
 	<?php endif ?>
+	--ex-panneau:     #ffffff;
+	--ex-panneau-2:   #f0f3f7;
+	--ex-panneau-3:   #e1e8ef;
+	--ex-trait:       #d3dce6;
+	--ex-trait-fort:  #b5c3d1;
 	<?php if (!$text_is_custom): ?>
-	--ex-text:           #2a343c;
+	--ex-texte:       #2a3949;
 	<?php endif ?>
+	--ex-fort:        #0e1a27;
+	--ex-doux:        #586a7e;
 	<?php if (!$accent_is_custom): ?>
-	--ex-accent:         #1d5d97;
-	/* La seconde palette emploie un AUTRE accent : `on-accent` doit donc etre recalcule ICI,
-	   sinon il garde la couleur choisie pour l'accent de la premiere. C'est ce qui mettait du
-	   blanc sur le turquoise clair de `granite` — 1,86:1, mesure sur la page servie — dans tout
-	   le panneau `panel-color` : en-tete, libelles, boutons. Le meme oubli existait dans les six
-	   themes. Constate le 2026-09-16 par tools/check-contraste.php. */
-	--ex-on-accent:      <?php echo couleur_lisible_sur('#1d5d97') ?>;
+	--ex-accent:      #1f63a8;
+	/* La seconde palette emploie un AUTRE accent : `sur-accent` se recalcule ICI (la leçon du 2026-09-16). */
+	--ex-sur-accent:  <?php echo couleur_lisible_sur('#1f63a8') ?>;
 	<?php endif ?>
-
-	/* Dérivés recalculés depuis l'accent courant — assombris pour fond clair */
-	--ex-accent-strong:  color-mix(in srgb, var(--ex-accent) 84%, #000 16%);
-	--ex-accent-soft:    color-mix(in srgb, var(--ex-accent) 12%, transparent);
-	--ex-accent-text:    color-mix(in srgb, var(--ex-accent) 88%, #000 12%);
-	--ex-link:           var(--ex-accent-text);
-	--ex-link-hover:     color-mix(in srgb, var(--ex-accent) 68%, #000 32%);
-	--ex-glow:           0 0 14px -4px color-mix(in srgb, var(--ex-accent) 32%, transparent);
-	--ex-glow-soft:      0 0 8px -4px color-mix(in srgb, var(--ex-accent) 24%, transparent);
+	--ex-vif:         color-mix(in srgb, var(--ex-accent) 88%, #000 12%);
+	--ex-accent-doux: color-mix(in srgb, var(--ex-accent) 12%, transparent);
+	--ex-accent-fort: color-mix(in srgb, var(--ex-accent) 84%, #000 16%);
+	--ex-vert:        #137a4b;
+	--ex-ambre:       #8f5b05;
+	--ex-perdu:       #b03434;
+	--ex-info:        #1c6e8c;
+	--ex-ombre:       0 12px 30px -18px rgba(20, 40, 60, 0.35);
+	--nf-shadow-sm:   0 3px 10px -6px rgba(20, 40, 60, 0.25);
+	--nf-shadow-md:   0 18px 40px -20px rgba(20, 40, 60, 0.4);
+	color-scheme: light;
 }
 
 /* =========================================================================
-   §3 — Base / Reset
+   §3 — Base
    ======================================================================== */
 
+html { scroll-padding-top: 76px; }
+
 body {
-	background-color:      var(--ex-bg);
+	background-color: var(--ex-fond);
 <?php if ($bg_image): ?>
-	background-image:      url('<?php echo $bg_image ?>');
-	background-position:   <?php echo $bg_pos ?>;
-	background-repeat:     <?php echo $bg_repeat ?>;
+	background-image: url('<?php echo $bg_image ?>');
+	background-position: <?php echo $bg_pos ?>;
+	background-repeat: <?php echo $bg_repeat ?>;
 	background-attachment: <?php echo $bg_attach ?>;
 <?php endif ?>
-	color:                 var(--ex-text);
-	font-family:           var(--ex-font);
-	font-size:             14px;
-	line-height:           1.6;
-	font-feature-settings: "kern", "liga";
+	color: var(--ex-texte);
+	font-family: var(--nf-font);
+	font-size: 15px;
+	line-height: 1.55;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 }
 
-h1 { font-size: 30px; }
-h2 { font-size: 25px; }
+h1, h2, h3, h4, h5, h6 { margin-top: 0; color: var(--ex-fort); font-family: var(--nf-font); font-weight: 700; line-height: 1.2; }
+h1 { font: 800 44px/1 var(--ex-titre); text-transform: uppercase; letter-spacing: 0.01em; }
+h2 { font: 800 32px/1.05 var(--ex-titre); text-transform: uppercase; letter-spacing: 0.02em; }
 h3 { font-size: 21px; }
 h4 { font-size: 18px; }
 h5 { font-size: 16px; }
-h6 { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+h6 { font: 700 12px/1.4 var(--nf-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ex-doux); }
 
-h1, h2, h3, h4, h5, h6 {
-	color:          var(--ex-text-strong);
-	font-family:    var(--ex-font-display);
-	font-weight:    700;
-	line-height:    1.15;
-	letter-spacing: 0.005em;
-	margin-top:     0;
+a { color: var(--ex-vif); text-decoration: none; }
+a:hover { color: var(--ex-fort); }
+
+.ex-evitement {
+	position: fixed; left: 12px; top: -60px; z-index: 2000;
+	padding: 10px 16px;
+	border-radius: 8px;
+	background: var(--ex-accent); color: var(--ex-sur-accent);
+	font: 700 15px/1 var(--ex-titre); letter-spacing: 0.08em; text-transform: uppercase;
+	transition: top 160ms ease;
 }
-
-::-webkit-scrollbar-thumb:hover { background: var(--ex-muted-2); }
-
-/* §4 — Icônes */
+.ex-evitement:focus { top: 12px; color: var(--ex-sur-accent); }
+.ex-principal:focus { outline: none; }
 
 /* =========================================================================
-   §5 — Layout
+   §4 — La barre : la marque, les onglets, le compte
    ======================================================================== */
 
-.ex-header { position: relative; z-index: 10; }
-.ex-section { padding: 28px 0; }
-.ex-section + .ex-section { padding-top: 0; }
+.ex-barre {
+	position: sticky; top: 0; z-index: 1030;
+	display: flex; align-items: center; gap: 26px;
+	height: 62px;
+	padding: 0 22px;
+	background: var(--ex-panneau);
+	border-bottom: 1px solid var(--ex-trait);
+	box-shadow: 0 10px 24px -20px rgba(0, 0, 0, 0.9);
+}
+.ex-marque { display: inline-flex; align-items: center; gap: 11px; min-width: 0; flex: none; color: var(--ex-fort); }
+.ex-marque:hover { color: var(--ex-fort); }
+.ex-embleme {
+	flex: none;
+	display: grid; place-items: center;
+	width: 36px; height: 40px;
+	background: var(--ex-accent); color: var(--ex-sur-accent);
+	clip-path: polygon(50% 0, 100% 24%, 100% 76%, 50% 100%, 0 76%, 0 24%);
+	font: 800 13px/1 var(--ex-titre); letter-spacing: 0.04em;
+}
+.ex-logo { max-height: 40px; max-width: 150px; object-fit: contain; }
+.ex-nom { font: 800 21px/1 var(--ex-titre); letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
 
-/* Barre de navigation (zone Navigation, sous l'userbar) */
-.ex-nav { background: var(--ex-surface); border-bottom: 1px solid var(--ex-border); box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--ex-accent) 45%, transparent); }
-.ex-nav .container { padding-top: 4px; padding-bottom: 4px; }
-.ex-nav .row.row-dark { background: transparent; border: none; box-shadow: none; margin: 0; padding: 0; }
-.ex-nav .row.row-dark > [class*="col-"] { padding-left: 0; padding-right: 0; }
+/* Les onglets : la navigation posée dans la zone « Onglets », en capitales serrées ; l'onglet ouvert s'allume. */
+.ex-onglets { flex: 1 1 auto; min-width: 0; align-self: stretch; display: flex; }
+.ex-onglets > .row, .ex-onglets > .live-editor-zone > .row { flex: 1 1 auto; margin: 0; }
+.ex-onglets .row > [class*="col-"], .ex-onglets .row > .col { padding: 0; }
+.ex-onglets .widget, .ex-onglets .card { height: 100%; margin: 0 !important; background: none; border: 0; box-shadow: none; }
+.ex-onglets .card-body { height: 100%; padding: 0; }
+.ex-onglets .nf-nav-repliable { height: 100%; }
+.ex-onglets .nf-nav-repliable > .nf-nav-toggle { display: none !important; }
+.ex-onglets .nf-nav-repliable > .nav { display: flex !important; }
+.ex-onglets .widget-navigation .nav { flex-wrap: nowrap; height: 100%; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.ex-onglets .widget-navigation .nav::-webkit-scrollbar { display: none; }
+.ex-onglets .widget-navigation .nav-item { display: flex; }
+.ex-onglets .widget-navigation .nav-link {
+	position: relative;
+	display: flex; align-items: center; gap: 8px;
+	padding: 0 15px;
+	border: 0; border-radius: 0;
+	background: none;
+	color: var(--ex-doux);
+	font: 700 17px/1 var(--ex-titre);
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	transition: color 150ms ease;
+}
+.ex-onglets .widget-navigation .nav-link > .icon { display: none; }
+.ex-onglets .widget-navigation .nav-link .d-none.d-sm-inline { display: inline !important; }
+.ex-onglets .widget-navigation .nav-link::after {
+	content: ""; position: absolute; left: 15px; right: 15px; bottom: -1px; height: 3px;
+	background: var(--ex-vif); box-shadow: 0 0 14px var(--ex-vif);
+	transform: scaleX(0); transition: transform 200ms ease;
+}
+.ex-onglets .widget-navigation .nav-link:hover, .ex-onglets .widget-navigation .nav-link.active { background: none; color: var(--ex-fort); }
+.ex-onglets .widget-navigation .nav-link:hover::after { transform: scaleX(0.4); }
+.ex-onglets .widget-navigation .nav-link.active::after { transform: scaleX(1); }
+.ex-onglets .widget-navigation .nav-link:focus-visible { outline: 2px solid var(--ex-vif); outline-offset: -4px; }
+.ex-onglets .widget-navigation .dropdown-menu { margin-top: 0; }
+/* « Plus » et « En ligne » (js/extend.js) n'existent qu'au téléphone (§13). */
+.ex-onglets .widget-navigation .nav-item.ex-tel-seul { display: none; }
+
+.ex-compte { margin-left: auto; flex: none; display: flex; align-items: center; }
+.ex-compte-liste { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.ex-compte-liste .nav-link {
+	position: relative;
+	display: inline-grid; place-items: center;
+	width: 38px; height: 38px; padding: 0;
+	border: 0; border-radius: 9px;
+	background: var(--ex-panneau-2);
+	color: var(--ex-texte);
+	cursor: pointer;
+	transition: background-color 150ms ease, color 150ms ease;
+}
+.ex-compte-liste .nav-link:hover, .ex-compte-liste .show > .nav-link { background: var(--ex-panneau-3); color: var(--ex-fort); }
+.ex-compte-liste .nav-link:focus-visible { outline: 2px solid var(--ex-vif); outline-offset: 2px; }
+.ex-compte-liste .nf-notif-badge { position: absolute; top: -5px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: var(--ex-rouge) !important; color: #fff !important; font: 700 11px/19px var(--nf-font); box-shadow: 0 0 0 2px var(--ex-panneau); }
+/* La pastille du membre : son avatar, son pseudo, son palier. */
+.ex-compte-liste .ex-moi { display: inline-flex; align-items: center; gap: 10px; width: auto; height: 42px; padding: 3px 14px 3px 3px; border-radius: 22px; }
+.ex-moi .avatar { width: 36px; height: 36px; border-radius: 50%; }
+.ex-moi-texte { display: grid; text-align: left; line-height: 1.15; }
+.ex-moi-nom { color: var(--ex-fort); font-size: 14px; font-weight: 700; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ex-moi-palier { color: var(--ex-ambre); font: 700 11px/1.2 var(--nf-font); letter-spacing: 0.06em; text-transform: uppercase; }
+.ex-moi .fa-angle-down { font-size: 11px; color: var(--ex-doux); }
+.ex-compte-liste .dropdown-menu { min-width: 240px; }
+.ex-connexion {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 10px 18px;
+	border-radius: 9px;
+	background: var(--ex-accent); color: var(--ex-sur-accent);
+	font: 700 15px/1 var(--ex-titre); letter-spacing: 0.08em; text-transform: uppercase;
+	white-space: nowrap;
+	box-shadow: 0 8px 22px -10px var(--ex-accent);
+}
+.ex-connexion:hover, .ex-connexion:focus-visible { background: var(--ex-accent-fort); color: var(--ex-sur-accent); }
+.ex-connexion .fa-user { display: none; }
 
 /* =========================================================================
-   §6 — Header banner (dégradé bleu acier)
+   §5 — Le cadre : la page au centre, le panneau à droite
    ======================================================================== */
 
-.ex-header-banner {
-<?php if ($header_img): ?>
-	background-image:      url('<?php echo $header_img ?>');
-	background-position:   <?php echo $header_pos ?>;
-	background-repeat:     <?php echo $header_repeat ?>;
-	background-attachment: <?php echo $header_attach ?>;
-<?php else: ?>
-	background-image:      var(--ex-banner-gradient);
-	background-size:       cover;
-	background-position:   center;
+/* Le fond du panneau court sur toute la hauteur du cadre (un dégradé net), quelle que soit la longueur de la page. */
+.ex-cadre {
+	flex: 1 0 auto;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 310px;
+	background: linear-gradient(to left, var(--ex-panneau) 309px, var(--ex-trait) 309px, var(--ex-trait) 310px, transparent 310px);
+}
+.ex-cadre.ex-cadre-seul { grid-template-columns: minmax(0, 1fr); background: none; }
+.ex-principal { display: flex; flex-direction: column; gap: 26px; width: 100%; max-width: 1360px; margin: 0 auto; padding: 22px 26px 40px; min-width: 0; }
+.ex-principal > .row, .ex-principal > .live-editor-zone > .row { margin-left: 0; margin-right: 0; }
+.ex-principal > .row > [class*="col-"], .ex-principal > .row > .col { padding-left: 0; padding-right: 0; }
+.ex-principal .row.row-default + .row.row-default { margin-top: 0; }
+.ex-principal .widget { margin-bottom: 0; }
+.ex-principal .row.row-default { margin: 0; }
+.ex-principal .row > [class*="col-"] > .widget, .ex-principal .row > .col > .widget { margin-bottom: 0; }
+
+/* Le panneau de droite : collé sous la barre, il défile seul. */
+.ex-panneau {
+	position: sticky; top: 62px;
+	align-self: start;
+	max-height: calc(100vh - 62px);
+	overflow-y: auto;
+	scrollbar-width: thin;
+	padding: 18px 16px 24px;
+}
+.ex-panneau-fermer { display: none; }
+.ex-panneau > .row, .ex-panneau > .live-editor-zone > .row { margin: 0; }
+.ex-panneau .row > [class*="col-"], .ex-panneau .row > .col { padding: 0; display: grid; gap: 22px; }
+.ex-panneau .widget { margin: 0 !important; }
+.ex-panneau .card { background: none; border: 0; border-radius: 0; box-shadow: none; }
+.ex-panneau .card > .card-header { padding: 0 0 12px; border: 0; background: none; color: var(--ex-fort); font: 800 19px/1 var(--ex-titre); letter-spacing: 0.05em; text-transform: uppercase; }
+.ex-panneau .card > .card-header i.icon, .ex-panneau .card > .card-header .fas, .ex-panneau .card > .card-header .far { display: none; }
+.ex-panneau .card .card-body { padding: 0; }
+.ex-panneau .card .card-footer { padding: 12px 0 0; background: none; border: 0; }
+.ex-panneau .widget + .widget { padding-top: 18px; border-top: 1px solid var(--ex-trait); }
+
+/* Qui est en ligne (la liste) */
+.ex-panneau .widget-members .card > .card-header::after { content: ""; width: 8px; height: 8px; margin-left: auto; border-radius: 50%; background: var(--ex-vert); box-shadow: 0 0 10px var(--ex-vert); animation: ex-pouls 2s ease-in-out infinite; }
+.nf-en-ligne-chiffres span { background: var(--ex-panneau-2); border-radius: 8px; color: var(--ex-doux); }
+.nf-en-ligne-chiffres b { color: var(--ex-fort); font: 700 18px/1.15 var(--ex-chiffre); }
+.nf-en-ligne-groupe { color: var(--ex-doux); font: 700 11px/1 var(--ex-chiffre); letter-spacing: 0.12em; }
+.nf-en-ligne-liste li { margin: 0 -8px; padding: 6px 8px; border-radius: 8px; transition: background-color 150ms ease; }
+.nf-en-ligne-liste li:hover { background: var(--ex-panneau-2); }
+.nf-en-ligne-avatar .avatar { border-radius: 50%; }
+.nf-en-ligne-avatar::after { background: var(--ex-vert); box-shadow: 0 0 0 2px var(--ex-panneau); }
+.nf-en-ligne-qui > a { color: var(--ex-fort); }
+.nf-en-ligne-qui > a:hover { color: var(--ex-vif); }
+/* Le salon */
+.nf-salon-auteur > a { color: var(--ex-fort); }
+.nf-salon-rejoindre { border-radius: 9px; background: var(--ex-panneau-2); color: var(--ex-doux); }
+.nf-salon-rejoindre .icon, .nf-salon-rejoindre i { color: var(--ex-vif); }
+.nf-salon-rejoindre:hover { background: var(--ex-panneau-3); color: var(--ex-fort); }
+@keyframes ex-pouls { 50% { opacity: 0.35; } }
+
+/* =========================================================================
+   §6 — La vitrine de l'accueil, la bande des autres pages
+   ======================================================================== */
+
+/* Le paysage de nuit dessiné : ciel étoilé, aurore qui ondule, deux rangs de montagnes. Avec une image réglée, l'image. */
+.ex-art { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: linear-gradient(180deg, #050d17 0%, #0b2440 52%, #1c4e7a 100%); }
+.ex-ciel {
+	position: absolute; inset: -10%;
+	background:
+		radial-gradient(1.4px 1.4px at 8% 14%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 18% 32%, #cfe3ff 50%, transparent 51%),
+		radial-gradient(1.6px 1.6px at 31% 9%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 44% 26%, #fff 50%, transparent 51%),
+		radial-gradient(1.4px 1.4px at 57% 12%, #dbe9ff 50%, transparent 51%), radial-gradient(1px 1px at 69% 30%, #fff 50%, transparent 51%),
+		radial-gradient(1.4px 1.4px at 82% 8%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 93% 22%, #cfe3ff 50%, transparent 51%),
+		radial-gradient(1.2px 1.2px at 25% 45%, #fff 50%, transparent 51%), radial-gradient(1.2px 1.2px at 74% 41%, #fff 50%, transparent 51%);
+	animation: ex-derive 26s ease-in-out infinite alternate;
+}
+.ex-aurore {
+	position: absolute; left: -10%; right: -10%; top: 4%; height: 58%;
+	background: radial-gradient(40% 60% at 30% 60%, rgba(64, 224, 190, 0.5), transparent 70%), radial-gradient(35% 55% at 62% 45%, rgba(86, 150, 255, 0.5), transparent 70%), radial-gradient(30% 50% at 85% 60%, rgba(140, 110, 255, 0.35), transparent 70%);
+	filter: blur(6px);
+	animation: ex-aurore 14s ease-in-out infinite alternate;
+}
+.ex-monts { position: absolute; left: 0; right: 0; bottom: 0; height: 58%; background: #12304d; clip-path: polygon(0 58%, 9% 40%, 17% 52%, 29% 16%, 41% 47%, 52% 30%, 63% 51%, 75% 22%, 87% 49%, 100% 34%, 100% 100%, 0 100%); }
+.ex-monts.ex-pres { height: 40%; background: #08182a; clip-path: polygon(0 50%, 12% 30%, 24% 58%, 37% 38%, 49% 66%, 61% 34%, 73% 60%, 86% 36%, 100% 56%, 100% 100%, 0 100%); }
+/* Le voile : sombre du côté du texte, pour qu'il se lise sur n'importe quelle image. */
+.ex-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4, 10, 18, 0.9) 0%, rgba(4, 10, 18, 0.55) 48%, rgba(4, 10, 18, 0.12) 75%, rgba(4, 10, 18, 0.4) 100%); }
+<?php if ($vitrine_image): ?>
+.ex-art { background: #0b2440 url('<?php echo $vitrine_image ?>') <?php echo $vitrine_pos ?> / cover no-repeat; }
+.ex-art > i { display: none; }
 <?php endif ?>
-	background-color:      <?php echo $header_color ?>;
-	padding:               44px 0 52px;
-	margin-top:            <?php echo $this->config->extend_navbar_display ? '53px' : '0' ?>;
-	position:              relative;
-}
+@keyframes ex-derive { to { transform: translate(-3%, 2%) scale(1.05); } }
+@keyframes ex-aurore { 0% { transform: translateX(-4%) skewX(-6deg); opacity: 0.7; } 100% { transform: translateX(5%) skewX(5deg); opacity: 1; } }
 
-.ex-header-banner::before {
-	content:  "";
-	position: absolute;
-	inset:    0;
-	background: linear-gradient(
-		to bottom,
-		color-mix(in srgb, var(--ex-bg) 14%, transparent) 0%,
-		transparent 44%,
-		color-mix(in srgb, var(--ex-bg) 80%, transparent) 100%
-	);
-	pointer-events: none;
+.ex-vitrine { position: relative; isolation: isolate; border-radius: 14px; overflow: hidden; background-color: #0b2440; color: #fff; }
+.ex-vitrine > .row, .ex-vitrine > .live-editor-zone > .row { margin: 0; }
+.ex-vitrine .row > [class*="col-"], .ex-vitrine .row > .col { padding: 0; }
+.ex-vitrine .widget { margin: 0 !important; }
+.ex-vitrine .card { background: none; border: 0; box-shadow: none; }
+
+/* La vitrine du site, sans diaporama : le nom du site sur l'image, sa devise, l'inscription, le Discord. */
+.ex-vitrine-site { min-height: 340px; display: flex; align-items: flex-end; }
+.ex-vitrine-texte { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; max-width: 640px; padding: 46px 40px 38px; }
+.ex-vitrine-titre { margin: 0; color: #fff; font: 800 clamp(40px, 5vw, 62px)/0.92 var(--ex-titre); text-transform: uppercase; letter-spacing: 0.01em; text-wrap: balance; overflow-wrap: anywhere; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45); }
+.ex-vitrine-devise { margin: 0; max-width: 48ch; color: #d6e2ef; font-size: 16px; }
+.ex-vitrine-boutons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+
+/* Le diaporama dans la vitrine : l'image en grand, son titre à gauche en capitales, la durée de chaque vue en traits. */
+.ex-vitrine .carousel-item { position: relative; }
+.ex-vitrine .carousel-item img, .ex-vitrine .carousel-item > a > img, .ex-vitrine .carousel-item > div.d-block, .ex-vitrine .carousel-item > a > div.d-block { height: clamp(280px, 30vw, 400px) !important; object-fit: cover; }
+.ex-vitrine .carousel-item::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(4, 10, 18, 0.9) 0%, rgba(4, 10, 18, 0.5) 45%, rgba(4, 10, 18, 0.05) 75%); }
+.ex-vitrine .carousel-caption {
+	position: absolute; z-index: 2; inset: 0 auto 0 0;
+	display: flex !important; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px;
+	width: min(62%, 640px);
+	padding: 40px 40px 56px;
+	text-align: left;
 }
-.ex-header-banner > * { position: relative; z-index: 1; }
+.ex-vitrine .carousel-caption::before { content: "<?php echo addslashes($this->lang('À la une')) ?>"; display: inline-flex; align-items: center; gap: 8px; color: #a6d3ff; font: 700 12px/1 var(--ex-chiffre); letter-spacing: 0.12em; text-transform: uppercase; }
+.ex-vitrine .carousel-caption h3 { margin: 0; color: #fff; font: 800 clamp(32px, 4.2vw, 54px)/0.95 var(--ex-titre); text-transform: uppercase; letter-spacing: 0.01em; text-wrap: balance; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4); }
+.ex-vitrine .carousel-caption p { margin: 0; max-width: 46ch; color: #d6e2ef; font-size: 15.5px; }
+/* Une vue qui mène quelque part le dit : le bouton du lanceur. */
+.ex-vitrine .carousel-item > a .carousel-caption::after { content: "<?php echo addslashes($this->lang('Découvrir')) ?>  ›"; display: inline-flex; margin-top: 6px; padding: 11px 20px; border-radius: 9px; background: var(--ex-accent); color: var(--ex-sur-accent); font: 700 15px/1 var(--ex-titre); letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7); }
+.ex-vitrine .carousel-item > a:hover .carousel-caption::after { background: var(--ex-accent-fort); }
+.ex-vitrine .carousel-indicators { z-index: 3; justify-content: flex-start; margin: 0 0 22px 40px; gap: 6px; }
+.ex-vitrine .carousel-indicators [data-bs-target] { width: 46px; height: 3px; margin: 0; border: 0; border-radius: 2px; background: #fff; opacity: 0.3; }
+.ex-vitrine .carousel-indicators .active { opacity: 1; }
+.ex-vitrine .carousel-control-prev, .ex-vitrine .carousel-control-next { z-index: 3; width: 56px; opacity: 0; transition: opacity 200ms ease; }
+.ex-vitrine:hover .carousel-control-prev, .ex-vitrine:hover .carousel-control-next, .ex-vitrine .carousel-control-prev:focus-visible, .ex-vitrine .carousel-control-next:focus-visible { opacity: 0.8; }
+
+/* La bande des autres pages : le titre de la page sur l'image. */
+/* Le fond sombre de la vitrine et de la bande est un SECOURS : le dessin (ou l'image, ou le diaporama) le couvre ; une
+   image qui ne se charge pas laissait le titre blanc sur le fond clair du jour (check-mise-en-page, 2026-10-07). */
+.ex-entete { position: relative; isolation: isolate; display: flex; align-items: flex-end; min-height: 150px; padding: 24px 28px; border-radius: 14px; overflow: hidden; background-color: #0b2440; }
+.ex-entete-titre { margin: 0; color: #fff; font: 800 clamp(32px, 4vw, 48px)/1 var(--ex-titre); text-transform: uppercase; letter-spacing: 0.02em; overflow-wrap: anywhere; text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45); }
+
+/* Les boutons du lanceur, hors des modules : plein (l'accent) ou en verre (sur une image). */
+.ex-bouton {
+	display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+	padding: 11px 20px;
+	border: 0; border-radius: 9px;
+	background: var(--ex-accent); color: var(--ex-sur-accent);
+	font: 700 15px/1 var(--ex-titre); letter-spacing: 0.08em; text-transform: uppercase;
+	box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+	transition: transform 150ms ease, background-color 150ms ease;
+}
+.ex-bouton:hover, .ex-bouton:focus-visible { transform: translateY(-2px); background: var(--ex-accent-fort); color: var(--ex-sur-accent); }
+.ex-bouton-verre { background: rgba(255, 255, 255, 0.12); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.32); backdrop-filter: blur(6px); }
+.ex-bouton-verre:hover, .ex-bouton-verre:focus-visible { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.ex-bouton:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* =========================================================================
-   §7 — Footer
+   §7 — Les blocs
    ======================================================================== */
 
-.ex-footer {
-	background: var(--ex-surface);
-	border-top: 1px solid var(--ex-border);
-	box-shadow: inset 0 2px 0 color-mix(in srgb, var(--ex-accent) 48%, transparent);
-	color:      var(--ex-muted);
-	padding:    18px 0 16px;
-	margin-top: 32px;
+.card {
+	background: var(--ex-panneau);
+	border: 1px solid var(--ex-trait);
+	border-radius: 12px;
+	box-shadow: none;
+	color: var(--ex-texte);
 }
-.ex-footer hr { margin: 0 0 14px; }
-.ex-footer-bar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; font-size: 12.5px; }
-.ex-copy a       { color: var(--ex-text); font-weight: 600; }
-.ex-copy a:hover { color: var(--ex-accent-text); }
-.ex-site-name    { color: var(--ex-text); font-weight: 600; }
-
-.ex-socials { display: inline-flex; gap: 6px; }
-.ex-social {
-	width: 32px; height: 32px;
-	display: inline-flex; align-items: center; justify-content: center;
-	border-radius: var(--ex-radius-xs);
-	background: var(--ex-surface-2);
-	color: var(--ex-text);
-	font-size: 13px;
-	transition: background-color 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+.card + .card, .widget + .widget { margin-top: 22px; }
+.card > .card-header {
+	display: flex; align-items: center; gap: 10px;
+	padding: 16px 18px 0;
+	background: none; border: 0;
+	color: var(--ex-fort);
+	font: 800 22px/1.05 var(--ex-titre);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
 }
-.ex-social:hover { background: var(--ex-accent); color: var(--ex-on-accent); transform: translateY(-1px); box-shadow: var(--ex-glow-soft); }
+.card > .card-header i.icon, .card > .card-header > span > i.icon, .card > .card-header .fas, .card > .card-header .far { color: var(--ex-vif); font-size: 15px; }
+.card > .card-header > :last-child:not(:first-child) { margin-left: auto; }
+/* Les titres écrits à la main par un module (`<div class="card-header"><h5>…</h5>`) gardent leur taille de texte. */
+.card > .card-header > :is(h4, h5, h6):first-child { margin: 0; color: inherit; font: 700 16px/1.3 var(--nf-font); letter-spacing: 0; text-transform: none; }
+.card > .card-header > * { min-width: 0; overflow-wrap: break-word; }
+.card .card-body { padding: 14px 18px 18px; }
+.card .card-footer { padding: 0 18px 16px; background: none; border: 0; font-size: 14px; }
+.card .card-footer a:not(.btn) { font-weight: 600; }
+/* Le pied d'un WIDGET (« Voir le calendrier ») : un lien du lanceur, une flèche. */
+.widget .card > .card-footer a:not(.btn) .icon, .widget .card > .card-footer a:not(.btn) .fas, .widget .card > .card-footer a:not(.btn) .far { display: none; }
+.widget .card > .card-footer a:not(.btn)::after { content: " ›"; }
 
-.ex-lang .btn-light { background: var(--ex-surface-2); border-color: var(--ex-border); color: var(--ex-text); font-weight: 600; }
-.ex-lang .btn-light:hover { background: var(--ex-surface-3); color: var(--ex-text-strong); }
+/* « Titre coloré » (panel-header) : le titre sur une bande d'accent. */
+.card.panel-header > .card-header { padding: 12px 18px; border-radius: 11px 11px 0 0; background: var(--ex-accent); color: var(--ex-sur-accent); }
+.card.panel-header > .card-header i.icon, .card.panel-header > .card-header .fas, .card.panel-header > .card-header .far, .card.panel-header > .card-header a { color: var(--ex-sur-accent); }
+.card.panel-header > .card-body { padding-top: 16px; }
+
+/* « Widget coloré » (panel-color) : le bloc d'accent entier. Ses couleurs se redéfinissent DANS le bloc : chaque règle de
+   la feuille (et des feuilles des widgets, par le pont --nf-*) y prend d'elle-même la couleur lisible sur l'accent —
+   sans quoi les textes doux, les liens vifs, les cases claires gardaient les couleurs de la page (1,1:1 à 3,8:1,
+   check-contraste du 2026-10-07). */
+.card.panel-color {
+	--ex-fort: var(--ex-sur-accent);
+	--ex-texte: var(--ex-sur-accent);
+	--ex-doux: color-mix(in srgb, var(--ex-sur-accent) 86%, transparent);
+	--ex-vif: var(--ex-sur-accent);
+	--ex-panneau-2: rgba(0, 0, 0, 0.2);
+	--ex-panneau-3: rgba(0, 0, 0, 0.28);
+	--ex-trait: color-mix(in srgb, var(--ex-sur-accent) 24%, transparent);
+	--ex-trait-fort: color-mix(in srgb, var(--ex-sur-accent) 40%, transparent);
+	/* Victoire et défaite gardent leur flèche (le widget la dessine) ; leur vert et leur rouge ne se liraient pas sur l'accent. */
+	--ex-vert: var(--ex-sur-accent);
+	--ex-perdu: var(--ex-sur-accent);
+	--nf-text: var(--ex-texte);
+	--nf-text-strong: var(--ex-fort);
+	--nf-text-muted: var(--ex-doux);
+	--nf-text-soft: var(--ex-texte);
+	--nf-muted: var(--ex-doux);
+	--nf-accent-text: var(--ex-vif);
+	--nf-link: var(--ex-vif);
+	--nf-surface-2: var(--ex-panneau-2);
+	--nf-surface-3: var(--ex-panneau-3);
+	--nf-border: var(--ex-trait);
+	background: linear-gradient(160deg, var(--ex-accent), var(--ex-accent-fort));
+	border-color: transparent;
+	color: var(--ex-sur-accent);
+	box-shadow: 0 16px 36px -20px var(--ex-accent);
+}
+.card.panel-color > .card-header, .card.panel-color > .card-body, .card.panel-color > .card-footer, .card.panel-color a:not(.btn), .card.panel-color h1, .card.panel-color h2, .card.panel-color h3, .card.panel-color h4, .card.panel-color h5, .card.panel-color h6, .card.panel-color i, .card.panel-color .icon { color: var(--ex-sur-accent); }
+.card.panel-color .text-muted, .card.panel-color small { color: color-mix(in srgb, var(--ex-sur-accent) 84%, transparent) !important; }
+.card.panel-color .list-group-item { color: var(--ex-sur-accent); border-color: color-mix(in srgb, var(--ex-sur-accent) 22%, transparent); }
+.card.panel-color .input-group-text, .card.panel-color .input-group-text i, .card.panel-color .input-group-text .icon { color: var(--ex-doux); }
+/* Le bouton plein, sur l'accent : inversé (le fond de la couleur lisible, le texte de l'accent). */
+.card.panel-color .btn-primary { background: var(--ex-sur-accent); border-color: var(--ex-sur-accent); color: var(--ex-accent); box-shadow: none; }
+.card.panel-color .btn-primary:hover, .card.panel-color .btn-primary:focus-visible { background: color-mix(in srgb, var(--ex-sur-accent) 88%, var(--ex-accent)); border-color: transparent; color: var(--ex-accent); }
+.widget-user .card.panel-color .card-footer.text-end { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px 18px; }
+.widget-user .card.panel-color .card-footer a:not(.btn-primary):not(.btn-secondary),
+.widget-user .card.panel-color .card-footer a:not(.btn-primary):not(.btn-secondary):hover { background: none; border-color: transparent; color: var(--ex-sur-accent); padding: 0; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
 /* =========================================================================
-   §8 — Userbar
+   §8 — Les widgets de l'accueil : rendez-vous, actualités, résultats
    ======================================================================== */
 
-.navbar-user .navbar-text a { color: var(--ex-accent-text); font-weight: 600; }
-
-@media (max-width: 767.98px) {
-	
-	.navbar-user .navbar-account .dropdown-toggle .ms-2 { display: none; }
+/* Les prochains rendez-vous : des cartes de match, la date en chiffres, la couleur de l'événement en liseré. */
+.ex-principal .widget-calendar ul.list-unstyled { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.ex-principal .widget-calendar ul.list-unstyled > li {
+	display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 8px;
+	min-height: 108px;
+	padding: 16px 16px 16px 18px !important;
+	border: 1px solid var(--ex-trait) !important; border-left-width: 4px !important;
+	border-radius: 10px;
+	background: var(--ex-panneau-2);
+	transition: transform 180ms ease, border-color 180ms ease;
 }
+.ex-principal .widget-calendar ul.list-unstyled > li:hover { transform: translateY(-3px); }
+.ex-principal .widget-calendar ul.list-unstyled > li > br { display: none; }
+.ex-principal .widget-calendar ul.list-unstyled > li > a { color: var(--ex-fort); font-weight: 700; font-size: 16px; line-height: 1.3; }
+.ex-principal .widget-calendar ul.list-unstyled > li > a .far { display: none; }
+.ex-principal .widget-calendar ul.list-unstyled > li > small { color: var(--ex-vif) !important; font: 700 13px/1.3 var(--ex-chiffre); }
+.ex-panneau .widget-calendar ul.list-unstyled > li { padding: 8px 0 8px 10px !important; border-bottom: 1px solid var(--ex-trait) !important; }
+.ex-panneau .widget-calendar ul.list-unstyled > li a { color: var(--ex-fort); font-weight: 600; }
 
-/* =========================================================================
-   §9 — Cards + panels
-   ======================================================================== */
-
-.card .card-header {
-	background: transparent; border-bottom: 1px solid var(--ex-border);
-	padding: 12px 16px; font-weight: 700; color: var(--ex-text-strong);
-	font-size: 17px; display: flex; align-items: center; gap: 8px; margin: 0;
-	font-family: var(--ex-font-display); letter-spacing: 0.02em;
+/* Les actualités : des vignettes, l'image en haut (un paysage dessiné quand il n'y en a pas), la rubrique, le titre. */
+.ex-principal .widget-news .card-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+.ex-principal .widget-news .card-body > .d-flex { flex-direction: column; align-items: stretch !important; gap: 10px; min-width: 0; }
+.ex-principal .widget-news .card-body > .d-flex > .me-3 { margin: 0 !important; }
+.ex-principal .widget-news .img-cover, .ex-principal .widget-news .card-body > .d-flex:not(:has(.img-cover))::before {
+	display: block;
+	width: 100%; aspect-ratio: 16 / 10; height: auto;
+	border-radius: 10px;
+	background-size: cover; background-position: center;
+	transition: transform 250ms ease, box-shadow 250ms ease;
 }
-.card .card-header i.icon, .card .card-header i.fas, .card .card-header i.far, .card .card-header i.fab { color: var(--ex-muted); font-size: 14px; }
-.card .card-body { padding: 14px 16px; font-size: 14px; }
-.card .card-footer { background: var(--ex-surface-2); border-top: 1px solid var(--ex-border); padding: 10px 16px; font-size: 12.5px; color: var(--ex-muted); }
+.ex-principal .widget-news .card-body > .d-flex:not(:has(.img-cover))::before {
+	content: "";
+	/* Une actualité sans image : un petit paysage de nuit (deux pentes, l'aurore), comme la vitrine. */
+	background: linear-gradient(162deg, transparent 64%, #08182a 64.4%), linear-gradient(198deg, transparent 60%, #12304d 60.4%), radial-gradient(60% 55% at 30% 30%, rgba(64, 224, 190, 0.42), transparent 70%), radial-gradient(50% 45% at 72% 22%, rgba(86, 150, 255, 0.45), transparent 70%), linear-gradient(180deg, #050d17, #1c4e7a);
+}
+.ex-principal .widget-news .card-body > .d-flex:hover .img-cover, .ex-principal .widget-news .card-body > .d-flex:not(:has(.img-cover)):hover::before { transform: scale(1.03); box-shadow: 0 0 0 2px var(--ex-vif), 0 14px 30px -14px rgba(0, 0, 0, 0.7); }
+.ex-principal .widget-news .badge { display: inline-block; margin-bottom: 4px; padding: 0; border: 0; background: none !important; color: var(--ex-vif) !important; font: 700 11px/1.3 var(--ex-chiffre); letter-spacing: 0.1em; text-transform: uppercase; }
+.ex-principal .widget-news .flex-grow-1 > a:not(.badge) { color: var(--ex-fort); font: 600 16px/1.3 var(--nf-font); }
+.ex-principal .widget-news .flex-grow-1 > a:not(.badge):hover { color: var(--ex-vif); }
+.ex-principal .widget-news .flex-grow-1 > br:last-child { display: none; }
 
- 
-.card.panel-header > .card-header,
-.card.panel-header > .card-header h1, .card.panel-header > .card-header h2,
-.card.panel-header > .card-header h3, .card.panel-header > .card-header h4,
-.card.panel-header > .card-header h5, .card.panel-header > .card-header h6,
-.card.panel-header > .card-header a, .card.panel-header > .card-header i,
-.card.panel-header > .card-header .icon { color: var(--ex-on-accent); }
-.card.panel-header > .card-header a:hover { opacity: 0.85; }
+/* Les résultats : des cartes, la victoire en vert, la défaite en rouge, le score en chiffres. */
+.ex-principal .widget-events .card > .list-group, .ex-principal .widget-events .card > .list-group + .card-footer { border: 0; }
+.ex-principal .widget-events .list-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; padding: 14px 18px 18px; }
+.ex-principal .widget-events .list-group-item { padding: 14px 16px; border: 1px solid var(--ex-trait) !important; border-radius: 10px !important; background: var(--ex-panneau-2); }
+.ex-principal .widget-events .list-group-item .row { flex-wrap: nowrap; gap: 12px; }
+.ex-principal .widget-events .list-group-item .row > [class*="col-"] { width: auto; flex: 0 0 auto; max-width: none; }
+.ex-principal .widget-events .list-group-item .row > .text-start, .ex-principal .widget-events .list-group-item .row > [class*="col-"]:last-child { flex: 1 1 auto; min-width: 0; }
+.ex-principal .widget-events .list-group-item img.img-fluid { width: 34px; height: 34px; object-fit: contain; }
+.ex-principal .widget-events .list-group-item .float-end { float: none !important; order: 2; margin-left: auto; font: 700 18px/1 var(--ex-chiffre); }
+.ex-principal .widget-events .list-group-item a { color: var(--ex-fort); font-weight: 600; }
+.ex-principal .widget-events .text-success { color: var(--ex-vert) !important; }
+.ex-principal .widget-events .text-danger { color: var(--ex-perdu) !important; }
+.ex-principal .widget-events .text-primary { color: var(--ex-vif) !important; }
 
-.card.panel-color > .card-header { background: transparent; border-bottom: 1px solid color-mix(in srgb, #fff 22%, transparent); color: var(--ex-on-accent); font-weight: 700; }
+/* Le prochain rendez-vous, le site en chiffres, les dernières photos (si on les pose) */
+.ex-principal .nf-prochain-date { border-radius: 10px; background: var(--ex-accent); color: var(--ex-sur-accent); }
+.nf-chiffre-valeur { color: var(--ex-fort); font-family: var(--ex-chiffre); }
+.nf-chiffre-libelle { color: var(--ex-doux); }
+.ex-principal .nf-photo { border-radius: 10px; }
 
-.card.panel-color,
-.card.panel-color a,
-.card.panel-color h1, .card.panel-color h2, .card.panel-color h3,
-.card.panel-color h4, .card.panel-color h5, .card.panel-color h6,
-.card.panel-color i, .card.panel-color .icon,
-.card.panel-color .text-muted,
-.card.panel-color .list-group-item { color: var(--ex-on-accent); }
+/* Les dernières discussions du forum */
+.widget-forum .card-body > .d-flex { padding: 10px 0; border-bottom: 1px solid var(--ex-trait); }
+.widget-forum .card-body > .d-flex:first-child { padding-top: 0; }
+.widget-forum .card-body > .d-flex:last-child { border-bottom: 0; padding-bottom: 0; }
+.widget-forum .card-body > .d-flex .flex-grow-1 > a { color: var(--ex-fort); font-weight: 600; }
+.widget-forum .card-body > .d-flex small { color: var(--ex-doux); }
 
-/* Les icônes des champs gardent la couleur du champ : sur leur case claire, le blanc du panneau les effaçait (le pseudo
-   et le mot de passe de l'espace membre, vus sur la démo le 2026-10-06). */
-.card.panel-color .input-group-text,
-.card.panel-color .input-group-text i,
-.card.panel-color .input-group-text .icon { color: var(--nf-muted); }
-.card.panel-color a:hover { opacity: 0.8; }
-.card.panel-color .list-group-item { background: transparent; border-color: color-mix(in srgb, #fff 18%, transparent); }
-.card.panel-color .badge { background: rgba(255, 255, 255, 0.9); color: var(--ex-accent); border: 0; }
+/* Qui est en ligne (les nombres) et le diaporama, ailleurs que dans le panneau et la vitrine */
+.widget-members .row.text-center { flex-wrap: nowrap; }
+.widget-members .row.text-center > [class*="col-"] { display: flex; flex-direction: column; align-items: center; flex: 1 1 0; width: auto; color: var(--ex-doux); font-size: 13px; }
+.widget-members h3 { margin: 0; color: var(--ex-fort); font: 700 26px/1.2 var(--ex-chiffre); }
+.ex-principal .widget-slider { border-radius: 12px; overflow: hidden; }
 
-.card.panel-color .btn-primary:hover { filter: brightness(0.92); }
-
-/* =========================================================================
-   §10 — Rows + gutters
-   ======================================================================== */
-
-.row.row-dark { background: var(--ex-surface); border: 1px solid var(--ex-border); border-radius: var(--ex-radius); margin-top: 12px; margin-bottom: 12px; padding: 8px 14px; }
-.ex-header-banner .row-dark > [class*="col-"] { padding-left: 0; padding-right: 0; }
-
-/* Les gouttieres de Bootstrap 5 valent 1,5 rem, soit -12 px de marge sur .row, compenses par les
-   12 px de padding de .container. Cette regle les remettait a -15 px — la valeur de Bootstrap 4,
-   ou la gouttiere valait 30 px. Les 3 px d'ecart depassaient donc de chaque cote : mesure a 390 px,
-   le document faisait 393 px et la page defilait lateralement. Bootstrap 5 s'en charge seul. */
-.row > [class*="col-"], .row > .col { padding-right: 15px; padding-left: 15px; }
-
-.card .row > [class*="col-"], .card .row > .col { padding-right: 8px; padding-left: 8px; }
+/* La barre d'état et le pied : les widgets réglés pour y tenir (serveur de jeu, salon vocal, Discord) */
+.widget-partners .column-partners img.logo { max-height: 40px; width: auto; }
 
 /* =========================================================================
-   §11 — Buttons
+   §9 — Listes, tableaux, badges, alertes, boutons, formulaires, menus
    ======================================================================== */
 
+.list-group-item { background: transparent; border-color: var(--ex-trait); color: var(--ex-texte); }
+.list-group-item-action:hover, .list-group-item-action:focus { background: var(--ex-panneau-2); color: var(--ex-fort); }
+
+.table { --bs-table-bg: transparent; --bs-table-color: var(--ex-texte); --bs-table-hover-bg: var(--ex-panneau-2); --bs-table-hover-color: var(--ex-fort); color: var(--ex-texte); }
+.table > :not(caption) > * > * { border-bottom-color: var(--ex-trait); }
+.table thead th { color: var(--ex-doux); font: 700 11.5px var(--ex-chiffre); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.badge { border-radius: 6px; font: 700 11px var(--nf-font); letter-spacing: 0.02em; }
+.alert { border: 1px solid var(--ex-trait); border-left: 4px solid var(--ex-vif); border-radius: 10px; background: var(--ex-panneau-2); color: var(--ex-texte); }
+.alert-success { border-left-color: var(--ex-vert); }
+.alert-danger { border-left-color: var(--ex-perdu); }
+.alert-warning { border-left-color: var(--ex-ambre); }
+.alert-info { border-left-color: var(--ex-info); }
+
+/* Les boutons : ceux du lanceur, en capitales serrées. */
 .btn {
-	font-family: var(--ex-font); font-weight: 600; font-size: 13px;
-	text-transform: none; text-decoration: none; padding: 7px 14px;
-	border-radius: var(--ex-radius-sm); border: 1px solid transparent;
-	transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+	padding: 9px 16px;
+	border-radius: 9px;
+	font: 700 15px/1.1 var(--ex-titre);
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+.btn-sm { padding: 6px 11px; min-height: 30px; font-size: 13.5px; }
+.btn-lg { padding: 12px 22px; font-size: 17px; }
+.btn-primary { background: var(--ex-accent); border-color: var(--ex-accent); color: var(--ex-sur-accent); box-shadow: 0 8px 20px -12px var(--ex-accent); }
+.btn-primary:hover, .btn-primary:focus-visible, .btn-primary:active { background: var(--ex-accent-fort); border-color: var(--ex-accent-fort); color: var(--ex-sur-accent); }
+.btn-secondary, .btn-light, .btn-outline-secondary { background: var(--ex-panneau-2); border-color: var(--ex-trait); color: var(--ex-fort); }
+.btn-secondary:hover, .btn-light:hover, .btn-outline-secondary:hover { background: var(--ex-panneau-3); border-color: var(--ex-trait-fort); color: var(--ex-fort); }
+.btn-dark { background: #060b13; border-color: #060b13; color: #f0f5fa; }
+.btn-link { border-color: transparent; color: var(--ex-vif); font: 600 15px var(--nf-font); letter-spacing: 0; text-transform: none; }
+.btn.btn-outline-primary { background: transparent; border-color: var(--ex-vif); color: var(--ex-vif); }
+.btn.btn-outline-primary:hover { background: var(--ex-accent); border-color: var(--ex-accent); color: var(--ex-sur-accent); }
+.btn:focus-visible { outline: 2px solid var(--ex-vif); outline-offset: 2px; }
+.btn-danger { background: color-mix(in srgb, var(--ex-rouge) 92%, #000); border-color: transparent; color: #fff; }
+.btn-success { background: #16794a; border-color: transparent; color: #fff; }
+.btn-warning { background: #f2b450; border-color: transparent; color: #1c1405; }
+.btn-info { background: #1c6e8c; border-color: transparent; color: #fff; }
+
+.form-control, .form-select, textarea.form-control { background-color: var(--ex-panneau-2); border: 1px solid var(--ex-trait-fort); border-radius: 8px; color: var(--ex-fort); }
+.form-control::placeholder { color: var(--ex-doux); }
+.form-control:focus, .form-select:focus { background-color: var(--ex-panneau-2); border-color: var(--ex-vif); box-shadow: 0 0 0 3px var(--ex-accent-doux); color: var(--ex-fort); }
+.input-group-text { background: var(--ex-panneau-3); border: 1px solid var(--ex-trait-fort); color: var(--ex-doux); }
+.form-text, .text-muted { color: var(--ex-doux) !important; }
+.col-form-label, .form-label { color: var(--ex-fort); font-weight: 600; }
+
+.nav-pills .nav-link { border-radius: 8px; color: var(--ex-texte); }
+.nav-pills .nav-link:hover { background: var(--ex-panneau-2); color: var(--ex-fort); }
+.nav-tabs { border-bottom: 1px solid var(--ex-trait); gap: 4px; }
+.nav-tabs .nav-link { position: relative; border: 0; border-radius: 0; background: none; color: var(--ex-doux); font: 700 15px/1 var(--ex-titre); letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 12px; }
+.nav-tabs .nav-link:hover { color: var(--ex-fort); }
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link { background: none; color: var(--ex-fort); box-shadow: inset 0 -3px 0 var(--ex-vif); }
+
+.page-link { border: 0 !important; border-radius: 8px !important; background: var(--ex-panneau-2); color: var(--ex-fort); font: 600 13px/1.6 var(--ex-chiffre); }
+.page-link:hover { background: var(--ex-panneau-3); color: var(--ex-fort); }
+.page-item.active .page-link { background: var(--ex-accent); color: var(--ex-sur-accent); }
+.pagination { gap: 6px; }
+
+.breadcrumb { margin: 0; padding: 0; background: none; border: 0; box-shadow: none; font: 500 12.5px var(--ex-chiffre); letter-spacing: 0.04em; }
+.breadcrumb-item, .breadcrumb-item a { color: var(--ex-doux); }
+.breadcrumb-item b { color: var(--ex-fort); font-weight: 700; }
+.breadcrumb-item a:hover { color: var(--ex-vif); }
+.breadcrumb-item .icon { display: none; }
+.breadcrumb-item + .breadcrumb-item::before { content: "›"; color: var(--ex-doux); }
+.ex-principal .widget-breadcrumb .card { background: none; border: 0; box-shadow: none; }
+.ex-principal .widget-breadcrumb .card-body { padding: 0; }
+
+.dropdown-menu { padding: 6px; background: var(--ex-panneau); border: 1px solid var(--ex-trait-fort); border-radius: 10px; box-shadow: var(--nf-shadow-md); }
+.dropdown-item { border-radius: 7px; color: var(--ex-texte); }
+.dropdown-item:hover, .dropdown-item:focus { background: var(--ex-panneau-2); color: var(--ex-fort); }
+.dropdown-item.active, .dropdown-item:active { background: var(--ex-accent); color: var(--ex-sur-accent); }
+.modal-content { background: var(--ex-panneau); border: 1px solid var(--ex-trait-fort); border-radius: 14px; box-shadow: var(--nf-shadow-md); }
+.modal-title { font: 800 24px/1.1 var(--ex-titre); letter-spacing: 0.03em; text-transform: uppercase; }
+.tooltip-inner { border-radius: 7px; background: #060b13; color: #f0f5fa; font-size: 12.5px; }
+
+/* Les avatars : ronds, comme dans un lanceur. */
+.avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 50%; background: var(--ex-panneau-3); vertical-align: middle; object-fit: cover; }
+.module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; border-radius: 26px; box-shadow: 0 0 0 5px var(--ex-panneau), 0 0 0 7px var(--ex-vif); }
+.module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+
+/* =========================================================================
+   §10 — Les modules : actualités, forum en bibliothèque, espace membre en fiche de joueur
+   ======================================================================== */
+
+/* Les actualités et leurs articles */
+.module-news > .card { margin-bottom: 22px; }
+.module-news .card-title { margin: 0 0 6px; font: 700 22px/1.25 var(--nf-font); }
+.module-news .card-title a { color: var(--ex-fort); }
+.module-news .card-title a:hover { color: var(--ex-vif); }
+.module-news .card-img-top { border-radius: 11px 11px 0 0; }
+.module-news .nf-news-meta { color: var(--ex-doux) !important; font: 500 13px var(--nf-font); }
+.ex-principal .news-article { padding: 28px 32px 26px; }
+.ex-principal .news-article-cover img { border-radius: 12px; }
+.ex-principal .news-article-cat { padding: 0; background: none; color: var(--ex-vif); font: 700 12px/1.3 var(--ex-chiffre); letter-spacing: 0.1em; text-transform: uppercase; }
+.ex-principal .news-article-title { font: 800 clamp(34px, 4vw, 52px)/0.98 var(--ex-titre); text-transform: uppercase; letter-spacing: 0.01em; text-wrap: balance; }
+.ex-principal .news-article-meta { font: 500 13px var(--nf-font); border-bottom-color: var(--ex-trait); }
+.ex-principal .news-article-body { font-size: 16.5px; line-height: 1.75; color: var(--ex-texte); }
+.ex-principal .news-article-body h2, .ex-principal .news-article-body h3 { font-family: var(--ex-titre); text-transform: uppercase; }
+
+/* Le forum : chaque catégorie, une étagère de la bibliothèque ; chaque forum, sa ligne et sa case. Un forum aux messages
+   non lus a sa case allumée. Les sujets : un état, le titre, les réponses, le dernier message. */
+.module-forum table[data-forum-view] { margin: 0; }
+.module-forum table[data-forum-view] > thead > tr > th { padding: 14px 16px 10px; border-bottom: 1px solid var(--ex-trait); background: none; }
+.module-forum table[data-forum-view] > thead h5 { color: var(--ex-doux) !important; font: 700 11.5px/1.3 var(--ex-chiffre) !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.module-forum table[data-forum-view] > thead > tr > th:first-child h5 { color: var(--ex-fort) !important; font: 800 21px/1 var(--ex-titre) !important; letter-spacing: 0.05em; }
+.module-forum table[data-forum-view] > thead .icon { color: var(--ex-vif); }
+.module-forum table[data-forum-view] > thead > tr > th:first-child h5 .forum-category-img { max-height: 24px; border-radius: 6px; }
+.module-forum table[data-forum-view] > tbody > tr > td { padding: 13px 14px; border-top: 0; border-bottom: 1px solid var(--ex-trait); background: none; vertical-align: middle; }
+.module-forum table[data-forum-view] > tbody > tr:last-child > td { border-bottom: 0; }
+.module-forum table[data-forum-view] > tbody > tr > td:first-child { width: 66px; padding-left: 16px; text-align: center; }
+.module-forum .forum-icone {
+	display: inline-grid; place-items: center;
+	width: 38px; height: 38px;
+	border-radius: 10px;
+	background: var(--ex-panneau-3);
+	color: var(--ex-vif);
+}
+.module-forum .forum-icone .icon, .module-forum .forum-icone i { font-size: 16px !important; }
+.module-forum .forum-icone.forum-non-lu { background: var(--ex-accent); color: var(--ex-sur-accent); box-shadow: 0 0 16px -4px var(--ex-accent); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 600 16px/1.3 var(--nf-font); margin-bottom: 3px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--ex-fort); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--ex-vif); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--ex-doux); font-size: 13.5px; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(3) { color: var(--ex-doux); font-size: 12.5px; white-space: nowrap; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(3) b { color: var(--ex-fort); font-family: var(--ex-chiffre); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(4) { color: var(--ex-doux); font-size: 13px; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(4) a { color: var(--ex-texte); }
+.module-forum .subforums > li, .module-forum .forum-groups > a { border: 1px solid var(--ex-trait); border-radius: 999px; background: var(--ex-panneau-2); font-size: 12px; }
+.module-forum .topic-icon { color: var(--ex-vif); }
+.module-forum .forum-resolu { color: var(--ex-vert); font: 700 11px var(--ex-chiffre); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* L'espace membre : la fiche du joueur — sa bannière (l'image de la vitrine), son avatar cerclé de bleu, son nom en
+   grand ; le menu de l'espace en onglets au-dessus de la page. */
+.ex-principal .nf-espace-colonne-menu { flex: 0 0 100%; width: 100%; max-width: 100%; }
+.ex-principal .nf-espace-colonne-page { flex: 0 0 100%; width: 100%; max-width: 100%; }
+/* Sur ordinateur, les onglets passent à la ligne plutôt que d'être coupés au bord (une douzaine d'entrées, modules compris) ;
+   au téléphone, ils défilent de côté (§13). */
+.ex-principal .nf-espace-menu {
+	position: static;
+	display: flex; flex-wrap: wrap; gap: 0;
+	margin-bottom: 18px;
+	padding: 0 10px;
+	border: 1px solid var(--ex-trait); border-radius: 12px;
+	background: var(--ex-panneau);
+}
+.ex-principal .nf-espace-menu::-webkit-scrollbar { display: none; }
+.ex-principal .nf-espace-groupe { display: contents; }
+.ex-principal .nf-espace-titre { display: none; }
+.ex-principal .nf-espace-lien {
+	position: relative;
+	padding: 13px 9px;
+	border-radius: 0;
+	background: none;
+	color: var(--ex-doux);
+	font: 700 14px/1 var(--ex-titre);
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.ex-principal .nf-espace-lien:hover { background: none; color: var(--ex-fort); }
+.ex-principal .nf-espace-lien.actif { background: none; color: var(--ex-fort); }
+.ex-principal .nf-espace-lien.actif::before { display: none; }
+.ex-principal .nf-espace-lien.actif::after { content: ""; position: absolute; left: 9px; right: 9px; bottom: 0; height: 3px; background: var(--ex-vif); box-shadow: 0 0 12px var(--ex-vif); }
+.ex-principal .nf-espace-lien .icon { color: inherit; }
+.ex-principal .nf-espace-badge { border-radius: 9px; background: var(--ex-rouge); color: #fff; letter-spacing: 0; }
+.ex-principal .card:has(> .card-body > .nf-espace-accueil) { overflow: hidden; }
+.ex-principal .card:has(> .card-body > .nf-espace-accueil) > .card-body { padding: 0; }
+.ex-principal .nf-espace-accueil { position: relative; isolation: isolate; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px; padding: 134px 24px 20px; }
+/* La bannière s'arrête au-dessus du nom : de jour, un nom sombre posé sur elle ne se lisait plus (vu le 2026-10-07). */
+.ex-principal .nf-espace-accueil::before {
+	content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: 122px;
+	background: linear-gradient(180deg, transparent 40%, rgba(4, 10, 18, 0.55)), <?php echo $vitrine_image ? "url('".$vitrine_image."') ".$vitrine_pos.' / cover no-repeat,' : 'radial-gradient(40% 70% at 30% 60%, rgba(64, 224, 190, 0.4), transparent 70%), radial-gradient(35% 60% at 65% 40%, rgba(86, 150, 255, 0.45), transparent 70%),' ?> linear-gradient(180deg, #050d17, #0b2440 60%, #1c4e7a);
+}
+.ex-principal .nf-espace-accueil > .avatar { align-self: flex-start; margin-top: -64px; width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 0 0 5px var(--ex-panneau), 0 0 0 7px var(--ex-vif); }
+.ex-principal .nf-espace-accueil-nom h2 { margin-bottom: 6px; color: var(--ex-fort); font: 800 40px/1 var(--ex-titre); letter-spacing: 0.02em; text-transform: uppercase; }
+.ex-principal .nf-espace-accueil-actions { margin-left: auto; }
+.ex-principal .nf-membre-onglet.is-actif { background: var(--ex-accent); color: var(--ex-sur-accent); }
+.ex-principal .nf-membre-couverture-vide { background: radial-gradient(40% 70% at 30% 60%, rgba(64, 224, 190, 0.4), transparent 70%), linear-gradient(180deg, #050d17, #0b2440 60%, #1c4e7a) !important; }
+
+/* =========================================================================
+   §11 — La barre d'état
+   ======================================================================== */
+
+.ex-etat {
+	position: relative; z-index: 2;
+	display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px;
+	min-height: 44px;
+	padding: 6px 22px;
+	background: var(--ex-panneau);
+	border-top: 1px solid var(--ex-trait);
+	color: var(--ex-doux);
+	font-size: 13px;
+}
+.ex-etat a { color: var(--ex-texte); }
+.ex-etat a:hover { color: var(--ex-fort); }
+/* Les widgets de la zone, en ligne : sans carte, leur titre caché (la barre est une ligne, pas une colonne de blocs). */
+.ex-etat-zone { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; min-width: 0; }
+.ex-etat-zone .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; margin: 0; }
+.ex-etat-zone .row > [class*="col-"], .ex-etat-zone .row > .col { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; width: auto; flex: 0 1 auto; padding: 0; }
+.ex-etat-zone .widget { margin: 0 !important; }
+.ex-etat-zone .card { background: none; border: 0; box-shadow: none; }
+.ex-etat-zone .card > .card-header, .ex-etat-zone .card > .card-footer { display: none; }
+.ex-etat-zone .card-body { padding: 0; }
+.ex-etat-zone .text-muted { color: var(--ex-doux) !important; }
+.ex-etat-droite { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-left: auto; }
+.ex-langue .btn { padding: 5px 10px; border: 0; background: none; color: var(--ex-texte); font: 500 13px var(--nf-font); letter-spacing: 0; text-transform: none; }
+.ex-langue .btn:hover { background: var(--ex-panneau-2); color: var(--ex-fort); }
+.ex-copy { white-space: nowrap; }
+.ex-copy a, .ex-site-name { color: var(--ex-texte); font-weight: 600; }
+.ex-socials { display: inline-flex; gap: 6px; }
+.ex-social { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--ex-panneau-2); color: var(--ex-texte); font-size: 13px; }
+.ex-social:hover, .ex-social:focus-visible { background: var(--ex-accent); color: var(--ex-sur-accent); }
+
+/* =========================================================================
+   §12 — Écran moyen : le panneau plus étroit
+   ======================================================================== */
+
+@media (max-width: 1279.98px) {
+	.ex-barre { gap: 16px; padding: 0 16px; }
+	.ex-onglets .widget-navigation .nav-link { padding: 0 11px; font-size: 16px; letter-spacing: 0.05em; }
+	.ex-onglets .widget-navigation .nav-link::after { left: 11px; right: 11px; }
+	.ex-moi-texte, .ex-moi .fa-angle-down { display: none; }
+	.ex-compte-liste .ex-moi { padding: 3px; }
+	.ex-cadre { grid-template-columns: minmax(0, 1fr) 270px; background: linear-gradient(to left, var(--ex-panneau) 269px, var(--ex-trait) 269px, var(--ex-trait) 270px, transparent 270px); }
+	.ex-principal { padding: 20px 20px 36px; }
 }
 
-.btn-sm { padding: 5px 10px; }
-.btn-lg { padding: 11px 20px; }
-
-.btn-primary { background: var(--ex-accent); border-color: var(--ex-accent); color: var(--ex-on-accent); }
-.btn-primary:hover { background: var(--ex-accent-strong); border-color: var(--ex-accent-strong); color: var(--ex-on-accent); transform: translateY(-1px); box-shadow: var(--ex-glow); }
-.btn-secondary { background: var(--ex-surface-2); border-color: var(--ex-border); color: var(--ex-text); }
-
-.btn-outline-primary { background: transparent; border-color: var(--ex-accent); color: var(--ex-accent-text); }
-.btn-outline-primary:hover { background: var(--ex-accent); border-color: var(--ex-accent); color: var(--ex-on-accent); box-shadow: var(--ex-glow-soft); }
-.btn-link { background: transparent; border-color: transparent; color: var(--ex-accent-text); }
-
-.btn-light { background: var(--ex-surface-2); border-color: var(--ex-border); color: var(--ex-text); }
-.btn-light:hover { background: var(--ex-surface-3); color: var(--ex-text-strong); }
-.btn-danger  { background: var(--ex-danger);  border-color: var(--ex-danger); }
-.btn-danger:hover { filter: brightness(1.05); color: #fff; }
-.btn-success { background: var(--ex-success); border-color: var(--ex-success); }
-.btn-success:hover { filter: brightness(1.05); }
-.btn-warning { background: var(--ex-warning); border-color: var(--ex-warning); color: #0e151a; }
-.btn-info    { background: var(--ex-info);    border-color: var(--ex-info); }
-
 /* =========================================================================
-   §12 — Forms
+   §13 — Tablette et téléphone : les onglets en bas, le panneau qui s'ouvre
    ======================================================================== */
-
-.form-control, .form-select, textarea.form-control {
-	background-color: var(--ex-surface-2); border: 1px solid var(--ex-border);
-	border-radius: var(--ex-radius-sm); padding: 8px 12px; font-size: 14px;
-	color: var(--ex-text);
-	transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
-}
-
-.form-control.is-invalid:focus { box-shadow: 0 0 0 3px var(--ex-danger-soft); }
-
-.col-form-label, .form-label, label { color: var(--ex-text-strong); font-size: 14px; font-weight: 600; }
-.form-text, .text-muted { color: var(--ex-muted); }
-
-/* =========================================================================
-   §13 — Nav tabs / pills
-   ======================================================================== */
-
-.nav-tabs .nav-link {
-	border: none; background: transparent; color: var(--ex-muted);
-	font-size: 15px; font-weight: 600; padding: 10px 16px;
-	border-radius: var(--ex-radius-sm) var(--ex-radius-sm) 0 0; position: relative;
-	font-family: var(--ex-font-display); letter-spacing: 0.01em;
-	transition: color 120ms ease, background-color 120ms ease;
-}
-
-.nav-tabs .nav-link.active { color: var(--ex-accent-text); background: transparent; border: none; }
-.nav-tabs .nav-link.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--ex-accent); box-shadow: var(--ex-glow-soft); }
-
-.nav-pills .nav-link {
-	display: flex; align-items: center; gap: 8px; padding: 8px 12px;
-	border-radius: var(--ex-radius-sm); font-size: 13px; font-weight: 500; color: var(--ex-text);
-	transition: background-color 120ms ease, color 120ms ease;
-}
-.nav-pills .nav-link i.icon, .nav-pills .nav-link i.fas { color: var(--ex-muted); font-size: 14px; transition: color 120ms ease; }
-.nav-pills .nav-link:hover { background: var(--ex-surface-2); color: var(--ex-text); }
-.nav-pills .nav-link.active { background: var(--ex-accent-soft); color: var(--ex-accent-text); font-weight: 600; }
-
-.widget-navigation .nav-link {
-	color: var(--ex-text); font-weight: 600; font-size: 16px; padding: 8px 14px;
-	border-radius: var(--ex-radius-sm); font-family: var(--ex-font-display);
-	text-transform: uppercase; letter-spacing: 0.04em;
-	transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
-}
-.widget-navigation .nav-link:hover, .widget-navigation .nav-link.active { background: var(--ex-accent); color: var(--ex-on-accent); box-shadow: var(--ex-glow-soft); }
-.row-dark .widget-navigation .nav-link { color: var(--ex-text-strong); }
-
-/* =========================================================================
-   §14 — List group
-   ======================================================================== */
-
-.list-group-item {
-	background: transparent; border-color: var(--ex-border); padding: 9px 14px;
-	font-size: 13px; font-weight: 500; color: var(--ex-text);
-	transition: background-color 120ms ease, color 120ms ease;
-}
-.list-group-item i.icon, .list-group-item i.fas { color: var(--ex-muted); font-size: 12px; }
-
-.list-group-item-action:hover i.icon, .list-group-item-action:hover i.fas { color: var(--ex-accent); }
-
-/* =========================================================================
-   §15 — Tables
-   ======================================================================== */
-
-/* =========================================================================
-   §16 — Badges
-   ======================================================================== */
-
-/* =========================================================================
-   §17 — Alerts
-   ======================================================================== */
-
-.alert { border-radius: var(--ex-radius-sm); border: 1px solid; font-size: 14px; padding: 12px 14px; }
-.alert i.icon:first-child, .alert i.fas:first-child { margin-right: 8px; font-size: 14px; vertical-align: middle; }
-.alert-success { background: var(--ex-success-soft); color: var(--bs-success-text-emphasis); border-color: color-mix(in srgb, var(--ex-success) 30%, transparent); }
-.alert-danger  { background: var(--ex-danger-soft);  color: var(--bs-danger-text-emphasis);  border-color: color-mix(in srgb, var(--ex-danger) 30%, transparent); }
-.alert-warning { background: var(--ex-warning-soft); color: var(--bs-warning-text-emphasis); border-color: color-mix(in srgb, var(--ex-warning) 30%, transparent); }
-.alert-info    { background: var(--ex-info-soft);    color: var(--bs-info-text-emphasis);    border-color: color-mix(in srgb, var(--ex-info) 30%, transparent); }
-
-/* =========================================================================
-   §18 — Dropdowns / modals / pagination / breadcrumb
-   ======================================================================== */
-
-.dropdown-menu { background: var(--ex-surface); border: 1px solid var(--ex-border); border-radius: var(--ex-radius-sm); padding: 4px; box-shadow: var(--ex-shadow-md); font-size: 13px; z-index: 1020; }
-
-.modal-title { font-size: 21px; font-weight: 700; color: var(--ex-text-strong); line-height: 1.25; font-family: var(--ex-font-display); letter-spacing: 0.01em; }
-
-.breadcrumb-item, .breadcrumb-item a { color: var(--ex-muted); }
-.breadcrumb-item a:hover { color: var(--ex-accent-text); }
-
-/* =========================================================================
-   §19 — Avatars
-   ======================================================================== */
-
-.avatar {
-	display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto;
-	border-radius: 999px; background: var(--ex-surface-3); vertical-align: middle; box-sizing: border-box;
-}
-
-body .widget-user .avatar, body .widget-user img.avatar {
-	width: 76px !important; height: 76px !important; margin: 0 auto 10px !important;
-	box-shadow: 0 0 0 3px color-mix(in srgb, #fff 25%, transparent), var(--ex-glow-soft);
-}
-.module-user .user-profile .avatar, .module-user .user-profile img.avatar {
-	width: 132px; height: 132px; margin: 0 auto 12px;
-	box-shadow: 0 0 0 3px var(--ex-bg), 0 0 0 5px var(--ex-accent), var(--ex-glow);
-}
-.module-members .card .avatar, .module-members .user-profile .avatar { width: 104px; height: 104px; }
-
-/* =========================================================================
-   §20 — Widget Espace membre
-   ======================================================================== */
-
-.widget-user .card-body { padding: 16px; text-align: center; }
-.widget-user .user-name, .widget-user .username { font-size: 21px; font-weight: 700; color: var(--ex-text-strong); margin-bottom: 2px; font-family: var(--ex-font-display); letter-spacing: 0.01em; }
-
-.widget-user .card-footer { background: transparent; border-top: 1px solid var(--ex-border); padding: 10px 14px; text-align: center; }
-.widget-user .card-footer a {
-	display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-	border-radius: var(--ex-radius-sm); font-size: 12.5px; font-weight: 600;
-	color: var(--ex-muted); background: transparent;
-	border: 1px solid var(--ex-border);
-	transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
-}
-.widget-user .card-footer a:hover { background: var(--ex-surface-2); border-color: var(--ex-border-strong); color: var(--ex-text-strong); }
-
-.widget-user.panel-color .card-footer,
-.card.panel-color .widget-user .card-footer { border-top-color: color-mix(in srgb, #fff 22%, transparent); }
-
-/* =========================================================================
-   §21 — Widget Slider
-   ======================================================================== */
-
-.widget-slider .carousel-caption { background: linear-gradient(180deg, transparent, rgba(0,0,0,0.7)); position: absolute; bottom: 0; left: 0; right: 0; padding: 36px 24px 18px; text-align: left; }
-.widget-slider .carousel-caption h3, .widget-slider .carousel-caption h5 { color: #fff; font-size: 24px; font-weight: 700; margin-bottom: 4px; text-shadow: 0 1px 4px rgba(0,0,0,0.55); font-family: var(--ex-font-display); }
-
-/* =========================================================================
-   §22 — Widget Recherche + Shoutbox
-   ======================================================================== */
-
-.widget-search .btn { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-.widget-shoutbox .shoutbox-messages { max-height: 240px; overflow-y: auto; padding: 8px 0; }
-.widget-shoutbox .shoutbox-message { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; border-bottom: 1px solid var(--ex-border); }
-
-.widget-shoutbox .shoutbox-form { display: flex; gap: 6px; padding: 8px 0 0; margin-top: 8px; border-top: 1px solid var(--ex-border); }
-
-/* =========================================================================
-   §23 — Module Forum (touches légères)
-   ======================================================================== */
-
-.module-forum .subforums > li, .module-forum .forum-groups > a {
-	background: var(--ex-surface-2); border: 1px solid var(--ex-border); border-radius: 999px;
-	padding: 2px 10px; font-size: 11px; font-weight: 600;
-	transition: background-color 120ms ease, color 120ms ease;
-}
-.module-forum .subforums > li:hover, .module-forum .forum-groups > a:hover { background: var(--ex-accent-soft); color: var(--ex-accent-text); }
-.module-members .card.list-group-item-action:hover, .module-members a.card:hover { box-shadow: var(--ex-shadow-md), var(--ex-glow-soft); transform: translateY(-2px); }
-
-/* =========================================================================
-   §24 — Utilities + back-to-top
-   ======================================================================== */
-
-.ex-to-top {
-	position: fixed; right: 18px; bottom: 18px; width: 42px; height: 42px;
-	display: inline-flex; align-items: center; justify-content: center;
-	background: var(--ex-accent); color: var(--ex-on-accent); border: none;
-	border-radius: var(--ex-radius); box-shadow: var(--ex-shadow-md), var(--ex-glow); font-size: 16px; cursor: pointer;
-	opacity: 0; visibility: hidden; transform: translateY(8px);
-	transition: opacity 160ms ease, transform 160ms ease, background-color 140ms ease;
-	z-index: 1030;
-}
-.ex-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
-.ex-to-top:hover { background: var(--ex-accent-strong); }
-
-/* =========================================================================
-   §25 — Signatures + responsive
-   ======================================================================== */
-
-.card.panel-header { box-shadow: var(--ex-shadow-sm), var(--ex-glow-soft); }
-.card.panel-color  { box-shadow: var(--ex-shadow), var(--ex-glow); }
-.ex-header-banner { box-shadow: inset 0 -2px 22px -6px color-mix(in srgb, var(--ex-accent) 50%, transparent); }
 
 @media (max-width: 991.98px) {
-	.ex-header-banner { padding: 28px 0 32px; }
+	html { scroll-padding-top: 66px; }
+	.ex-barre { height: 58px; gap: 10px; }
+	.ex-nom { font-size: 19px; max-width: 46vw; }
+	.ex-cadre, .ex-cadre.ex-cadre-seul { grid-template-columns: minmax(0, 1fr); background: none; }
+	.ex-principal { padding: 14px 14px 30px; gap: 22px; }
+	/* Sans script : le panneau sous la page. Avec lui (js/extend.js pose `ex-js`) : un tiroir, ouvert par « En ligne ». */
+	.ex-panneau { position: static; max-height: none; overflow: visible; margin: 0 14px 18px; padding: 18px 16px; border: 1px solid var(--ex-trait); border-radius: 12px; background: var(--ex-panneau); }
+	.ex-js .ex-panneau {
+		position: fixed; z-index: 1045; top: 0; right: 0; bottom: 0;
+		/* `stretch` : posé en `start` (la colonne de l'ordinateur), le tiroir prenait la hauteur de son contenu, pas
+		   celle de l'écran — même collé en haut et en bas (mesuré le 2026-10-07 : 325 px sur 844). */
+		align-self: stretch;
+		width: min(340px, 88vw); max-height: none; margin: 0;
+		padding: 56px 18px calc(24px + env(safe-area-inset-bottom));
+		border: 0; border-left: 1px solid var(--ex-trait); border-radius: 0;
+		overflow-y: auto;
+		box-shadow: -24px 0 50px -20px rgba(0, 0, 0, 0.8);
+		transform: translateX(105%);
+		visibility: hidden;
+		transition: transform 260ms ease, visibility 0s 260ms;
+	}
+	.ex-js .ex-panneau.is-ouvert { transform: none; visibility: visible; transition: transform 260ms ease, visibility 0s; }
+	.ex-js .ex-panneau-fermer { position: absolute; top: 12px; right: 12px; display: inline-grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 9px; background: var(--ex-panneau-2); color: var(--ex-fort); }
+	.ex-voile { position: fixed; inset: 0; z-index: 1040; background: rgba(2, 6, 12, 0.6); }
+
+	/* Les onglets descendent en bas de l'écran : le pictogramme, le nom dessous. */
+	.ex-onglets {
+		position: fixed; left: 0; right: 0; bottom: 0; z-index: 1035;
+		align-self: auto;
+		padding: 0 4px env(safe-area-inset-bottom);
+		background: var(--ex-panneau);
+		border-top: 1px solid var(--ex-trait);
+		box-shadow: 0 -10px 24px -20px rgba(0, 0, 0, 0.9);
+	}
+	.ex-onglets .widget-navigation .nav { justify-content: space-around; height: 62px; overflow-x: auto; }
+	.ex-onglets .widget-navigation .nav-item { flex: 1 1 0; min-width: 62px; }
+	.ex-onglets .widget-navigation .nav-link {
+		flex: 1 1 auto;
+		flex-direction: column; justify-content: center; gap: 5px;
+		padding: 6px 2px;
+		font-size: 11.5px; letter-spacing: 0.05em;
+		white-space: nowrap;
+	}
+	.ex-onglets .widget-navigation .nav-link > .icon { display: inline-block; font-size: 19px; }
+	.ex-onglets .widget-navigation .nav-link::after { left: 30%; right: 30%; top: -1px; bottom: auto; border-radius: 0 0 3px 3px; }
+	.ex-onglets .widget-navigation .nav-link:hover::after { transform: scaleX(0); }
+	.ex-onglets .widget-navigation .nav-link.active { color: var(--ex-vif); }
+	.ex-onglets .widget-navigation .nav-item.ex-tel-seul { display: flex; }
+	.ex-onglets .ex-deborde { display: none !important; }
+	.ex-onglets .ex-compteur { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--ex-accent); color: var(--ex-sur-accent); font: 700 10.5px/18px var(--nf-font); letter-spacing: 0; text-align: center; }
+	.ex-plus-feuille { position: fixed; z-index: 1036; left: 10px; right: 10px; bottom: calc(70px + env(safe-area-inset-bottom)); padding: 8px; border: 1px solid var(--ex-trait-fort); border-radius: 14px; background: var(--ex-panneau); box-shadow: var(--nf-shadow-md); }
+	.ex-plus-feuille ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+	.ex-plus-feuille .nav-link { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px; border-radius: 10px; color: var(--ex-texte); font: 700 12.5px/1.1 var(--ex-titre); letter-spacing: 0.05em; text-transform: uppercase; text-align: center; }
+	.ex-plus-feuille .nav-link .icon { font-size: 19px; color: var(--ex-vif); }
+	.ex-plus-feuille .nav-link .d-none.d-sm-inline { display: inline !important; }
+	.ex-plus-feuille .nav-link:hover, .ex-plus-feuille .nav-link.active { background: var(--ex-panneau-2); color: var(--ex-fort); }
+
+	.ex-etat { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+	.ex-vitrine .carousel-caption { width: 100%; padding: 26px 22px 46px; justify-content: flex-end; }
+	.ex-vitrine .carousel-item::after { background: linear-gradient(180deg, rgba(4, 10, 18, 0.1) 0%, rgba(4, 10, 18, 0.88) 78%); }
+	.ex-vitrine .carousel-indicators { margin-left: 22px; margin-bottom: 18px; }
+	.ex-vitrine .carousel-item img, .ex-vitrine .carousel-item > a > img, .ex-vitrine .carousel-item > div.d-block, .ex-vitrine .carousel-item > a > div.d-block { height: 400px !important; }
+	.ex-art::after { background: linear-gradient(180deg, rgba(4, 10, 18, 0.15) 0%, rgba(4, 10, 18, 0.85) 85%); }
 }
 @media (max-width: 767.98px) {
-	.card .card-body   { padding: 12px; }
-	.card .card-header { padding: 10px 12px; }
-	.card .card-footer { padding: 8px 12px; }
-	
-	.ex-to-top { right: 12px; bottom: 12px; width: 38px; height: 38px; }
+	.ex-connexion { padding: 10px 12px; }
+	.ex-connexion .fa-user { display: inline-block; }
+	.ex-connexion-texte { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	.ex-vitrine-site { min-height: 300px; }
+	.ex-vitrine-texte { padding: 26px 20px 22px; }
+	.ex-entete { min-height: 110px; padding: 18px 18px; }
+	.card > .card-header { padding: 14px 14px 0; font-size: 20px; }
+	.card .card-body { padding: 12px 14px 16px; }
+	.card .card-footer { padding: 0 14px 14px; }
+	.ex-principal .widget-calendar ul.list-unstyled { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 82%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; scrollbar-width: none; }
+	.ex-principal .widget-calendar ul.list-unstyled > li { scroll-snap-align: start; }
+	.ex-principal .widget-news .card-body { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+	.ex-principal .widget-news .flex-grow-1 > a:not(.badge) { font-size: 14.5px; }
+	.ex-principal .widget-events .list-group { grid-template-columns: minmax(0, 1fr); padding: 12px 14px 14px; gap: 8px; }
+	.ex-principal .news-article { padding: 20px 18px 18px; }
+	.ex-principal .nf-espace-menu { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+	.ex-principal .nf-espace-groupe { flex-wrap: nowrap; }
+	.ex-principal .nf-espace-accueil { padding: 108px 16px 16px; }
+	.ex-principal .nf-espace-accueil::before { height: 96px; }
+	.ex-principal .nf-espace-accueil > .avatar { margin-top: -50px; width: 88px; height: 88px; border-radius: 22px; }
+	.ex-principal .nf-espace-accueil-nom h2 { font-size: 32px; }
+	.ex-principal .nf-espace-accueil-actions { margin-left: 0; }
+	.ex-etat { justify-content: center; text-align: center; }
+	.ex-etat-droite { margin-left: 0; justify-content: center; }
+	.module-forum table[data-forum-view] > tbody > tr > td:first-child { width: 52px; padding-left: 10px; }
+	.module-forum .forum-icone { width: 34px; height: 34px; }
 }
 
 /* =========================================================================
-   §UX — Corrections audit visuel (lisibilité, hamburger, focus, responsive)
+   §14 — Moins d'animations demandé : la vitrine s'arrête
    ======================================================================== */
 
-.navbar-user .navbar-toggler { border: 1px solid var(--ex-border); padding: 4px 9px; border-radius: var(--ex-radius-sm); }
-.navbar-user .navbar-toggler-icon {
-	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='%2314202b' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+@media (prefers-reduced-motion: reduce) {
+	.ex-ciel, .ex-aurore, .ex-panneau .widget-members .card > .card-header::after { animation: none; }
+	.ex-onglets .widget-navigation .nav-link::after, .ex-bouton, .ex-evitement, .ex-panneau, .btn,
+	.ex-principal .widget-calendar ul.list-unstyled > li, .ex-principal .widget-news .img-cover { transition: none; }
+	.ex-bouton:hover, .ex-principal .widget-calendar ul.list-unstyled > li:hover { transform: none; }
 }
-
-.card.panel-color .btn-link { color: var(--ex-on-accent); }
-.card.panel-color .btn-link:hover { color: var(--ex-on-accent); opacity: 0.82; }
-
-.theme-toggle:focus-visible,
-.navbar-user .nav-link:focus-visible,
-.btn:focus-visible,
-.ex-social:focus-visible { outline: 2px solid var(--ex-accent); outline-offset: 2px; }
-
-.card .card-header .btn { text-transform: none; letter-spacing: normal; }
-
-@media (max-width: 575.98px) {
-	.ex-footer-bar { flex-direction: column; justify-content: center; text-align: center; gap: 10px; }
-}
-@media (max-width: 767.98px) {
-	.ex-social { width: 44px; height: 44px; }
-}
-
-/* Contraste des boutons pleins (WCAG AA), jour + nuit. */
-.btn-warning { color: #0e151a; }
-[data-theme="light"] .btn-warning { background: color-mix(in srgb, var(--ex-warning) 72%, #000); border-color: color-mix(in srgb, var(--ex-warning) 72%, #000); color: #fff; }
-
-.btn-info    { background: color-mix(in srgb, var(--ex-info) 80%, #000);    border-color: color-mix(in srgb, var(--ex-info) 80%, #000); }
-.btn-success { background: color-mix(in srgb, var(--ex-success) 60%, #000); border-color: color-mix(in srgb, var(--ex-success) 60%, #000); }
-.btn-danger  { background: color-mix(in srgb, var(--ex-danger) 72%, #000);  border-color: color-mix(in srgb, var(--ex-danger) 72%, #000); }
-
-.ex-footer { margin-top: auto; }
-
