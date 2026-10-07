@@ -1,7 +1,8 @@
 <?php
 /**
  * https://neofr.ag
- * Blockcraft — panneau d'administration du thème.
+ * Blockcraft — panneau d'administration du thème : l'en-tête (le logo, l'adresse du serveur), l'arrière-plan, les
+ * couleurs et les réseaux sociaux. Le ciel et le paysage sont dessinés : il n'y a plus d'image de bannière (1.x).
  */
 
 namespace NF\Themes\Blockcraft\Controllers;
@@ -14,6 +15,11 @@ class Admin extends Controller
 	{
 		$this->js('admin');
 
+		// Les couleurs par défaut de Blockcraft 1.x valent celles de la 2.0 (cf. css/style.css) : le sélecteur montre la
+		// couleur que le thème rend.
+		$heritees = ['#6aa84f' => '#3c7a27', '#eef3f7' => '#eef3e6', '#2e2a25' => '#1e2916'];
+		$couleur  = static fn ($valeur): string => $heritees[strtolower((string) $valeur)] ?? (string) $valeur;
+
 		$image_check = function($filename, $ext){
 			if (!in_array($ext, ['gif', 'jpeg', 'jpg', 'png']))
 			{
@@ -21,64 +27,10 @@ class Admin extends Controller
 			}
 		};
 
-		/* ---------------------------------------------------------------- Header */
+		/* ------------------------------------------------- L'en-tête : le logo, l'adresse du serveur */
 
 		$form_header = $this->form()
 			->add_rules([
-				'header' => [
-					'label'       => $this->lang('Image de bannière'),
-					'value'       => $this->config->blockcraft_header,
-					'type'        => 'file',
-					'upload'      => 'themes/blockcraft/headers',
-					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
-					'check'       => $image_check,
-					'description' => $this->lang('Laisser vide pour utiliser le dégradé du thème.')
-				],
-				'repeat' => [
-					'label'  => $this->lang('Répétition'),
-					'value'  => $this->config->blockcraft_header_repeat,
-					'values' => [
-						'no-repeat' => $this->lang('Non'),
-						'repeat-x'  => $this->lang('Horizontalement'),
-						'repeat-y'  => $this->lang('Verticalement'),
-						'repeat'    => $this->lang('Les deux')
-					],
-					'type'   => 'radio',
-					'rules'  => 'required'
-				],
-				'positionX' => [
-					'label'  => $this->lang('Position'),
-					'value'  => explode(' ', (string) $this->config->blockcraft_header_position ?: 'center center')[0],
-					'values' => [
-						'left'   => $this->lang('Gauche'),
-						'center' => $this->lang('Centré'),
-						'right'  => $this->lang('Droite')
-					],
-					'type'   => 'radio',
-					'rules'  => 'required'
-				],
-				'positionY' => [
-					'value'  => explode(' ', (string) $this->config->blockcraft_header_position ?: 'center center')[1] ?? 'center',
-					'values' => [
-						'top'    => $this->lang('Haut'),
-						'center' => $this->lang('Milieu'),
-						'bottom' => $this->lang('Bas')
-					],
-					'type'   => 'radio',
-					'rules'  => 'required'
-				],
-				'fixed' => [
-					'checked' => ['on' => $this->config->blockcraft_header_attachment == 'fixed'],
-					'values'  => ['on' => $this->lang('Image fixe (parallax)')],
-					'type'    => 'checkbox'
-				],
-				'color' => [
-					'label' => $this->lang('Couleur de fond'),
-					'value' => $this->config->blockcraft_header_color,
-					'type'  => 'colorpicker',
-					'rules' => 'required',
-					'size'  => 'col-3'
-				],
 				'logo' => [
 					'label'       => $this->lang('Logo du site'),
 					'value'       => $this->config->blockcraft_logo,
@@ -86,7 +38,14 @@ class Admin extends Controller
 					'upload'      => 'themes/blockcraft/logos',
 					'info'        => $this->lang(' d\'image (max. %d Mo)', file_upload_max_size() / 1024 / 1024),
 					'check'       => $image_check,
-					'description' => $this->lang('Affiché dans le widget header en remplacement du titre.')
+					'description' => $this->lang('Dans la barre, devant le nom du site. Laissé vide : le logo du site (réglages généraux), s’il y en a un, sinon un bloc d’herbe.')
+				],
+				// L'adresse que les joueurs tapent dans le jeu, dans le ciel de l'accueil, avec son bouton « Copier l'adresse ».
+				'adresse' => [
+					'label'       => $this->lang('Adresse du serveur'),
+					'value'       => $this->config->blockcraft_adresse,
+					'type'        => 'text',
+					'description' => $this->lang('Celle que les joueurs tapent dans le jeu (par exemple play.monserveur.fr). Elle s’affiche sous le nom du site, sur l’accueil, avec un bouton pour la copier. Laisser vide : pas d’adresse.')
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -145,7 +104,7 @@ class Admin extends Controller
 				],
 				'color' => [
 					'label' => $this->lang('Couleur de fond'),
-					'value' => $this->config->blockcraft_background_color,
+					'value' => $couleur($this->config->blockcraft_background_color),
 					'type'  => 'colorpicker',
 					'rules' => 'required',
 					'size'  => 'col-3'
@@ -160,24 +119,19 @@ class Admin extends Controller
 			->add_rules([
 				'theme_color' => [
 					'label'       => $this->lang('Couleur d\'accent'),
-					'value'       => $this->config->blockcraft_theme_color,
+					'value'       => $couleur($this->config->blockcraft_theme_color),
 					'type'        => 'colorpicker',
-					'description' => $this->lang('Couleur principale du thème (boutons, liens, accents)'),
+					'description' => $this->lang('L’herbe du thème : les boutons, les liens, les titres colorés et les widgets colorés.'),
 					'rules'       => 'required',
 					'size'        => 'col-3'
 				],
 				'text_color' => [
 					'label'       => $this->lang('Couleur du texte'),
-					'value'       => $this->config->blockcraft_text_color,
+					'value'       => $couleur($this->config->blockcraft_text_color),
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur appliquée au texte principal'),
 					'rules'       => 'required',
 					'size'        => 'col-3'
-				],
-				'navbar' => [
-					'checked' => ['on' => $this->config->blockcraft_navbar_display],
-					'values'  => ['on' => $this->lang('Garder la barre du haut visible en permanence')],
-					'type'    => 'checkbox'
 				]
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -218,19 +172,14 @@ class Admin extends Controller
 
 		if ($form_header->is_valid($post))
 		{
-			if ($post['header']) $this->config('blockcraft_header', $post['header'], 'int');
-			else                 $this->config->unset('blockcraft_header');
+			if ($post['logo']) $this->config('blockcraft_logo', $post['logo'], 'int');
+			else               $this->config->unset('blockcraft_logo');
 
-			if ($post['logo'])   $this->config('blockcraft_logo', $post['logo'], 'int');
-			else                 $this->config->unset('blockcraft_logo');
+			// Une adresse de serveur : une ligne, sans balise ; au-delà de cent caractères, ce n'en est pas une.
+			$this	->config('blockcraft_adresse', mb_substr(trim(strip_tags((string) $post['adresse'])), 0, 100))
+					->config('nf_version_css', time());
 
-			$this	->config('blockcraft_header_repeat',     $post['repeat'])
-					->config('blockcraft_header_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
-					->config('blockcraft_header_position',   $post['positionX'].' '.$post['positionY'])
-					->config('blockcraft_header_color',      $post['color'])
-					->config('nf_version_css',               time());
-
-			notify($this->lang('Bannière du site mise à jour !'));
+			notify($this->lang('En-tête mis à jour !'));
 			redirect($this->url->location.'#header');
 		}
 		else if ($form_background->is_valid($post))
@@ -242,17 +191,16 @@ class Admin extends Controller
 					->config('blockcraft_background_attachment', in_array('on', $post['fixed']) ? 'fixed' : 'scroll')
 					->config('blockcraft_background_position',   $post['positionX'].' '.$post['positionY'])
 					->config('blockcraft_background_color',      $post['color'])
-					->config('nf_version_css',                   time());
+					->config('nf_version_css',                    time());
 
 			notify($this->lang('Arrière-plan mis à jour !'));
 			redirect($this->url->location.'#background');
 		}
 		else if ($form_settings->is_valid($post))
 		{
-			$this	->config('blockcraft_theme_color',    $post['theme_color'])
-					->config('blockcraft_text_color',     $post['text_color'])
-					->config('blockcraft_navbar_display', in_array('on', $post['navbar']), 'bool')
-					->config('nf_version_css',            time());
+			$this	->config('blockcraft_theme_color', $post['theme_color'])
+					->config('blockcraft_text_color',  $post['text_color'])
+					->config('nf_version_css',         time());
 
 			notify($this->lang('Configuration mise à jour !'));
 			redirect($this->url->location.'#settings');

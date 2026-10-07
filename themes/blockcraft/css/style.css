@@ -1,808 +1,929 @@
 <?php
 /* =========================================================================
-   Blockcraft — feuille de style (template PHP servi par NeoFrag)
-   Mode jour « biome » par défaut (:root / [data-theme="light"])
-   Mode nuit « grotte » via [data-theme="dark"]
+   Blockcraft 2.0.0 — feuille de style (gabarit PHP servi par NeoFrag)
+
+   Le site d'un serveur de jeu de blocs (chantier B ; direction D « Spawn + Inventaire » de la planche du 2026-10-07,
+   https://claude.ai/artifact/LrvbM1UU4Zp4wDTZ8MGN1a, celle qui a été choisie). Un ciel au-dessus d'un paysage en blocs,
+   la navigation en barre d'objets, des blocs à coins carrés et ombres franches, le forum en coffres, l'espace membre en
+   écran du personnage, le pied en roche. Titres Jersey 10, texte Rubik, chiffres VT323. Les pixels sont dessinés pour
+   le thème (images/blocs, images/objets, images/sol.png : .claude/epreuves/chantiers/blockcraft/pixels.py) et
+   agrandis sans flou (`image-rendering: pixelated`).
+
+   Jour (la prairie) par défaut ; la nuit (le ciel étoilé) au choix du visiteur ou de son système (js/theme.js). De
+   jour, les textes du ciel sont sombres : blancs sur un ciel clair, ils ne se liraient que par leur ombre — que les
+   mesures de contraste ne voient pas. Tout mouvement s'arrête si le visiteur a demandé moins d'animations (§13).
    ======================================================================== */
 
-/* === Defaults (servent à détecter une customisation admin) === */
-$accent_default = '#6aa84f';   /* vert herbe */
-$bg_default     = '#eef3f7';   /* ciel pâle */
-$text_default   = '#2e2a25';   /* terre foncée */
+$accent_default = '#3c7a27';   /* l'herbe */
+$bg_default     = '#eef3e6';   /* la prairie */
+$text_default   = '#1e2916';   /* la terre */
 
-/* === Valeurs admin (priorité admin > thème) === */
-$bg_image    = ($this->config->blockcraft_background && ($f = NeoFrag()->model2('file', $this->config->blockcraft_background)->path())) ? $f : '';
-$header_img  = ($this->config->blockcraft_header     && ($f = NeoFrag()->model2('file', $this->config->blockcraft_header)->path()))     ? $f : '';
-$accent      = $this->config->blockcraft_theme_color      ?: $accent_default;
-$bg_color    = $this->config->blockcraft_background_color ?: $bg_default;
-$text_color  = $this->config->blockcraft_text_color       ?: $text_default;
-$bg_repeat   = $this->config->blockcraft_background_repeat     ?: 'repeat';
-$bg_attach   = $this->config->blockcraft_background_attachment ?: 'scroll';
-$bg_pos      = $this->config->blockcraft_background_position   ?: 'center top';
-$header_color  = $this->config->blockcraft_header_color      ?: '#6aa84f';
-$header_repeat = $this->config->blockcraft_header_repeat     ?: 'no-repeat';
-$header_attach = $this->config->blockcraft_header_attachment ?: 'scroll';
-$header_pos    = $this->config->blockcraft_header_position   ?: 'center top';
+// Les couleurs par défaut de Blockcraft 1.x sont celles d'un site qui n'a rien choisi : lues comme un choix, elles
+// figeaient la nuit sur les couleurs du jour (texte sombre sur blocs sombres). Elles valent celles de la 2.0.
+$heritees   = ['#6aa84f' => $accent_default, '#eef3f7' => $bg_default, '#2e2a25' => $text_default];
+$couleur    = static fn ($valeur, string $defaut): string => $heritees[strtolower((string) $valeur)] ?? ((string) $valeur ?: $defaut);
+$bg_image   = ($this->config->blockcraft_background && ($f = NeoFrag()->model2('file', $this->config->blockcraft_background)->path())) ? $f : '';
+$accent     = $couleur($this->config->blockcraft_theme_color,      $accent_default);
+$bg_color   = $couleur($this->config->blockcraft_background_color, $bg_default);
+$text_color = $couleur($this->config->blockcraft_text_color,       $text_default);
+$bg_repeat  = $this->config->blockcraft_background_repeat     ?: 'repeat';
+$bg_attach  = $this->config->blockcraft_background_attachment ?: 'scroll';
+$bg_pos     = $this->config->blockcraft_background_position   ?: 'center top';
 
-$accent_is_custom = ($accent !== $accent_default);
-$bg_is_custom     = ($bg_color !== $bg_default);
-$text_is_custom   = ($text_color !== $text_default);
+$accent_is_custom = (strtolower($accent) !== $accent_default);
+$bg_is_custom     = (strtolower($bg_color) !== $bg_default);
+$text_is_custom   = (strtolower($text_color) !== $text_default);
+
+// Les objets de la barre, et ceux des titres de blocs : l'adresse d'une rubrique, ou le module d'un bloc, choisit le sien.
+$objets_rubriques = [
+	'livre'    => ['news', 'blog', 'articles', 'newsletter', 'guestbook'],
+	'carte'    => ['forum', 'classifieds'],
+	'cloche'   => ['calendar', 'events', 'webradio'],
+	'diamant'  => ['gallery'],
+	'etoile'   => ['members', 'awards'],
+	'coffre'   => ['user'],
+	'emeraude' => ['shop', 'donations', 'partners'],
+	'epee'     => ['teams', 'recruits'],
+	'pioche'   => ['wiki', 'downloads', 'bugtracker'],
+	'boussole' => ['contact', 'faq', 'pages', 'links'],
+	'pomme'    => ['surveys', 'quotes', 'recipes'],
+];
 ?>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Rubik:wght@400;500;600;700&family=VT323&display=swap');
 
 /* =========================================================================
-   §1 — Tokens — Mode JOUR (biome) — défaut
+   §1 — Jetons — JOUR (la prairie)
    ======================================================================== */
 
 :root,
 [data-theme="light"] {
-	/* Tokens admin-configurables (priorité absolue) */
-	--bc-bg:             <?php echo $bg_color ?>;
-	--bc-text:           <?php echo $text_color ?>;
-	--bc-accent:         <?php echo $accent ?>;
+	--bc-ciel-haut:   #86c1ec;
+	--bc-ciel-bas:    #d5edfb;
+	--bc-sur-ciel:    #10203a;
+	--bc-sur-ciel-doux: #23395c;
+	--bc-fond:        <?php echo $bg_color ?>;
+	--bc-carte:       #fbfdf8;
+	--bc-carte-2:     #eef2e8;
+	--bc-carte-3:     #e1e8d9;
+	--bc-trait:       #2b3720;
+	--bc-texte:       <?php echo $text_color ?>;
+	--bc-doux:        #4f5d45;
+	--bc-vert:        <?php echo $accent ?>;
+	--bc-sur-vert:    <?php echo couleur_lisible_sur($accent) ?>;
+	--bc-vert-texte:  color-mix(in srgb, <?php echo $accent ?> 88%, #000 12%);
+	--bc-vert-doux:   color-mix(in srgb, <?php echo $accent ?> 13%, transparent);
+	--bc-vert-fonce:  color-mix(in srgb, <?php echo $accent ?> 78%, #000 22%);
+	--bc-or:          #f2c94c;
+	--bc-or-texte:    #8a620f;
+	--bc-sur-or:      #1e2916;
+	--bc-ombre:       rgba(43, 55, 32, 0.22);
+	--bc-ombre-bloc:  6px 6px 0 var(--bc-ombre), inset 0 -4px 0 rgba(0, 0, 0, 0.07);
+	--bc-ecran:       #1c1f22;
+	--bc-sur-ecran:   #f2f4f0;
+	/* L'écran du personnage : le gris de l'inventaire, ses biseaux. */
+	--bc-inventaire:  #c6c6c6;
+	--bc-inv-clair:   #ffffff;
+	--bc-inv-sombre:  #555555;
+	--bc-sur-inventaire: #1e1e1e;
+	--bc-sur-inventaire-doux: #3d3d3d;
+	--bc-fente:       #8b8b8b;
+	--bc-fente-haut:  #373737;
+	--bc-fente-bas:   #ffffff;
+	--bc-filtre-sol:  none;
 
-	/* Accent dérivé — assombri pour rester lisible sur fond clair */
-	--bc-accent-strong:  color-mix(in srgb, <?php echo $accent ?> 82%, #000 18%);
-	--bc-accent-soft:    color-mix(in srgb, <?php echo $accent ?> 14%, transparent);
-	--bc-accent-text:    color-mix(in srgb, <?php echo $accent ?> 68%, #000 32%);
-	/* Calcule, et non fige : l'accent est reglable par l'administrateur, et du blanc sur un
-	   accent clair devient illisible (1,75:1 sur le turquoise par defaut). */
-	--bc-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
+	--bc-succes:      #2e7d32;
+	--bc-danger:      #b23a2a;
+	--bc-alerte:      #8a620f;
+	--bc-info:        #2667a3;
 
-	--bc-link:           var(--bc-accent-text);
-	--bc-link-hover:     color-mix(in srgb, <?php echo $accent ?> 55%, #000 45%);
+	--bc-titre:       "Jersey 10", "Rubik", system-ui, sans-serif;
+	--bc-chiffres:    "VT323", ui-monospace, monospace;
+	--nf-font:        "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--nf-font-display: var(--bc-titre);
 
-	/* Surfaces — blanc + teintes herbe très légères */
-	--bc-surface:        #ffffff;
-	--bc-surface-2:      #f1f4ee;
-	--bc-surface-3:      #e7ece1;
-
-	/* Bordures */
-	--bc-border:         #dde3d6;
-	--bc-border-strong:  #c6cebb;
-
-	/* Texte */
-	--bc-text-strong:    #1c1a16;
-	--bc-muted:          #6b6f64;
-	--bc-muted-2:        #9aa091;
-
-	/* Sémantiques — jour (foncés pour contraste sur clair) */
-	--bc-success:        #2e9e4f;
-	--bc-success-soft:   #e3f5e8;
-	--bc-danger:         #d64545;
-	--bc-danger-soft:    #fbe5e5;
-	--bc-warning:        #c97f1a;
-	--bc-warning-soft:   #fbf0db;
-	--bc-info:           #2b86c5;
-	--bc-info-soft:      #e1f0fb;
-
-	/* Ombres — légères sur fond clair */
-	--bc-shadow-sm:      0 1px 2px rgba(40, 44, 32, 0.06);
-	--bc-shadow:         0 6px 20px -8px rgba(40, 44, 32, 0.16), 0 2px 5px -2px rgba(40, 44, 32, 0.08);
-	--bc-shadow-md:      0 12px 32px -12px rgba(40, 44, 32, 0.22), 0 3px 8px -2px rgba(40, 44, 32, 0.12);
-
-	/* Géométrie — coins carrés = identité « blocs » */
-	--bc-radius:         4px;
-	--bc-radius-sm:      3px;
-	--bc-radius-xs:      2px;
-
-	/* Typographie */
-	/* Police : déclarée dans le vocabulaire partagé `--nf-*` pour qu'un réglage d'administration
-	   puisse la surcharger sans toucher au thème. Les jetons propres au thème pointent
-	   dessus : changer `--nf-font` change toute la typographie, y compris les titres si le thème
-	   n'en distingue pas. `--nf-font-mono` reste fixe : du code se lit en chasse fixe, toujours. */
-	--nf-font:           "Inter", "Segoe UI", system-ui, sans-serif;
-	--nf-font-display:   "Inter", "Segoe UI", system-ui, sans-serif;
-	--bc-font:           var(--nf-font);
-	--bc-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
-
-	/* Dégradé de bannière par défaut — herbe → terre */
-	/* Le titre blanc et la devise de la bannière se lisent sur tout le dégradé (4,8:1 au moins) : son vert clair d'origine,
-	   #7cba5d, ne leur laissait que 2,32:1 et 1,98:1 (check-contraste, qui mesure le texte sur un dégradé, 2026-10-06). */
-	--bc-banner-gradient: linear-gradient(135deg, #3f7330 0%, #34622a 52%, #7a5f40 100%);
-
-	/* Pont --nf-* : voir explication dans le thème granite. Mappe les tokens
-	   génériques des CSS partagés sur l'identité du thème (jour + nuit). */
-	--nf-accent:        var(--bc-accent);
-	--nf-accent-soft:   var(--bc-accent-soft);
-	--nf-accent-text:   var(--bc-accent-text);
-	--nf-accent-strong: var(--bc-accent-strong);
-	--nf-on-accent:     var(--bc-on-accent);
-	--nf-bg:            var(--bc-bg);
-	--nf-bg-elevated:   var(--bc-surface);
-	--nf-surface:       var(--bc-surface);
-	--nf-surface-2:     var(--bc-surface-2);
-	--nf-surface-3:     var(--bc-surface-3);
-	--nf-border:        var(--bc-border);
-	--nf-border-strong: var(--bc-border-strong);
-	--nf-text:          var(--bc-text);
-	--nf-text-strong:   var(--bc-text-strong);
-	--nf-text-muted:    var(--bc-muted);
-	--nf-text-soft:     var(--bc-muted);
-	--nf-muted:         var(--bc-muted);
-	--nf-hover:         var(--bc-surface-2);
+	/* Pont --nf-* : les feuilles partagées (socle, modules, widgets) sont écrites pour n'importe quel thème ; ce pont
+	   leur donne l'allure des blocs. Contrôlé par tools/check-css-variables.php. */
+	--nf-accent:        var(--bc-vert);
+	--nf-accent-soft:   var(--bc-vert-doux);
+	--nf-accent-text:   var(--bc-vert-texte);
+	--nf-accent-strong: var(--bc-vert-fonce);
+	--nf-on-accent:     var(--bc-sur-vert);
+	--nf-bg:            var(--bc-fond);
+	--nf-bg-elevated:   var(--bc-carte);
+	--nf-surface:       var(--bc-carte);
+	--nf-surface-2:     var(--bc-carte-2);
+	--nf-surface-3:     var(--bc-carte-3);
+	--nf-border:        color-mix(in srgb, var(--bc-trait) 22%, transparent);
+	--nf-border-strong: var(--bc-trait);
+	--nf-text:          var(--bc-texte);
+	--nf-text-strong:   var(--bc-texte);
+	--nf-text-muted:    var(--bc-doux);
+	--nf-text-soft:     var(--bc-doux);
+	--nf-muted:         var(--bc-doux);
+	--nf-muted-2:       color-mix(in srgb, var(--bc-doux) 75%, var(--bc-carte));
+	--nf-hover:         var(--bc-carte-2);
 	--nf-danger:        var(--bc-danger);
-	/* Alias du vocabulaire partagé : les feuilles des MODULES sont écrites pour n'importe quel
-	   thème. Sans eux, `var(--nf-danger-soft, …)` retombait sur son repli — c'est ce qui posait
-	   des blocs blancs en thème sombre ailleurs dans le produit. Contrôlé par
-	   tools/check-css-variables.php. */
-	--nf-danger-soft:   color-mix(in srgb, var(--bc-danger) 18%, transparent);
-	--nf-muted-2:       var(--bc-muted);
-	--nf-success:       var(--bc-success);
-	--nf-warning:       var(--bc-warning);
+	--nf-danger-soft:   color-mix(in srgb, var(--bc-danger) 12%, transparent);
+	--nf-success:       var(--bc-succes);
+	--nf-success-soft:  color-mix(in srgb, var(--bc-succes) 12%, transparent);
+	--nf-warning:       var(--bc-alerte);
+	--nf-warning-soft:  color-mix(in srgb, var(--bc-or) 22%, transparent);
 	--nf-info:          var(--bc-info);
-	--nf-radius:        var(--bc-radius);
-	--nf-radius-sm:     var(--bc-radius-sm);
-	/* Les jetons du socle commun des thèmes (css/nf-socle-themes.css), étape B1 du chantier B. */
-	--nf-radius-xs:   var(--bc-radius-xs);
-	--nf-shadow:      var(--bc-shadow);
-	--nf-shadow-sm:   var(--bc-shadow-sm);
-	--nf-shadow-md:   var(--bc-shadow-md);
-	--nf-success-soft: var(--bc-success-soft);
-	--nf-warning-soft: var(--bc-warning-soft);
-	--nf-info-soft:   var(--bc-info-soft);
-	--nf-link:        var(--bc-link);
-	--nf-link-hover:  var(--bc-link-hover);
-	--nf-font-mono:   var(--bc-font-mono);
+	--nf-info-soft:     color-mix(in srgb, var(--bc-info) 12%, transparent);
+	--nf-radius:        0;
+	--nf-radius-sm:     0;
+	--nf-radius-xs:     0;
+	--nf-shadow:        var(--bc-ombre-bloc);
+	--nf-shadow-sm:     4px 4px 0 var(--bc-ombre);
+	--nf-shadow-md:     8px 8px 0 var(--bc-ombre);
+	--nf-link:          var(--bc-vert-texte);
+	--nf-link-hover:    var(--bc-texte);
+	--nf-font-mono:     var(--bc-chiffres);
+	color-scheme: light;
 }
 
 /* =========================================================================
-   §2 — Tokens — Mode NUIT (grotte)
-   Surfaces/sémantiques toujours overridées ; bg/text/accent respectent
-   la customisation admin (priorité admin).
+   §2 — Jetons — NUIT (le ciel étoilé)
    ======================================================================== */
 
 [data-theme="dark"] {
-	--bc-surface:        #1f242b;
-	--bc-surface-2:      #262c34;
-	--bc-surface-3:      #2f3640;
-	--bc-border:         rgba(255, 255, 255, 0.08);
-	--bc-border-strong:  rgba(255, 255, 255, 0.16);
-	--bc-text-strong:    #f1f5f0;
-	--bc-muted:          #8e978a;
-	--bc-muted-2:        #5d6657;
-
-	--bc-success:        #34d058;
-	--bc-success-soft:   rgba(52, 208, 88, 0.12);
-	--bc-danger:         #f06d6d;
-	--bc-danger-soft:    rgba(240, 109, 109, 0.12);
-	--bc-warning:        #f0b341;
-	--bc-warning-soft:   rgba(240, 179, 65, 0.12);
-	--bc-info:           #45b3e8;
-	--bc-info-soft:      rgba(69, 179, 232, 0.12);
-
-	--bc-shadow-sm:      0 1px 3px rgba(0, 0, 0, 0.40);
-	--bc-shadow:         0 6px 20px -8px rgba(0, 0, 0, 0.60), 0 2px 6px -2px rgba(0, 0, 0, 0.40);
-	--bc-shadow-md:      0 12px 32px -12px rgba(0, 0, 0, 0.70), 0 3px 8px -2px rgba(0, 0, 0, 0.50);
-
-	--bc-banner-gradient: linear-gradient(135deg, #26331f 0%, #181d24 58%, #3a2f22 100%);
-
+	--bc-ciel-haut:   #070b18;
+	--bc-ciel-bas:    #1b2342;
+	--bc-sur-ciel:    #ffffff;
+	--bc-sur-ciel-doux: #d6dcef;
 	<?php if (!$bg_is_custom): ?>
-	--bc-bg:             #14181d;
+	--bc-fond:        #14171c;
 	<?php endif ?>
+	--bc-carte:       #20242b;
+	--bc-carte-2:     #2a2f37;
+	--bc-carte-3:     #343a44;
+	--bc-trait:       #050608;
 	<?php if (!$text_is_custom): ?>
-	--bc-text:           #c9d1d9;
+	--bc-texte:       #e8ebf0;
 	<?php endif ?>
+	--bc-doux:        #a3acb8;
 	<?php if (!$accent_is_custom): ?>
-	--bc-accent:         #4caf6a;
-	/* La seconde palette emploie un AUTRE accent : `on-accent` doit donc etre recalcule ICI,
-	   sinon il garde la couleur choisie pour l'accent de la premiere. C'est ce qui mettait du
-	   blanc sur le turquoise clair de `granite` — 1,86:1, mesure sur la page servie — dans tout
-	   le panneau `panel-color` : en-tete, libelles, boutons. Le meme oubli existait dans les six
-	   themes. Constate le 2026-09-16 par tools/check-contraste.php. */
-	--bc-on-accent:      <?php echo couleur_lisible_sur('#4caf6a') ?>;
+	--bc-vert:        #5cb53a;
+	--bc-sur-vert:    <?php echo couleur_lisible_sur('#5cb53a') ?>;
 	<?php endif ?>
-
-	/* Dérivés recalculés depuis l'accent courant — éclaircis pour fond sombre */
-	--bc-accent-strong:  color-mix(in srgb, var(--bc-accent) 80%, #fff 20%);
-	--bc-accent-soft:    color-mix(in srgb, var(--bc-accent) 16%, transparent);
-	--bc-accent-text:    color-mix(in srgb, var(--bc-accent) 72%, #fff 28%);
-	--bc-link:           var(--bc-accent-text);
-	--bc-link-hover:     color-mix(in srgb, var(--bc-accent) 80%, #fff 20%);
+	--bc-vert-texte:  color-mix(in srgb, var(--bc-vert) 75%, #fff 25%);
+	--bc-vert-doux:   color-mix(in srgb, var(--bc-vert) 18%, transparent);
+	--bc-vert-fonce:  color-mix(in srgb, var(--bc-vert) 82%, #000 18%);
+	--bc-or-texte:    #f2c94c;
+	--bc-ombre:       rgba(0, 0, 0, 0.5);
+	--bc-ombre-bloc:  6px 6px 0 var(--bc-ombre), inset 0 -4px 0 rgba(0, 0, 0, 0.2);
+	--bc-inventaire:  #3a3e45;
+	--bc-inv-clair:   #5d636d;
+	--bc-inv-sombre:  #15171b;
+	--bc-sur-inventaire: #eef0f3;
+	--bc-sur-inventaire-doux: #c3c8d0;
+	--bc-fente:       #23262c;
+	--bc-fente-haut:  #0d0e11;
+	--bc-fente-bas:   #4c525c;
+	--bc-filtre-sol:  brightness(0.5) saturate(0.75);
+	--bc-succes:      #6cc58f;
+	--bc-danger:      #ef8a78;
+	--bc-alerte:      #f2c94c;
+	--bc-info:        #7fbbd9;
+	color-scheme: dark;
 }
 
 /* =========================================================================
-   §3 — Base / Reset
+   §3 — Base
    ======================================================================== */
+
+html { scroll-padding-top: 24px; }
 
 body {
-	background-color:      var(--bc-bg);
+	background-color: var(--bc-fond);
 <?php if ($bg_image): ?>
-	background-image:      url('<?php echo $bg_image ?>');
-	background-position:   <?php echo $bg_pos ?>;
-	background-repeat:     <?php echo $bg_repeat ?>;
+	background-image: url('<?php echo $bg_image ?>');
+	background-position: <?php echo $bg_pos ?>;
+	background-repeat: <?php echo $bg_repeat ?>;
 	background-attachment: <?php echo $bg_attach ?>;
 <?php endif ?>
-	color:                 var(--bc-text);
-	font-family:           var(--bc-font);
-	font-size:             13.5px;
-	line-height:           1.55;
-	font-feature-settings: "kern", "liga";
+	color: var(--bc-texte);
+	font-family: var(--nf-font);
+	font-size: 15px;
+	line-height: 1.55;
 }
 
-h1 { font-size: 22px; letter-spacing: -0.01em; }
-h2 { font-size: 18px; letter-spacing: -0.01em; }
-h3 { font-size: 16px; }
-h4 { font-size: 14.5px; }
-h5 { font-size: 13.5px; }
-h6 { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+h1, h2, h3, h4, h5, h6 { margin-top: 0; color: var(--bc-texte); font-family: var(--nf-font); font-weight: 700; line-height: 1.2; }
+h1 { font: 400 46px/1 var(--bc-titre); }
+h2 { font: 400 36px/1.05 var(--bc-titre); }
+h3 { font-size: 22px; }
+h4 { font-size: 19px; }
+h5 { font-size: 17px; }
+h6 { font: 700 12.5px/1.4 var(--nf-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bc-doux); }
 
-h1, h2, h3, h4, h5, h6 {
-	color:       var(--bc-text-strong);
-	font-family: var(--bc-font);
-	font-weight: 800;
-	line-height: 1.25;
-	margin-top:  0;
+a { color: var(--bc-vert-texte); text-decoration: none; }
+a:hover { color: var(--bc-texte); }
+
+.bc-evitement {
+	position: fixed; left: 12px; top: -60px; z-index: 2000;
+	padding: 10px 16px;
+	border: 3px solid var(--bc-trait);
+	background: var(--bc-or); color: var(--bc-sur-or);
+	font: 400 20px/1 var(--bc-titre);
+	transition: top 160ms steps(3);
 }
+.bc-evitement:focus { top: 12px; color: var(--bc-sur-or); }
+.bc-page:focus { outline: none; }
 
-h4, h5, h6 { font-weight: 700; line-height: 1.4; }
-
-::-webkit-scrollbar-thumb:hover { background: var(--bc-muted-2); }
-
-/* §4 — Icônes (icon() émet <i class="icon"> sans espace) */
+/* Les objets dessinés : un pixel du dessin, plusieurs à l'écran, sans flou. */
+.bc-bloc-marque, .bc-objets .nav-link::before, .card > .card-header::before { image-rendering: pixelated; background-repeat: no-repeat; background-position: center; background-size: contain; }
 
 /* =========================================================================
-   §5 — Layout
+   §4 — Le ciel : le décor, la barre, la barre d'objets, le compte
    ======================================================================== */
 
-.bc-header { position: relative; z-index: 10; }
-.bc-section { padding: 28px 0; }
-.bc-section + .bc-section { padding-top: 0; }
+.bc-ciel {
+	position: relative; z-index: 2; isolation: isolate;
+	background: linear-gradient(180deg, var(--bc-ciel-haut), var(--bc-ciel-bas) 78%);
+	color: var(--bc-sur-ciel);
+}
+.bc-decor { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bc-astre {
+	position: absolute; top: 74px; right: 12%;
+	width: 46px; height: 46px;
+	background: #fff6b0;
+	box-shadow: 0 0 0 6px rgba(255, 246, 176, 0.35), 0 0 60px 18px rgba(255, 240, 150, 0.55);
+}
+[data-theme="dark"] .bc-astre { background: #e8ecf8; box-shadow: 0 0 0 6px rgba(232, 236, 248, 0.18), 0 0 40px 10px rgba(200, 210, 255, 0.3); }
+/* Des nuages carrés : un pavé et deux marches. */
+.bc-nuage { position: absolute; height: 22px; background: rgba(255, 255, 255, 0.82); animation: bc-nuage 70s linear infinite; }
+.bc-nuage::before, .bc-nuage::after { content: ""; position: absolute; background: inherit; }
+.bc-nuage::before { left: 22%; top: -14px; width: 46%; height: 14px; }
+.bc-nuage::after { left: 12%; bottom: -10px; width: 70%; height: 10px; }
+.bc-n1 { top: 104px; left: 6%; width: 150px; }
+.bc-n2 { top: 140px; left: 70%; width: 110px; animation-duration: 95s; animation-delay: -40s; }
+.bc-n3 { top: 236px; left: 18%; width: 90px; animation-duration: 120s; animation-delay: -70s; }
+[data-theme="dark"] .bc-nuage { background: rgba(160, 170, 200, 0.2); }
+@keyframes bc-nuage { from { transform: translateX(-30vw); } to { transform: translateX(110vw); } }
+.bc-etoiles {
+	position: absolute; inset: 0; opacity: 0;
+	background-image:
+		radial-gradient(2px 2px at 12% 18%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 30% 9%, #fff 50%, transparent 51%),
+		radial-gradient(2px 2px at 48% 26%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 63% 12%, #fff 50%, transparent 51%),
+		radial-gradient(2px 2px at 79% 30%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 91% 8%, #fff 50%, transparent 51%),
+		radial-gradient(3px 3px at 22% 40%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 57% 44%, #fff 50%, transparent 51%),
+		radial-gradient(2px 2px at 85% 52%, #fff 50%, transparent 51%), radial-gradient(2px 2px at 6% 58%, #fff 50%, transparent 51%);
+}
+[data-theme="dark"] .bc-etoiles { opacity: 1; }
+/* Le sol : les collines, les arbres, la roche ; la nuit, assombri. */
+.bc-sol {
+	position: absolute; left: 0; right: 0; bottom: 0;
+	height: 312px;
+	background: url('../images/sol.png') 0 100% / auto 312px repeat-x;
+	image-rendering: pixelated;
+	filter: var(--bc-filtre-sol);
+}
+.bc-bandeau .bc-sol { height: 150px; background-size: auto 150px; background-position: 30% 100%; }
+
+/* La barre : la marque, la barre d'objets au centre, le compte. */
+.bc-barre {
+	position: relative; z-index: 3;
+	display: flex; align-items: center; gap: 22px;
+	max-width: 1440px; margin: 0 auto;
+	padding: 16px clamp(16px, 3vw, 48px);
+}
+.bc-marque { display: inline-flex; align-items: center; gap: 12px; min-width: 0; flex: none; color: var(--bc-sur-ciel); }
+.bc-marque:hover { color: var(--bc-sur-ciel); }
+.bc-bloc-marque { flex: none; display: block; width: 36px; height: 36px; background-image: url('../images/objets/herbe.png'); filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.3)); }
+.bc-logo { max-height: 42px; max-width: 150px; object-fit: contain; }
+.bc-nom { font: 400 32px/1 var(--bc-titre); letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+[data-theme="dark"] .bc-nom { text-shadow: 3px 3px 0 #000; }
+
+/* La barre d'objets : la navigation posée dans la zone « Barre d'objets », chaque rubrique dans sa case. */
+.bc-objets { flex: 1 1 auto; min-width: 0; display: flex; justify-content: center; }
+.bc-objets .row { margin: 0; }
+.bc-objets .row > [class*="col-"], .bc-objets .row > .col { padding: 0; }
+.bc-objets .card { background: none; border: 0; box-shadow: none; margin: 0; }
+.bc-objets .card-body { padding: 0; }
+.bc-objets .widget { margin: 0 !important; }
+.bc-objets .nf-nav-repliable > .nf-nav-toggle { display: none !important; }
+.bc-objets .nf-nav-repliable > .nav { display: flex !important; }
+.bc-objets .widget-navigation .nav {
+	flex-wrap: nowrap; justify-content: center; gap: 0;
+	padding: 3px;
+	border: 3px solid #101010;
+	/* Des fonds OPAQUES : sur un fond transparent, le blanc des noms se mesurait contre le ciel clair (1,21:1), que
+	   l'œil ne voit pas sous la barre — et un fond qu'on ne mesure pas, on ne le garantit pas. */
+	background: #12160d;
+	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.22);
+}
+.bc-objets .widget-navigation .nav-item { position: relative; }
+.bc-objets .widget-navigation .nav-link {
+	display: flex; flex-direction: column; align-items: center; gap: 4px;
+	min-width: 66px;
+	padding: 7px 8px 6px;
+	border: 0; border-radius: 0;
+	background: #1f2618;
+	box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.12), inset -2px -2px 0 rgba(0, 0, 0, 0.35);
+	color: #ffffff;
+	font: 400 16px/0.95 var(--bc-titre);
+	letter-spacing: 0.02em;
+	text-align: center;
+	text-shadow: 1px 1px 0 #000;
+	white-space: nowrap;
+}
+.bc-objets .widget-navigation .nav-link::before {
+	content: "";
+	display: block;
+	width: 28px; height: 28px;
+	background-image: url('../images/objets/herbe.png');
+	filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.45));
+	transition: transform 120ms steps(2);
+}
+<?php foreach ($objets_rubriques as $objet => $rubriques): ?>
+<?php echo implode(",\n", array_map(static fn (string $r): string => '.bc-objets .widget-navigation .nav-link[href*="/'.$r.'"]::before', $rubriques)) ?> { background-image: url('../images/objets/<?php echo $objet ?>.png'); }
+<?php endforeach ?>
+.bc-objets .widget-navigation .nav-link:hover { background: #313a28; color: #fff; }
+.bc-objets .widget-navigation .nav-link:hover::before { transform: translateY(-2px); }
+/* La case choisie : le cadre blanc épais de la barre d'objets. */
+.bc-objets .widget-navigation .nav-link.active { background: #384330; box-shadow: inset 0 0 0 3px #ffffff; color: #fff; }
+.bc-objets .widget-navigation .nav-link:focus-visible { outline: 3px solid var(--bc-or); outline-offset: 0; }
+.bc-objets .widget-navigation .nav-link > .icon { display: none; }
+.bc-objets .widget-navigation .nav-link .d-none.d-sm-inline { display: inline !important; }
+.bc-objets .widget-navigation .dropdown-menu, .bc-objets .widget-navigation .nav .nav { margin-top: 6px; }
+
+.bc-droite { display: flex; align-items: center; gap: 8px; margin-left: auto; flex: none; }
+
+/* Le compte */
+.bc-compte { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.bc-compte .nav-link {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 6px 9px;
+	border: 3px solid transparent; border-radius: 0;
+	background: none;
+	color: var(--bc-sur-ciel);
+	font: 600 14px var(--nf-font);
+	cursor: pointer;
+}
+.bc-compte .nav-link:hover, .bc-compte .nav-link:focus-visible, .bc-compte .show > .nav-link { border-color: #101010; background: rgba(14, 18, 10, 0.74); color: #fff; }
+.bc-compte .nav-link:focus-visible { outline: 3px solid var(--bc-or); outline-offset: 0; }
+.bc-compte .avatar { width: 30px; height: 30px; }
+.bc-compte .nf-notif .nav-link { position: relative; }
+.bc-compte .nf-notif-badge { position: absolute; top: -2px; right: -2px; border-radius: 0; background: #c0392b !important; color: #fff !important; }
+.bc-compte .dropdown-menu { min-width: 230px; }
+.bc-compte .fa-angle-down { font-size: 11px; }
+/* « Se connecter » : un bouton de bloc ; au téléphone, une icône qui garde son nom. */
+.bc-connexion {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 8px 16px 9px;
+	border: 3px solid var(--bc-trait);
+	background: var(--bc-vert); color: var(--bc-sur-vert);
+	box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25), inset 0 3px 0 rgba(255, 255, 255, 0.22), 4px 4px 0 rgba(0, 0, 0, 0.2);
+	font: 400 22px/1 var(--bc-titre);
+	letter-spacing: 0.03em;
+	white-space: nowrap;
+}
+.bc-connexion:hover, .bc-connexion:focus-visible { background: var(--bc-vert-fonce); color: var(--bc-sur-vert); }
+.bc-connexion .fa-user { display: none; }
 
 /* =========================================================================
-   §6 — Header banner
+   §5 — Le héros de l'accueil, le bandeau des autres pages
    ======================================================================== */
 
-.bc-header-banner {
-<?php if ($header_img): ?>
-	background-image:      url('<?php echo $header_img ?>');
-	background-position:   <?php echo $header_pos ?>;
-	background-repeat:     <?php echo $header_repeat ?>;
-	background-attachment: <?php echo $header_attach ?>;
-<?php else: ?>
-	background-image:      var(--bc-banner-gradient);
-	background-size:       cover;
-	background-position:   center;
-<?php endif ?>
-	background-color:      <?php echo $header_color ?>;
-	padding:               46px 0 54px;
-	margin-top:            <?php echo $this->config->blockcraft_navbar_display ? '53px' : '0' ?>;
-	position:              relative;
+.bc-heros {
+	position: relative; z-index: 2;
+	display: grid; justify-items: center; gap: 14px;
+	max-width: 1100px; margin: 0 auto;
+	padding: 34px clamp(16px, 3vw, 48px) 260px;
+	text-align: center;
 }
-
-.bc-header-banner::before {
-	content:  "";
-	position: absolute;
-	inset:    0;
-	background: linear-gradient(
-		to bottom,
-		color-mix(in srgb, var(--bc-bg) 25%, transparent) 0%,
-		transparent 42%,
-		color-mix(in srgb, var(--bc-bg) 72%, transparent) 100%
-	);
-	pointer-events: none;
+.bc-titre {
+	margin: 0;
+	color: var(--bc-sur-ciel);
+	font: 400 clamp(64px, 11vw, 128px)/0.85 var(--bc-titre);
+	text-shadow: 5px 5px 0 rgba(255, 255, 255, 0.55);
+	text-wrap: balance;
+	overflow-wrap: anywhere;
 }
+[data-theme="dark"] .bc-titre { text-shadow: 5px 5px 0 #000, 9px 9px 0 rgba(0, 0, 0, 0.35); }
+.bc-devise { margin: 0; max-width: 60ch; color: var(--bc-sur-ciel-doux); font-size: 18px; font-weight: 500; text-wrap: balance; }
+/* L'adresse du serveur : posée sur des planches, à copier d'un clic. */
+.bc-adresse {
+	display: flex; align-items: stretch; flex-wrap: wrap; justify-content: center;
+	margin-top: 6px;
+	border: 3px solid var(--bc-trait);
+	background: #6e4b29 url('../images/blocs/planches.png') 0 0 / 32px 32px;
+	image-rendering: pixelated;
+	box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.25);
+}
+.bc-adresse code { display: flex; align-items: center; padding: 8px 18px; background: rgba(15, 18, 12, 0.78); color: #fff; font: 30px/1 var(--bc-chiffres); overflow-wrap: anywhere; }
+.bc-adresse .bc-bouton { border-width: 0 0 0 3px; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25), inset 0 3px 0 rgba(255, 255, 255, 0.22); }
+.bc-heros-boutons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.bc-annonce:empty { display: none; }
+.bc-annonce { margin: 0; padding: 4px 12px; background: rgba(15, 18, 12, 0.78); color: #fff; font: 20px/1.2 var(--bc-chiffres); }
 
-.bc-header-banner > * { position: relative; z-index: 1; }
+/* Le bouton de bloc : vert, un biseau clair en haut, sombre en bas, une ombre franche. */
+.bc-bouton {
+	display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+	padding: 10px 18px;
+	border: 3px solid var(--bc-trait); border-radius: 0;
+	background: var(--bc-vert); color: var(--bc-sur-vert);
+	box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25), inset 0 3px 0 rgba(255, 255, 255, 0.22), 4px 4px 0 rgba(0, 0, 0, 0.22);
+	font: 400 22px/1 var(--bc-titre);
+	letter-spacing: 0.03em;
+	cursor: pointer;
+}
+.bc-bouton:hover, .bc-bouton:focus-visible { background: var(--bc-vert-fonce); color: var(--bc-sur-vert); }
+.bc-bouton:focus-visible { outline: 3px solid var(--bc-or); outline-offset: 2px; }
+.bc-bouton.is-copie { background: var(--bc-or); color: var(--bc-sur-or); }
+.bc-bouton-clair { background: var(--bc-carte); color: var(--bc-texte); }
+.bc-bouton-clair:hover, .bc-bouton-clair:focus-visible { background: var(--bc-carte-2); color: var(--bc-texte); }
+
+/* Le bandeau des autres pages : plus bas, le titre de la page, un peu de sol. */
+.bc-bandeau { min-height: 238px; }
+.bc-page-titre {
+	position: relative; z-index: 2;
+	max-width: 1440px; margin: 0 auto;
+	padding: 8px clamp(16px, 3vw, 48px) 150px;
+	color: var(--bc-sur-ciel);
+	font: 400 clamp(40px, 5vw, 62px)/1 var(--bc-titre);
+	text-shadow: 4px 4px 0 rgba(255, 255, 255, 0.5);
+	overflow-wrap: anywhere;
+}
+[data-theme="dark"] .bc-page-titre { text-shadow: 4px 4px 0 #000; }
 
 /* =========================================================================
-   §7 — Footer
+   §6 — La page : le contenu, la colonne, la bande pleine largeur
    ======================================================================== */
 
-.bc-footer {
-	background: var(--bc-surface);
-	border-top: 3px solid var(--bc-accent);
-	color:      var(--bc-muted);
-	padding:    18px 0 16px;
-	margin-top: 32px;
-}
+/* `width: 100%` : le corps de page est une colonne flexible, où un bloc centré par ses marges se réduisait à la
+   largeur de son contenu (la leçon de Chronique). */
+.bc-page { flex: 1 0 auto; width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 48px); }
+.bc-corps { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 26px; padding: 34px 0 20px; }
+.bc-corps.bc-corps-seul { grid-template-columns: minmax(0, 1fr); }
+.bc-colonne { display: grid; gap: 22px; align-content: start; }
+/* Les rangées de la ZONE seulement (et celles de l'éditeur en direct, qui les enveloppe d'une section) : écrites
+   `.bc-colonne .row`, ces règles atteignaient aussi les rangées internes d'un widget — « Qui est en ligne » prenait
+   l'écart des blocs entre son nombre et son nom, sauf dans la colonne où le nombre est un lien (2026-10-07). */
+.bc-colonne > .row, .bc-colonne > .live-editor-zone > .row { margin: 0; }
+.bc-colonne > .row > [class*="col-"], .bc-colonne > .row > .col, .bc-colonne > .live-editor-zone > .row > [class*="col-"], .bc-colonne > .live-editor-zone > .row > .col { padding: 0; display: grid; gap: 22px; }
+.bc-colonne > .row > [class*="col-"] > .widget, .bc-colonne > .row > .col > .widget, .bc-colonne > .live-editor-zone > .row > [class*="col-"] > .widget, .bc-colonne > .live-editor-zone > .row > .col > .widget { margin: 0; }
+.bc-largeur { padding: 6px 0 40px; }
+.bc-corps + .bc-largeur { padding-top: 0; }
+.bc-page > :last-child { padding-bottom: 46px; }
 
-.bc-footer-bar {
-	display:         flex;
-	flex-wrap:       wrap;
-	gap:             14px;
-	align-items:     center;
-	justify-content: space-between;
-	font-size:       12px;
-}
-
-.bc-copy a       { color: var(--bc-text); font-weight: 600; }
-.bc-copy a:hover { color: var(--bc-accent-text); }
-.bc-site-name    { color: var(--bc-text); font-weight: 600; }
-
-.bc-socials { display: inline-flex; gap: 6px; }
-
-.bc-social {
-	width:           32px;
-	height:          32px;
-	display:         inline-flex;
-	align-items:     center;
-	justify-content: center;
-	border-radius:   var(--bc-radius-xs);
-	background:      var(--bc-surface-2);
-	color:           var(--bc-text);
-	font-size:       13px;
-	transition:      background-color 140ms ease, color 140ms ease, transform 140ms ease;
-}
-
-.bc-social:hover { background: var(--bc-accent); color: var(--bc-on-accent); transform: translateY(-1px); }
-
-.bc-lang .btn-light {
-	background:   var(--bc-surface-2);
-	border-color: var(--bc-border);
-	color:        var(--bc-text);
-	font-weight:  600;
-}
-.bc-lang .btn-light:hover { background: var(--bc-surface-3); color: var(--bc-text-strong); }
+.row.row-default { margin-top: 0; margin-bottom: 0; }
+.row > [class*="col-"] > .card, .row > .col > .card, .row > [class*="col-"] > .widget, .row > .col > .widget { margin-bottom: 22px; }
+.row.row-dark { margin: 10px 0 28px; padding: 22px 10px 0; border: 3px solid var(--bc-trait); background: var(--bc-ecran); color: var(--bc-sur-ecran); box-shadow: var(--bc-ombre-bloc); }
+.row.row-space { margin-top: 34px; }
 
 /* =========================================================================
-   §8 — Userbar
+   §7 — Les blocs
    ======================================================================== */
 
-.navbar-user .navbar-text a { color: var(--bc-accent-text); font-weight: 600; }
-
-@media (max-width: 767.98px) {
-	
-	/* Le libelle du compte : le pont (`css/nf-bs5-bridge.css`) l'efface sous 576 px en le
-	   laissant aux lecteurs d'ecran. La regle qui vivait ici visait `.ml-2`, nom de
-	   Bootstrap 4 que le markup n'emet plus depuis la migration : elle ne selectionnait
-	   plus rien. */
+.card {
+	background: var(--bc-carte);
+	border: 3px solid var(--bc-trait);
+	border-radius: 0;
+	box-shadow: var(--bc-ombre-bloc);
+	color: var(--bc-texte);
 }
-
-/* =========================================================================
-   §9 — Cards + panels (Live Editor)
-   ======================================================================== */
-
-.card .card-header {
-	background:     transparent;
-	border-bottom:  1px solid var(--bc-border);
-	padding:        12px 16px;
-	font-weight:    700;
-	color:          var(--bc-text-strong);
-	font-size:      14px;
-	display:        flex;
-	align-items:    center;
-	gap:            8px;
-	margin:         0;
+.card + .card, .widget + .widget { margin-top: 22px; }
+.card > .card-header {
+	display: flex; align-items: center; gap: 10px;
+	padding: 16px 20px 0;
+	background: none; border: 0;
+	color: var(--bc-texte);
+	font: 400 30px/1 var(--bc-titre);
+	letter-spacing: 0.01em;
 	text-transform: none;
 }
-.card .card-header i.icon,
-.card .card-header i.fas,
-.card .card-header i.far,
-.card .card-header i.fab { color: var(--bc-muted); font-size: 13px; }
-
-.card .card-body { padding: 14px 16px; font-size: 13.5px; }
-.card .card-footer { background: var(--bc-surface-2); border-top: 1px solid var(--bc-border); padding: 10px 16px; font-size: 12px; color: var(--bc-muted); }
-
- /* l'en-tête direct : un cadre imbriqué (les commentaires d'un billet) garde le sien */
-
-/* panel-default = alias card */
-
-.card.panel-header > .card-header,
-.card.panel-header > .card-header h1, .card.panel-header > .card-header h2,
-.card.panel-header > .card-header h3, .card.panel-header > .card-header h4,
-.card.panel-header > .card-header h5, .card.panel-header > .card-header h6,
-.card.panel-header > .card-header a,  .card.panel-header > .card-header i,
-.card.panel-header > .card-header .icon { color: var(--bc-on-accent); }
-.card.panel-header > .card-header a:hover { opacity: 0.8; }
-
-.card.panel-color > .card-header { background: transparent; border-bottom: 1px solid color-mix(in srgb, var(--bc-on-accent) 18%, transparent); color: var(--bc-on-accent); font-weight: 700; }
-
-.card.panel-color,
-.card.panel-color a,
-.card.panel-color h1, .card.panel-color h2, .card.panel-color h3,
-.card.panel-color h4, .card.panel-color h5, .card.panel-color h6,
-.card.panel-color i, .card.panel-color .icon,
-.card.panel-color .text-muted,
-.card.panel-color .list-group-item { color: var(--bc-on-accent); }
-
-.card.panel-color a:hover { opacity: 0.75; }
-.card.panel-color .list-group-item { background: transparent; border-color: color-mix(in srgb, var(--bc-on-accent) 15%, transparent); }
-.card.panel-color .badge { background: rgba(20, 24, 29, 0.82); color: #fff; border: 0; }
-
-.card.panel-color .btn-primary:hover { background: #000; border-color: #000; color: var(--bc-accent-strong); }
-
-/* =========================================================================
-   §10 — Rows + gutters
-   ======================================================================== */
-
-.row.row-dark {
-	background:    var(--bc-surface);
-	border:        1px solid var(--bc-border);
-	border-radius: var(--bc-radius);
-	margin-top:    12px;
-	margin-bottom: 12px;
-	padding:       10px 14px;
+.card > .card-header::before {
+	content: "";
+	flex: none;
+	width: 28px; height: 28px;
+	background-image: url('../images/objets/herbe.png');
 }
-/* Bandeau header : le logo (col simple) et la navbar (carte row-dark + col)
-   cumulaient 2 paddings → liens décalés de 15px vs logo. On annule la gouttière
-   du col dans le bandeau pour aligner les liens sur le logo et le contenu. */
-.bc-header-banner .row-dark > [class*="col-"] { padding-left: 0; padding-right: 0; }
+<?php foreach ($objets_rubriques as $objet => $rubriques): ?>
+<?php echo implode(",\n", array_merge(
+	array_map(static fn (string $r): string => '.widget-'.$r.' .card > .card-header::before', $rubriques),
+	array_map(static fn (string $r): string => '.module-'.$r.' .card > .card-header::before', $rubriques)
+)) ?> { background-image: url('../images/objets/<?php echo $objet ?>.png'); }
+<?php endforeach ?>
+.widget-chiffres .card > .card-header::before { background-image: url('../images/objets/boussole.png'); }
+/* L'icône de police du titre (`<h6 class="card-header"><span><i class="icon …"></i> Titre</span>`) : l'objet dessiné la
+   remplace. Celles des boutons, plus loin dans le titre, restent. */
+.card > .card-header > i.icon, .card > .card-header > .fas, .card > .card-header > .far, .card > .card-header > .fab,
+.card > .card-header > span:first-child > i.icon:first-child { display: none; }
+.card > .card-header > :last-child:not(:first-child) { margin-left: auto; }
+/* Les titres écrits à la main par un module (`<div class="card-header"><h5><i class="icon …"></i> Titre</h5>`, la
+   messagerie) gardent leur icône et leur texte, sans objet dessiné devant : dans la colonne étroite de la messagerie
+   (110 px à 768), « Participants » ne tenait pas à côté de l'objet et se coupait en plein mot. */
+.card > .card-header:has(> :is(h4, h5, h6):first-child)::before { display: none; }
+.card > .card-header > :is(h4, h5, h6):first-child { margin: 0; color: inherit; font: 700 17px/1.25 var(--nf-font); letter-spacing: 0; text-transform: none; }
+/* Un titre long passe à la ligne : élément d'une ligne souple, il ne rétrécissait pas sous son texte et sortait du
+   bloc (« Staff », dans la messagerie, à 768 px). */
+.card > .card-header > * { min-width: 0; overflow-wrap: break-word; }
+.card .card-body { padding: 14px 20px 18px; }
+.card .card-footer { padding: 0 20px 16px; background: none; border: 0; font-size: 14px; }
+.card .card-footer a:not(.btn) { font-weight: 600; }
+/* Le pied d'un WIDGET seulement (« Voir le calendrier › ») : écrites pour toute carte, ces règles ôtaient aussi l'icône
+   des commentaires d'un événement, qui ne disait plus que « 0 ›» (check-mise-en-page, 2026-10-07). */
+.widget .card > .card-footer a:not(.btn) .icon, .widget .card > .card-footer a:not(.btn) .fas, .widget .card > .card-footer a:not(.btn) .far { display: none; }
+.widget .card > .card-footer a:not(.btn)::after { content: " ›"; }
 
-/* Les gouttieres de Bootstrap 5 valent 1,5 rem, soit -12 px de marge sur .row, compenses par les
-   12 px de padding de .container. Cette regle les remettait a -15 px — la valeur de Bootstrap 4,
-   ou la gouttiere valait 30 px. Les 3 px d'ecart depassaient donc de chaque cote : mesure a 390 px,
-   le document faisait 393 px et la page defilait lateralement. Bootstrap 5 s'en charge seul. */
-.row > [class*="col-"], .row > .col { padding-right: 15px; padding-left: 15px; }
+/* « Titre coloré » (panel-header) : le titre sur une bande d'herbe. */
+.card.panel-header > .card-header { padding: 11px 18px 10px; background: var(--bc-vert); border-bottom: 3px solid var(--bc-trait); color: var(--bc-sur-vert); }
 
-.card .row > [class*="col-"], .card .row > .col { padding-right: 8px; padding-left: 8px; }
+/* « Widget coloré » (panel-color) : le bloc d'herbe entier. Le socle le suppose de la couleur d'accent : ici, son
+   texte et ses boutons ont leurs propres couleurs. */
+.card.panel-color { background: var(--bc-vert); color: var(--bc-sur-vert); }
+.card.panel-color > .card-header, .card.panel-color > .card-body, .card.panel-color > .card-footer, .card.panel-color a:not(.btn) { color: var(--bc-sur-vert); }
+.card.panel-color .text-muted, .card.panel-color small { color: color-mix(in srgb, var(--bc-sur-vert) 84%, transparent) !important; }
+.card.panel-color .form-check-label, .card.panel-color label { color: var(--bc-sur-vert); }
+.card.panel-color .btn-primary { background: var(--bc-or); border-color: var(--bc-trait); color: var(--bc-sur-or); }
+.card.panel-color .btn-primary:hover, .card.panel-color .btn-primary:focus-visible { background: #f7d872; color: var(--bc-sur-or); }
+.card.panel-color .list-group-item { color: var(--bc-sur-vert); border-color: color-mix(in srgb, var(--bc-sur-vert) 22%, transparent); }
+.card.panel-color .progress { background: rgba(0, 0, 0, 0.22); }
+.card.panel-color .progress-bar { background: var(--bc-or); }
+.card.panel-color .input-group-text, .card.panel-color .input-group-text i, .card.panel-color .input-group-text .icon { color: var(--nf-muted); }
+/* L'espace membre posé sur l'herbe : des liens soulignés, un seul bouton plein, un écart dans les deux sens. */
+.widget-user .card.panel-color .card-footer.text-end { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px 18px; }
+.widget-user .card.panel-color .card-footer a:not(.btn-primary):not(.btn-secondary),
+.widget-user .card.panel-color .card-footer a:not(.btn-primary):not(.btn-secondary):hover { background: none; border-color: transparent; color: var(--bc-sur-vert); padding: 0; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.widget-user .card.panel-color .card-footer .btn-secondary { background: transparent; border-color: var(--bc-sur-vert); color: var(--bc-sur-vert); }
 
 /* =========================================================================
-   §11 — Buttons
+   §8 — Les widgets dans leurs blocs
    ======================================================================== */
 
+/* Les nouvelles : la première en grand, son image à gauche (des planches et un livre quand elle n'en a pas), les
+   autres en brèves, deux par rang. */
+.bc-page .widget-news .card-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.bc-page .widget-news .card-body > .d-flex { flex-direction: column; align-items: stretch !important; gap: 10px; padding: 12px 14px 14px; border: 3px solid var(--bc-trait); background: var(--bc-carte-2); }
+.bc-page .widget-news .card-body > .d-flex > .me-3 { margin: 0 !important; }
+.bc-page .widget-news .img-cover { width: 100%; height: 130px; border: 3px solid var(--bc-trait); background-size: cover; background-position: center; }
+.bc-page .widget-news .card-body > .d-flex:not(:has(.img-cover))::before {
+	content: ""; display: block; height: 110px;
+	border: 3px solid var(--bc-trait);
+	background: url('../images/objets/livre.png') center / 56px 56px no-repeat, #6e4b29 url('../images/blocs/planches.png') 0 0 / 32px 32px;
+	image-rendering: pixelated;
+}
+.bc-contenu .widget-news .card-body > .d-flex:first-child { grid-column: 1 / -1; display: grid !important; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start !important; gap: 16px; padding: 0; background: var(--bc-carte); }
+.bc-contenu .widget-news .card-body > .d-flex:first-child::before, .bc-contenu .widget-news .card-body > .d-flex:first-child .img-cover { height: 100%; min-height: 190px; border-width: 0 3px 0 0; }
+.bc-contenu .widget-news .card-body > .d-flex:first-child > .flex-grow-1 { padding: 16px 18px 16px 0; }
+.bc-contenu .widget-news .card-body > .d-flex:first-child > .flex-grow-1 > a:not(.badge) { font-size: 22px; }
+.bc-page .widget-news .badge {
+	display: inline-block; margin-bottom: 6px; padding: 2px 9px;
+	border: 2px solid var(--bc-trait); border-radius: 0;
+	background: var(--bc-or) !important; color: var(--bc-sur-or) !important;
+	font: 400 18px/1.15 var(--bc-titre);
+	letter-spacing: 0.02em;
+}
+.bc-page .widget-news .flex-grow-1 > a:not(.badge) { color: var(--bc-texte); font: 700 17px/1.25 var(--nf-font); text-wrap: balance; }
+.bc-page .widget-news .flex-grow-1 > a:not(.badge):hover { color: var(--bc-vert-texte); }
+
+/* Les dernières discussions : la tête de l'auteur, le sujet, sa date. */
+.widget-forum .card-body > .d-flex { padding: 10px 0; border-bottom: 2px dotted color-mix(in srgb, var(--bc-doux) 45%, transparent); }
+.widget-forum .card-body > .d-flex:first-child { padding-top: 0; }
+.widget-forum .card-body > .d-flex:last-child { border-bottom: 0; padding-bottom: 0; }
+.widget-forum .card-body > .d-flex .flex-grow-1 > a { color: var(--bc-texte); font-weight: 600; }
+.widget-forum .card-body > .d-flex .flex-grow-1 > a:hover { color: var(--bc-vert-texte); }
+.widget-forum .card-body > .d-flex small { color: var(--bc-doux); }
+/* Sur l'herbe (widget coloré), le texte du bloc : la règle du titre, plus précise, l'emportait (2,9:1 de jour). */
+.widget-forum .card.panel-color .card-body > .d-flex .flex-grow-1 > a, .widget-forum .card.panel-color .card-body > .d-flex .flex-grow-1 > a:hover,
+.widget-forum .card.panel-color .card-body > .d-flex small { color: var(--bc-sur-vert); }
+.widget-forum .card.panel-color .card-body > .d-flex { border-bottom-color: color-mix(in srgb, var(--bc-sur-vert) 35%, transparent); }
+
+/* Le prochain rendez-vous : la date sur un écran sombre, en chiffres de console. `.bc-page` devant : la feuille du
+   widget, chargée après celle du thème, l'emportait à égalité — le quantième blanc tombait sur sa case claire. */
+.bc-page .nf-prochain-date { width: 84px; min-height: 90px; border: 3px solid var(--bc-trait); border-radius: 0; background: var(--bc-ecran); color: var(--bc-sur-ecran); }
+.bc-page .nf-prochain-jour { color: var(--bc-or); font: 400 18px/1 var(--bc-titre); letter-spacing: 0.04em; }
+.bc-page .nf-prochain-quantieme { color: var(--bc-sur-ecran); font: 46px/0.85 var(--bc-chiffres); }
+.bc-page .nf-prochain-titre { font: 700 19px/1.2 var(--nf-font); }
+.bc-page .nf-prochain-titre a { color: var(--bc-texte); }
+.card.panel-color .nf-prochain-titre a { color: var(--bc-sur-vert); }
+.card.panel-color .nf-prochain-quand, .card.panel-color .nf-prochain-texte, .card.panel-color .nf-prochain-vide { color: color-mix(in srgb, var(--bc-sur-vert) 86%, transparent); }
+
+/* Le site en chiffres, qui est en ligne : des chiffres de console. */
+.bc-page .nf-chiffre-valeur { color: var(--bc-vert-texte); font: 46px/0.9 var(--bc-chiffres); }
+.bc-page .nf-chiffre-libelle { color: var(--bc-doux); font-size: 13px; }
+.card.panel-color .nf-chiffre-valeur, .card.panel-color .nf-chiffre-libelle { color: var(--bc-sur-vert); }
+.widget-members .row.text-center { flex-wrap: nowrap; }
+.widget-members .row.text-center > [class*="col-"] { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; flex: 1 1 0; width: auto; color: var(--bc-doux); font-size: 13px; }
+.widget-members .row.text-center > [class*="col-"] > a { display: flex; flex-direction: column; align-items: center; color: var(--bc-vert-texte); }
+.widget-members h3 { height: 42px; margin: 0; color: var(--bc-texte); font: 42px/42px var(--bc-chiffres); }
+.card.panel-color .widget-members h3, .widget-members .card.panel-color h3, .widget-members .card.panel-color .row.text-center > [class*="col-"] { color: var(--bc-sur-vert); }
+
+/* Les dernières constructions : des photos encadrées de noir. */
+.bc-page .nf-photos { gap: 14px; grid-auto-rows: 120px; }
+.bc-page .nf-photo { border: 3px solid var(--bc-trait); border-radius: 0; box-shadow: 4px 4px 0 var(--bc-ombre); }
+
+/* L'agenda, les documents, les partenaires, si on les pose */
+.widget-calendar ul.list-unstyled > li { padding: 10px 0 10px 12px !important; border-bottom: 2px dotted color-mix(in srgb, var(--bc-doux) 45%, transparent) !important; border-left-width: 4px !important; border-radius: 0; }
+.widget-calendar ul.list-unstyled > li:last-child { border-bottom: 0 !important; }
+.widget-calendar ul.list-unstyled > li a { color: var(--bc-texte); font-weight: 600; }
+.widget-downloads li { padding: 8px 0 !important; border-bottom: 2px dotted color-mix(in srgb, var(--bc-doux) 45%, transparent); }
+.widget-downloads li:last-child { border-bottom: 0; }
+.widget-partners .column-partners img.logo { max-height: 40px; width: auto; }
+.widget-slider { border: 3px solid var(--bc-trait); overflow: hidden; }
+.widget-slider .carousel-caption { left: 0; right: 0; bottom: 0; padding: 30px 22px 16px; text-align: left; background: linear-gradient(transparent, rgba(10, 12, 8, 0.8)); }
+.widget-slider .carousel-caption h3 { color: #fff; font: 400 34px/1 var(--bc-titre); }
+
+/* La navigation, si on la pose ailleurs que dans la barre d'objets */
+.bc-contenu .widget-navigation .nav-link, .bc-colonne .widget-navigation .nav-link { color: var(--bc-texte); font-weight: 600; border-radius: 0; }
+.bc-contenu .widget-navigation .nav-link.active, .bc-contenu .widget-navigation .nav-link:hover,
+.bc-colonne .widget-navigation .nav-link.active, .bc-colonne .widget-navigation .nav-link:hover { background: var(--bc-carte-2); color: var(--bc-texte); }
+
+/* =========================================================================
+   §9 — Listes, tableaux, badges, alertes, boutons, formulaires, bulles
+   ======================================================================== */
+
+.list-group-item { background: transparent; border-color: color-mix(in srgb, var(--bc-trait) 18%, transparent); color: var(--bc-texte); }
+.list-group-item-action:hover, .list-group-item-action:focus { background: var(--bc-vert-doux); }
+
+.table { color: var(--bc-texte); }
+.table thead th { border-bottom: 3px solid var(--bc-trait); color: var(--bc-doux); font: 700 12px var(--nf-font); letter-spacing: 0.08em; text-transform: uppercase; }
+.table tbody td { border-top-color: color-mix(in srgb, var(--bc-trait) 18%, transparent); }
+.table-hover tbody tr:hover { background: var(--bc-vert-doux); }
+
+.badge { border-radius: 0; font: 700 11.5px var(--nf-font); }
+.alert { border: 3px solid var(--bc-trait); border-left-width: 10px; border-radius: 0; background: var(--bc-carte); box-shadow: 4px 4px 0 var(--bc-ombre); color: var(--bc-texte); }
+.alert-success { border-left-color: var(--bc-succes); }
+.alert-danger { border-left-color: var(--bc-danger); }
+.alert-warning { border-left-color: var(--bc-or); }
+.alert-info { border-left-color: var(--bc-info); }
+
+/* Les boutons : des boutons de bloc, en Jersey 10. */
 .btn {
-	font-family:     var(--bc-font);
-	font-weight:     600;
-	font-size:       13px;
-	text-transform:  none;
-	text-decoration: none;
-	padding:         7px 14px;
-	border-radius:   var(--bc-radius-sm);
-	border:          1px solid transparent;
-	transition:      background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
-}
-
-.btn-sm { padding: 5px 10px; }
-.btn-lg { padding: 11px 20px; }
-
-.btn-primary { background: var(--bc-accent); border-color: var(--bc-accent); color: var(--bc-on-accent); }
-.btn-primary:hover { background: var(--bc-accent-strong); border-color: var(--bc-accent-strong); color: var(--bc-on-accent); transform: translateY(-1px); }
-
-.btn-secondary { background: var(--bc-surface-2); border-color: var(--bc-border); color: var(--bc-text); }
-
-.btn-outline-primary { background: transparent; border-color: var(--bc-accent); color: var(--bc-accent-text); }
-.btn-outline-primary:hover { background: var(--bc-accent); border-color: var(--bc-accent); color: var(--bc-on-accent); }
-
-.btn-link { background: transparent; border-color: transparent; color: var(--bc-accent-text); }
-
-.btn-light { background: var(--bc-surface-2); border-color: var(--bc-border); color: var(--bc-text); }
-.btn-light:hover { background: var(--bc-surface-3); color: var(--bc-text-strong); }
-
-.btn-danger  { background: var(--bc-danger);  border-color: var(--bc-danger); }
-.btn-danger:hover { filter: brightness(0.92); color: #fff; }
-.btn-success { background: var(--bc-success); border-color: var(--bc-success); }
-.btn-success:hover { filter: brightness(0.95); color: #fff; }
-.btn-warning { background: var(--bc-warning); border-color: var(--bc-warning); color: #fff; }
-.btn-info    { background: var(--bc-info);    border-color: var(--bc-info); }
-
-/* =========================================================================
-   §12 — Forms
-   ======================================================================== */
-
-.form-control, .form-select, textarea.form-control {
-	background-color:    var(--bc-surface-2);
-	border:        1px solid var(--bc-border);
-	border-radius: var(--bc-radius-sm);
-	padding:       8px 12px;
-	font-size:     13.5px;
-	color:         var(--bc-text);
-	transition:    border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
-}
-
-.form-control.is-invalid:focus { box-shadow: 0 0 0 3px var(--bc-danger-soft); }
-
-.col-form-label, .form-label, label { color: var(--bc-text-strong); font-size: 13.5px; font-weight: 600; }
-.form-text, .text-muted { color: var(--bc-muted); }
-
-/* =========================================================================
-   §13 — Nav tabs / pills
-   ======================================================================== */
-
-.nav-tabs .nav-link {
-	border: none;
-	background: transparent;
-	color: var(--bc-muted);
-	font-size: 13.5px;
-	font-weight: 500;
-	padding: 10px 16px;
-	border-radius: var(--bc-radius-sm) var(--bc-radius-sm) 0 0;
-	position: relative;
-	transition: color 120ms ease, background-color 120ms ease;
-}
-
-.nav-tabs .nav-link.active {
-	color: var(--bc-accent-text);
-	background: transparent;
-	border: none;
-	font-weight: 600;
-}
-.nav-tabs .nav-link.active::after {
-	content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--bc-accent);
-}
-
-.nav-pills .nav-link {
-	display: flex; align-items: center; gap: 8px;
-	padding: 8px 12px;
-	border-radius: var(--bc-radius-sm);
-	font-size: 13px; font-weight: 500;
-	color: var(--bc-text);
-	transition: background-color 120ms ease, color 120ms ease;
-}
-.nav-pills .nav-link i.icon, .nav-pills .nav-link i.fas { color: var(--bc-muted); font-size: 14px; transition: color 120ms ease; }
-.nav-pills .nav-link:hover { background: var(--bc-surface-2); color: var(--bc-text); }
-.nav-pills .nav-link.active { background: var(--bc-accent-soft); color: var(--bc-accent-text); font-weight: 600; }
-
-.widget-navigation .nav-link {
-	color: var(--bc-text);
-	font-weight: 700;
-	font-size: 13.5px;
-	padding: 8px 14px;
-	border-radius: var(--bc-radius-sm);
-	transition: background-color 140ms ease, color 140ms ease;
-}
-.widget-navigation .nav-link:hover, .widget-navigation .nav-link.active { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
-.row-dark .widget-navigation .nav-link { color: var(--bc-text-strong); }
-
-/* =========================================================================
-   §14 — List group
-   ======================================================================== */
-
-.list-group-item {
-	background: transparent;
-	border-color: var(--bc-border);
-	padding: 9px 14px;
-	font-size: 13px;
-	font-weight: 500;
-	color: var(--bc-text);
-	transition: background-color 120ms ease, color 120ms ease;
-}
-.list-group-item i.icon, .list-group-item i.fas { color: var(--bc-muted); font-size: 12px; }
-
-.list-group-item-action:hover i.icon, .list-group-item-action:hover i.fas { color: var(--bc-accent); }
-
-/* =========================================================================
-   §15 — Tables
-   ======================================================================== */
-
-/* =========================================================================
-   §16 — Badges
-   ======================================================================== */
-
-/* =========================================================================
-   §17 — Alerts
-   ======================================================================== */
-
-.alert { border-radius: var(--bc-radius-sm); border: 1px solid; font-size: 13.5px; padding: 12px 14px; }
-.alert i.icon:first-child, .alert i.fas:first-child { margin-right: 8px; font-size: 14px; vertical-align: middle; }
-.alert-success { background: var(--bc-success-soft); color: var(--bs-success-text-emphasis); border-color: color-mix(in srgb, var(--bc-success) 30%, transparent); }
-.alert-danger  { background: var(--bc-danger-soft);  color: var(--bs-danger-text-emphasis);  border-color: color-mix(in srgb, var(--bc-danger) 30%, transparent); }
-.alert-warning { background: var(--bc-warning-soft); color: var(--bs-warning-text-emphasis); border-color: color-mix(in srgb, var(--bc-warning) 30%, transparent); }
-.alert-info    { background: var(--bc-info-soft);    color: var(--bs-info-text-emphasis);    border-color: color-mix(in srgb, var(--bc-info) 30%, transparent); }
-
-/* =========================================================================
-   §18 — Dropdowns / modals / pagination / breadcrumb
-   ======================================================================== */
-
-.dropdown-menu {
-	background: var(--bc-surface);
-	border: 1px solid var(--bc-border);
-	border-radius: var(--bc-radius-sm);
-	padding: 4px;
-	box-shadow: var(--bc-shadow-md);
-	font-size: 13px;
-	z-index: 1020;
-}
-
-.modal-title { font-size: 15px; font-weight: 800; color: var(--bc-text-strong); line-height: 1.4; }
-
-.breadcrumb-item, .breadcrumb-item a { color: var(--bc-muted); }
-.breadcrumb-item a:hover { color: var(--bc-accent-text); }
-
-/* =========================================================================
-   §19 — Avatars
-   ======================================================================== */
-
-.avatar {
-	display: inline-block;
-	position: relative;
-	width: 40px;
-	height: 40px;
-	flex: 0 0 auto;
-	border-radius: 999px;
-	background: var(--bc-surface-3);
-	vertical-align: middle;
-	box-sizing: border-box;
-}
-
-body .widget-user .avatar, body .widget-user img.avatar {
-	width: 76px !important; height: 76px !important; margin: 0 auto 10px !important;
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--bc-on-accent) 28%, transparent);
-}
-.module-user .user-profile .avatar, .module-user .user-profile img.avatar {
-	width: 132px; height: 132px; margin: 0 auto 12px;
-	box-shadow: 0 0 0 3px var(--bc-bg), 0 0 0 6px var(--bc-accent);
-}
-.module-members .card .avatar, .module-members .user-profile .avatar { width: 104px; height: 104px; }
-
-/* =========================================================================
-   §20 — Widget Espace membre
-   ======================================================================== */
-
-.widget-user .card-body { padding: 16px; text-align: center; }
-.widget-user .user-name, .widget-user .username { font-size: 15px; font-weight: 800; color: var(--bc-text-strong); margin-bottom: 2px; }
-
-.widget-user .card-footer { background: transparent; border-top: 1px solid var(--bc-border); padding: 10px 14px; text-align: center; }
-.widget-user .card-footer a {
-	display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-	border-radius: var(--bc-radius-sm); font-size: 12.5px; font-weight: 600;
-	color: var(--bc-muted); background: transparent;
-	border: 1px solid var(--bc-border);
-	transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
-}
-.widget-user .card-footer a:hover { background: var(--bc-surface-2); border-color: var(--bc-border-strong); color: var(--bc-text-strong); }
-
-/* panel-color widget user — footer lisible sur accent */
-.widget-user.panel-color .card-footer,
-.card.panel-color .widget-user .card-footer { border-top-color: color-mix(in srgb, var(--bc-on-accent) 18%, transparent); }
-
-/* =========================================================================
-   §21 — Widget Slider
-   ======================================================================== */
-
-.widget-slider .carousel-caption { background: linear-gradient(180deg, transparent, rgba(0,0,0,0.65)); position: absolute; bottom: 0; left: 0; right: 0; padding: 36px 24px 18px; text-align: left; }
-.widget-slider .carousel-caption h3, .widget-slider .carousel-caption h5 { color: #fff; font-size: 18px; font-weight: 800; margin-bottom: 4px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
-
-/* =========================================================================
-   §22 — Widget Recherche + Shoutbox
-   ======================================================================== */
-
-.widget-search .btn { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-
-.widget-shoutbox .shoutbox-messages { max-height: 240px; overflow-y: auto; padding: 8px 0; }
-.widget-shoutbox .shoutbox-message { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; border-bottom: 1px solid var(--bc-border); }
-
-.widget-shoutbox .shoutbox-form { display: flex; gap: 6px; padding: 8px 0 0; margin-top: 8px; border-top: 1px solid var(--bc-border); }
-
-/* =========================================================================
-   §23 — Module Forum (touches légères, hérite des tables/cards)
-   ======================================================================== */
-
-.module-forum .subforums > li, .module-forum .forum-groups > a {
-	background: var(--bc-surface-2);
-	border: 1px solid var(--bc-border);
-	border-radius: 999px;
-	padding: 2px 10px;
-	font-size: 11px;
-	font-weight: 600;
-	transition: background-color 120ms ease, color 120ms ease;
-}
-.module-forum .subforums > li:hover, .module-forum .forum-groups > a:hover { background: var(--bc-accent-soft); color: var(--bc-accent-text); }
-
-/* Members grid hover */
-.module-members .card.list-group-item-action:hover,
-.module-members a.card:hover { box-shadow: var(--bc-shadow-md); transform: translateY(-2px); }
-
-/* =========================================================================
-   §24 — Utilities
-   ======================================================================== */
-
-/* Bouton retour-en-haut (injecté par blockcraft.js) */
-.bc-to-top {
-	position: fixed;
-	right: 18px;
-	bottom: 18px;
-	width: 42px;
-	height: 42px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	background: var(--bc-accent);
-	color: var(--bc-on-accent);
-	border: none;
-	border-radius: var(--bc-radius);
-	box-shadow: var(--bc-shadow-md);
-	font-size: 16px;
-	cursor: pointer;
-	opacity: 0;
-	visibility: hidden;
-	transform: translateY(8px);
-	transition: opacity 160ms ease, transform 160ms ease, background-color 140ms ease;
-	z-index: 1030;
-}
-.bc-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
-.bc-to-top:hover { background: var(--bc-accent-strong); }
-
-/* =========================================================================
-   §25 — Responsive
-   ======================================================================== */
-
-@media (max-width: 991.98px) {
-	.bc-header-banner { padding: 28px 0 32px; }
-}
-
-@media (max-width: 767.98px) {
-	.card .card-body   { padding: 12px; }
-	.card .card-header { padding: 10px 12px; }
-	.card .card-footer { padding: 8px 12px; }
-	
-	.bc-to-top { right: 12px; bottom: 12px; width: 38px; height: 38px; }
-}
-
-/* =========================================================================
-   §26 — Identité « blocs » (signature visuelle, distincte de dungeon/granite)
-   ======================================================================== */
-
-/* Bannière : trame de blocs subtile par-dessus le dégradé */
-.bc-header-banner::after {
-	content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-	background-image:
-		repeating-linear-gradient(0deg,  rgba(0,0,0,0.05) 0 2px, transparent 2px 44px),
-		repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 44px);
-}
-
-/* Cartes : bords francs + ombre « bloc » décalée nette (pas de flou) */
-.card { border-width: 2px; box-shadow: 3px 3px 0 color-mix(in srgb, var(--bc-text-strong) 9%, transparent); }
-[data-theme="dark"] .card { box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.38); }
-.card.panel-color { box-shadow: 3px 3px 0 color-mix(in srgb, var(--bc-accent) 40%, transparent); }
-.row.row-dark { border-width: 2px; }
-
-/* Entête de widget classique : capuchon bloc accent en haut */
-.card.panel-default > .card-header { box-shadow: inset 0 3px 0 var(--bc-accent); }
-
-/* Navigation : items en blocs pleins, majuscules */
-.widget-navigation .nav-link {
-	border: 2px solid var(--bc-border);
-	background: var(--bc-surface);
-	text-transform: uppercase;
+	padding: 7px 16px 8px;
+	border: 3px solid var(--bc-trait); border-radius: 0;
+	box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), inset 0 3px 0 rgba(255, 255, 255, 0.2);
+	font: 400 21px/1 var(--bc-titre);
 	letter-spacing: 0.03em;
-	font-size: 12.5px;
+	transition: background-color 120ms steps(2), color 120ms steps(2);
 }
-.widget-navigation .nav-link:hover,
-.widget-navigation .nav-link.active {
-	background: var(--bc-accent);
-	color: var(--bc-on-accent);
-	border-color: var(--bc-accent-strong);
-}
-.row-dark .widget-navigation .nav-link { background: var(--bc-surface-2); }
+.btn-sm { padding: 5px 11px 6px; font-size: 18px; }
+.btn-lg { padding: 11px 24px 12px; font-size: 25px; }
+.btn-primary { background: var(--bc-vert); border-color: var(--bc-trait); color: var(--bc-sur-vert); }
+.btn-primary:hover, .btn-primary:focus-visible, .btn-primary:active { background: var(--bc-vert-fonce); border-color: var(--bc-trait); color: var(--bc-sur-vert); }
+.btn-secondary, .btn-light, .btn-outline-secondary { background: var(--bc-carte); border-color: var(--bc-trait); color: var(--bc-texte); }
+.btn-secondary:hover, .btn-light:hover, .btn-outline-secondary:hover { background: var(--bc-carte-2); border-color: var(--bc-trait); color: var(--bc-texte); }
+.btn-dark { background: var(--bc-ecran); border-color: var(--bc-trait); color: var(--bc-sur-ecran); }
+.btn-dark:hover, .btn-dark:focus-visible { background: #000; color: #fff; }
+.btn-link { border-color: transparent; box-shadow: none; color: var(--bc-vert-texte); font: 500 15px var(--nf-font); letter-spacing: 0; }
+.btn.btn-outline-primary { background: var(--bc-carte); border-color: var(--bc-trait); color: var(--bc-vert-texte); }
+.btn.btn-outline-primary:hover { background: var(--bc-vert); color: var(--bc-sur-vert); }
+.btn:focus-visible { outline: 3px solid var(--bc-or); outline-offset: 2px; }
+.btn-danger { background: var(--bc-danger); border-color: var(--bc-trait); color: #fff; }
+.btn-success { background: var(--bc-succes); border-color: var(--bc-trait); color: #fff; }
+.btn-warning { background: var(--bc-or); border-color: var(--bc-trait); color: var(--bc-sur-or); }
+.btn-info { background: var(--bc-info); border-color: var(--bc-trait); color: #fff; }
+[data-theme="dark"] .btn-danger, [data-theme="dark"] .btn-success, [data-theme="dark"] .btn-info { color: #14171c; }
 
-/* Boutons primaires : effet « bloc pressé » */
-.btn-primary:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--bc-accent-strong); }
-.btn-primary:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: none; }
+.form-control, .form-select, textarea.form-control { background: var(--bc-carte); border: 2px solid color-mix(in srgb, var(--bc-trait) 60%, transparent); border-radius: 0; color: var(--bc-texte); }
+.form-control:focus, .form-select:focus { background: var(--bc-carte); border-color: var(--bc-vert); box-shadow: 0 0 0 3px var(--bc-vert-doux); color: var(--bc-texte); }
+.input-group-text { background: var(--bc-carte-2); border: 2px solid color-mix(in srgb, var(--bc-trait) 60%, transparent); border-radius: 0; color: var(--bc-doux); }
+.form-text, .text-muted { color: var(--bc-doux) !important; }
 
-/* Titres bien carrés */
-h1, h2, h3, h4 { letter-spacing: 0; }
+.nav-pills .nav-link { border-radius: 0; color: var(--bc-texte); }
+.nav-pills .nav-link:hover { background: var(--bc-carte-2); color: var(--bc-texte); }
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link { background: var(--bc-vert); color: var(--bc-sur-vert); box-shadow: inset 0 0 0 3px var(--bc-trait); }
+.nav-tabs { border-bottom: 0; gap: 6px; }
+.nav-tabs .nav-link { border: 3px solid var(--bc-trait); border-radius: 0; background: var(--bc-carte); color: var(--bc-doux); font: 400 20px/1 var(--bc-titre); letter-spacing: 0.02em; box-shadow: 3px 3px 0 var(--bc-ombre); }
+.nav-tabs .nav-link:hover { color: var(--bc-texte); }
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link { background: var(--bc-vert); border-color: var(--bc-trait); color: var(--bc-sur-vert); }
+
+.page-link { border: 3px solid var(--bc-trait) !important; border-radius: 0 !important; background: var(--bc-carte); color: var(--bc-texte); font: 22px/1 var(--bc-chiffres); box-shadow: 3px 3px 0 var(--bc-ombre); }
+.page-link:hover { background: var(--bc-carte-2); color: var(--bc-texte); }
+.page-item.active .page-link { background: var(--bc-vert); color: var(--bc-sur-vert); }
+.pagination { gap: 6px; }
+
+.breadcrumb { margin: 0; padding: 0; background: none; border: 0; box-shadow: none; font: 500 13px var(--nf-font); }
+.breadcrumb-item, .breadcrumb-item a { color: var(--bc-doux); }
+.breadcrumb-item b { color: var(--bc-texte); font-weight: 700; }
+.breadcrumb-item a:hover { color: var(--bc-vert-texte); }
+.breadcrumb-item .icon { display: none; }
+.breadcrumb-item + .breadcrumb-item::before { content: "›"; color: var(--bc-doux); }
+.bc-contenu .widget-breadcrumb { margin-bottom: 14px !important; }
+.bc-contenu .widget-breadcrumb .card { background: none; border: 0; box-shadow: none; }
+.bc-contenu .widget-breadcrumb .card-body { padding: 0; }
+
+.dropdown-menu { background: var(--bc-carte); border: 3px solid var(--bc-trait); border-radius: 0; box-shadow: 6px 6px 0 var(--bc-ombre); padding: 6px; }
+.dropdown-item { border-radius: 0; color: var(--bc-texte); }
+.dropdown-item:hover, .dropdown-item:focus { background: var(--bc-carte-2); color: var(--bc-texte); }
+.dropdown-item.active { background: var(--bc-vert); color: var(--bc-sur-vert); }
+.modal-content { border: 3px solid var(--bc-trait); border-radius: 0; background: var(--bc-carte); box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.35); }
+.modal-title { font: 400 30px/1 var(--bc-titre); }
+/* Les bulles : celles des objets du jeu — fond nuit violette, liseré pourpre, lettres de console. */
+.tooltip-inner { max-width: 260px; padding: 6px 10px; border: 2px solid #1a0533; border-radius: 0; background: rgba(16, 2, 18, 0.95); box-shadow: inset 0 0 0 2px #3c1a78; color: #ffffff; font: 19px/1.1 var(--bc-chiffres); }
+.tooltip .tooltip-arrow { display: none; }
+
+/* Les têtes : des avatars carrés, cerclés de noir. */
+.avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 0 !important; background: var(--bc-carte-2); box-shadow: 0 0 0 2px var(--bc-trait); vertical-align: middle; }
+.module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; box-shadow: 0 0 0 3px var(--bc-trait), 6px 6px 0 var(--bc-ombre); }
+.module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
 
 /* =========================================================================
-   §UX — Corrections audit visuel (lisibilité, hamburger, focus, responsive)
+   §10 — Les modules : nouvelles, forum en coffres, espace membre en écran du personnage
    ======================================================================== */
 
-/* Hamburger mobile : sans .navbar-light/.navbar-dark, Bootstrap ne dessine pas
-   l'icône → bouton vide. On la fournit (sombre en jour, claire en nuit). */
-.navbar-user .navbar-toggler { border: 1px solid var(--bc-border); padding: 4px 9px; border-radius: var(--bc-radius-sm); }
-.navbar-user .navbar-toggler-icon {
-	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='%231c1a16' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+/* Les nouvelles et leurs articles */
+.module-news > .card { margin-bottom: 22px; }
+.module-news .card-title { margin: 0 0 6px; font: 700 23px/1.2 var(--nf-font); }
+.module-news .card-title a { color: var(--bc-texte); }
+.module-news .card-title a:hover { color: var(--bc-vert-texte); }
+.module-news .card-img-top { border-radius: 0; border-bottom: 3px solid var(--bc-trait); }
+.module-news .nf-news-meta { color: var(--bc-doux) !important; font: 500 13px var(--nf-font); }
+.bc-page .news-article { padding: 28px 32px 26px; }
+.bc-page .news-article-cover img { border: 3px solid var(--bc-trait); border-radius: 0; }
+.bc-page .news-article-cat { padding: 2px 9px; border: 2px solid var(--bc-trait); border-radius: 0; background: var(--bc-or); color: var(--bc-sur-or); font: 400 18px/1.15 var(--bc-titre); }
+.bc-page .news-article-title { font: 400 clamp(40px, 5vw, 60px)/0.95 var(--bc-titre); text-wrap: balance; }
+.bc-page .news-article-meta { font: 500 13px var(--nf-font); border-bottom-color: color-mix(in srgb, var(--bc-trait) 25%, transparent); }
+.bc-page .news-article-body { font-size: 17px; line-height: 1.75; color: var(--bc-texte); }
+.bc-page .news-article-body h2, .bc-page .news-article-body h3 { font-family: var(--bc-titre); font-weight: 400; }
+
+/* Le forum : chaque catégorie est un coffre, son couvercle en planches ; chaque forum dans sa case. Un forum aux
+   messages non lus est enchanté : sa case scintille. */
+.module-forum table[data-forum-view] { margin: 0; }
+.module-forum table[data-forum-view] > thead > tr > th {
+	padding: 12px 18px;
+	border-bottom: 3px solid var(--bc-trait);
+	background: #6e4b29 url('../images/blocs/planches.png') 0 0 / 48px 48px;
+	image-rendering: pixelated;
 }
-
-/* Liens "btn-link" (ex. Mot de passe oublié) lisibles sur panneau coloré. */
-.card.panel-color .btn-link { color: var(--bc-on-accent); }
-.card.panel-color .btn-link:hover { color: var(--bc-on-accent); opacity: 0.82; }
-
-/* Focus clavier visible (WCAG 2.4.7). */
-.theme-toggle:focus-visible,
-.navbar-user .nav-link:focus-visible,
-.btn:focus-visible,
-.bc-social:focus-visible { outline: 2px solid var(--bc-accent); outline-offset: 2px; }
-
-/* Footer : empilement vertical sous 576px. */
-@media (max-width: 575.98px) {
-	.bc-footer-bar { flex-direction: column; justify-content: center; text-align: center; gap: 10px; }
+.module-forum table[data-forum-view] > thead h5 { color: #fff !important; font: 400 26px/1 var(--bc-titre) !important; letter-spacing: 0.02em; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); }
+.module-forum table[data-forum-view] > thead .icon { display: none; }
+.module-forum table[data-forum-view] > thead > tr > th:first-child h5::before {
+	content: ""; display: inline-block; width: 26px; height: 26px; margin-right: 10px; vertical-align: -4px;
+	background: url('../images/objets/coffre.png') center / contain no-repeat; image-rendering: pixelated;
 }
+.module-forum table[data-forum-view] > thead > tr > th:first-child h5 .forum-category-img { display: none; }
+.module-forum table[data-forum-view] > tbody > tr > td { padding: 14px 12px; border-top: 0; border-bottom: 3px solid color-mix(in srgb, var(--bc-trait) 30%, transparent); background: none; vertical-align: middle; }
+.module-forum table[data-forum-view] > tbody > tr:last-child > td { border-bottom: 0; }
+.module-forum table[data-forum-view] > tbody > tr > td:first-child { width: 72px; padding-left: 18px; }
+.module-forum .forum-icone {
+	display: inline-grid; place-items: center;
+	width: 48px; height: 48px;
+	background: var(--bc-fente);
+	box-shadow: inset 3px 3px 0 var(--bc-fente-haut), inset -3px -3px 0 var(--bc-fente-bas);
+	color: #ffffff;
+}
+.module-forum .forum-icone .icon, .module-forum .forum-icone i { font-size: 20px !important; filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.45)); }
+.module-forum .forum-icone.forum-non-lu { position: relative; overflow: hidden; color: #fff; background: #5b2a86; }
+.module-forum .forum-icone.forum-non-lu::after {
+	content: ""; position: absolute; inset: 0;
+	background: linear-gradient(120deg, transparent 30%, rgba(214, 160, 255, 0.55) 45%, rgba(255, 255, 255, 0.2) 50%, transparent 65%);
+	background-size: 300% 100%;
+	animation: bc-enchante 3s linear infinite;
+}
+@keyframes bc-enchante { from { background-position: 150% 0; } to { background-position: -150% 0; } }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 700 18px/1.25 var(--nf-font); margin-bottom: 2px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--bc-texte); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--bc-vert-texte); }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--bc-doux); font-size: 14px; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(3) { color: var(--bc-doux); font-size: 13px; white-space: nowrap; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(4) { color: var(--bc-doux); font-size: 13px; }
+.module-forum .subforums > li, .module-forum .forum-groups > a { border: 2px solid color-mix(in srgb, var(--bc-trait) 40%, transparent); border-radius: 0; background: var(--bc-carte-2); font-size: 12px; }
+.module-forum .topic-icon { color: var(--bc-vert-texte); }
 
-/* Cibles tactiles ≥ 44px sur mobile (WCAG 2.5.5). */
+/* L'espace membre : l'écran du personnage — le gris de l'inventaire, la tête du joueur dans sa vitrine noire, son nom,
+   ses groupes ; le menu en cases. */
+.bc-page .card:has(> .card-body > .nf-espace-accueil) { background: none; border: 0; box-shadow: none; }
+.bc-page .card:has(> .card-body > .nf-espace-accueil) > .card-body { padding: 0; }
+.bc-page .nf-espace-accueil {
+	position: relative;
+	padding: 22px 24px;
+	border: 3px solid #000;
+	border-radius: 0;
+	background: var(--bc-inventaire);
+	box-shadow: inset 3px 3px 0 var(--bc-inv-clair), inset -3px -3px 0 var(--bc-inv-sombre), 6px 6px 0 var(--bc-ombre);
+	color: var(--bc-sur-inventaire);
+}
+.bc-page .nf-espace-accueil .avatar {
+	width: 104px; height: 104px;
+	border: 6px solid #000;
+	background: #000;
+	box-shadow: inset 3px 3px 0 #373737, 0 0 0 3px var(--bc-inv-sombre);
+}
+.bc-page .nf-espace-accueil-nom h2 { margin-bottom: 8px; color: var(--bc-sur-inventaire); font: 400 42px/0.95 var(--bc-titre); }
+.bc-page .nf-espace-accueil .text-muted { color: var(--bc-sur-inventaire-doux) !important; }
+.bc-page .nf-espace-accueil .user-profile-groups .badge { display: inline-flex; align-items: center; gap: 6px; border: 2px solid #000; font: 400 17px/1.15 var(--bc-titre); letter-spacing: 0.02em; }
+.bc-page .nf-espace-accueil .btn-outline-secondary { background: var(--bc-carte); color: var(--bc-texte); }
+.bc-page .nf-espace-menu { background: var(--bc-carte); border: 3px solid var(--bc-trait); border-radius: 0; box-shadow: var(--bc-ombre-bloc); }
+.bc-page .nf-espace-menu .nf-espace-titre { color: var(--bc-doux); font: 400 19px/1 var(--bc-titre); letter-spacing: 0.04em; }
+.bc-page .nf-espace-menu .nf-espace-lien { border-radius: 0; color: var(--bc-texte); font-weight: 600; }
+.bc-page .nf-espace-menu .nf-espace-lien:hover { background: var(--bc-carte-2); color: var(--bc-texte); }
+.bc-page .nf-espace-menu .nf-espace-lien.actif { background: var(--bc-vert); color: var(--bc-sur-vert); box-shadow: inset 0 0 0 3px var(--bc-trait); }
+.bc-page .nf-espace-menu .nf-espace-badge { border-radius: 0; background: #c0392b; color: #fff; }
+.bc-page .nf-membre-couverture-vide { background: #6e4b29 url('../images/sol.png') 30% 100% / auto 200px repeat-x !important; image-rendering: pixelated; }
+/* L'onglet choisi du profil : une case d'herbe, cerclée de noir. Le module le peint de l'accent : en changer le
+   texte sans le fond le rendait illisible (texte sombre sur l'herbe, 2,9:1). */
+.bc-page .nf-membre-onglet.is-actif { background: var(--bc-vert); color: var(--bc-sur-vert); box-shadow: inset 0 0 0 3px var(--bc-trait); }
+
+/* =========================================================================
+   §11 — Le pied en roche
+   ======================================================================== */
+
+.bc-pied { position: relative; margin-top: auto; border-top: 3px solid var(--bc-trait); background: #2b2d30 url('../images/blocs/roche.png') 0 0 / 48px 48px; image-rendering: pixelated; color: #e8e8e8; }
+.bc-pied-voile { background: rgba(8, 9, 10, 0.68); }
+.bc-pied-haut, .bc-pied-barre { max-width: 1440px; margin: 0 auto; padding-left: clamp(16px, 3vw, 48px); padding-right: clamp(16px, 3vw, 48px); }
+.bc-pied-haut { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 26px; padding-top: 30px; padding-bottom: 18px; font-size: 14px; }
+.bc-pied-haut > :only-child { grid-column: 1 / -1; }
+.bc-pied-nom, .bc-pied-titre { margin: 0 0 8px; color: #fff; font: 400 26px/1 var(--bc-titre); letter-spacing: 0.02em; }
+.bc-pied-devise { margin: 0; color: #c9cdd2; }
+.bc-pied-zone .row { margin: 0; }
+.bc-pied-zone .row > [class*="col-"], .bc-pied-zone .row > .col { padding: 0; }
+.bc-pied-zone .card { background: none; border: 0; box-shadow: none; margin: 0; }
+.bc-pied-zone .card-body { padding: 0; }
+.bc-pied-zone .nf-nav-repliable > .nf-nav-toggle { display: none !important; }
+.bc-pied-zone .nf-nav-repliable > .nav { display: flex !important; }
+.bc-pied-zone .widget-navigation .nav { gap: 2px; }
+.bc-pied-zone .widget-navigation .nav-link { padding: 3px 0; background: none; color: #eef0f2; font-weight: 500; }
+.bc-pied-zone .widget-navigation .nav-link:hover, .bc-pied-zone .widget-navigation .nav-link.active { background: none; color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.bc-pied-zone .widget-navigation .nav-link > .icon:empty { display: none; }
+.bc-socials { display: flex; flex-wrap: wrap; gap: 8px; }
+.bc-social { display: inline-grid; place-items: center; width: 38px; height: 38px; border: 3px solid #101010; background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.12), inset -2px -2px 0 rgba(0, 0, 0, 0.35); }
+.bc-social:hover, .bc-social:focus-visible { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.bc-pied-barre { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-top: 14px; padding-bottom: 18px; border-top: 3px solid rgba(0, 0, 0, 0.4); color: #b9bec4; font-size: 13px; }
+.bc-copy { margin-right: auto; }
+.bc-copy a, .bc-site-name { color: #fff; font-weight: 600; }
+.bc-copy a:hover { color: var(--bc-or); }
+.bc-pied .btn-light { background: rgba(255, 255, 255, 0.1); border-color: #101010; color: #fff; font: 600 13px var(--nf-font); letter-spacing: 0; }
+.bc-pied .btn-light:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+/* =========================================================================
+   §12 — Tablette et téléphone
+   ======================================================================== */
+
+@media (max-width: 1279.98px) {
+	.bc-barre { gap: 14px; }
+	.bc-nom { font-size: 28px; max-width: 190px; }
+	.bc-objets .widget-navigation .nav-link { min-width: 56px; padding: 6px 5px; font-size: 15px; }
+	.bc-objets .widget-navigation .nav-link::before { width: 24px; height: 24px; }
+	.bc-compte .bc-compte-nom { display: none; }
+}
+/* La barre d'objets descend en bas de l'écran : à portée de pouce, comme dans le jeu. */
+@media (max-width: 991.98px) {
+	.bc-pied-voile { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+	.bc-objets {
+		position: fixed; left: 0; right: 0; bottom: 0; z-index: 1035;
+		justify-content: flex-start;
+		padding: 0 6px calc(6px + env(safe-area-inset-bottom));
+		background: #0e110b;
+		border-top: 3px solid #101010;
+	}
+	.bc-objets .widget-navigation .nav { flex: 1 1 auto; justify-content: space-between; overflow-x: auto; scrollbar-width: none; border-width: 0; background: none; box-shadow: none; padding: 6px 0 0; }
+	.bc-objets .widget-navigation .nav::-webkit-scrollbar { display: none; }
+	.bc-objets .widget-navigation .nav-item { flex: 1 1 0; min-width: 0; }
+	/* Sept cases sur la largeur d'un téléphone : un nom de deux mots passe sur deux lignes (« Mon / espace »). */
+	.bc-objets .widget-navigation .nav-link { justify-content: flex-start; height: 100%; min-width: 0; padding: 5px 1px 4px; border: 2px solid #101010; font-size: 14px; letter-spacing: 0; white-space: normal; overflow-wrap: normal; }
+	.bc-corps { grid-template-columns: minmax(0, 1fr); }
+	.card > .card-header { padding: 14px 14px 0; }
+	.card > .card-header::before { width: 24px; height: 24px; }
+	.bc-pied-haut { grid-template-columns: 1fr 1fr; }
+	.bc-pied-haut > .bc-pied-col:first-child { grid-column: 1 / -1; }
+	.bc-heros { padding-bottom: 210px; }
+	.bc-sol { height: 250px; background-size: auto 250px; }
+}
 @media (max-width: 767.98px) {
-	.bc-social { width: 44px; height: 44px; }
+	.bc-barre { gap: 10px; padding-top: 12px; padding-bottom: 12px; }
+	.bc-nom { font-size: 26px; max-width: 48vw; }
+	.bc-bloc-marque, .bc-logo { width: 30px; height: 30px; }
+	.bc-compte .fa-angle-down { display: none; }
+	.bc-compte .bc-compte-membre { padding: 4px; }
+	.bc-connexion { padding: 8px 11px; font-size: 18px; }
+	.bc-connexion .fa-user { display: inline-block; font-size: 15px; }
+	.bc-connexion-texte { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	.bc-heros { gap: 12px; padding-top: 22px; padding-bottom: 170px; }
+	.bc-titre { font-size: clamp(54px, 17vw, 84px); }
+	.bc-devise { font-size: 16px; }
+	.bc-adresse code { padding: 8px 12px; font-size: 24px; }
+	.bc-bouton { font-size: 20px; }
+	.bc-sol { height: 200px; background-size: auto 200px; }
+	.bc-bandeau { min-height: 180px; }
+	.bc-bandeau .bc-sol { height: 90px; background-size: auto 190px; }
+	.bc-page-titre { padding-bottom: 96px; }
+	.bc-corps { gap: 18px; padding-top: 22px; }
+	.card > .card-header { padding: 14px 16px 0; font-size: 27px; }
+	.card .card-body { padding: 12px 16px 16px; }
+	.card .card-footer { padding: 0 16px 14px; }
+	.bc-page .widget-news .card-body { grid-template-columns: minmax(0, 1fr); }
+	.bc-contenu .widget-news .card-body > .d-flex:first-child { grid-template-columns: minmax(0, 1fr); }
+	.bc-contenu .widget-news .card-body > .d-flex:first-child::before, .bc-contenu .widget-news .card-body > .d-flex:first-child .img-cover { min-height: 150px; border-width: 0 0 3px; }
+	.bc-contenu .widget-news .card-body > .d-flex:first-child > .flex-grow-1 { padding: 0 14px 14px; }
+	.bc-page .news-article { padding: 20px 18px 18px; }
+	.bc-page .nf-espace-accueil { padding: 18px; }
+	.bc-pied-haut { grid-template-columns: minmax(0, 1fr); }
+	.module-forum table[data-forum-view] > tbody > tr > td:first-child { width: 60px; padding-left: 12px; }
+	.module-forum .forum-icone { width: 40px; height: 40px; }
+	.module-forum table[data-forum-view] > tbody > tr > td:not(:last-child) { border-bottom-width: 0; }
+	.module-forum table[data-forum-view] > tbody > tr > td:nth-child(n+3) { padding-top: 0; }
 }
 
-/* Contraste des boutons pleins (WCAG AA), jour + nuit. warning (gold) = texte sombre
-   (le blanc échoue sur du doré) ; en jour son fond est assombri. info/success/danger =
-   fond assombri + texte blanc (les teintes vives échouaient avec du blanc, surtout en nuit). */
-.btn-warning { color: #1a1612; }
-[data-theme="light"] .btn-warning { background: color-mix(in srgb, var(--bc-warning) 74%, #000); border-color: color-mix(in srgb, var(--bc-warning) 74%, #000); color: #fff; }
+/* =========================================================================
+   §13 — Moins d'animations demandé : le ciel s'arrête
+   ======================================================================== */
 
-.btn-info    { background: color-mix(in srgb, var(--bc-info) 80%, #000);    border-color: color-mix(in srgb, var(--bc-info) 80%, #000); }
-.btn-success { background: color-mix(in srgb, var(--bc-success) 60%, #000); border-color: color-mix(in srgb, var(--bc-success) 60%, #000); }
-.btn-danger  { background: color-mix(in srgb, var(--bc-danger) 72%, #000);  border-color: color-mix(in srgb, var(--bc-danger) 72%, #000); }
-
-.bc-footer { margin-top: auto; }
-
+@media (prefers-reduced-motion: reduce) {
+	.bc-nuage { animation: none; }
+	.module-forum .forum-icone.forum-non-lu::after { animation: none; display: none; }
+	.bc-objets .widget-navigation .nav-link::before, .bc-evitement, .btn { transition: none; }
+	.bc-objets .widget-navigation .nav-link:hover::before { transform: none; }
+}

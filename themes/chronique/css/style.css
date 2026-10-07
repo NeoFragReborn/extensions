@@ -369,9 +369,12 @@ html.ch-sommaire-ouvert { overflow: hidden; }
 .ch-corps.ch-corps-seul { grid-template-columns: minmax(0, 1fr); }
 .ch-page > .ch-corps:first-child { padding-top: 36px; }
 .ch-cote { position: sticky; top: 88px; align-self: start; display: grid; gap: 18px; }
-.ch-cote .row { margin: 0; }
-.ch-cote .row > [class*="col-"], .ch-cote .row > .col { padding: 0; display: grid; gap: 18px; }
-.ch-cote .row > [class*="col-"] > .widget, .ch-cote .row > .col > .widget { margin: 0; }
+/* Les rangées de la ZONE seulement (et celles de l'éditeur en direct, qui les enveloppe d'une section) : écrites
+   `.ch-cote .row`, ces règles atteignaient aussi les rangées internes d'un widget — « Qui est en ligne » prenait
+   l'écart des blocs entre son nombre et son nom, sauf dans la colonne où le nombre est un lien (2026-10-07). */
+.ch-cote > .row, .ch-cote > .live-editor-zone > .row { margin: 0; }
+.ch-cote > .row > [class*="col-"], .ch-cote > .row > .col, .ch-cote > .live-editor-zone > .row > [class*="col-"], .ch-cote > .live-editor-zone > .row > .col { padding: 0; display: grid; gap: 18px; }
+.ch-cote > .row > [class*="col-"] > .widget, .ch-cote > .row > .col > .widget, .ch-cote > .live-editor-zone > .row > [class*="col-"] > .widget, .ch-cote > .live-editor-zone > .row > .col > .widget { margin: 0; }
 
 .row.row-default { margin-top: 0; margin-bottom: 0; }
 .row.row-default + .row.row-default { margin-top: 10px; }
@@ -398,9 +401,11 @@ html.ch-sommaire-ouvert { overflow: hidden; }
 .card .card-body { padding: 12px 18px 16px; }
 .card .card-footer { padding: 10px 18px 14px; background: none; border-top: 1px dashed var(--ch-trait); font-size: 14px; }
 .card .card-footer a { font-weight: 600; }
-.card .card-footer a .icon, .card .card-footer a .fas, .card .card-footer a .far { display: none; }
-.card .card-footer a::after { content: " →"; }
-.card .card-footer a.btn::after { content: none; }
+/* Le pied d'un WIDGET seulement (« Voir le calendrier → ») : écrites pour toute carte, ces règles ôtaient aussi l'icône
+   des commentaires d'un événement, qui ne disait plus que « 0 →» (check-mise-en-page, 2026-10-07). */
+.widget .card > .card-footer a .icon, .widget .card > .card-footer a .fas, .widget .card > .card-footer a .far { display: none; }
+.widget .card > .card-footer a::after { content: " →"; }
+.widget .card > .card-footer a.btn::after { content: none; }
 /* « Titre coloré » : le titre en sarcelle, sur le papier — le socle peint l'en-tête à l'accent : sans ce fond retiré,
    le titre était sarcelle sur sarcelle, invisible (1,20:1 ; check-contraste --widget, 2026-10-06). */
 .card.panel-header > .card-header { background: none; color: var(--ch-sarcelle-texte); }
@@ -621,7 +626,8 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .ch-page .nf-espace-menu .nf-espace-lien.actif { background: var(--ch-sarcelle-doux); color: var(--ch-sarcelle-texte); }
 .ch-page .nf-espace-menu .nf-espace-badge { background: var(--ch-sarcelle); color: var(--ch-sur-sarcelle); }
 .ch-page .nf-membre-couverture-vide { background: repeating-linear-gradient(115deg, var(--ch-surface-2) 0 2px, transparent 2px 12px), var(--ch-surface-3) !important; }
-.ch-page .nf-membre-onglet.is-actif { color: var(--ch-texte); box-shadow: inset 0 -2px 0 var(--ch-sarcelle); }
+/* Le module peint l'onglet choisi de l'accent : un thème qui en change le texte en change aussi le fond. */
+.ch-page .nf-membre-onglet.is-actif { background: none; color: var(--ch-texte); box-shadow: inset 0 -2px 0 var(--ch-sarcelle); }
 
 /* Les widgets : la semaine du calendrier, qui est en ligne, les partenaires */
 .ch-page .nf-semaine-jour { border-radius: 10px; }

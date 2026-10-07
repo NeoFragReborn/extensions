@@ -1,6 +1,6 @@
 /**
- * Blockcraft theme — bascule jour/nuit.
- * - jour (clair, biome) par défaut ; nuit (grotte) via le bouton .theme-toggle
+ * Blockcraft — bascule jour/nuit (jour « prairie », nuit « ciel étoilé »).
+ * - jour (la prairie) par défaut ; nuit (le ciel étoilé) via le bouton .theme-toggle
  * - localStorage 'nf-blockcraft-theme', suit la préférence système sans choix manuel
  */
 (function() {

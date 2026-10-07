@@ -351,9 +351,12 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .pl-corps.pl-corps-seul { grid-template-columns: minmax(0, 1fr); }
 .pl-mosaique + .pl-corps { padding-top: 0; }
 .pl-cote { position: sticky; top: 88px; align-self: start; display: grid; gap: 16px; }
-.pl-cote .row { margin: 0; }
-.pl-cote .row > [class*="col-"], .pl-cote .row > .col { padding: 0; display: grid; gap: 16px; }
-.pl-cote .row > [class*="col-"] > .widget, .pl-cote .row > .col > .widget { margin: 0; }
+/* Les rangées de la ZONE seulement (et celles de l'éditeur en direct, qui les enveloppe d'une section) : écrites
+   `.pl-cote .row`, ces règles atteignaient aussi les rangées internes d'un widget — « Qui est en ligne » prenait
+   l'écart des blocs entre son nombre et son nom, sauf dans la colonne où le nombre est un lien (2026-10-07). */
+.pl-cote > .row, .pl-cote > .live-editor-zone > .row { margin: 0; }
+.pl-cote > .row > [class*="col-"], .pl-cote > .row > .col, .pl-cote > .live-editor-zone > .row > [class*="col-"], .pl-cote > .live-editor-zone > .row > .col { padding: 0; display: grid; gap: 16px; }
+.pl-cote > .row > [class*="col-"] > .widget, .pl-cote > .row > .col > .widget, .pl-cote > .live-editor-zone > .row > [class*="col-"] > .widget, .pl-cote > .live-editor-zone > .row > .col > .widget { margin: 0; }
 
 .row.row-default { margin-top: 0; margin-bottom: 0; }
 .row.row-default + .row.row-default { margin-top: 4px; }
@@ -444,9 +447,11 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .card .card-body { padding: 12px 22px 18px; }
 .card .card-footer { padding: 0 22px 16px; background: none; border: 0; font-size: 14px; }
 .card .card-footer a { font-weight: 700; }
-.card .card-footer a .icon, .card .card-footer a .fas, .card .card-footer a .far { display: none; }
-.card .card-footer a::after { content: " →"; }
-.card .card-footer a.btn::after { content: none; }
+/* Le pied d'un WIDGET seulement (« Voir le calendrier → ») : écrites pour toute carte, ces règles ôtaient aussi l'icône
+   des commentaires d'un événement, qui ne disait plus que « 0 →» (check-mise-en-page, 2026-10-07). */
+.widget .card > .card-footer a .icon, .widget .card > .card-footer a .fas, .widget .card > .card-footer a .far { display: none; }
+.widget .card > .card-footer a::after { content: " →"; }
+.widget .card > .card-footer a.btn::after { content: none; }
 
 /* « Dalle soleil » (panel-header) : la dalle chaude, l'adhésion de la maquette. */
 .card.panel-header { background: var(--pl-soleil); color: var(--pl-sur-soleil); }
@@ -717,9 +722,12 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .pl-page .nf-espace-menu .nf-espace-lien { border-radius: 999px; color: var(--pl-texte); font-weight: 700; }
 .pl-page .nf-espace-menu .nf-espace-lien:hover { background: var(--pl-dalle-2); color: var(--pl-texte); }
 .pl-page .nf-espace-menu .nf-espace-lien.actif { background: var(--pl-texte); color: var(--pl-fond); }
-.pl-page .nf-espace-menu .nf-espace-badge { background: var(--pl-brique); color: #fff; }
+/* La brique du jour pour le compteur, de jour comme de nuit : la brique de nuit, plus claire, ne laissait au blanc que
+   3,9:1. */
+.pl-page .nf-espace-menu .nf-espace-badge { background: #b2533a; color: #fff; }
 .pl-page .nf-membre-couverture-vide { background: var(--pl-paysage) !important; }
-.pl-page .nf-membre-onglet.is-actif { color: var(--pl-texte); box-shadow: inset 0 -3px 0 var(--pl-ardoise); }
+/* Le module peint l'onglet choisi de l'accent : un thème qui en change le texte en change aussi le fond. */
+.pl-page .nf-membre-onglet.is-actif { background: none; color: var(--pl-texte); box-shadow: inset 0 -3px 0 var(--pl-ardoise); }
 
 /* =========================================================================
    §11 — Le pied : une dalle sombre, le plan où bat le point
