@@ -74,8 +74,9 @@ $devise = html_entity_decode((string) $this->config->nf_description, ENT_QUOTES,
 		<?php endif ?>
 		<div class="gz-ours-barre">
 			<div class="gz-copy">
-				<?php echo $this->lang('Propulsé par') ?> <a href="https://neofr.ag" target="_blank" rel="noopener">NeoFrag Reborn</a>
+				<?php echo $this->lang('Propulsé par') ?> <a href="https://neofrag-reborn.xyz" target="_blank" rel="noopener">NeoFrag Reborn</a>
 				· © <?php echo date('Y') ?> <span class="gz-site-name"><?php echo nf_texte($nom) ?></span>
+				· <?php echo nf_liens_legaux() ?>
 			</div>
 			<?php echo $this->view('socials') ?>
 			<?php echo nf_selecteur_theme() ?>

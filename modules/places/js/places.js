@@ -11,12 +11,18 @@
  *
  * Les marqueurs sont des `divIcon` portant une icône FontAwesome, déjà embarquée dans le produit.
  * C'est ce qui permet de n'embarquer AUCUNE des images de Leaflet.
+ *
+ * Les tuiles viennent d'OpenStreetMap, mais par le site (2026-10-08) : aucune adresse de visiteur ne part
+ * ailleurs, il n'y a rien à lui demander.
  */
 (function () {
 	'use strict';
 
-	/** Les tuiles d'OpenStreetMap. Leur usage impose de citer les contributeurs, ce que fait le gabarit. */
-	var TUILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+	/**
+	 * Les tuiles d'OpenStreetMap, servies par le site lui-même (data-places-tuiles, cf. le contrôleur) : le
+	 * navigateur du visiteur ne parle qu'au site, et OpenStreetMap ne voit que le serveur. Leur usage impose de
+	 * citer les contributeurs, ce que fait le gabarit.
+	 */
 
 	/** Au-delà, les tuiles n'existent pas. */
 	var ZOOM_MAX = 19;
@@ -85,6 +91,12 @@
 			return;
 		}
 
+		var tuiles = bloc.getAttribute('data-places-tuiles');
+
+		if (!tuiles) {
+			return;
+		}
+
 		conteneur.hidden = false;
 
 		var carte = window.L.map(conteneur, {
@@ -93,7 +105,7 @@
 			scrollWheelZoom: false   // une carte qui happe la molette empêche de faire défiler la page
 		});
 
-		window.L.tileLayer(TUILES, {
+		window.L.tileLayer(tuiles, {
 			maxZoom: ZOOM_MAX,
 			attribution: bloc.getAttribute('data-places-attribution') || ''
 		}).addTo(carte);

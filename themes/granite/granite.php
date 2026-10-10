@@ -51,6 +51,9 @@ class Granite extends Theme
 	{
 		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
+				->css('fonts/playfair-display') // les polices, servies par le site (tools/polices-locales.php)
+				->css('fonts/source-serif-4')
+				->css('fonts/jetbrains-mono')
 				// Le socle commun des thèmes (chantier B, étape B1) : AVANT la feuille du thème, qui peut tout redéfinir.
 				->css('nf-socle-themes')
 				->css('style')

@@ -53,6 +53,9 @@ class Forge extends Theme
 	{
 		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
+				->css('fonts/barlow') // les polices, servies par le site (tools/polices-locales.php)
+				->css('fonts/rajdhani')
+				->css('fonts/jetbrains-mono')
 				// Le socle commun des thèmes (chantier B, étape B1) : ce que les quatre thèmes clones avaient
 				// d'identique. AVANT la feuille du thème, qui garde son identité et peut tout redéfinir.
 				->css('nf-socle-themes')

@@ -149,7 +149,6 @@ $nuit = function () use ($accent, $bg_color, $text_color) {
 	return ob_get_clean();
 };
 ?>
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 /* =========================================================================
    §1 — Jetons — NUIT (par défaut) ; le rail et le foyer restent de nuit en mode jour

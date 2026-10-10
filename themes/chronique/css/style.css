@@ -30,7 +30,6 @@ $accent_is_custom = (strtolower($accent) !== $accent_default);
 $bg_is_custom     = (strtolower($bg_color) !== $bg_default);
 $text_is_custom   = (strtolower($text_color) !== $text_default);
 ?>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,800;1,9..144,500;1,9..144,800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
 /* =========================================================================
    §1 — Jetons — JOUR (le papier)

@@ -31,6 +31,8 @@ class Index extends Controller_Module
 			.' data-places-lat="'.Place::nombre((float) $cadrage['lat']).'"'
 			.' data-places-lon="'.Place::nombre((float) $cadrage['lon']).'"'
 			.' data-places-zoom="'.(int) $cadrage['zoom'].'"'
+			// Les tuiles passent par le site (User\Controllers\Ajax::_tuile()) : OpenStreetMap ne voit pas les visiteurs.
+			.' data-places-tuiles="'.nf_texte(url('ajax/user/tuile').'/{z}/{x}/{y}').'"'
 			.' data-places-attribution="'.nf_texte($this->lang('Fond de carte : &copy; les contributeurs d\'OpenStreetMap')).'">';
 
 		// Le conteneur de la carte est vide et MASQUÉ tant que le script ne l'a pas pris en charge :

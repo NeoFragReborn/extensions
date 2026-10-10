@@ -28,7 +28,6 @@ $accent_is_custom = (strtolower($accent) !== $accent_default);
 $bg_is_custom     = (strtolower($bg_color) !== $bg_default);
 $text_is_custom   = (strtolower($text_color) !== $text_default);
 ?>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 /* =========================================================================
    §1 — Jetons — JOUR (la pierre claire)

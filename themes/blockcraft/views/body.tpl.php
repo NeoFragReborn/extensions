@@ -138,8 +138,9 @@ $reseaux    = trim((string) $this->view('socials'));
 		</div>
 		<div class="bc-pied-barre">
 			<div class="bc-copy">
-				<?php echo $this->lang('Propulsé par') ?> <a href="https://neofr.ag" target="_blank" rel="noopener">NeoFrag Reborn</a>
+				<?php echo $this->lang('Propulsé par') ?> <a href="https://neofrag-reborn.xyz" target="_blank" rel="noopener">NeoFrag Reborn</a>
 				· © <?php echo date('Y') ?> <span class="bc-site-name"><?php echo nf_texte($nom) ?></span>
+				· <?php echo nf_liens_legaux() ?>
 			</div>
 			<?php echo nf_selecteur_theme() ?>
 			<?php if (count($this->config->langs) > 1): $cur = $this->config->lang->info(); ?>

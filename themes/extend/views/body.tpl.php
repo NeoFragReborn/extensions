@@ -126,6 +126,6 @@ $inscription = !$this->user->id && $this->config->nf_registration_status;
 			</div>
 		</form>
 		<?php endif ?>
-		<span class="ex-copy"><?php echo $this->lang('Propulsé par') ?> <a href="https://neofr.ag" target="_blank" rel="noopener">NeoFrag Reborn</a> · © <?php echo date('Y') ?> <span class="ex-site-name"><?php echo nf_texte($nom) ?></span></span>
+		<span class="ex-copy"><?php echo $this->lang('Propulsé par') ?> <a href="https://neofrag-reborn.xyz" target="_blank" rel="noopener">NeoFrag Reborn</a> · © <?php echo date('Y') ?> <span class="ex-site-name"><?php echo nf_texte($nom) ?></span> · <?php echo nf_liens_legaux() ?></span>
 	</div>
 </footer>

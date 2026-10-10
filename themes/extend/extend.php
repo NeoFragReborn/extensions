@@ -56,6 +56,9 @@ class Extend extends Theme
 	{
 		$this	->css('bootstrap.min')->css('nf-bs5-bridge')
 				->css('icons/fontawesome.min')
+				->css('fonts/saira-condensed') // les polices, servies par le site (tools/polices-locales.php)
+				->css('fonts/albert-sans')
+				->css('fonts/jetbrains-mono')
 				// Le socle commun des thèmes (chantier B, étape B1) : AVANT la feuille du thème, qui peut tout redéfinir.
 				->css('nf-socle-themes')
 				->css('style')

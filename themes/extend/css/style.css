@@ -34,7 +34,6 @@ $accent_is_custom = (strtolower($accent) !== $accent_default);
 $bg_is_custom     = (strtolower($bg_color) !== $bg_default);
 $text_is_custom   = (strtolower($text_color) !== $text_default);
 ?>
-@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Albert+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 
 /* =========================================================================
    §1 — Jetons — NUIT (par défaut)
@@ -816,6 +815,10 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .ex-langue .btn { padding: 5px 10px; border: 0; background: none; color: var(--ex-texte); font: 500 13px var(--nf-font); letter-spacing: 0; text-transform: none; }
 .ex-langue .btn:hover { background: var(--ex-panneau-2); color: var(--ex-fort); }
 .ex-copy { white-space: nowrap; }
+/* Les liens légaux du pied (nf_liens_legaux()) passent à la ligne quand la barre manque de place ; au téléphone, sur une
+   ligne à eux : collés au reste de la ligne, insécable, ils faisaient déborder la page de 34 pixels (2026-10-08). */
+.ex-copy .nf-liens-legaux { white-space: normal; }
+@media (max-width: 575.98px) { .ex-copy .nf-liens-legaux { display: block; margin-top: 2px; } }
 .ex-copy a, .ex-site-name { color: var(--ex-texte); font-weight: 600; }
 .ex-socials { display: inline-flex; gap: 6px; }
 .ex-social { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--ex-panneau-2); color: var(--ex-texte); font-size: 13px; }
