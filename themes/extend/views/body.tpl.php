@@ -53,7 +53,7 @@ $reseaux    = trim((string) $this->view('socials'));
 $inscription = !$this->user->id && $this->config->nf_registration_status;
 ?>
 <a class="ex-evitement" href="#ex-contenu"><?php echo $this->lang('Aller au contenu') ?></a>
-<header class="ex-barre">
+<header class="ex-barre" data-nf-entete>
 	<a href="<?php echo url() ?>" class="ex-marque">
 		<?php if ($logo): ?>
 		<img class="ex-logo" src="<?php echo $logo ?>" alt="" />

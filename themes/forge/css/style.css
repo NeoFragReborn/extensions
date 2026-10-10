@@ -219,11 +219,6 @@ $nuit = function () use ($accent, $bg_color, $text_color) {
 	color-scheme: light;
 }
 
-/* Les bandeaux de l'administrateur (maintenance, aperçu d'un rôle) occupent le haut de la fenêtre :
-   le rail et la barre du téléphone se collent dessous. */
-body.nf-maint-on      { --fg-haut: 52px; }
-body.nf-preview-active { --fg-haut: 46px; }
-
 /* =========================================================================
    §3 — Base
    ======================================================================== */
@@ -285,7 +280,7 @@ a:hover { color: var(--fg-link-hover); }
 
 .fg-page {
 	min-width: 0;
-	min-height: 100vh;
+	min-height: calc(100vh - var(--nf-haut, 0px));
 	display: flex;
 	flex-direction: column;
 }
@@ -327,9 +322,9 @@ a:hover { color: var(--fg-link-hover); }
 
 .fg-rail {
 	position: sticky;
-	top: var(--fg-haut, 0px);
-	height: calc(100vh - var(--fg-haut, 0px));
-	height: calc(100dvh - var(--fg-haut, 0px));
+	top: var(--nf-haut, 0px);
+	height: calc(100vh - var(--nf-haut, 0px));
+	height: calc(100dvh - var(--nf-haut, 0px));
 	display: flex;
 	flex-direction: column;
 	background: var(--fg-rail);
@@ -1270,7 +1265,7 @@ body .widget-user .avatar, body .widget-user img.avatar {
 	.fg-rail { display: contents; }
 	.fg-blason {
 		grid-column: 1; grid-row: 1;
-		position: sticky; top: var(--fg-haut, 0px); z-index: 1035;
+		position: sticky; top: var(--nf-haut, 0px); z-index: 1035;
 		padding: 10px 16px;
 		background: var(--fg-rail-fond);
 		border-bottom: 1px solid var(--fg-border);
@@ -1280,7 +1275,7 @@ body .widget-user .avatar, body .widget-user img.avatar {
 	.fg-blason-nom { font-size: 16px; -webkit-line-clamp: 1; }
 	.fg-compte {
 		grid-column: 2; grid-row: 1;
-		position: sticky; top: var(--fg-haut, 0px); z-index: 1035;
+		position: sticky; top: var(--nf-haut, 0px); z-index: 1035;
 		flex-direction: row; align-items: center; gap: 6px;
 		padding: 8px 12px 8px 4px;
 		background: var(--fg-rail-fond);

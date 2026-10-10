@@ -7,7 +7,7 @@
  * cloche des notifications et la bascule jour / nuit. Visiteur : l'accès à l'espace membre et la bascule.
  */
 ?>
-<div class="fg-compte<?php echo $this->user->id ? ' fg-compte-connecte' : '' ?>">
+<div class="fg-compte<?php echo $this->user->id ? ' fg-compte-connecte' : '' ?>" data-nf-entete>
 	<?php if ($this->user->id): ?>
 		<div class="fg-compte-identite">
 			<?php echo $this->user->avatar() ?>

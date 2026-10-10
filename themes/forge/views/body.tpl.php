@@ -36,7 +36,7 @@ $braises = [0, 7, 16][$this->config->forge_braises === FALSE ? 1 : max(0, min(2,
 <a class="fg-evitement" href="#fg-contenu"><?php echo $this->lang('Aller au contenu') ?></a>
 <div class="fg-coulee">
 	<aside class="fg-rail" data-bs-theme="dark" aria-label="<?php echo $this->lang('Navigation du site') ?>">
-		<a class="fg-blason" href="<?php echo url() ?>" title="<?php echo nf_texte($nom) ?>">
+		<a class="fg-blason" data-nf-entete href="<?php echo url() ?>" title="<?php echo nf_texte($nom) ?>">
 			<?php if ($logo): ?>
 				<img class="fg-blason-logo" src="<?php echo $logo ?>" alt="" />
 			<?php else: ?>

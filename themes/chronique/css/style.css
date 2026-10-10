@@ -144,8 +144,6 @@ $text_is_custom   = (strtolower($text_color) !== $text_default);
    §3 — Base
    ======================================================================== */
 
-html { scroll-padding-top: 90px; }
-
 body {
 	background-color: var(--ch-fond);
 <?php if ($bg_image): ?>
@@ -186,7 +184,7 @@ a:hover { color: var(--ch-texte); }
    ======================================================================== */
 
 .ch-tete {
-	position: sticky; top: 0; z-index: 1030;
+	position: sticky; top: var(--nf-haut, 0px); z-index: 1030;
 	border-bottom: 1px solid var(--ch-trait);
 }
 /* Le voile flouté vit sur un pseudo-élément, pas sur l'en-tête : un `backdrop-filter` fait de l'élément qui le
@@ -367,7 +365,7 @@ html.ch-sommaire-ouvert { overflow: hidden; }
 .ch-corps { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 50px; padding: 10px 0 48px; }
 .ch-corps.ch-corps-seul { grid-template-columns: minmax(0, 1fr); }
 .ch-page > .ch-corps:first-child { padding-top: 36px; }
-.ch-cote { position: sticky; top: 88px; align-self: start; display: grid; gap: 18px; }
+.ch-cote { position: sticky; top: calc(var(--nf-haut, 0px) + var(--nf-entete, 0px) + 24px); align-self: start; display: grid; gap: 18px; }
 /* Les rangées de la ZONE seulement (et celles de l'éditeur en direct, qui les enveloppe d'une section) : écrites
    `.ch-cote .row`, ces règles atteignaient aussi les rangées internes d'un widget — « Qui est en ligne » prenait
    l'écart des blocs entre son nombre et son nom, sauf dans la colonne où le nombre est un lien (2026-10-07). */

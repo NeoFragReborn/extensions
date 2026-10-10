@@ -53,7 +53,7 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 
 	<div class="blog-lecture">
 		<?php if (!empty($toc) && $fiche !== 'centree'): ?>
-		<nav class="blog-sommaire" aria-label="<?php echo $this->lang('Sommaire') ?>"><?php echo $toc ?></nav>
+		<nav class="blog-sommaire" data-nf-colle aria-label="<?php echo $this->lang('Sommaire') ?>"><?php echo $toc ?></nav>
 		<?php endif ?>
 
 		<div class="blog-texte">
@@ -145,7 +145,7 @@ foreach ($serie['parties'] ?? [] as $i => $partie)
 		</div>
 
 		<?php if ($fiche === 'fusion'): ?>
-		<aside class="blog-encart">
+		<aside class="blog-encart" data-nf-colle>
 			<?php if ($auteur): ?>
 			<div class="blog-boite">
 				<h3><?php echo $this->lang('Auteur') ?></h3>

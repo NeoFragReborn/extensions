@@ -159,8 +159,6 @@ $text_is_custom   = (strtolower($text_color) !== $text_default);
    §3 — Base
    ======================================================================== */
 
-html { scroll-padding-top: 90px; }
-
 body {
 	background-color: var(--pl-fond);
 	/* La trame : des joints blancs tous les 46 px, comme un dallage. */
@@ -205,7 +203,7 @@ a:hover { color: var(--pl-texte); }
    ======================================================================== */
 
 .pl-barre {
-	position: sticky; top: 0; z-index: 1030;
+	position: sticky; top: var(--nf-haut, 0px); z-index: 1030;
 	border-bottom: 1px solid var(--pl-trait);
 	transition: box-shadow 200ms ease;
 }
@@ -349,7 +347,7 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .pl-corps { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; padding: 26px 0 40px; }
 .pl-corps.pl-corps-seul { grid-template-columns: minmax(0, 1fr); }
 .pl-mosaique + .pl-corps { padding-top: 0; }
-.pl-cote { position: sticky; top: 88px; align-self: start; display: grid; gap: 16px; }
+.pl-cote { position: sticky; top: calc(var(--nf-haut, 0px) + var(--nf-entete, 0px) + 24px); align-self: start; display: grid; gap: 16px; }
 /* Les rangées de la ZONE seulement (et celles de l'éditeur en direct, qui les enveloppe d'une section) : écrites
    `.pl-cote .row`, ces règles atteignaient aussi les rangées internes d'un widget — « Qui est en ligne » prenait
    l'écart des blocs entre son nombre et son nom, sauf dans la colonne où le nombre est un lien (2026-10-07). */

@@ -193,7 +193,7 @@ a:hover { color: var(--gz-encre); }
 .gz-contenu:focus { outline: none; }
 
 /* La barre de lecture (js/granite.js) : un trait rouge en haut de la fenêtre, qui avance avec la page. */
-.gz-lecture { position: fixed; left: 0; top: 0; z-index: 1040; width: 100%; height: 3px; background: var(--gz-rouge); transform: scaleX(var(--gz-lu, 0)); transform-origin: 0 50%; pointer-events: none; }
+.gz-lecture { position: fixed; left: 0; top: var(--nf-haut, 0px); z-index: 1040; width: 100%; height: 3px; background: var(--gz-rouge); transform: scaleX(var(--gz-lu, 0)); transform-origin: 0 50%; pointer-events: none; }
 
 /* =========================================================================
    §4 — La feuille du journal : la date, le titre, les filets

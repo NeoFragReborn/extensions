@@ -73,7 +73,7 @@ $contenu    = $this->output->region('content');
 $cote       = $accueil ? '' : $this->output->region('cote');
 ?>
 <a class="pl-evitement" href="#pl-contenu"><?php echo $this->lang('Aller au contenu') ?></a>
-<header class="pl-barre">
+<header class="pl-barre" data-nf-entete>
 	<div class="pl-barre-ligne">
 		<a href="<?php echo url() ?>" class="pl-marque">
 			<?php if ($logo): ?>
@@ -121,7 +121,7 @@ $cote       = $accueil ? '' : $this->output->region('cote');
 	<div class="pl-corps<?php if (!$cote) echo ' pl-corps-seul' ?>">
 		<div class="pl-contenu"><?php echo $contenu ?></div>
 		<?php if ($cote): ?>
-		<aside class="pl-cote" aria-label="<?php echo $this->lang('À côté') ?>"><?php echo $cote ?></aside>
+		<aside class="pl-cote" data-nf-colle aria-label="<?php echo $this->lang('À côté') ?>"><?php echo $cote ?></aside>
 		<?php endif ?>
 	</div>
 	<?php endif ?>

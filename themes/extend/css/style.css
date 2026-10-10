@@ -151,8 +151,6 @@ $text_is_custom   = (strtolower($text_color) !== $text_default);
    §3 — Base
    ======================================================================== */
 
-html { scroll-padding-top: 76px; }
-
 body {
 	background-color: var(--ex-fond);
 <?php if ($bg_image): ?>
@@ -197,7 +195,7 @@ a:hover { color: var(--ex-fort); }
    ======================================================================== */
 
 .ex-barre {
-	position: sticky; top: 0; z-index: 1030;
+	position: sticky; top: var(--nf-haut, 0px); z-index: 1030;
 	display: flex; align-items: center; gap: 26px;
 	height: 62px;
 	padding: 0 22px;
@@ -315,9 +313,9 @@ a:hover { color: var(--ex-fort); }
 
 /* Le panneau de droite : collé sous la barre, il défile seul. */
 .ex-panneau {
-	position: sticky; top: 62px;
+	position: sticky; top: calc(var(--nf-haut, 0px) + var(--nf-entete, 0px));
 	align-self: start;
-	max-height: calc(100vh - 62px);
+	max-height: calc(100vh - var(--nf-haut, 0px) - var(--nf-entete, 0px));
 	overflow-y: auto;
 	scrollbar-width: thin;
 	padding: 18px 16px 24px;
@@ -843,7 +841,6 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
    ======================================================================== */
 
 @media (max-width: 991.98px) {
-	html { scroll-padding-top: 66px; }
 	.ex-barre { height: 58px; gap: 10px; }
 	.ex-nom { font-size: 19px; max-width: 46vw; }
 	.ex-cadre, .ex-cadre.ex-cadre-seul { grid-template-columns: minmax(0, 1fr); background: none; }

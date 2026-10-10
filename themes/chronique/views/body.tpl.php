@@ -40,7 +40,7 @@ $saison     = (int) $aujourdhui->format('n') >= 9 ? [$annee, $annee + 1] : [$ann
 $cote = $this->output->region('cote');
 ?>
 <a class="ch-evitement" href="#ch-contenu"><?php echo $this->lang('Aller au contenu') ?></a>
-<header class="ch-tete">
+<header class="ch-tete" data-nf-entete>
 	<div class="ch-tete-ligne">
 		<a href="<?php echo url() ?>" class="ch-marque">
 			<?php if ($logo): ?><img class="ch-logo" src="<?php echo $logo ?>" alt="" /><?php endif ?>
@@ -89,7 +89,7 @@ $cote = $this->output->region('cote');
 	<div class="ch-corps<?php if (!$cote) echo ' ch-corps-seul' ?>">
 		<div class="ch-contenu"><?php echo $this->output->region('content') ?></div>
 		<?php if ($cote): ?>
-		<aside class="ch-cote" aria-label="<?php echo $this->lang('À côté') ?>"><?php echo $cote ?></aside>
+		<aside class="ch-cote" data-nf-colle aria-label="<?php echo $this->lang('À côté') ?>"><?php echo $cote ?></aside>
 		<?php endif ?>
 	</div>
 </main>

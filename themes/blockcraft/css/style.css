@@ -191,8 +191,6 @@ $objets_rubriques = [
    §3 — Base
    ======================================================================== */
 
-html { scroll-padding-top: 24px; }
-
 body {
 	background-color: var(--bc-fond);
 <?php if ($bg_image): ?>
