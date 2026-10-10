@@ -58,6 +58,9 @@ class Checker extends Module_Checker
 			return;
 		}
 
+		// Le titre de l'adresse n'est pas le bon : 301 vers la bonne (elle répondait 200 à n'importe lequel).
+		nf_bon_titre((string) $title, (string) $ticket['title'], 'bugtracker/'.(int) $ticket_id);
+
 		$comments = NeoFrag()->moderation->sans_masques((array) NeoFrag()->db	->select('c.*', 'u.username', 'u.id AS user_id', 'UNIX_TIMESTAMP(c.created_at) AS ts')
 									->from('nf_bug_comments c')
 									->join('nf_user u', 'c.user_id = u.id', 'LEFT')

@@ -392,4 +392,6 @@ return [
 	'8c15e247' => 'Une sanction de modération du site t’empêche d’ouvrir un ticket.',
 	'43a698a5' => 'Une sanction de modération du site t’empêche de publier un lien : retire-le de ton ticket.',
 	'0c2bc997' => 'Ne reliez que VOTRE compte Discord. Si quelqu’un vous a envoyé ce lien, ce compte Discord est le sien : il publierait sous votre nom et recevrait les rôles de vos groupes.',
+	'9329e419' => 'Connexion à Discord perdue depuis %d s : reconnexion en cours…',
+	'1900fef3' => 'Connexion à Discord rétablie après %d s.',
 ];

@@ -38,7 +38,7 @@ return [
 	'8d653fb9' => 'Commentaire ajouté.',
 	'8d9ef7a4' => 'Supprimer',
 	'8fd9c7ef' => 'Enregistrer',
-	'90efd47d' => 'Demande de feature',
+	'e64ff2e3' => 'Demande de fonctionnalité',
 	'95e43e37' => 'Ticket mis à jour.',
 	'9bfba468' => 'Tickets',
 	'a9dd4a32' => 'Nouveau ticket',

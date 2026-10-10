@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `nf_discord_links` (
   `site_id` int(10) unsigned NOT NULL,
   `discord_id` varchar(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `orphelin_depuis` datetime DEFAULT NULL,
   PRIMARY KEY (`link_id`),
   UNIQUE KEY `uk_site` (`type`,`site_id`),
   UNIQUE KEY `uk_discord` (`type`,`discord_id`)

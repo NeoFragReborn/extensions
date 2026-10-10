@@ -38,7 +38,7 @@ return [
 	'8d653fb9' => 'Kommentar hinzugefügt.',
 	'8d9ef7a4' => 'Löschen',
 	'8fd9c7ef' => 'Speichern',
-	'90efd47d' => 'Feature-Anfrage',
+	'e64ff2e3' => 'Feature-Anfrage',
 	'95e43e37' => 'Ticket aktualisiert.',
 	'9bfba468' => 'Tickets',
 	'a9dd4a32' => 'Neues Ticket',

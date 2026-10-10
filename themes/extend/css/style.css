@@ -412,8 +412,9 @@ a:hover { color: var(--ex-fort); }
 /* Une vue qui mène quelque part le dit : le bouton du lanceur. */
 .ex-vitrine .carousel-item > a .carousel-caption::after { content: "<?php echo addslashes($this->lang('Découvrir')) ?>  ›"; display: inline-flex; margin-top: 6px; padding: 11px 20px; border-radius: 9px; background: var(--ex-accent); color: var(--ex-sur-accent); font: 700 15px/1 var(--ex-titre); letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.7); }
 .ex-vitrine .carousel-item > a:hover .carousel-caption::after { background: var(--ex-accent-fort); }
-.ex-vitrine .carousel-indicators { z-index: 3; justify-content: flex-start; margin: 0 0 22px 40px; gap: 6px; }
-.ex-vitrine .carousel-indicators [data-bs-target] { width: 46px; height: 3px; margin: 0; border: 0; border-radius: 2px; background: #fff; opacity: 0.3; }
+.ex-vitrine .carousel-indicators { z-index: 3; justify-content: flex-start; margin: 0 0 12px 40px; gap: 6px; }
+/* Un trait de 3 px dans une cible de 23 px de haut : les bordures transparentes de Bootstrap, gardées (2026-10-10). */
+.ex-vitrine .carousel-indicators [data-bs-target] { width: 46px; height: 3px; margin: 0; border: 0; border-block: 10px solid transparent; background-clip: padding-box; border-radius: 2px; background: #fff; opacity: 0.3; }
 .ex-vitrine .carousel-indicators .active { opacity: 1; }
 .ex-vitrine .carousel-control-prev, .ex-vitrine .carousel-control-next { z-index: 3; width: 56px; opacity: 0; transition: opacity 200ms ease; }
 .ex-vitrine:hover .carousel-control-prev, .ex-vitrine:hover .carousel-control-next, .ex-vitrine .carousel-control-prev:focus-visible, .ex-vitrine .carousel-control-next:focus-visible { opacity: 0.8; }
@@ -900,7 +901,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 	.ex-etat { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 	.ex-vitrine .carousel-caption { width: 100%; padding: 26px 22px 46px; justify-content: flex-end; }
 	.ex-vitrine .carousel-item::after { background: linear-gradient(180deg, rgba(4, 10, 18, 0.1) 0%, rgba(4, 10, 18, 0.88) 78%); }
-	.ex-vitrine .carousel-indicators { margin-left: 22px; margin-bottom: 18px; }
+	.ex-vitrine .carousel-indicators { margin-left: 22px; margin-bottom: 8px; }
 	.ex-vitrine .carousel-item img, .ex-vitrine .carousel-item > a > img, .ex-vitrine .carousel-item > div.d-block, .ex-vitrine .carousel-item > a > div.d-block { height: 400px !important; }
 	.ex-art::after { background: linear-gradient(180deg, rgba(4, 10, 18, 0.15) 0%, rgba(4, 10, 18, 0.85) 85%); }
 }

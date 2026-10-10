@@ -392,4 +392,6 @@ return [
 	'8c15e247' => 'Uma sanção de moderação do site impede-te de abrir um ticket.',
 	'43a698a5' => 'Uma sanção de moderação do site impede-te de publicar uma ligação: retira-a do teu ticket.',
 	'0c2bc997' => 'Associe apenas a SUA conta Discord. Se alguém lhe enviou esta ligação, esta conta Discord é dessa pessoa: publicaria em seu nome e receberia os cargos dos seus grupos.',
+	'9329e419' => 'Ligação ao Discord perdida há %d s: a restabelecer…',
+	'1900fef3' => 'Ligação ao Discord restabelecida após %d s.',
 ];

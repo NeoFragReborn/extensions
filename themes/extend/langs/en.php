@@ -67,10 +67,12 @@ return [
 	'de55c140' => 'Behind the site name on the home page (when there is no slideshow), behind the title of the other pages and as the banner of the member area. Leave empty: a night landscape drawn by the theme.',
 	'dcff4af2' => 'In the bar, before the site name. Left empty: the site logo (general settings), if there is one, otherwise an emblem with its initials.',
 	'17a68e22' => 'Bar and showcase updated!',
-	'540367d9' => '“Extend” theme, the website as an online game launcher: a tab bar, a large showcase on the home page, online members and the chat always open on the right, a status bar at the bottom (game server, voice channel, language); on phones, the tabs at the bottom of the screen. Steel blue on navy, night by default; adjustable logo, showcase image, background and colours.',
+	'540367d9' => '“Extend” theme, the website as an online game launcher: a tab bar, a large showcase on the home page, online members and the chat always open on the right, a status bar at the bottom (game server, voice channel, language); on phones, the tabs at the bottom of the screen. Steel blue on navy, night by default; adjustable logo, showcase image, background and colors.',
 	'0586cc0d' => 'The bar and the showcase',
 	'be565028' => 'Showcase',
 	'5cbecf7b' => 'Close the panel',
 	'8b70c29d' => 'Tabs',
 	'4cdefc5c' => 'Status bar',
+	'140fd0c2' => 'Featured',
+	'21480b4e' => 'Discover',
 ];

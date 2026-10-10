@@ -27,7 +27,7 @@ return [
 	'53c50335' => 'E.g. 499 = 4.99',
 	'468b6c4f' => 'Pack deleted',
 	'dcab7e66' => 'Payment received! Your account will be credited shortly.',
-	'2b32e568' => 'Payment cancelled.',
+	'2b32e568' => 'Payment canceled.',
 	'a004e692' => 'Packs of points or VIP days (Gamification module) paid through Stripe Checkout, credited after Stripe\'s signed confirmation, only once per payment.',
 	'7a1834da' => 'Stripe top-up',
 	'99f71fd4' => 'Top-up & VIP',

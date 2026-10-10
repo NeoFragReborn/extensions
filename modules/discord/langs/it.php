@@ -392,4 +392,6 @@ return [
 	'8c15e247' => 'Una sanzione di moderazione del sito ti impedisce di aprire un ticket.',
 	'43a698a5' => 'Una sanzione di moderazione del sito ti impedisce di pubblicare un link: rimuovilo dal tuo ticket.',
 	'0c2bc997' => 'Collegate solo il VOSTRO account Discord. Se qualcuno vi ha inviato questo link, questo account Discord è suo: pubblicherebbe a vostro nome e riceverebbe i ruoli dei vostri gruppi.',
+	'9329e419' => 'Connessione a Discord persa da %d s: riconnessione in corso…',
+	'1900fef3' => 'Connessione a Discord ristabilita dopo %d s.',
 ];

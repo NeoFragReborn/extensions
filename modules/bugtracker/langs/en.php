@@ -38,7 +38,7 @@ return [
 	'8d653fb9' => 'Comment added.',
 	'8d9ef7a4' => 'Delete',
 	'8fd9c7ef' => 'Save',
-	'90efd47d' => 'Feature request',
+	'e64ff2e3' => 'Feature request',
 	'95e43e37' => 'Ticket updated.',
 	'9bfba468' => 'Tickets',
 	'a9dd4a32' => 'New ticket',

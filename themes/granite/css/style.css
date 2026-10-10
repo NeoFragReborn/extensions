@@ -427,6 +427,8 @@ a:hover { color: var(--gz-encre); }
 .card.panel-color { border: 1.5px dashed var(--gz-encre); background: color-mix(in srgb, var(--gz-carte) 70%, transparent); padding: 14px 16px; text-align: center; }
 .card.panel-color > .card-header { justify-content: center; border-bottom: 0; font: 900 22px/1.2 var(--gz-titre); letter-spacing: 0; text-transform: none; padding: 0; }
 .card.panel-color .card-footer { border-top: 0; text-align: center; }
+/* Une carte de tableau a un cadre : sa pagination, au pied, en touchait le bord droit (2026-10-10). */
+.card.panel-table > .card-footer { padding: 8px 10px 10px; }
 /* La petite annonce est sur le papier, pas peinte à l'accent comme le socle le suppose : son texte, ses libellés et son
    bouton restent ceux du journal. Sinon le socle les passait à la couleur « sur l'accent » — blanc sur papier le jour
    (1,15:1), encre sur encre la nuit (1,02:1) ; check-contraste --widget, 2026-10-06. */

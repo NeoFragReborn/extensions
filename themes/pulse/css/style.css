@@ -283,6 +283,8 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .pl-compte .avatar { width: 30px; height: 30px; }
 .pl-compte .nf-notif .nav-link { position: relative; }
 .pl-compte .nf-notif-badge { position: absolute; top: 0; right: 0; background: var(--pl-brique) !important; color: #fff !important; }
+/* De nuit, la brique est claire : le chiffre blanc y restait à 3,92:1 — il devient sombre (check-demo-connecte, 2026-10-10). */
+[data-theme="dark"] .pl-compte .nf-notif-badge { color: #0d0f10 !important; }
 .pl-compte .dropdown-menu { min-width: 230px; }
 .pl-compte .fa-angle-down { font-size: 11px; color: var(--pl-doux); }
 /* « Se connecter » : un bouton au contour ; au téléphone, une icône qui garde son nom. */

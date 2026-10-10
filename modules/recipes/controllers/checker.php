@@ -39,6 +39,12 @@ class Checker extends Module_Checker
 									->where('r.published', '1')
 									->row();
 
+		if ($recette)
+		{
+			// Le titre de l'adresse n'est pas le bon : 301 vers la bonne (elle répondait 200 à n'importe lequel).
+			nf_bon_titre((string) $title, (string) $recette['title'], 'recipes/'.(int) $id);
+		}
+
 		return $recette ? [$recette] : NULL;
 	}
 }

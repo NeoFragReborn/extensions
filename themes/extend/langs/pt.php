@@ -69,4 +69,6 @@ return [
 	'5cbecf7b' => 'Fechar o painel',
 	'8b70c29d' => 'Separadores',
 	'4cdefc5c' => 'Barra de estado',
+	'140fd0c2' => 'Em destaque',
+	'21480b4e' => 'Descobrir',
 ];

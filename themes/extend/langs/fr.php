@@ -73,4 +73,6 @@ return [
 	'5cbecf7b' => 'Fermer le panneau',
 	'8b70c29d' => 'Onglets',
 	'4cdefc5c' => 'Barre d’état',
+	'140fd0c2' => 'À la une',
+	'21480b4e' => 'Découvrir',
 ];

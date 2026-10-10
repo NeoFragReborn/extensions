@@ -105,6 +105,10 @@ class Discord extends Module
 			$this->lang('Discord : %s'),
 			$this->lang('Connexion à Discord perdue : reconnexion…'),
 			$this->lang('Connexion à Discord rétablie.'),
+			// Depuis le bot 0.2.6, seule une coupure qui dure se dit (bot/src/connexion.ts) ; les deux d'avant restent pour
+			// les lignes déjà enregistrées et les bots plus anciens.
+			$this->lang('Connexion à Discord perdue depuis %d s : reconnexion en cours…'),
+			$this->lang('Connexion à Discord rétablie après %d s.'),
 			$this->lang('Discord n’a pas accepté la connexion dans la minute.'),
 			$this->lang('Discord refuse la clé du bot : collez la bonne dans l’administration du site (Discord → Connexion).'),
 			$this->lang('Connexion à Discord impossible : %s'),

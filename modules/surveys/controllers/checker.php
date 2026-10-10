@@ -24,6 +24,9 @@ class Checker extends Module_Checker
 		$survey = NeoFrag()->db->select('*')->from('nf_surveys')->where('id', $survey_id)->where('published', '1')->row();
 		if (empty($survey)) return;
 
+		// Le titre de l'adresse n'est pas le bon : 301 vers la bonne (elle répondait 200 à n'importe lequel).
+		nf_bon_titre((string) $title, (string) $survey['title'], 'surveys/'.(int) $survey_id);
+
 		$options = NeoFrag()->db	->select('o.id', 'o.label', 'o.sort_order', 'COUNT(v.id) AS votes')
 									->from('nf_surveys_options o')
 									->join('nf_surveys_votes v', 'o.id = v.option_id', 'LEFT')

@@ -11,7 +11,7 @@ class Index extends Controller_Module
 		$this->title($this->lang('Tickets'))->icon('fas fa-bug')->breadcrumb();
 
 		$body  = '<div class="d-flex flex-wrap align-items-center gap-2 mb-3">';
-		$types = ['' => $this->lang('Tous'), 'bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')];
+		$types = ['' => $this->lang('Tous'), 'bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de fonctionnalité'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')];
 
 		foreach ($types as $code => $libelle)
 		{
@@ -62,7 +62,7 @@ class Index extends Controller_Module
 		$this->form()
 			 ->add_rules([
 				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'rules' => 'required'],
-				'type'        => ['label' => $this->lang('Type'), 'type' => 'select', 'values' => ['bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de feature'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')], 'value' => in_array($_GET['type'] ?? '', Bugtracker::TYPES, TRUE) ? (string) $_GET['type'] : 'bug', 'rules' => 'required'],
+				'type'        => ['label' => $this->lang('Type'), 'type' => 'select', 'values' => ['bug' => $this->lang('Bug'), 'feature' => $this->lang('Demande de fonctionnalité'), 'question' => $this->lang('Question'), 'other' => $this->lang('Autre')], 'value' => in_array($_GET['type'] ?? '', Bugtracker::TYPES, TRUE) ? (string) $_GET['type'] : 'bug', 'rules' => 'required'],
 				'priority'    => ['label' => $this->lang('Priorité'), 'type' => 'select', 'values' => ['low' => $this->lang('Faible'), 'normal' => $this->lang('Normale'), 'high' => $this->lang('Haute'), 'critical' => $this->lang('Critique')], 'value' => 'normal', 'rules' => 'required'],
 				'description' => ['label' => $this->lang('Description détaillée'), 'type' => 'textarea', 'rules' => 'required',
 				                   'description' => $this->lang('Décris le problème, les étapes pour reproduire, le comportement attendu vs observé.')]
@@ -124,7 +124,7 @@ class Index extends Controller_Module
 			$body .= ' — '.$this->lang('Assigné à %s', $this->user->link($ticket['assignee_id'], $ticket['assignee']));
 		}
 		$body .= '</div>';
-		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(nf_texte($ticket['description'])).'</div></div>';
+		$body .= '<div class="card mb-3"><div class="card-body">'.nf_texte_et_images((string) $ticket['description']).'</div></div>';
 
 		// Signaler un ticket, ou l'un de ses commentaires (2026-10-09 : le Bugtracker n'avait pas de bouton).
 		$moderation = $this->module('moderation');
@@ -147,7 +147,7 @@ class Index extends Controller_Module
 				$author = $c['user_id'] ? $this->user->link($c['user_id'], $c['username']) : (!empty($c['author_name']) ? icon('fab fa-discord').' '.nf_texte($c['author_name']) : '<i>'.$this->lang('Anonyme').'</i>');
 				$body .= '<div class="card mb-2"><div class="card-body py-2">';
 				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.nf_date_heure($c['ts']).$signaler('bug_comment', (int) $c['id'], $c['user_id'] ? (int) $c['user_id'] : NULL).'</small></div>';
-				$body .= '<div>'.nl2br(nf_texte($c['content'])).'</div>';
+				$body .= '<div>'.nf_texte_et_images((string) $c['content']).'</div>';
 				$body .= '</div></div>';
 			}
 		}

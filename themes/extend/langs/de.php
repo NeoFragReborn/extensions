@@ -69,4 +69,6 @@ return [
 	'5cbecf7b' => 'Seitenleiste schließen',
 	'8b70c29d' => 'Tabs',
 	'4cdefc5c' => 'Statusleiste',
+	'140fd0c2' => 'Im Fokus',
+	'21480b4e' => 'Entdecken',
 ];

@@ -85,7 +85,7 @@ return [
 	'f99f93f6' => 'Gentle',
 	'b6a5de79' => 'Lively',
 	'6ebb657c' => 'Hearth updated!',
-	'0294fd7b' => '“Coulée” theme, for competitive clans: navigation in a steel rail on the side (a tab bar at the bottom on phones), a lava hearth where embers rise at the top of the home page, cut-corner plates that glow on hover; Rajdhani headings, day mode at the visitor’s choice; adjustable colours, images, logo and embers.',
+	'0294fd7b' => '“Coulée” theme, for competitive clans: navigation in a steel rail on the side (a tab bar at the bottom on phones), a lava hearth where embers rise at the top of the home page, cut-corner plates that glow on hover; Rajdhani headings, day mode at the visitor’s choice; adjustable colors, images, logo and embers.',
 	'30c04fcf' => 'More',
 	'906e9754' => 'Hearth and logo',
 	'f9b6730f' => 'Skip to content',

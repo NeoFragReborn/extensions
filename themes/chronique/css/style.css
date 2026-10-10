@@ -230,7 +230,10 @@ a:hover { color: var(--ch-texte); }
 .ch-compte .nav-link:focus-visible { outline: 2px solid var(--ch-sarcelle); outline-offset: 1px; }
 .ch-compte .avatar { width: 28px; height: 28px; }
 .ch-compte .nf-notif .nav-link { position: relative; }
-.ch-compte .nf-notif-badge { position: absolute; top: 0; right: 0; background: var(--ch-ocre-trait) !important; color: #fff !important; }
+/* L'ocre foncé, et non celui des traits : le chiffre blanc y restait à 3,66:1 de jour (check-demo-connecte, 2026-10-10) ;
+   de nuit l'ocre est clair, le chiffre devient sombre. */
+.ch-compte .nf-notif-badge { position: absolute; top: 0; right: 0; background: var(--ch-ocre) !important; color: #fff !important; }
+[data-theme="dark"] .ch-compte .nf-notif-badge { color: #15191b !important; }
 .ch-compte .dropdown-menu { min-width: 230px; }
 .ch-compte .fa-angle-down { font-size: 11px; color: var(--ch-doux); }
 .ch-compte .ch-connexion .fa-user { display: none; }

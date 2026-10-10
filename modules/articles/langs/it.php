@@ -99,7 +99,7 @@ return [
 	'6027fe7d' => 'Blog',
 	'2380f362' => 'Tutto',
 	'8088964a' => 'Visualizzazione',
-	'd3fe1369' => 'Palinsesto',
+	'd3fe1369' => 'Griglia',
 	'6844e87c' => 'Righe',
 	'1b148e6f' => 'Archivio',
 	'84a865b7' => 'Impaginazione dell\'elenco',

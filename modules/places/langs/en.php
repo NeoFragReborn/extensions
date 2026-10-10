@@ -51,7 +51,7 @@ return [
 	'52324908' => 'Category deleted.',
 	'7760702c' => 'New category',
 	'68e0de9d' => 'Edit the category',
-	'9e22fd9c' => 'Marker colour',
+	'9e22fd9c' => 'Marker color',
 	'ef99d01b' => 'Category created.',
 	'a90db1d4' => 'Category updated.',
 	'6a1c6a59' => 'Edit category: %s',

@@ -99,7 +99,7 @@ return [
 	'6027fe7d' => 'Blog',
 	'2380f362' => 'Todo',
 	'8088964a' => 'Visualización',
-	'd3fe1369' => 'Parrilla',
+	'd3fe1369' => 'Cuadrícula',
 	'6844e87c' => 'Líneas',
 	'1b148e6f' => 'Archivos',
 	'84a865b7' => 'Diseño de la lista',

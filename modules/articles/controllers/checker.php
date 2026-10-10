@@ -51,6 +51,10 @@ class Checker extends Module_Checker
 	{
 		if (($article = $this->_modele()->get_article($article_id)))
 		{
+			// Le titre de l'adresse n'est pas celui de la langue servie : 301 vers la bonne (elle répondait 200 à n'importe
+			// lequel, canonique sur l'adresse fautive).
+			nf_bon_titre((string) $title, (string) $article['title'], 'articles/'.(int) $article_id);
+
 			if (count_view('article', $article_id))
 			{
 				$this->_modele()->increment_views($article_id);
@@ -69,6 +73,8 @@ class Checker extends Module_Checker
 		{
 			return;
 		}
+
+		nf_bon_titre((string) $title, (string) $articles[0]['username'], 'articles/auteur/'.(int) $user_id, (string) $page);
 
 		[$donnees, $pagination] = $this->_paginer($articles, $page);
 
@@ -117,6 +123,8 @@ class Checker extends Module_Checker
 			return;
 		}
 
+		nf_bon_titre((string) $title, (string) $serie['title'], 'articles/serie/'.(int) $series_id);
+
 		return [$serie, $parties];
 	}
 
@@ -154,12 +162,15 @@ class Checker extends Module_Checker
 			return;
 		}
 
+		nf_bon_titre((string) $title, (string) $articles[0]['category_name'], 'articles/category/'.(int) $category_id, (string) $page);
+
 		[$donnees, $pagination] = $this->_paginer($articles, $page);
 
+		// Le titre de la catégorie dans la langue servie : la page prenait celui de l'adresse (« mises-a-jour »).
 		return [
 			$donnees,
 			$category_id,
-			$title,
+			(string) $articles[0]['category_title'],
 			$this->_barre($this->_modele()->get_articles()),
 			$pagination,
 		];

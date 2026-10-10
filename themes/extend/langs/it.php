@@ -69,4 +69,6 @@ return [
 	'5cbecf7b' => 'Chiudi il pannello',
 	'8b70c29d' => 'Schede',
 	'4cdefc5c' => 'Barra di stato',
+	'140fd0c2' => 'In primo piano',
+	'21480b4e' => 'Scopri',
 ];

@@ -17,6 +17,10 @@ class Checker extends Module_Checker
 		{
 			return;
 		}
+
+		// Le titre de l'adresse n'est pas le bon : 301 vers la bonne (elle répondait 200 à n'importe lequel).
+		nf_bon_titre((string) $title, (string) $cat['title'], 'classifieds/category/'.(int) $id);
+
 		return [$cat, $this->_categories(), $this->_ads((int)$id)];
 	}
 
@@ -39,6 +43,10 @@ class Checker extends Module_Checker
 		{
 			return;
 		}
+
+		// Le titre de l'adresse n'est pas le bon : 301 vers la bonne (elle répondait 200 à n'importe lequel), avant de
+		// compter une vue.
+		nf_bon_titre((string) $title, (string) $ad['title'], 'classifieds/'.(int) $id);
 
 		// Compteur de vues : on ne compte pas l'auteur (anti-gonflage), cf. politique vues du projet.
 		$viewer = NeoFrag()->user ? (int)NeoFrag()->user->id : 0;

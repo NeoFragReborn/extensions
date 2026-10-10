@@ -176,7 +176,9 @@ $nuit = function () use ($accent, $bg_color, $text_color) {
 	--fg-border:         #d9c7bd;
 	--fg-border-strong:  #bda69a;
 	--fg-text-strong:    #1c130f;
-	--fg-muted:          #7a6157;
+	/* 4,85:1 sur le fond de page, 4,67:1 sur les surfaces les plus sombres : #7a6157 restait à 4,46:1 (contrôle de mise
+	   en page, 2026-10-10). */
+	--fg-muted:          #735c52;
 	--fg-muted-2:        #a8928a;
 	--fg-on-accent:      <?php echo couleur_lisible_sur($accent) ?>;
 	--fg-or:             #9a4b16;
@@ -610,9 +612,11 @@ a:hover { color: var(--fg-link-hover); }
 }
 @keyframes fg-coulee { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
 .fg-foyer .widget-slider .carousel-caption p { color: #ead6cb; font-size: 15.5px; max-width: 54ch; margin: 0; }
-.fg-foyer .widget-slider .carousel-indicators { z-index: 3; justify-content: flex-end; margin: 0 26px 14px auto; }
+.fg-foyer .widget-slider .carousel-indicators { z-index: 3; justify-content: flex-end; margin: 0 26px 4px auto; }
+/* Un trait de 3 px, mais une cible pour le doigt : les bordures transparentes de Bootstrap, gardées, l'agrandissent à
+   24 × 23 px sans rien changer à ce qu'on voit (22 × 3 px au téléphone, 2026-10-10). */
 .fg-foyer .widget-slider .carousel-indicators [data-bs-target] {
-	width: 22px; height: 3px; border: 0; margin: 0 3px; opacity: 0.45;
+	width: 24px; height: 3px; border: 0; border-block: 10px solid transparent; background-clip: padding-box; margin: 0 3px; opacity: 0.45;
 	background: #ead6cb;
 	transition: opacity 200ms ease, background-color 200ms ease, width 200ms ease;
 }
@@ -694,10 +698,11 @@ a:hover { color: var(--fg-link-hover); }
 	/* Le pied laisse voir la coupe ET son filet (jusqu'à 12,7 px du coin). */
 	background: linear-gradient(315deg, transparent 12.7px, var(--fg-surface-2) 12.7px);
 }
-.card .card-footer a { font-family: var(--fg-font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-or); }
-.card .card-footer a:hover { color: var(--fg-accent-text); }
-.card .card-footer a.btn-primary, .card .card-footer a.btn-primary:hover { color: var(--fg-on-accent); }
-.card .card-footer a.btn-secondary { color: var(--fg-text); }
+/* Les LIENS du pied de carte, et non ses boutons : chaque bouton garde sa couleur — un bouton vert « Voir ma candidature »
+   portait le texte orange des liens, à 1,26:1 (check-mise-en-page, 2026-10-10). Les exceptions écrites une à une
+   (primaire, secondaire) en oubliaient les autres. */
+.card .card-footer a:not(.btn) { font-family: var(--fg-font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-or); }
+.card .card-footer a:not(.btn):hover { color: var(--fg-accent-text); }
 
 /* « Titre coloré » : un en-tête de lave, coupé avec la plaque. */
 .card.panel-header > .card-header {
@@ -1071,7 +1076,13 @@ body .widget-user .avatar, body .widget-user img.avatar {
 .card:has(.nf-espace-accueil) { --fg-fond: radial-gradient(60% 150% at 0% 0%, color-mix(in srgb, var(--fg-accent) 24%, transparent), transparent 72%) var(--fg-surface); }
 .nf-espace-accueil .avatar { box-shadow: 0 0 0 3px var(--fg-surface), 0 0 0 5px var(--fg-accent), 0 0 26px color-mix(in srgb, var(--fg-accent) 45%, transparent); }
 .nf-espace-accueil-nom h2 { font-size: 30px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
-.fg-page .nf-espace-menu { position: relative; isolation: isolate; background: none; border: 0; border-radius: 0; box-shadow: none; }
+/* Le menu garde la position du socle — collé sur ordinateur, ce qui suffit au décor découpé (::before) pour se caler.
+   Un `position: relative` partout réveillait le `top` prévu pour le menu collé : la bande du téléphone descendait de
+   73 px, sous la carte de la page qui la cachait, et le menu de l'ordinateur ne collait plus (2026-10-10). */
+.fg-page .nf-espace-menu { isolation: isolate; background: none; border: 0; border-radius: 0; box-shadow: none; }
+@media (max-width: 991.98px) {
+	.fg-page .nf-espace-menu { position: relative; top: auto; }
+}
 .fg-page .nf-espace-menu::before {
 	content: ""; position: absolute; inset: 0; z-index: -1;
 	background: var(--fg-surface);

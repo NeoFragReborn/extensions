@@ -31,28 +31,14 @@ jobs:
         with:
           path: extensions
 
-      # Tant que neofrag est privé, l'application de l'organisation le lit ; public, il se clone seul.
-      - name: Jeton de lecture de neofrag
-        id: jeton
-        if: ${{ vars.NF_APP_ID != '' }}
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ vars.NF_APP_ID }}
-          private-key: ${{ secrets.NF_APP_CLE }}
-          owner: NeoFragReborn
-          repositories: neofrag
-
       # Une VERSION publiée (une étiquette vX.Y.Z sur ce commit) se juge avec le neofrag de la même version :
       # les deux dépôts partent l'un après l'autre, et main peut porter encore la précédente (neofrag 1.2.26
       # testé avec les addons de la 1.2.25, le 2026-10-04). On attend l'étiquette jumelle, un quart d'heure
       # au plus ; hors version (une pull request), main.
       - name: La version de neofrag à cloner
         id: partenaire
-        env:
-          JETON: ${{ steps.jeton.outputs.token }}
         run: |
           acces="https://github.com"
-          [ -n "$JETON" ] && acces="https://x-access-token:${JETON}@github.com"
           # awk lit TOUTE la liste (sans `exit`) : sinon git reçoit SIGPIPE et `pipefail` fait échouer l'étape, au
           # hasard du débit (CI publique de neofrag rouge à la 1.2.32, 2026-10-06).
           version=$(git ls-remote --tags "https://github.com/${GITHUB_REPOSITORY}.git" 'v*' \
@@ -77,7 +63,6 @@ jobs:
           repository: NeoFragReborn/neofrag
           ref: ${{ steps.partenaire.outputs.ref }}
           path: neofrag
-          token: ${{ steps.jeton.outputs.token || github.token }}
 
       - uses: shivammathur/setup-php@v2
         with:

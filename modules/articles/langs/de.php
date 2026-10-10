@@ -99,7 +99,7 @@ return [
 	'6027fe7d' => 'Blog',
 	'2380f362' => 'Alle',
 	'8088964a' => 'Anzeige',
-	'd3fe1369' => 'Programm',
+	'd3fe1369' => 'Raster',
 	'6844e87c' => 'Zeilen',
 	'1b148e6f' => 'Archiv',
 	'84a865b7' => 'Layout der Liste',

@@ -392,4 +392,6 @@ return [
 	'8c15e247' => 'Una sanción de moderación del sitio te impide abrir un ticket.',
 	'43a698a5' => 'Una sanción de moderación del sitio te impide publicar un enlace: quítalo de tu ticket.',
 	'0c2bc997' => 'Vincule solo SU cuenta de Discord. Si alguien le ha enviado este enlace, esta cuenta de Discord es suya: publicaría con su nombre y recibiría los roles de sus grupos.',
+	'9329e419' => 'Conexión con Discord perdida desde hace %d s: reconectando…',
+	'1900fef3' => 'Conexión con Discord restablecida tras %d s.',
 ];

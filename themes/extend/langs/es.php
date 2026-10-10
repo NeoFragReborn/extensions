@@ -69,4 +69,6 @@ return [
 	'5cbecf7b' => 'Cerrar el panel',
 	'8b70c29d' => 'Pestañas',
 	'4cdefc5c' => 'Barra de estado',
+	'140fd0c2' => 'Destacado',
+	'21480b4e' => 'Descubrir',
 ];

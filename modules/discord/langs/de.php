@@ -392,4 +392,6 @@ return [
 	'8c15e247' => 'Eine Moderationsmaßnahme der Website hindert dich daran, ein Ticket zu eröffnen.',
 	'43a698a5' => 'Eine Moderationsmaßnahme der Website hindert dich daran, einen Link zu veröffentlichen: Entferne ihn aus deinem Ticket.',
 	'0c2bc997' => 'Verknüpfen Sie nur IHR Discord-Konto. Wenn Ihnen jemand diesen Link geschickt hat, gehört dieses Discord-Konto ihm: Er würde unter Ihrem Namen posten und die Rollen Ihrer Gruppen erhalten.',
+	'9329e419' => 'Verbindung zu Discord seit %d s verloren: Verbinde neu…',
+	'1900fef3' => 'Verbindung zu Discord nach %d s wiederhergestellt.',
 ];
