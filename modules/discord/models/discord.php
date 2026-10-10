@@ -754,9 +754,17 @@ class Discord extends Model
 		$this->nouvelle_version();
 	}
 
-	/** Le fil Discord d'un sujet, le message Discord d'un message — et l'inverse. */
-	public function lier(string $type, int $site_id, string $discord_id): void
+	/**
+	 * Le fil Discord d'un sujet, le message Discord d'un message — et l'inverse. Un lien déjà posé reste, sauf à le
+	 * `remplacer` : un ticket qui change de salon a un nouveau fil (bot 0.2.5, 2026-10-09).
+	 */
+	public function lier(string $type, int $site_id, string $discord_id, bool $remplacer = FALSE): void
 	{
+		if ($remplacer)
+		{
+			$this->db->where('type', $type)->where('site_id', $site_id)->delete('nf_discord_links');
+		}
+
 		$this->db->execute('INSERT IGNORE INTO nf_discord_links (type, site_id, discord_id) VALUES ("'.$this->db->escape_string($type).'", '.$site_id.', "'.$this->db->escape_string($discord_id).'")');
 	}
 

@@ -30,6 +30,13 @@ class Articles extends Module
 		];
 	}
 
+	/** Un article se montre s'il est publié, paru et hors de la corbeille (la règle de get_article()). */
+	public function contenu_visible(string $type, int $id): bool
+	{
+		return in_array($type, ['articles', 'article'], TRUE)
+			&& (bool) $this->db->select('1')->from('nf_articles')->where('article_id', $id)->where('deleted_at', NULL)->where('published', TRUE)->where('date <=', date('Y-m-d H:i:s'))->row();
+	}
+
 	/** URL publique d'un article (titre lu dans la langue courante). */
 	public function content_url($type, $id)
 	{

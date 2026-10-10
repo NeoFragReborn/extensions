@@ -128,7 +128,7 @@ class Payments extends Module
 			CURLOPT_POSTFIELDS     => http_build_query($params),
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_TIMEOUT        => 20,
-			CURLOPT_HTTPHEADER     => ['Authorization: Bearer '.$this->config->pay_stripe_secret],
+			CURLOPT_HTTPHEADER     => ['Authorization: Bearer '.$this->crypt->decrypt_secret($this->config->pay_stripe_secret)],
 		]);
 
 		$resp = curl_exec($ch);

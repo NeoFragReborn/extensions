@@ -48,4 +48,5 @@ return [
 	'4ceb7801' => 'Payment error.',
 	'e8567c20' => 'The points and VIP sold here are credited by the Gamification module, which is missing or disabled: purchases stay closed until it is installed and enabled.',
 	'e0c070fd' => 'The page has expired: reload it, then try again.',
+	'40b92a7e' => 'A key is saved, encrypted. Leave empty to keep it.',
 ];

@@ -82,6 +82,12 @@ class Checker extends Module_Checker
 
 	private function _can_view($ad)
 	{
+		// Une annonce d'un membre sous shadow ban ne se montre qu'à lui et aux modérateurs (audit du 2026-10-09).
+		if (in_array((int) $ad['user_id'], NeoFrag()->moderation->auteurs_masques(), TRUE))
+		{
+			return FALSE;
+		}
+
 		if (in_array($ad['status'], ['published', 'closed'], TRUE))
 		{
 			return TRUE;
@@ -120,6 +126,11 @@ class Checker extends Module_Checker
 		if ($category_id)
 		{
 			$db->where('a.category_id', $category_id);
+		}
+
+		if ($sans_masques = NeoFrag()->moderation->condition_sans_masques('a.user_id'))
+		{
+			$db->where($sans_masques);
 		}
 
 		return $db->order_by('a.created_at DESC')->limit(60)->get();

@@ -30,7 +30,9 @@ class Guestbook extends Module
 			'routes'      => [
 				''                            => 'index',
 				'admin{pages}'                => 'index',
-				'admin/{action}/{id}'         => '_action'
+				// `{action}` n'est pas un motif de route : approuver, rejeter ou supprimer un message menait à une page
+				// introuvable (audit du 2026-10-09). Les trois actions, nommées.
+				'admin/(approve|reject|delete)/{id}' => '_action'
 			]
 		];
 	}

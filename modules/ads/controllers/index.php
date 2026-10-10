@@ -22,7 +22,6 @@ class Index extends Controller_Module
 
 		$this->db->where('id', (int)$id)->update('nf_ads', ['clicks' => (int)$ad['clicks'] + 1]);
 
-		header('Location: '.$ad['url'], TRUE, 302);
-		exit;
+		nf_quitter_le_site((string) $ad['url']);
 	}
 }

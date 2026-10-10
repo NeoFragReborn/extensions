@@ -59,6 +59,12 @@ class Index extends Controller_Module
 
 		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(nf_texte($ad['description'])).'</div></div>';
 
+		// Signaler une annonce publiée (2026-10-09 : les petites annonces n'avaient pas de bouton).
+		if ($ad['status'] === 'published' && ($moderation = $this->module('moderation')) instanceof \NF\Modules\Moderation\Moderation)
+		{
+			$body .= '<div class="text-end mb-2">'.$moderation->report_button('classified', (int) $ad['id'], url('classifieds/'.$ad['id'].'/'.$slug), NULL, $ad['author_id'] ? (int) $ad['author_id'] : NULL).'</div>';
+		}
+
 		// Contact vendeur
 		if (!empty($ad['contact']))
 		{
@@ -111,6 +117,11 @@ class Index extends Controller_Module
 		$is_new = $ad === NULL;
 		$this->title($is_new ? $this->lang('Déposer une annonce') : $this->lang('Modifier l’annonce'))->icon('fas fa-bullhorn')->breadcrumb();
 
+		if ($bloque = $this->moderation->is_blocked_for((int) $this->user->id, 'classifieds.write'))
+		{
+			return $this->moderation->panneau($bloque, (string) ($is_new ? $this->lang('Déposer une annonce') : $this->lang('Modifier l’annonce')), 'fas fa-bullhorn');
+		}
+
 		$this->form()
 			 ->add_rules([
 				'category_id' => ['label' => $this->lang('Catégorie'), 'type' => 'select', 'values' => $cats, 'value' => $is_new ? key($cats) : $ad['category_id'], 'rules' => 'required'],
@@ -123,7 +134,10 @@ class Index extends Controller_Module
 			 ])
 			 ->add_submit($is_new ? $this->lang('Publier') : $this->lang('Enregistrer'), $is_new ? 'fas fa-bullhorn' : 'fas fa-check');
 
-		if ($this->form()->is_valid($post))
+		// L'adresse de l'image n'est pas un lien publié (elle s'affiche comme image) ; le contact, le titre et la description, si.
+		$refus = NULL;
+
+		if ($this->form()->is_valid($post) && !($refus = $this->moderation->lien_refuse((int) $this->user->id, $post['title'], $post['description'], $post['contact'] ?? NULL)))
 		{
 			$image = trim((string)($post['image'] ?? ''));
 			if ($image !== '' && !preg_match('#^https?://#i', $image))
@@ -158,6 +172,10 @@ class Index extends Controller_Module
 			NeoFrag()->db->where('id', $ad['id'])->update('nf_classifieds', $data);
 			notify($this->lang('Annonce modifiée.'));
 			redirect('classifieds/'.$ad['id'].'/'.url_title($post['title']));
+		}
+		else if ($refus)
+		{
+			$this->form()->error($refus['message'], 'description');
 		}
 
 		return $this->row($this->col($this->panel()->heading()->body($this->form()->display()))->size('col-12'));

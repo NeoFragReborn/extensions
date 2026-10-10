@@ -23,11 +23,20 @@ class Admin extends Controller_Module
 					'values'  => ['on' => $this->lang('Activer les paiements Stripe')]
 				],
 				'public' => ['label' => $this->lang('Clé publique (publishable)'), 'value' => $this->config->pay_stripe_public],
-				'secret' => ['label' => $this->lang('Clé secrète'),                'value' => $this->config->pay_stripe_secret],
+				// Les deux secrets ne se relisent plus (audit du 2026-10-09) : ils s'affichaient en clair dans la page, à qui
+				// regardait l'écran ou le code de la page. Enregistrés chiffrés, comme le mot de passe SMTP ; vide = gardé.
+				'secret' => [
+					'label'       => $this->lang('Clé secrète'),
+					'type'        => 'password',
+					'value'       => '',
+					'description' => $this->config->pay_stripe_secret ? $this->lang('Une clé est enregistrée, chiffrée. Laissez vide pour la garder.') : '',
+				],
 				'webhook_secret' => [
 					'label'       => $this->lang('Secret de signature du webhook'),
-					'value'       => $this->config->pay_stripe_webhook_secret,
-					'description' => $this->lang('Dans Stripe, crée un webhook sur <code>%s</code> pour l\'événement <code>checkout.session.completed</code>, et colle ici son secret de signature.', url('payments/webhook'))
+					'type'        => 'password',
+					'value'       => '',
+					'description' => $this->lang('Dans Stripe, crée un webhook sur <code>%s</code> pour l\'événement <code>checkout.session.completed</code>, et colle ici son secret de signature.', absolute_url('payments/webhook'))
+						.($this->config->pay_stripe_webhook_secret ? ' '.$this->lang('Une clé est enregistrée, chiffrée. Laissez vide pour la garder.') : ''),
 				],
 			])
 			->add_submit($this->lang('Enregistrer'))
@@ -36,9 +45,16 @@ class Admin extends Controller_Module
 		if ($form->is_valid($post))
 		{
 			$this	->config('pay_stripe_enabled',        in_array('on', (array)$post['enabled']), 'bool')
-					->config('pay_stripe_public',         $post['public'])
-					->config('pay_stripe_secret',         $post['secret'])
-					->config('pay_stripe_webhook_secret', $post['webhook_secret']);
+					->config('pay_stripe_public',         $post['public']);
+
+			// Un secret ne se réécrit que s'il est saisi (le formulaire rend NULL pour un champ vide).
+			foreach (['secret' => 'pay_stripe_secret', 'webhook_secret' => 'pay_stripe_webhook_secret'] as $champ => $reglage)
+			{
+				if (trim((string) ($post[$champ] ?? '')) !== '')
+				{
+					$this->config($reglage, $this->crypt->encrypt_secret(trim((string) $post[$champ])));
+				}
+			}
 
 			notify($this->lang('Réglages Stripe enregistrés'));
 			redirect('admin/payments');

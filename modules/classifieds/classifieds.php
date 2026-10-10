@@ -108,6 +108,12 @@ class Classifieds extends Module
 	 */
 	public function profil_membre($membre): array
 	{
+		// Un membre sous shadow ban : ses annonces ne se montrent pas aux autres (audit du 2026-10-09).
+		if (in_array((int) $membre->id, $this->moderation->auteurs_masques(), TRUE))
+		{
+			return [];
+		}
+
 		$annonces = (array) $this->db	->select('a.id', 'a.title', 'a.ad_type', 'a.price', 'a.created_at', 'c.title AS categorie')
 										->from('nf_classifieds a')
 										->join('nf_classifieds_categories c', 'c.id = a.category_id')

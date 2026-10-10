@@ -65,9 +65,9 @@ class Admin extends Controller_Module
 				$body .= '</div>';
 				$body .= '<div class="nf-content-card-foot">';
 				$body .= '<span class="nf-content-card-spacer"></span>';
-				if ($m['status'] !== 'approved') $body .= '<a class="btn btn-sm btn-outline-success" href="'.url('admin/guestbook/approve/'.$m['id']).'" title="'.$this->lang('Approuver').'"><i class="fas fa-check"></i></a>';
-				if ($m['status'] !== 'rejected') $body .= '<a class="btn btn-sm btn-outline-warning" href="'.url('admin/guestbook/reject/'.$m['id']).'" title="'.$this->lang('Rejeter').'"><i class="fas fa-ban"></i></a>';
-				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.url('admin/guestbook/delete/'.$m['id']).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
+				if ($m['status'] !== 'approved') $body .= '<a class="btn btn-sm btn-outline-success" href="'.$this->csrf_url('admin/guestbook/approve/'.$m['id']).'" title="'.$this->lang('Approuver').'"><i class="fas fa-check"></i></a>';
+				if ($m['status'] !== 'rejected') $body .= '<a class="btn btn-sm btn-outline-warning" href="'.$this->csrf_url('admin/guestbook/reject/'.$m['id']).'" title="'.$this->lang('Rejeter').'"><i class="fas fa-ban"></i></a>';
+				$body .= '<a class="btn btn-sm btn-outline-danger" href="'.$this->csrf_url('admin/guestbook/delete/'.$m['id']).'" data-confirm="'.nf_texte($this->lang('Supprimer ?')).'" title="'.$this->lang('Supprimer').'"><i class="far fa-trash-alt"></i></a>';
 				$body .= '</div>';
 				$body .= '</div>';
 			}
@@ -129,6 +129,9 @@ class Admin extends Controller_Module
 
 	public function _action($action, $id)
 	{
+		// Un lien qui modifie : son jeton, sans quoi un lien piégé le déclenchait chez un modérateur connecté.
+		$this->check_csrf('admin/guestbook');
+
 		if ($action === 'delete')
 		{
 			NeoFrag()->db->where('id', $id)->delete('nf_guestbook');

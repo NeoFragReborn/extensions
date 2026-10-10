@@ -27,6 +27,9 @@ $reprendre = $reprendre ?? '';
 </div>
 <?php if ($connecte): ?>
 <p><?php echo $this->lang('Une fois vos comptes reliés, ce que vous écrivez depuis Discord paraît sur le forum sous votre compte du site, et le serveur Discord vous donne les rôles de vos groupes.') ?></p>
+<?php /* Un lien de liaison qu'un autre a obtenu par /forum account link relierait SON compte Discord au vôtre (audit du
+         2026-10-09) : on le dit avant le bouton. */ ?>
+<div class="alert alert-warning"><?php echo icon('fas fa-triangle-exclamation').' '.$this->lang('Ne reliez que VOTRE compte Discord. Si quelqu’un vous a envoyé ce lien, ce compte Discord est le sien : il publierait sous votre nom et recevrait les rôles de vos groupes.') ?></div>
 <div class="d-flex flex-wrap gap-2">
 	<?php if ($reprendre !== ''): ?>
 	<a class="btn btn-primary" href="<?php echo $reprendre ?>"><?php echo icon('fas fa-link').' '.$this->lang('Relier, et reprendre à mon nom mes %d message(s) publiés depuis Discord', $messages) ?></a>

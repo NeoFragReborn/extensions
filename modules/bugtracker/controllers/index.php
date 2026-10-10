@@ -54,6 +54,11 @@ class Index extends Controller_Module
 	{
 		$this->title($this->lang('Nouveau ticket'))->icon('fas fa-plus')->breadcrumb();
 
+		if ($bloque = $this->moderation->is_blocked_for((int) $this->user->id, 'bugtracker.write'))
+		{
+			return $this->moderation->panneau($bloque, (string) $this->lang('Nouveau ticket'), 'fas fa-plus');
+		}
+
 		$this->form()
 			 ->add_rules([
 				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'rules' => 'required'],
@@ -64,12 +69,18 @@ class Index extends Controller_Module
 			 ])
 			 ->add_submit($this->lang('Créer le ticket'), 'fas fa-plus');
 
-		if ($this->form()->is_valid($post))
+		$refus = NULL;
+
+		if ($this->form()->is_valid($post) && !($refus = $this->moderation->lien_refuse((int) $this->user->id, $post['title'], $post['description'])))
 		{
 			$ticket_id = $this->_modele()->creer_ticket((string) $post['title'], (string) $post['description'], (string) $post['type'], (string) $post['priority'], (int) $this->user->id);
 
 			notify($this->lang('Ticket créé.'));
 			redirect('bugtracker/'.$ticket_id.'/'.url_title($post['title']));
+		}
+		else if ($refus)
+		{
+			$this->form()->error($refus['message']);
 		}
 
 		// « Déjà signalé ? » : js/similaires.js place cette boîte sous le titre et la remplit pendant la frappe.
@@ -114,6 +125,13 @@ class Index extends Controller_Module
 		}
 		$body .= '</div>';
 		$body .= '<div class="card mb-3"><div class="card-body">'.nl2br(nf_texte($ticket['description'])).'</div></div>';
+
+		// Signaler un ticket, ou l'un de ses commentaires (2026-10-09 : le Bugtracker n'avait pas de bouton).
+		$moderation = $this->module('moderation');
+		$adresse    = url('bugtracker/'.$ticket['id'].'/'.url_title($ticket['title']));
+		$signaler   = fn (string $type, int $id, ?int $auteur): string => $moderation instanceof \NF\Modules\Moderation\Moderation ? $moderation->report_button($type, $id, $adresse, NULL, $auteur) : '';
+
+		$body .= '<div class="text-end">'.$signaler('bug_ticket', (int) $ticket['id'], $ticket['reporter_id'] ? (int) $ticket['reporter_id'] : NULL).'</div>';
 		$body .= '</div>';
 
 		// Comments
@@ -128,7 +146,7 @@ class Index extends Controller_Module
 			{
 				$author = $c['user_id'] ? $this->user->link($c['user_id'], $c['username']) : (!empty($c['author_name']) ? icon('fab fa-discord').' '.nf_texte($c['author_name']) : '<i>'.$this->lang('Anonyme').'</i>');
 				$body .= '<div class="card mb-2"><div class="card-body py-2">';
-				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.nf_date_heure($c['ts']).'</small></div>';
+				$body .= '<div class="d-flex justify-content-between mb-1"><strong>'.$author.'</strong><small class="text-muted">'.nf_date_heure($c['ts']).$signaler('bug_comment', (int) $c['id'], $c['user_id'] ? (int) $c['user_id'] : NULL).'</small></div>';
 				$body .= '<div>'.nl2br(nf_texte($c['content'])).'</div>';
 				$body .= '</div></div>';
 			}
@@ -154,7 +172,13 @@ class Index extends Controller_Module
 	public function _comment($ticket)
 	{
 		$content = trim($_POST['content'] ?? '');
-		if ($content !== '')
+		$bloque  = $this->moderation->is_blocked_for((int) $this->user->id, 'bugtracker.write') ?: $this->moderation->lien_refuse((int) $this->user->id, $content);
+
+		if ($bloque)
+		{
+			notify($bloque['message'], 'danger');
+		}
+		else if ($content !== '')
 		{
 			$this->_modele()->commenter((int) $ticket['id'], (int) $this->user->id, $content);
 			notify($this->lang('Commentaire ajouté.'));

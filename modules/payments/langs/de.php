@@ -48,4 +48,5 @@ return [
 	'4ceb7801' => 'Zahlungsfehler.',
 	'e8567c20' => 'Die hier verkauften Punkte und VIP-Tage werden vom Modul Gamification gutgeschrieben, das fehlt oder deaktiviert ist: Käufe bleiben geschlossen, bis es installiert und aktiviert ist.',
 	'e0c070fd' => 'Die Seite ist abgelaufen: Lade sie neu und versuche es dann erneut.',
+	'40b92a7e' => 'Ein Schlüssel ist verschlüsselt gespeichert. Leer lassen, um ihn zu behalten.',
 ];

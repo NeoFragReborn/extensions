@@ -48,4 +48,5 @@ return [
 	'4ceb7801' => 'Error de pago.',
 	'e8567c20' => 'Los puntos y el VIP que se venden aquí los acredita el módulo Gamificación, ausente o desactivado: las compras siguen cerradas mientras no esté instalado y activado.',
 	'e0c070fd' => 'La página ha caducado: recárgala y vuelve a intentarlo.',
+	'40b92a7e' => 'Hay una clave guardada, cifrada. Déjelo vacío para conservarla.',
 ];

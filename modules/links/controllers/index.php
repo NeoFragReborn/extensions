@@ -56,7 +56,6 @@ class Index extends Controller_Module
 			redirect('links');
 		}
 
-		header('Location: '.$link['url'], TRUE, 302);
-		exit;
+		nf_quitter_le_site((string) $link['url'], 'links');
 	}
 }

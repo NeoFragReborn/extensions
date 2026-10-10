@@ -5,6 +5,12 @@ use NF\NeoFrag\Loadables\Controllers\Module as Controller_Module;
 
 class Index extends Controller_Module
 {
+	/** Le bouton « Signaler » de la modération, s'il est là. */
+	private function moderation_signaler(string $type, int $id, string $adresse, ?int $auteur): string
+	{
+		return ($moderation = $this->module('moderation')) instanceof \NF\Modules\Moderation\Moderation ? $moderation->report_button($type, $id, $adresse, NULL, $auteur) : '';
+	}
+
 	public function index($messages)
 	{
 		$this	->title($this->lang('Livre d\'or'))
@@ -12,6 +18,9 @@ class Index extends Controller_Module
 				->breadcrumb();
 
 		$user = $this->user();
+
+		// Une sanction qui ferme le livre d'or (son bannissement, celui du site) : l'avis à la place du formulaire.
+		$bloque = $user ? $this->moderation->is_blocked_for((int) $user->id, 'guestbook.write') : NULL;
 
 		// Form
 		$rate_limit = new \NF\NeoFrag\Libraries\Rate_Limit($this);
@@ -33,17 +42,21 @@ class Index extends Controller_Module
 			 ])
 			 ->add_submit($this->lang('Signer le livre d\'or'), 'fas fa-pen');
 
-		if ($this->form()->is_valid($post))
+		if (!$bloque && $this->form()->is_valid($post))
 		{
-			$check = $rate_limit->check('guestbook:ip:'.$ip);
+			$check = $rate_limit->check('guestbook:ip:'.\NF\NeoFrag\Libraries\Rate_Limit::bloc_ip($ip));
 
-			if (!$check['allowed'])
+			if ($refus = $this->moderation->lien_refuse($user ? (int) $user->id : 0, $post['name'], $post['message']))
+			{
+				$this->form()->error($refus['message']);
+			}
+			else if (!$check['allowed'])
 			{
 				$this->form()->error($this->lang('Trop de messages récents. Réessaye dans %d minute(s).', ceil($check['retry_after'] / 60)));
 			}
 			else
 			{
-				$rate_limit->hit('guestbook:ip:'.$ip, 3, 600, 1800);
+				$rate_limit->hit('guestbook:ip:'.\NF\NeoFrag\Libraries\Rate_Limit::bloc_ip($ip), 3, 600, 1800);
 
 				NeoFrag()->db->insert('nf_guestbook', [
 					'user_id'    => $user ? $user->id : NULL,
@@ -59,7 +72,7 @@ class Index extends Controller_Module
 		}
 
 		// Render messages list
-		$body = '<div class="mb-4">'.$this->form()->display().'</div>';
+		$body = '<div class="mb-4">'.($bloque ? $this->moderation->avis($bloque) : $this->form()->display()).'</div>';
 		$body .= '<hr>';
 
 		if (empty($messages))
@@ -81,7 +94,9 @@ class Index extends Controller_Module
 					.'<div class="card-body">'
 					.'<div class="d-flex justify-content-between mb-1">'
 					.'<span>'.$display_name.'</span>'
-					.'<small class="text-muted">'.timetostr('j M Y H:i', $m['ts']).'</small>'
+					.'<small class="text-muted">'.timetostr('j M Y H:i', $m['ts'])
+					// Signaler un message (2026-10-09 : le livre d'or n'avait pas de bouton).
+					.$this->moderation_signaler('guestbook', (int) $m['id'], url('guestbook'), $m['user_id'] ? (int) $m['user_id'] : NULL).'</small>'
 					.'</div>'
 					.'<p class="mb-0">'.nl2br(nf_texte($m['message'])).'</p>'
 					.'</div>'

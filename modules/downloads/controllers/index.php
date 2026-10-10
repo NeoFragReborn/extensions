@@ -63,7 +63,6 @@ class Index extends Controller_Module
 			redirect('downloads');
 		}
 
-		header('Location: '.$file['file_url'], TRUE, 302);
-		exit;
+		nf_quitter_le_site((string) $file['file_url'], 'downloads');
 	}
 }

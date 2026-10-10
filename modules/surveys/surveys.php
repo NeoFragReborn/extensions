@@ -62,7 +62,9 @@ class Surveys extends Module
 	 */
 	public static function ip_hash()
 	{
-		$ip = \NF\NeoFrag\Libraries\Rate_Limit::client_ip();
+		// Une adresse IPv6 compte pour son réseau /64, comme une adresse IPv4 derrière une box : sinon chaque adresse
+		// tirée dans ce réseau votait une fois de plus (audit du 2026-10-09).
+		$ip = \NF\NeoFrag\Libraries\Rate_Limit::bloc_ip();
 		return hash('sha256', 'survey-salt:'.$ip);
 	}
 

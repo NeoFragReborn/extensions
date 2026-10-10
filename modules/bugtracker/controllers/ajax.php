@@ -30,7 +30,7 @@ class Ajax extends Controller_Module
 
 		// Point d'entrée public et LIKE non indexé : la même limite légère que la recherche du site.
 		$limite = new \NF\NeoFrag\Libraries\Rate_Limit($this);
-		$cle    = 'bugtracker_similaires:ip:'.\NF\NeoFrag\Libraries\Rate_Limit::client_ip();
+		$cle    = 'bugtracker_similaires:ip:'.\NF\NeoFrag\Libraries\Rate_Limit::bloc_ip();
 
 		if (!$limite->check($cle)['allowed'])
 		{

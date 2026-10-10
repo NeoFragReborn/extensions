@@ -24,6 +24,12 @@ class Checker extends Module_Checker
 			NeoFrag()->db->where('t.type', $type);
 		}
 
+		// Ni les tickets d'un membre sous shadow ban (audit du 2026-10-09).
+		if ($sans_masques = NeoFrag()->moderation->condition_sans_masques('t.user_id'))
+		{
+			NeoFrag()->db->where($sans_masques);
+		}
+
 		return [NeoFrag()->db->get(), $type];
 	}
 
@@ -43,12 +49,21 @@ class Checker extends Module_Checker
 								->row();
 		if (empty($ticket)) return;
 
-		$comments = NeoFrag()->db	->select('c.*', 'u.username', 'u.id AS user_id', 'UNIX_TIMESTAMP(c.created_at) AS ts')
+		// Ouvert par un membre sous shadow ban : introuvable pour les autres ; ses commentaires ne se montrent pas
+		// (audit du 2026-10-09).
+		$masques = NeoFrag()->moderation->auteurs_masques();
+
+		if ($ticket['user_id'] && in_array((int) $ticket['user_id'], $masques, TRUE))
+		{
+			return;
+		}
+
+		$comments = NeoFrag()->moderation->sans_masques((array) NeoFrag()->db	->select('c.*', 'u.username', 'u.id AS user_id', 'UNIX_TIMESTAMP(c.created_at) AS ts')
 									->from('nf_bug_comments c')
 									->join('nf_user u', 'c.user_id = u.id', 'LEFT')
 									->where('c.ticket_id', $ticket_id)
 									->order_by('c.created_at ASC')
-									->get();
+									->get());
 
 		return [$ticket, $comments];
 	}

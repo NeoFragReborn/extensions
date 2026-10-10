@@ -24,7 +24,7 @@ class Ads extends Widget
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
-			'requires'    => [],
+			'requires'    => ['ads'],
 			'version'     => '1.0',
 			'depends'     => ['neofrag' => '1.0.0']
 		];

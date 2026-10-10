@@ -123,10 +123,12 @@ class Discord extends Module
 			$this->lang('Bugtracker'),
 			$this->lang('Chaque ticket du Bugtracker devient un fil d’un salon Forum : son type et son statut en sont les étiquettes, les commentaires passent dans les deux sens, et /bug ou /idee ouvrent un ticket depuis Discord.'),
 			$this->lang('Salon Forum des tickets'),
-			$this->lang('Chaque ticket y devient un fil. Le bot y crée les étiquettes des types et des statuts.'),
+			$this->lang('Chaque ticket y devient un fil — les idées vont dans le salon des suggestions, s’il est choisi. Le bot y crée les étiquettes des types et des statuts.'),
+			$this->lang('Salon Forum des suggestions'),
+			$this->lang('Facultatif : les tickets de type « Idée » y ont leur fil, à part des bogues. Un ticket qui change de type change de salon.'),
 			$this->lang('Proposer /bug et /idee pour ouvrir un ticket depuis Discord'),
 			$this->lang('Donner aussi un fil aux tickets encore ouverts'),
-			$this->lang('Au démarrage du bot et quand le salon change : les tickets ouverts qui n’ont pas encore de fil en reçoivent un.'),
+			$this->lang('Au démarrage du bot et quand un salon change : les tickets ouverts qui n’ont pas encore de fil en reçoivent un, et ceux qui ne sont pas dans le salon de leur type le rejoignent.'),
 			$this->lang('Bugtracker : le ticket n° %d est publié sur Discord.'),
 			$this->lang('Bugtracker : le ticket n° %d est supprimé sur le site, son fil aussi.'),
 			$this->lang('Bugtracker : le fil « %s » devient le ticket n° %d.'),
@@ -134,10 +136,17 @@ class Discord extends Module
 			$this->lang('Bugtracker : choisissez le salon Forum des tickets dans l’administration (Discord → Fonctionnalités → Bugtracker).'),
 			$this->lang('Bugtracker : le salon choisi n’existe plus ou n’est pas un salon Forum.'),
 			$this->lang('Bugtracker : le salon « %s » est déjà relié à un forum du site ; choisissez-en un autre pour les tickets.'),
-			$this->lang('Bugtracker : étiquettes créées dans le salon : %s.'),
+			$this->lang('Bugtracker : le salon des suggestions est celui des tickets ; les idées restent avec les tickets.'),
+			$this->lang('Bugtracker : le salon « %s » est déjà relié à un forum du site ; choisissez-en un autre pour les suggestions.'),
+			$this->lang('Bugtracker : le salon des suggestions n’existe plus ou n’est pas un salon Forum ; les idées restent avec les tickets.'),
+			$this->lang('Bugtracker : étiquettes créées dans le salon « %s » : %s.'),
+			$this->lang('Bugtracker : le ticket n° %d change de salon : %s.'),
+			$this->lang('Bugtracker : le site garde le premier fil du ticket n° %d ; mettez NeoFrag Reborn à jour pour qu’un ticket change de salon.'),
 			$this->lang('Bugtracker : %s'),
 			$this->lang('Bugtracker : la clé d’accès du bot n’a pas les droits du Bugtracker ; créez-en une nouvelle dans l’administration (Discord → Clé d’accès du bot).'),
 			$this->lang('Bugtracker : le Bugtracker n’est pas installé sur le site.'),
+			$this->lang('Bugtracker : un message de %s n’est pas recopié sur le ticket n° %d, une sanction de modération du site l’en empêche (%s).'),
+			$this->lang('Bugtracker : le fil « %s » de %s ne devient pas un ticket, une sanction de modération du site l’en empêche (%s).'),
 			$this->lang('Compte et apparence'),
 			$this->lang('La commande /forum : relier ou délier son compte Discord depuis Discord, et choisir comment on apparaît sur le forum sans compte relié.'),
 			$this->lang('Proposer /forum visibility : choisir son apparence sur le forum sans compte relié'),
@@ -146,6 +155,8 @@ class Discord extends Module
 			$this->lang('Relie chaque forum du site à un salon Forum de Discord : sujets, réponses, modifications et suppressions passent d’un côté à l’autre.'),
 			$this->lang('Sous chaque sujet recopié sur Discord, un lien vers le site'),
 			$this->lang('Au démarrage, rattraper ce qui s’est écrit sur Discord pendant que le bot était éteint'),
+			$this->lang('Accorder les permissions des salons reliés aux droits de leur forum sur le site'),
+			$this->lang('Qui ne peut pas lire un forum ne voit pas son salon ; qui ne peut pas y écrire n’y poste pas (en mode « tout »). Tout le serveur compte comme les membres du site ; un rôle relié, comme son groupe.'),
 			$this->lang('Forum : %s'),
 			$this->lang('Forum : le sujet « %s » est publié sur Discord.'),
 			$this->lang('Forum : le sujet n° %d est supprimé sur le site, son fil « %s » aussi sur Discord.'),
@@ -160,10 +171,18 @@ class Discord extends Module
 			$this->lang('Forum : le salon relié au forum n° %d n’existe plus sur le serveur.'),
 			$this->lang('Forum : le salon « %s » n’est pas un salon Forum ; seul un salon Forum peut être relié à un forum du site.'),
 			$this->lang('Forum : dans le salon « %s », il manque au bot les permissions : %s.'),
+			$this->lang('Forum : les permissions du salon « %s » suivent les droits de son forum sur le site.'),
+			$this->lang('Forum : les permissions du salon « %s » ne suivent pas les droits de son forum — %s'),
+			$this->lang('Forum : le fil « %s » de %s n’est pas recopié, son auteur n’a pas le droit d’écrire dans ce forum du site.'),
+			$this->lang('Forum : les réponses de %s ne sont pas recopiées dans le sujet n° %d, il n’a pas le droit d’écrire dans ce forum du site.'),
+			$this->lang('Forum : le fil « %s » de %s n’est pas recopié, une sanction de modération du site l’en empêche (%s).'),
+			$this->lang('Forum : une réponse de %s n’est pas recopiée dans le sujet n° %d, une sanction de modération du site l’en empêche (%s).'),
 			$this->lang('Forum : %d salon(s) relié(s) à un forum du site.'),
 			$this->lang('Rôles et pseudos'),
 			$this->lang('Donne aux membres qui ont lié leur compte Discord les rôles reliés à leurs groupes, et leur pseudo du site s’ils le veulent.'),
 			$this->lang('Donner aux membres liés leur pseudo du site sur le serveur'),
+			$this->lang('Donner aux rôles reliés le nom et la couleur de leur groupe'),
+			$this->lang('Le site fait foi : un groupe renommé ou recoloré l’est aussi sur le serveur. Un rôle relié à plusieurs groupes garde les siens.'),
 			$this->lang('Minutes entre deux passages sur tous les membres'),
 			$this->lang('Un changement de groupe est appliqué tout de suite ; ce passage rattrape le reste (un pseudo changé, un compte lié).'),
 			$this->lang('Rôles de %s (arrivée) : %s'),
@@ -176,6 +195,8 @@ class Discord extends Module
 			$this->lang('Le rôle relié au groupe « %s » n’existe plus sur le serveur : défaites ou refaites la correspondance dans l’administration.'),
 			$this->lang('Le rôle « %s » est tenu par une intégration : Discord interdit de le donner.'),
 			$this->lang('Le rôle « %s » est au-dessus du rôle du bot : dans les réglages du serveur (Rôles), placez le rôle du bot plus haut.'),
+			$this->lang('Rôle « %s » : nom et couleur repris du groupe « %s » du site.'),
+			$this->lang('Rôle « %s » : nom et couleur non repris de son groupe — %s'),
 			$this->lang('Rôles et pseudos : %d échec(s) — %s. Le rôle du bot doit être placé au-dessus des rôles qu’il donne et des membres qu’il renomme.'),
 			$this->lang('Rôles temporaires'),
 			$this->lang('La commande /role : donner un rôle pour un temps limité — une sanction, un accès d’essai, un rôle d’événement. Le bot le retire à la fin, même après un redémarrage.'),
@@ -239,13 +260,18 @@ class Discord extends Module
 			$this->lang('Titre'),
 			$this->lang('Description'),
 			$this->lang('Ce qui se passe, ce qui était attendu, comment le reproduire.'),
+			$this->lang('Ton idée, et ce qu’elle apporterait au site.'),
 			$this->lang('Ticket n° %d ouvert : %s'),
 			$this->lang('La discussion continue dans %s.'),
 			$this->lang('Un ticket appartient à un membre du site : relie d’abord ton compte avec /forum account link.'),
+			$this->lang('Une sanction de modération du site t’empêche d’ouvrir un ticket.'),
+			$this->lang('Une sanction de modération du site t’empêche de publier un lien : retire-le de ton ticket.'),
 			$this->lang('Pour que ce signalement aille dans le Bugtracker du site, relie ton compte avec /forum account link, puis utilise /bug ou /idee.'),
 			$this->lang('Ce fil est maintenant le ticket n° %d du Bugtracker : %s'),
 			$this->lang('Ticket n° %d · %s · priorité %s'),
 			$this->lang('Doublon du ticket n° %d : %s'),
+			$this->lang('Ce ticket est maintenant du type « %s » : la discussion continue dans %s.'),
+			$this->lang('Ce ticket a changé de salon : sa discussion précédente est dans %s.'),
 			$this->lang('Bogue'),
 			$this->lang('Idée'),
 			$this->lang('Question'),
@@ -302,6 +328,77 @@ class Discord extends Module
 		$nom = trim((string) preg_replace(['/[^\p{L}\p{N}_-]+/u', '/-{2,}/'], ['-', '-'], mb_strtolower($titre)), '-');
 
 		return mb_substr($nom, 0, 100) ?: 'forum';
+	}
+
+	/**
+	 * Les groupes du site tels que Discord les montre, sans les visiteurs : leur nom en clair — le site range ses textes
+	 * codés pour le web — et leur couleur en hexadécimal (NULL : celle de Discord). La mise en place en tire ses rôles,
+	 * et le bot donne aux rôles reliés le nom et la couleur de leur groupe (bot 0.2.5).
+	 *
+	 * @return array<string, array{nom: string, couleur: ?string}>
+	 */
+	public function groupes_pour_discord(): array
+	{
+		$groupes = [];
+		$coeur   = NeoFrag()->groups;
+
+		foreach ($coeur instanceof \NF\NeoFrag\Core\Groups ? (array) $coeur() : [] as $cle => $g)
+		{
+			if ((string) $cle !== 'visitors')
+			{
+				$groupes[(string) $cle] = [
+					'nom'     => html_entity_decode((string) ($g['title'] ?? $cle), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+					'couleur' => self::couleur_hexadecimale((string) ($g['color'] ?? '')),
+				];
+			}
+		}
+
+		return $groupes;
+	}
+
+	/**
+	 * Ce que chaque groupe peut faire dans le forum de chaque salon relié — le lire, y écrire —, d'après les droits de sa
+	 * catégorie : le bot en tire les permissions du salon (bot 0.2.5). Les membres valent pour quiconque est sur le
+	 * serveur Discord : le rejoindre, c'est comme s'inscrire ; une catégorie réservée aux VIP leur est donc fermée. Les
+	 * autres groupes sont ceux qu'un rôle relie.
+	 *
+	 * @param list<array{channel_id: string, forum_id: int}> $salons
+	 * @param list<string>                                   $groupes les groupes reliés à un rôle
+	 * @return array<string, array<string, array{read: bool, write: bool}>> salon => groupe => droits
+	 */
+	public function droits_des_salons(array $salons, array $groupes): array
+	{
+		$forum  = NeoFrag()->module('forum');
+		$modele = $forum ? $forum->model('forum') : NULL;
+		$acces  = NeoFrag()->access;
+		$droits = [];
+
+		if (!$modele instanceof \NF\Modules\Forum\Models\Forum) // couplage: forum — sans lui, aucun salon n'est relié et rien n'est rendu
+		{
+			return [];
+		}
+
+		foreach ($salons as $salon)
+		{
+			$categorie = $modele->categorie_du_forum((int) $salon['forum_id']);
+
+			if ($categorie === NULL)
+			{
+				continue;
+			}
+
+			foreach (array_unique(array_merge(['members'], array_map('strval', $groupes))) as $groupe)
+			{
+				$ferme = $groupe === 'members' && $categorie['vip_only'];
+
+				$droits[(string) $salon['channel_id']][$groupe] = [
+					'read'  => !$ferme && $acces->can_for_group($groupe, 'forum.category_read', $categorie['category_id']),
+					'write' => !$ferme && $acces->can_for_group($groupe, 'forum.category_write', $categorie['category_id']),
+				];
+			}
+		}
+
+		return $droits;
 	}
 
 	/** Une couleur de groupe (« danger », « blue », « #ff8800 ») en hexadécimal pour Discord ; NULL si elle n'en a pas. */

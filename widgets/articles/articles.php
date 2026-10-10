@@ -16,7 +16,7 @@ class Articles extends Widget
 			// Decouplage du paquet : cf. tools/check-addon-declarations.php.
 			'core'        => FALSE,
 			'presets'     => [],
-			'requires'    => [],
+			'requires'    => ['articles'],
 			'version' => '1.1',
 			'link'        => 'https://neofrag-reborn.xyz',
 			'depends' => ['neofrag' => '0.2.0'],

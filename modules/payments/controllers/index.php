@@ -46,7 +46,7 @@ class Index extends Controller_Module
 		$payload = file_get_contents('php://input');
 		$sig     = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
 
-		if (!$pay instanceof \NF\Modules\Payments\Payments || !$pay->verify_signature($payload, $sig, $this->config->pay_stripe_webhook_secret))
+		if (!$pay instanceof \NF\Modules\Payments\Payments || !$pay->verify_signature($payload, $sig, $this->crypt->decrypt_secret($this->config->pay_stripe_webhook_secret)))
 		{
 			http_response_code(400);
 			echo 'invalid signature';

@@ -908,10 +908,9 @@ class Admin extends Controller_Module
 	/** La couleur d'un groupe en hexadécimal, pour le rôle qui lui correspond (NULL : la couleur par défaut de Discord). */
 	private function _couleur_du_groupe(string $cle): ?string
 	{
-		$coeur   = NeoFrag()->groups;
-		$couleur = $coeur instanceof \NF\NeoFrag\Core\Groups ? (string) (((array) $coeur())[$cle]['color'] ?? '') : '';
+		$module = $this->module('discord');
 
-		return Discord::couleur_hexadecimale($couleur);
+		return $module instanceof Discord ? ($module->groupes_pour_discord()[$cle]['couleur'] ?? NULL) : NULL;
 	}
 
 	/** Un texte déclaré par le bot, traduit si le module le connaît. */
