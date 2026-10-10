@@ -866,11 +866,23 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 		background: #0e110b;
 		border-top: 3px solid #101010;
 	}
-	.bc-objets .widget-navigation .nav { flex: 1 1 auto; justify-content: space-between; overflow-x: auto; scrollbar-width: none; border-width: 0; background: none; box-shadow: none; padding: 6px 0 0; }
+	/* La barre occupe toute la largeur, et ses cases se la partagent à parts égales. Ses enveloppes (rangée, colonne,
+	   widget, carte) gardaient la largeur de leur contenu : sept cases de 47 px quel que soit l'écran, un vide à droite,
+	   et « Nouvelles » qui débordait de la sienne (signalé sur la démo, au téléphone, le 2026-10-09). */
+	.bc-objets { padding-left: 4px; padding-right: 4px; }
+	.bc-objets > *, .bc-objets .row, .bc-objets .row > [class*="col-"], .bc-objets .row > .col, .bc-objets .widget, .bc-objets .card, .bc-objets .card-body, .bc-objets .nf-nav-repliable { flex: 1 1 auto; width: 100%; min-width: 0; }
+	.bc-objets .widget-navigation .nav { flex: 1 1 auto; width: 100%; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; border-width: 0; background: none; box-shadow: none; padding: 6px 0 0; }
 	.bc-objets .widget-navigation .nav::-webkit-scrollbar { display: none; }
-	.bc-objets .widget-navigation .nav-item { flex: 1 1 0; min-width: 0; }
-	/* Sept cases sur la largeur d'un téléphone : un nom de deux mots passe sur deux lignes (« Mon / espace »). */
-	.bc-objets .widget-navigation .nav-link { justify-content: flex-start; height: 100%; min-width: 0; padding: 5px 1px 4px; border: 2px solid #101010; font-size: 14px; letter-spacing: 0; white-space: normal; overflow-wrap: normal; }
+	/* Au-delà de ce que l'écran tient, la barre défile plutôt que d'écraser ses cases. */
+	.bc-objets .widget-navigation .nav-item { flex: 1 1 0; min-width: 46px; }
+	/* Le nom suit la largeur de l'écran (12 px sur 360, 14 px au-delà de 420) ; un nom de deux mots passe sur deux
+	   lignes (« Mon / espace »), un mot trop long se coupe au trait d'union plutôt que de déborder de la case : celui que
+	   portent les mots longs des traductions du menu (« Neuig-keiten », widgets/navigation/langs), sinon celui que le
+	   navigateur sait placer dans la langue de la page. Les icônes restent alignées en haut. */
+	/* La case choisie garde son cadre blanc de 3 px, mais dans sa BORDURE (2 px) plus un trait : une ombre intérieure de
+	   3 px se peignait sur la marge, et un nom qui remplissait la case touchait le cadre (« Startseite »). */
+	.bc-objets .widget-navigation .nav-link.active { border-color: #ffffff; box-shadow: inset 0 0 0 1px #ffffff; }
+	.bc-objets .widget-navigation .nav-link { justify-content: flex-start; gap: 3px; height: 100%; min-width: 0; padding: 6px 2px 5px; border: 2px solid #101010; font-size: clamp(12px, 3.3vw, 14px); line-height: 0.95; letter-spacing: 0; white-space: normal; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
 	.bc-corps { grid-template-columns: minmax(0, 1fr); }
 	.card > .card-header { padding: 14px 14px 0; }
 	.card > .card-header::before { width: 24px; height: 24px; }
