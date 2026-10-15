@@ -6,6 +6,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `nf_surveys_votes`;
+DROP TABLE IF EXISTS `nf_surveys_options_lang`;
+DROP TABLE IF EXISTS `nf_surveys_lang`;
 DROP TABLE IF EXISTS `nf_surveys_options`;
 DROP TABLE IF EXISTS `nf_surveys`;
 

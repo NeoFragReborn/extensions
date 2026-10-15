@@ -43,14 +43,27 @@ class Articles extends Model
 							'c.icon_id as category_icon', 'c.name as category_name', 'cl.title as category_title',
 							'u.id as user_id', 'u.username', 'up.avatar', 'up.sex')
 					->from('nf_articles a')
-					->join('nf_articles_lang al',            'a.article_id  = al.article_id')
 					->join('nf_articles_categories c',       'a.category_id = c.category_id')
 					->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id', $lang)
 					->join('nf_user u',                      'a.user_id     = u.id AND u.deleted = "0"')
 					->join('nf_user_profile up',             'up.id         = u.id')
-					->where('al.lang', $lang)
 					->where('a.deleted_at', NULL)
 					->order_by('a.date DESC');
+
+		/*
+		 * Côté public, la liste est dans la langue DEMANDÉE : une billet écrit en allemand n'a rien à faire
+		 * dans la liste française. Dans l'administration, c'est l'inverse : la liste doit tout montrer, sinon un
+		 * contenu pas encore traduit dans la langue où l'on travaille est INVISIBLE, et on ne peut pas l'ouvrir
+		 * pour le traduire — c'est ce qui arrivait (2026-10-14). On y sert la meilleure traduction du titre.
+		 */
+		if ($this->url->admin)
+		{
+			$this->db->join_lang('nf_articles_lang al', 'article_id', 'a.article_id', $lang);
+		}
+		else
+		{
+			$this->db->join('nf_articles_lang al', 'a.article_id = al.article_id')->where('al.lang', $lang);
+		}
 
 		if (!empty($filter) && !empty($filter_data))
 		{
@@ -93,20 +106,29 @@ class Articles extends Model
 		// milieu d'une chaîne écrase celle qu'on est en train de bâtir.
 		// La catégorie suit la langue de l'article : elles sont saisies ensemble, et un article
 		// servi en repli doit porter le libellé de catégorie de SA version.
-		$lang = $this->langue_du_contenu('nf_articles_lang', 'article_id', $article_id);
+		/*
+		 * Côté public, un billet monolingue est servi dans SA langue, avec son bandeau. Dans l'administration, au
+		 * contraire, on ouvre la langue demandée EXACTEMENT, jointe à gauche : un billet pas encore traduit s'ouvre
+		 * avec ses champs vides, prêts à l'écrire. Avec le repli, l'écran allemand montrait le texte français — et
+		 * l'enregistrait en allemand au premier clic (2026-10-14).
+		 */
+		$lang = $this->url->admin
+			? (string) $this->config->lang->info()->name
+			: $this->langue_du_contenu('nf_articles_lang', 'article_id', $article_id);
+
+		$exacte = preg_match('/^[a-z]{2}$/', (string) $lang) ? (string) $lang : 'fr';
 
 		$article = $this->db	->select('a.*', 'al.title', 'al.excerpt', 'al.content', 'al.tags',
 										'IFNULL(a.image_id, c.image_id) as image',
 										'c.icon_id as category_icon', 'c.name as category_name', 'cl.title as category_title',
 										'u.id as user_id', 'u.username', 'up.avatar', 'up.sex')
 								->from('nf_articles a')
-								->join('nf_articles_lang al',            'a.article_id  = al.article_id')
+								->join('nf_articles_lang al',            'a.article_id  = al.article_id AND al.lang = "'.$exacte.'"', $this->url->admin ? 'LEFT' : '')
 								->join('nf_articles_categories c',       'a.category_id = c.category_id')
 								->join_lang('nf_articles_categories_lang cl', 'category_id', 'c.category_id', $lang)
 								->join('nf_user u',                      'a.user_id     = u.id AND u.deleted = "0"')
 								->join('nf_user_profile up',             'up.id         = u.id')
 								->where('a.article_id', $article_id)
-								->where('al.lang', $lang)
 								->where('a.deleted_at', NULL)
 								->row();
 

@@ -77,6 +77,7 @@ class Ads extends Module
 
 		$ads = $this->db	->select('*')
 							->from('nf_ads')
+							->join_lang('nf_ads_lang al', 'ad_id', 'nf_ads.id', NULL, 'LEFT')
 							->where('placement', $placement)
 							->where('active', 1)
 							->get(FALSE);

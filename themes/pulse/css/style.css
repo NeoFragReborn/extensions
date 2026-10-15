@@ -456,7 +456,7 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .card.panel-header { background: var(--pl-soleil); color: var(--pl-sur-soleil); }
 .card.panel-header > .card-header { background: none; border: 0; color: color-mix(in srgb, var(--pl-sur-soleil) 72%, transparent); }
 .card.panel-header > .card-body, .card.panel-header > .card-footer, .card.panel-header a:not(.btn) { color: var(--pl-sur-soleil); }
-.card.panel-header .text-muted, .card.panel-header small { color: color-mix(in srgb, var(--pl-sur-soleil) 80%, transparent) !important; }
+.card.panel-header .text-muted, .card.panel-header small { color: color-mix(in srgb, var(--pl-sur-soleil) 80%, transparent); }
 .card.panel-header .progress { background: rgba(42, 34, 8, 0.16); }
 .card.panel-header .progress-bar { background: var(--pl-sur-soleil); }
 .card.panel-header .btn-primary { background: var(--pl-sur-soleil); border-color: var(--pl-sur-soleil); color: var(--pl-soleil); }
@@ -494,11 +494,15 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
    §8 — Les widgets dans leurs dalles
    ======================================================================== */
 
-/* Le prochain rendez-vous : la date dans une case blanche, le titre en grand, « Voir le rendez-vous » au soleil. */
-.nf-prochain-date { width: 86px; min-height: 92px; border-radius: 18px; background: var(--pl-dalle-2); }
-.nf-prochain-jour { color: var(--pl-brique); }
-.nf-prochain-quantieme { font: 800 40px/0.9 var(--pl-titre); }
-.nf-prochain-titre { font: 800 23px/1.15 var(--pl-titre); }
+/* Le prochain rendez-vous : la date dans une case blanche, le titre en grand, « Voir le rendez-vous » au soleil.
+   Le préfixe `body` n'est pas décoratif : la feuille d'un widget est chargée APRÈS celle du thème, et une règle de
+   même spécificité y perdait — le dessin de Pulse ne s'affichait pas (relevé 2026-10-13, 85 déclarations dans ce cas
+   sur les sept thèmes et l'administration). Les hauteurs de ligne contiennent l'encre : à 0,9, le quantième débordait
+   de sa ligne et se posait sur le nom du jour dès que la feuille du widget manquait (« Lun. » sur « 12 »). */
+body .nf-prochain-date { width: 86px; min-height: 92px; border-radius: 18px; background: var(--pl-dalle-2); }
+body .nf-prochain-jour { color: var(--pl-brique); }
+body .nf-prochain-quantieme { font: 800 40px/1.15 var(--pl-titre); }
+body .nf-prochain-titre { font: 800 23px/1.15 var(--pl-titre); }
 .nf-prochain-titre a { color: var(--pl-texte); }
 .card.panel-color .nf-prochain-date { background: #fff; color: #23282b; }
 .card.panel-color .nf-prochain-jour { color: #b2533a; }
@@ -508,9 +512,9 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .nf-prochain-lien { margin-top: 2px; }
 
 /* Le site en chiffres : de grands nombres mousse ; blancs sur l'ardoise, sombres au soleil. */
-.nf-chiffres { gap: 14px; }
-.nf-chiffre-valeur { color: var(--pl-mousse-texte); font: 800 42px/1 var(--pl-titre); }
-.nf-chiffre-libelle { color: var(--pl-doux); font-size: 13px; }
+body .nf-chiffres { gap: 14px; }
+body .nf-chiffre-valeur { color: var(--pl-mousse-texte); font: 800 42px/1.15 var(--pl-titre); }
+body .nf-chiffre-libelle { color: var(--pl-doux); font-size: 13px; }
 .card.panel-color .nf-chiffre-valeur, .card.panel-color .nf-chiffre-libelle { color: #fff; }
 .card.panel-header .nf-chiffre-valeur, .card.panel-header .nf-chiffre-libelle { color: var(--pl-sur-soleil); }
 
@@ -531,8 +535,8 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .widget-calendar ul.list-unstyled > li .fa-calendar { display: none; }
 
 /* La semaine (si on la pose) : des jours en pastilles. */
-.nf-semaine-jour { border-radius: 12px; }
-.nf-semaine-numero { font: 800 20px/1.1 var(--pl-titre); }
+body .nf-semaine-jour { border-radius: 12px; }
+body .nf-semaine-numero { font: 800 20px/1.15 var(--pl-titre); }
 
 /* Le sondage : des barres arrondies qui se remplissent. */
 .progress { height: 8px !important; border-radius: 999px; background: var(--pl-dalle-3); overflow: hidden; }
@@ -555,8 +559,8 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .widget-partners .column-partners img.logo { max-height: 40px; width: auto; }
 
 /* Les dernières photos */
-.nf-photos { grid-auto-rows: 92px; }
-.nf-photo { border-radius: 12px; }
+body .nf-photos { grid-auto-rows: 92px; }
+body .nf-photo { border-radius: 12px; }
 
 /* Qui est en ligne, les statistiques du forum */
 .widget-members h3 { font: 800 30px/1 var(--pl-titre); }
@@ -612,7 +616,7 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .form-control, .form-select, textarea.form-control { background: var(--pl-dalle); border: 1px solid var(--pl-trait); border-radius: 12px; color: var(--pl-texte); }
 .form-control:focus, .form-select:focus { background: var(--pl-dalle); border-color: var(--pl-ardoise); box-shadow: 0 0 0 3px var(--pl-ardoise-doux); color: var(--pl-texte); }
 .input-group-text { background: var(--pl-dalle-2); border-color: var(--pl-trait); color: var(--pl-doux); }
-.form-text, .text-muted { color: var(--pl-doux) !important; }
+.form-text, .text-muted { color: var(--pl-doux); }
 
 .nav-tabs { border-bottom: 0; gap: 6px; }
 .nav-tabs .nav-link { border: 0; border-radius: 999px; background: var(--pl-dalle); color: var(--pl-doux); font-weight: 700; box-shadow: var(--pl-ombre); }
@@ -645,7 +649,7 @@ html.pl-defile .pl-barre { box-shadow: 0 10px 26px -20px rgba(20, 28, 32, 0.55);
 .avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 999px; background: var(--pl-dalle-2); vertical-align: middle; }
 .module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; border-radius: 30px; box-shadow: 0 0 0 4px var(--pl-dalle), 0 0 0 6px var(--pl-ardoise); }
 .module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
-body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px; height: 64px; margin: 0 auto 10px; }
 
 /* =========================================================================
    §10 — Les modules : actualités, forum en cartes, espace membre
@@ -657,7 +661,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .module-news .card-title a { color: var(--pl-texte); }
 .module-news .card-title a:hover { color: var(--pl-ardoise-texte); }
 .module-news .card-img-top { border-radius: 22px 22px 0 0; }
-.module-news .nf-news-meta { color: var(--pl-doux) !important; font: 700 12.5px var(--nf-font); }
+.module-news .nf-news-meta { color: var(--pl-doux); font: 700 12.5px var(--nf-font); }
 .module-news > .card:first-child .card-title { font-size: clamp(28px, 3.2vw, 36px); }
 /* L'article est dans une dalle claire, pas à même le papier comme dans Chronique : il garde une marge intérieure (sans
    elle, le titre et le texte touchaient le bord de la dalle, et l'étiquette de rubrique chevauchait son coin). */
@@ -671,11 +675,11 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 
 /* Le forum : chaque forum d'une catégorie devient une carte, deux par rang. */
 .module-forum table[data-forum-view] > thead > tr > th { border: 0; background: none; padding: 18px 22px 8px; }
-.module-forum table[data-forum-view] > thead h5 { color: var(--pl-doux) !important; font: 800 12.5px var(--nf-font) !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.module-forum table[data-forum-view] > thead h5 { color: var(--pl-doux); font: 800 12.5px var(--nf-font); letter-spacing: 0.12em; text-transform: uppercase; }
 .module-forum table[data-forum-view] > thead .icon { display: none; }
 .module-forum table[data-forum-view] > tbody > tr > td { border-top: 0; border-bottom: 1px solid var(--pl-trait); padding: 14px 12px; background: none; }
 .module-forum table[data-forum-view] .forum-icone { color: var(--pl-ardoise); }
-.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 800 19px/1.25 var(--pl-titre); margin-bottom: 2px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 800 19px/1.25 var(--pl-titre); margin-bottom: 2px; }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--pl-texte); }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--pl-ardoise-texte); }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--pl-doux); font-size: 14px; }
@@ -697,9 +701,9 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 		transition: transform 300ms ease, background-color 300ms ease;
 	}
 	.module-forum table[data-forum-view="categories"] > tbody > tr:hover { transform: translateY(-2px); background: var(--pl-dalle-3); }
-	.module-forum table[data-forum-view="categories"] > tbody > tr > td { display: block; width: auto !important; padding: 0 !important; border: 0 !important; text-align: left !important; background: none !important; }
+	.module-forum table[data-forum-view="categories"] > tbody > tr > td { display: block; width: auto; padding: 0; border: 0; text-align: left; background: none; }
 	.module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(n+3) { grid-column: 2; }
-	.module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(3) { padding-top: 6px !important; border-top: 1px solid var(--pl-trait) !important; }
+	.module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(3) { padding-top: 6px; border-top: 1px solid var(--pl-trait); }
 }
 
 /* L'espace membre : la carte d'adhérent en dalle forte, le menu en dalle. */

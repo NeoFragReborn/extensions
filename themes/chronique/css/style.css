@@ -524,7 +524,7 @@ html.ch-sommaire-ouvert { overflow: hidden; }
 .form-control, .form-select, textarea.form-control { background: var(--ch-carte); border: 1px solid var(--ch-trait); border-radius: 10px; color: var(--ch-texte); }
 .form-control:focus, .form-select:focus { background: var(--ch-carte); border-color: var(--ch-sarcelle); box-shadow: 0 0 0 3px var(--ch-sarcelle-doux); color: var(--ch-texte); }
 .input-group-text { background: var(--ch-surface-2); border-color: var(--ch-trait); color: var(--ch-doux); }
-.form-text, .text-muted { color: var(--ch-doux) !important; }
+.form-text, .text-muted { color: var(--ch-doux); }
 
 .nav-tabs { border-bottom: 1px solid var(--ch-trait); }
 .nav-tabs .nav-link { border: 0; border-radius: 0; color: var(--ch-doux); font-weight: 600; background: none; }
@@ -558,7 +558,7 @@ html.ch-sommaire-ouvert { overflow: hidden; }
 .avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 999px; background: var(--ch-surface-2); vertical-align: middle; }
 .module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; box-shadow: 0 0 0 3px var(--ch-fond), 0 0 0 5px var(--ch-sarcelle); }
 .module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
-body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px; height: 64px; margin: 0 auto 10px; }
 
 /* =========================================================================
    §10 — Les modules : actualités, forum en chapitres, carnet du membre
@@ -570,7 +570,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .module-news .card-title a { color: var(--ch-texte); }
 .module-news .card-title a:hover { color: var(--ch-sarcelle-texte); }
 .module-news .card-img-top { border-radius: 14px 14px 0 0; }
-.module-news .nf-news-meta { color: var(--ch-doux) !important; font: 500 12px var(--ch-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.module-news .nf-news-meta { color: var(--ch-doux); font: 500 12px var(--ch-mono); letter-spacing: 0.06em; text-transform: uppercase; }
 .module-news > .card:first-child .card-title { font-size: clamp(28px, 3.4vw, 38px); }
 /* L'article est dans une carte bordée : il garde une marge intérieure (sans elle, le titre, le texte et l'étiquette de
    rubrique touchaient la bordure ; vu le 2026-10-06). */
@@ -587,7 +587,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .module-forum table[data-forum-view] > thead > tr > th { border: 0; background: none; padding: 16px 12px 8px; }
 .module-forum table[data-forum-view] > thead > tr > th:first-child { padding-left: 18px; }
 .module-forum table[data-forum-view] > thead > tr > th:last-child { padding-right: 18px; }
-.module-forum table[data-forum-view] > thead h5 { color: var(--ch-ocre) !important; font: 500 12px var(--ch-mono) !important; letter-spacing: 0.18em; text-transform: uppercase; }
+.module-forum table[data-forum-view] > thead h5 { color: var(--ch-ocre); font: 500 12px var(--ch-mono); letter-spacing: 0.18em; text-transform: uppercase; }
 .module-forum table[data-forum-view] > thead .icon { display: none; }
 .module-forum table[data-forum-view] > tbody > tr > td { border-top: 0; border-bottom: 1px solid var(--ch-trait); padding: 16px 12px; background: none; }
 .module-forum table[data-forum-view] > tbody > tr > td:first-child { padding-left: 18px; }
@@ -595,7 +595,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .module-forum table[data-forum-view] > tbody > tr:last-child > td { border-bottom: 0; }
 .module-forum table[data-forum-view] > tbody > tr:hover > td { background: var(--ch-sarcelle-doux); }
 .module-forum table[data-forum-view] .forum-icone { color: var(--ch-granit); }
-.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 800 22px/1.2 var(--ch-titre); margin-bottom: 2px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 800 22px/1.2 var(--ch-titre); margin-bottom: 2px; }
 .module-forum table[data-forum-view="categories"] > tbody > tr > td:nth-child(2) h5::before {
 	counter-increment: chapitre;
 	content: counter(chapitre, decimal-leading-zero);

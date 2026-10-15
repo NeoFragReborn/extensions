@@ -34,7 +34,7 @@ class Ajax extends Controller_Module
 		$id      = (int)$id;
 		$user_id = (int)$this->user->id;
 
-		$item = $this->db->select('*')->from('nf_shop_items')->where('id', $id)->where('active', 1)->row(FALSE);
+		$item = $this->db->select('*')->from('nf_shop_items')->join_lang('nf_shop_items_lang il', 'item_id', 'nf_shop_items.id', NULL, 'LEFT')->where('id', $id)->where('active', 1)->row(FALSE);
 
 		if (!$item)
 		{

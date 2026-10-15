@@ -33,4 +33,5 @@ return [
 	'eae6f46e' => 'Fin (optionnel)',
 	'8fd9c7ef' => 'Enregistrer',
 	'e060760c' => 'Annonce supprimée',
+	'4c55b8fc' => 'Écrit pour %s. Change la langue de l\'administration pour traduire cette annonce ; les autres langues gardent leur texte.',
 ];

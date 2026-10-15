@@ -45,4 +45,5 @@ return [
 	'4539b307' => 'VIP (Payload = Tage)',
 	'5a7a9517' => 'Physisches Produkt (Merch)',
 	'e0c070fd' => 'Die Seite ist abgelaufen: Lade sie neu und versuche es dann erneut.',
+	'48cead6e' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diesen Artikel zu übersetzen; die anderen Sprachen behalten ihren Text.',
 ];

@@ -60,4 +60,6 @@ return [
 	'b2656c03' => 'Kategorie bearbeiten: %s',
 	'0aac9844' => 'Datum',
 	'287e1fcc' => 'Der Link muss eine Webadresse (http oder https) oder eine Seite der Website sein.',
+	'bff00c60' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diesen Link zu übersetzen; die anderen Sprachen behalten ihren Text.',
+	'40698b8f' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Kategorie zu übersetzen; die anderen Sprachen behalten ihren Text.',
 ];

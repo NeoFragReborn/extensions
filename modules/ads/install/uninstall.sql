@@ -7,4 +7,6 @@ SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `nf_ads`;
 
+DROP TABLE IF EXISTS `nf_ads_lang`;
+
 SET FOREIGN_KEY_CHECKS = 1;

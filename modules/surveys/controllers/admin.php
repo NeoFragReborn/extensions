@@ -115,26 +115,33 @@ class Admin extends Controller_Module
 	protected function _form($s)
 	{
 		$is_new = $s === NULL;
-		$this->title($is_new ? $this->lang('Nouveau sondage') : $this->lang('Éditer sondage'))->icon('fas fa-poll')->breadcrumb();
+		$this->title($is_new ? $this->lang('Nouveau sondage') : $this->lang('Éditer : %s', $s['title_lu'] ?? $s['title']))->icon('fas fa-poll')->breadcrumb();
 
 		// Fetch existing options to allow editing them
-		$existing_options = $is_new ? [] : NeoFrag()->db	->select('id', 'label', 'sort_order')
-															->from('nf_surveys_options')
-															->where('survey_id', $s['id'])
-															->order_by('sort_order ASC')
+		// Les réponses s'écrivent elles aussi dans la langue où l'on travaille : on les lit SANS repli,
+		// sinon on proposerait le français à corriger dans l'écran allemand (m32, 2026-10-15).
+		$langue = (string) $this->config->lang->info()->name;
+
+		$existing_options = $is_new ? [] : NeoFrag()->db	->select('o.id', 'ol.label', 'o.sort_order')
+															->from('nf_surveys_options o')
+															->join('nf_surveys_options_lang ol', 'ol.option_id = o.id AND ol.lang = "'.NeoFrag()->db->escape_string($langue).'"', 'LEFT')
+															->where('o.survey_id', $s['id'])
+															->order_by('o.sort_order ASC')
 															->get();
 		$opts_str = '';
 		foreach ($existing_options as $o)
 		{
-			$opts_str .= $o['label']."\n";
+			$opts_str .= (string) $o['label']."\n";
 		}
 
 		$this->form()
 			 ->add_rules([
-				'title'           => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $s['title'], 'rules' => 'required'],
+				// Le texte d'un sondage s'écrit dans la langue où l'on travaille (m32, 2026-10-15) : on le dit.
+				'title'           => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $s['title'], 'rules' => 'required',
+				                       'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire ce sondage ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'description'     => ['label' => $this->lang('Description'), 'type' => 'editor', 'value' => $is_new ? '' : $s['description']],
 				'options'         => ['label' => $this->lang('Options (une par ligne)'), 'type' => 'textarea', 'value' => $is_new ? "Option 1\nOption 2\nOption 3" : $opts_str, 'rules' => 'required',
-				                       'description' => $this->lang('Liste des choix possibles, un par ligne. Les options existantes seront remplacées par cette liste.')],
+				                       'description' => $this->lang('Un choix par ligne. Une réponse garde ses votes tant qu\'elle reste dans la liste, même corrigée, déplacée ou traduite ; seule une réponse RETIRÉE perd les siens.')],
 				'multiple_choice' => ['label' => $this->lang('Choix multiples'), 'type' => 'checkbox', 'value' => ['1'], 'values' => ['1' => $this->lang('Permettre plusieurs réponses par utilisateur')], 'checked' => ['1' => (!$is_new && !empty($s['multiple_choice']))]],
 				'show_results'    => ['label' => $this->lang('Afficher les résultats'), 'type' => 'select', 'values' => [
 					'always'      => $this->lang('Toujours visibles'),
@@ -149,8 +156,6 @@ class Admin extends Controller_Module
 		if ($this->form()->is_valid($post))
 		{
 			$data = [
-				'title'           => $post['title'],
-				'description'     => $post['description'] ?? '',
 				'multiple_choice' => in_array('1', $post['multiple_choice'] ?? []) ? 1 : 0,
 				'show_results'    => $post['show_results'],
 				'published'       => in_array('1', $post['published'] ?? []) ? 1 : 0
@@ -166,28 +171,118 @@ class Admin extends Controller_Module
 			{
 				$survey_id = (int)$s['id'];
 				NeoFrag()->db->where('id', $survey_id)->update('nf_surveys', $data);
-				NeoFrag()->db->where('survey_id', $survey_id)->delete('nf_surveys_options');
-				// Note : on supprime aussi les votes pour rester cohérent (les votes pointaient sur les anciens options)
-				NeoFrag()->db->where('survey_id', $survey_id)->delete('nf_surveys_votes');
 			}
 
-			$lines = preg_split('/\r?\n/', trim($post['options']));
-			$order = 0;
-			foreach ($lines as $line)
+			// `ecrire_lang` CRÉE la ligne quand elle manque : un `update` sur une traduction qui
+			// n'existe pas encore n'écrirait rien, et sans un mot (leçon de m30).
+			NeoFrag()->db->ecrire_lang('nf_surveys_lang', ['survey_id' => $survey_id, 'lang' => $langue], [
+				'title'       => $post['title'],
+				'description' => $post['description'] ?? ''
+			]);
+
+			$lignes = [];
+
+			foreach (preg_split('/\r?\n/', trim((string) $post['options'])) ?: [] as $ligne)
 			{
-				$line = trim($line);
-				if ($line === '') continue;
-				NeoFrag()->db->insert('nf_surveys_options', [
-					'survey_id'  => $survey_id,
-					'label'      => $line,
-					'sort_order' => $order++
-				]);
+				if (($ligne = trim($ligne)) !== '')
+				{
+					$lignes[] = $ligne;
+				}
 			}
 
-			notify($is_new ? $this->lang('Sondage créé.') : $this->lang('Sondage modifié (votes existants effacés).'));
+			$retirees = $this->_poser_reponses($survey_id, $existing_options, $lignes, $langue);
+
+			notify($is_new
+				? $this->lang('Sondage créé.')
+				: ($retirees
+					? $this->lang('Sondage modifié. %d réponse retirée, et ses votes avec.|Sondage modifié. %d réponses retirées, et leurs votes avec.', $retirees, $retirees)
+					: $this->lang('Sondage modifié. Les votes sont conservés.')));
 			redirect('admin/surveys');
 		}
 
 		return $this->admin_card('fas fa-poll', $is_new ? $this->lang('Nouveau sondage') : $this->lang('Éditer le sondage'), $this->form()->display());
+	}
+
+	/**
+	 * Pose la liste des réponses saisies, en gardant les VOTES de celles qui restent.
+	 *
+	 * Avant le 2026-10-15, enregistrer un sondage effaçait toutes ses réponses pour les recréer, et
+	 * ses votes avec : corriger une faute dans la question coûtait le sondage entier. C'était aussi
+	 * ce qui empêchait de le traduire — écrire la version italienne aurait détruit la française.
+	 *
+	 * On apparie donc, dans CETTE langue :
+	 *   1. par le LIBELLÉ exact d'abord — une réponse déplacée dans la liste garde ses votes ;
+	 *   2. puis, pour ce qui reste, DANS L'ORDRE — une faute corrigée garde les siens, et une langue
+	 *      encore vide (tous ses libellés absents) retrouve ses réponses une à une ;
+	 *   3. ce qui reste sans emploi à la fin est retiré, avec ses votes. C'est la seule perte, et
+	 *      l'écran l'annonce en la comptant.
+	 *
+	 * @param list<array{id: int|string, label: string|null, sort_order: int|string}> $existantes
+	 * @param list<string> $lignes
+	 * @return int Le nombre de réponses retirées.
+	 */
+	private function _poser_reponses(int $survey_id, array $existantes, array $lignes, string $langue): int
+	{
+		$libres = [];
+
+		foreach ($existantes as $o)
+		{
+			$libres[(int) $o['id']] = (string) ($o['label'] ?? '');
+		}
+
+		$paires = [];   // rang de la ligne => identifiant de la réponse
+		$restes = $lignes;
+
+		// 1. Le libellé exact.
+		foreach ($restes as $rang => $ligne)
+		{
+			foreach ($libres as $id => $libelle)
+			{
+				if ($libelle !== '' && $libelle === $ligne)
+				{
+					$paires[$rang] = $id;
+					unset($libres[$id], $restes[$rang]);
+					break;
+				}
+			}
+		}
+
+		// 2. Ce qui reste, dans l'ordre.
+		foreach (array_keys($restes) as $rang)
+		{
+			if (!$libres)
+			{
+				break;
+			}
+
+			$id = (int) array_key_first($libres);
+			$paires[$rang] = $id;
+			unset($libres[$id], $restes[$rang]);
+		}
+
+		// 3. Les réponses sans emploi s'en vont, avec leurs votes (aucune clé étrangère ne le fait).
+		foreach (array_keys($libres) as $id)
+		{
+			NeoFrag()->db->where('option_id', $id)->delete('nf_surveys_votes');
+			NeoFrag()->db->where('id', $id)->delete('nf_surveys_options');
+		}
+
+		foreach ($lignes as $rang => $ligne)
+		{
+			if (isset($paires[$rang]))
+			{
+				$id = (int) $paires[$rang];
+				NeoFrag()->db->where('id', $id)->update('nf_surveys_options', ['sort_order' => $rang]);
+			}
+			else
+			{
+				NeoFrag()->db->insert('nf_surveys_options', ['survey_id' => $survey_id, 'sort_order' => $rang]);
+				$id = (int) NeoFrag()->db->driver()->insert_id();
+			}
+
+			NeoFrag()->db->ecrire_lang('nf_surveys_options_lang', ['option_id' => $id, 'lang' => $langue], ['label' => $ligne]);
+		}
+
+		return count($libres);
 	}
 }

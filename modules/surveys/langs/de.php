@@ -71,4 +71,9 @@ return [
 	'01730157' => 'Diese Umfrage ist geschlossen.',
 	'38441190' => 'Die Ergebnisse werden sichtbar, sobald die Umfrage geschlossen ist.',
 	'afd2aa15' => 'Die Ergebnisse dieser Umfrage sind nicht öffentlich.',
+	'881485c2' => 'Bearbeiten: %s',
+	'a685a944' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Umfrage zu übersetzen; die anderen Sprachen behalten ihren Text.',
+	'5b864585' => 'Eine Auswahl pro Zeile. Eine Antwort behält ihre Stimmen, solange sie in der Liste bleibt — auch korrigiert, verschoben oder übersetzt; nur eine ENTFERNTE Antwort verliert sie.',
+	'960775de' => 'Umfrage geändert. %d Antwort entfernt, samt ihren Stimmen.|Umfrage geändert. %d Antworten entfernt, samt ihren Stimmen.',
+	'31e39bcc' => 'Umfrage geändert. Die Stimmen bleiben erhalten.',
 ];

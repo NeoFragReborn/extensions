@@ -7,7 +7,6 @@ SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `nf_ads` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(150) NOT NULL,
   `placement` varchar(50) NOT NULL DEFAULT 'sidebar',
   `format` enum('image','html') NOT NULL DEFAULT 'image',
   `image_url` varchar(255) NOT NULL DEFAULT '',
@@ -22,6 +21,15 @@ CREATE TABLE IF NOT EXISTS `nf_ads` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `idx_pick` (`placement`,`active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `nf_ads_lang` (
+  `ad_id` int(11) unsigned NOT NULL,
+  `lang` varchar(5) NOT NULL,
+  `title` varchar(150) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ad_id`,`lang`),
+  KEY `lang` (`lang`),
+  CONSTRAINT `nf_ads_lang_ibfk_1` FOREIGN KEY (`ad_id`) REFERENCES `nf_ads` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

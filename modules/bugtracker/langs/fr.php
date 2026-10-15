@@ -71,4 +71,5 @@ return [
 	'eeb78c6a' => 'Déjà signalé ?',
 	'680a5f7e' => 'Ces tickets ouverts ressemblent au vôtre : s’il s’agit du même sujet, ajoutez-y plutôt un commentaire.',
 	'8f685755' => 'Ticket mis à jour, mais pas son statut : « Doublon » demande le numéro d’un autre ticket existant.',
+	'a20182a6' => 'Ticket #',
 ];

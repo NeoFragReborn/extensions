@@ -62,4 +62,5 @@ return [
 	'8115302b' => 'Una trasmissione può scavalcare la mezzanotte: « 22:00 → 02:00 » finisce il giorno dopo, e resta legata al giorno in cui inizia.',
 	'd3fe1369' => 'Palinsesto',
 	'e2c8f589' => 'Stato',
+	'd436c4a9' => 'Scritto per %s. Cambia la lingua dell\'amministrazione per tradurre questa trasmissione; le altre lingue mantengono il loro testo.',
 ];

@@ -9,8 +9,10 @@ class Admin_Checker extends Module_Checker
 
 	public function index($page = '')
 	{
-		$cats = NeoFrag()->db	->select('c.id', 'c.title', 'c.sort_order', 'COUNT(a.id) AS nb')
+		// La LISTE montre la meilleure traduction ; l'écran d'ÉDITION ouvre la langue où l'on travaille.
+		$cats = NeoFrag()->db	->select('c.id', 'cl.title', 'c.sort_order', 'COUNT(a.id) AS nb')
 								->from('nf_classifieds_categories c')
+								->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 								->join('nf_classifieds a', 'c.id = a.category_id', 'LEFT')
 								->group_by('c.id')
 								->order_by('c.sort_order ASC')
@@ -25,9 +27,10 @@ class Admin_Checker extends Module_Checker
 			'status'   => isset($_GET['status']) && in_array($_GET['status'], ['pending', 'published', 'closed', 'rejected'], TRUE) ? $_GET['status'] : ''
 		];
 
-		$db = NeoFrag()->db	->select('a.*', 'c.title AS cat_title', 'u.username AS author', 'u.id AS author_id', 'UNIX_TIMESTAMP(a.created_at) AS created_ts')
+		$db = NeoFrag()->db	->select('a.*', 'cl.title AS cat_title', 'u.username AS author', 'u.id AS author_id', 'UNIX_TIMESTAMP(a.created_at) AS created_ts')
 							->from('nf_classifieds a')
 							->join('nf_classifieds_categories c', 'a.category_id = c.id', 'LEFT')
+							->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 							->join('nf_user u', 'a.user_id = u.id', 'LEFT');
 
 		if ($filters['q'] !== '')
@@ -61,11 +64,38 @@ class Admin_Checker extends Module_Checker
 	public function _cat_edit($id, $title)
 	{
 		$c = NeoFrag()->db->select('*')->from('nf_classifieds_categories')->where('id', $id)->row(FALSE);
-		return $c ? [$c] : NULL;
+
+		if (!$c)
+		{
+			return NULL;
+		}
+
+		$ecrit = NeoFrag()->db	->select('title')
+								->from('nf_classifieds_categories_lang')
+								->where('category_id', (int) $c['id'])
+								->where('lang', (string) $this->config->lang->info()->name)
+								->row();
+
+		$lu = NeoFrag()->db	->select('title')
+							->from('nf_classifieds_categories_lang')
+							->where('category_id', (int) $c['id'])
+							->order_by("lang = 'fr' DESC, lang ASC")
+							->row();
+
+		// Le nom TEL QU'IL EST ÉCRIT dans la langue de l'administration (vide si rien n'y est encore
+		// écrit), et le nom LU pour l'en-tête.
+		return [$c + [
+			'title'    => is_string($ecrit) ? $ecrit : '',
+			'title_lu' => is_string($lu) ? $lu : (is_string($ecrit) ? $ecrit : '')
+		]];
 	}
 	public function _cat_delete($id, $title)
 	{
-		$c = NeoFrag()->db->select('id', 'title')->from('nf_classifieds_categories')->where('id', $id)->row(FALSE);
+		$c = NeoFrag()->db	->select('c.id', 'cl.title')
+							->from('nf_classifieds_categories c')
+							->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+							->where('c.id', $id)
+							->row(FALSE);
 		return $c ? [$c] : NULL;
 	}
 

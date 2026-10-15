@@ -73,4 +73,5 @@ return [
 	'680a5f7e' => 'Estes tickets abertos parecem-se com o seu: se for o mesmo assunto, adicione antes um comentário lá.',
 	'bde466c1' => 'Todos',
 	'8f685755' => 'Ticket atualizado, mas não o seu estado: «Duplicado» precisa do número de outro ticket existente.',
+	'a20182a6' => 'Ticket n.º ',
 ];

@@ -123,16 +123,23 @@ class Admin extends Controller_Module
 	protected function _file_form($f)
 	{
 		$is_new = $f === NULL;
-		$this->title($is_new ? $this->lang('Nouveau fichier') : $this->lang('Éditer : %s', $f['title']))->icon('fas fa-download')->breadcrumb();
+		$this->title($is_new ? $this->lang('Nouveau fichier') : $this->lang('Éditer : %s', $f['title_lu'] ?? $f['title']))->icon('fas fa-download')->breadcrumb();
 
-		$cats = NeoFrag()->db->select('id', 'title')->from('nf_downloads_categories')->order_by('sort_order ASC')->get();
+		$cats = NeoFrag()->db	->select('c.id', 'cl.title')
+								->from('nf_downloads_categories c')
+								->join_lang('nf_downloads_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->order_by('c.sort_order ASC')
+								->get();
 		$cats_array = [];
 		foreach ($cats as $c) { $cats_array[$c['id']] = $c['title']; }
 
 		$this->form()
 			 ->add_rules([
 				'category_id'     => ['label' => $this->lang('Catégorie'), 'type' => 'select', 'values' => $cats_array, 'value' => $is_new ? key($cats_array) : $f['category_id'], 'rules' => 'required'],
-				'title'           => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $f['title'], 'rules' => 'required'],
+				// Le texte d'un fichier s'écrit dans la langue où l'on travaille (m32, 2026-10-15) : on le dit,
+				// sinon on croit corriger ce que voient tous les visiteurs.
+				'title'           => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $f['title'], 'rules' => 'required',
+				                       'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire ce fichier ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'description'     => ['label' => $this->lang('Description'), 'type' => 'editor', 'value' => $is_new ? '' : $f['description']],
 				'file_url'        => ['label' => $this->lang('URL du fichier'), 'type' => 'text', 'value' => $is_new ? '' : $f['file_url'], 'rules' => 'required',
 				                       'description' => $this->lang('URL absolue. Ex: <code>https://exemple.com/file.zip</code> ou <code>/upload/file.zip</code>')],
@@ -148,8 +155,6 @@ class Admin extends Controller_Module
 		{
 			$data = [
 				'category_id'     => (int)$post['category_id'],
-				'title'           => $post['title'],
-				'description'     => $post['description'] ?? '',
 				'file_url'        => $post['file_url'],
 				'file_size_bytes' => $post['file_size_bytes'] !== '' ? (int)$post['file_size_bytes'] : NULL,
 				'file_type'       => $post['file_type'] ?? '',
@@ -157,14 +162,21 @@ class Admin extends Controller_Module
 				'published'       => in_array('1', $post['published'] ?? []) ? 1 : 0
 			];
 
-			if ($is_new) NeoFrag()->db->insert('nf_downloads', $data);
-			else         NeoFrag()->db->where('id', $f['id'])->update('nf_downloads', $data);
+			if ($is_new) $id = (int) NeoFrag()->db->insert('nf_downloads', $data);
+			else         NeoFrag()->db->where('id', $id = (int) $f['id'])->update('nf_downloads', $data);
+
+			// `ecrire_lang` CRÉE la ligne quand elle manque : un `update` sur une traduction qui
+			// n'existe pas encore n'écrirait rien, et sans un mot (leçon de m30).
+			NeoFrag()->db->ecrire_lang('nf_downloads_lang', ['download_id' => $id, 'lang' => (string) $this->config->lang->info()->name], [
+				'title'       => $post['title'],
+				'description' => $post['description'] ?? ''
+			]);
 
 			notify($is_new ? $this->lang('Fichier créé.') : $this->lang('Fichier modifié.'));
 			redirect('admin/downloads');
 		}
 
-		return $this->admin_card($is_new ? 'fas fa-plus' : 'fas fa-edit', $is_new ? $this->lang('Nouveau fichier') : $this->lang('Éditer : %s', $f['title']), $this->form()->display());
+		return $this->admin_card($is_new ? 'fas fa-plus' : 'fas fa-edit', $is_new ? $this->lang('Nouveau fichier') : $this->lang('Éditer : %s', $f['title_lu'] ?? $f['title']), $this->form()->display());
 	}
 
 	public function _cat_add()    { return $this->_cat_form(NULL); }
@@ -191,7 +203,8 @@ class Admin extends Controller_Module
 
 		$this->form()
 			 ->add_rules([
-				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required'],
+				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required',
+				                   'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire cette catégorie ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'description' => ['label' => $this->lang('Description'), 'type' => 'editor', 'value' => $is_new ? '' : ($c['description'] ?? '')],
 				'sort_order'  => ['label' => $this->lang('Ordre tri'), 'type' => 'text', 'value' => $is_new ? '0' : $c['sort_order']]
 			 ])
@@ -199,14 +212,20 @@ class Admin extends Controller_Module
 
 		if ($this->form()->is_valid($post))
 		{
-			$data = ['title' => $post['title'], 'description' => $post['description'] ?? '', 'sort_order' => (int)$post['sort_order']];
-			if ($is_new) NeoFrag()->db->insert('nf_downloads_categories', $data);
-			else         NeoFrag()->db->where('id', $c['id'])->update('nf_downloads_categories', $data);
+			$data = ['sort_order' => (int)$post['sort_order']];
+
+			if ($is_new) $id = (int) NeoFrag()->db->insert('nf_downloads_categories', $data);
+			else         NeoFrag()->db->where('id', $id = (int) $c['id'])->update('nf_downloads_categories', $data);
+
+			NeoFrag()->db->ecrire_lang('nf_downloads_categories_lang', ['category_id' => $id, 'lang' => (string) $this->config->lang->info()->name], [
+				'title'       => $post['title'],
+				'description' => $post['description'] ?? ''
+			]);
 
 			notify($is_new ? $this->lang('Catégorie créée.') : $this->lang('Catégorie modifiée.'));
 			redirect('admin/downloads');
 		}
 
-		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title']), $this->form()->display());
+		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title_lu'] ?? $c['title']), $this->form()->display());
 	}
 }

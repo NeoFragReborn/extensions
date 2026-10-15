@@ -676,7 +676,7 @@ a:hover { color: var(--bc-texte); }
 .form-control, .form-select, textarea.form-control { background: var(--bc-carte); border: 2px solid color-mix(in srgb, var(--bc-trait) 60%, transparent); border-radius: 0; color: var(--bc-texte); }
 .form-control:focus, .form-select:focus { background: var(--bc-carte); border-color: var(--bc-vert); box-shadow: 0 0 0 3px var(--bc-vert-doux); color: var(--bc-texte); }
 .input-group-text { background: var(--bc-carte-2); border: 2px solid color-mix(in srgb, var(--bc-trait) 60%, transparent); border-radius: 0; color: var(--bc-doux); }
-.form-text, .text-muted { color: var(--bc-doux) !important; }
+.form-text, .text-muted { color: var(--bc-doux); }
 
 .nav-pills .nav-link { border-radius: 0; color: var(--bc-texte); }
 .nav-pills .nav-link:hover { background: var(--bc-carte-2); color: var(--bc-texte); }
@@ -712,10 +712,10 @@ a:hover { color: var(--bc-texte); }
 .tooltip .tooltip-arrow { display: none; }
 
 /* Les têtes : des avatars carrés, cerclés de noir. */
-.avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 0 !important; background: var(--bc-carte-2); box-shadow: 0 0 0 2px var(--bc-trait); vertical-align: middle; }
+.avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 0; background: var(--bc-carte-2); box-shadow: 0 0 0 2px var(--bc-trait); vertical-align: middle; }
 .module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; box-shadow: 0 0 0 3px var(--bc-trait), 6px 6px 0 var(--bc-ombre); }
 .module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
-body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px; height: 64px; margin: 0 auto 10px; }
 
 /* =========================================================================
    §10 — Les modules : nouvelles, forum en coffres, espace membre en écran du personnage
@@ -727,7 +727,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .module-news .card-title a { color: var(--bc-texte); }
 .module-news .card-title a:hover { color: var(--bc-vert-texte); }
 .module-news .card-img-top { border-radius: 0; border-bottom: 3px solid var(--bc-trait); }
-.module-news .nf-news-meta { color: var(--bc-doux) !important; font: 500 13px var(--nf-font); }
+.module-news .nf-news-meta { color: var(--bc-doux); font: 500 13px var(--nf-font); }
 .bc-page .news-article { padding: 28px 32px 26px; }
 .bc-page .news-article-cover img { border: 3px solid var(--bc-trait); border-radius: 0; }
 .bc-page .news-article-cat { padding: 2px 9px; border: 2px solid var(--bc-trait); border-radius: 0; background: var(--bc-or); color: var(--bc-sur-or); font: 400 18px/1.15 var(--bc-titre); }
@@ -745,7 +745,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 	background: #6e4b29 url('../images/blocs/planches.png') 0 0 / 48px 48px;
 	image-rendering: pixelated;
 }
-.module-forum table[data-forum-view] > thead h5 { color: #fff !important; font: 400 26px/1 var(--bc-titre) !important; letter-spacing: 0.02em; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); }
+.module-forum table[data-forum-view] > thead h5 { color: #fff; font: 400 26px/1 var(--bc-titre); letter-spacing: 0.02em; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); }
 .module-forum table[data-forum-view] > thead .icon { display: none; }
 .module-forum table[data-forum-view] > thead > tr > th:first-child h5::before {
 	content: ""; display: inline-block; width: 26px; height: 26px; margin-right: 10px; vertical-align: -4px;
@@ -762,7 +762,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 	box-shadow: inset 3px 3px 0 var(--bc-fente-haut), inset -3px -3px 0 var(--bc-fente-bas);
 	color: #ffffff;
 }
-.module-forum .forum-icone .icon, .module-forum .forum-icone i { font-size: 20px !important; filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.45)); }
+.module-forum .forum-icone .icon, .module-forum .forum-icone i { font-size: 20px; filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.45)); }
 .module-forum .forum-icone.forum-non-lu { position: relative; overflow: hidden; color: #fff; background: #5b2a86; }
 .module-forum .forum-icone.forum-non-lu::after {
 	content: ""; position: absolute; inset: 0;
@@ -771,7 +771,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 	animation: bc-enchante 3s linear infinite;
 }
 @keyframes bc-enchante { from { background-position: 150% 0; } to { background-position: -150% 0; } }
-.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 700 18px/1.25 var(--nf-font); margin-bottom: 2px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 700 18px/1.25 var(--nf-font); margin-bottom: 2px; }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--bc-texte); }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--bc-vert-texte); }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--bc-doux); font-size: 14px; }

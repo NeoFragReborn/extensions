@@ -329,14 +329,12 @@ class Admin extends Controller_Module
 									'series_order' => $rang
 								], !empty($post['date']) ? ['date' => $post['date']] : []));
 
-				NeoFrag()->db	->where('article_id', $article['article_id'])
-								->where('lang', $lang)
-								->update('nf_articles_lang', [
-									'title'   => $post['title'],
-									'excerpt' => $post['excerpt'] ?? '',
-									'content' => $post['content'],
-									'tags'    => $post['tags'] ?? ''
-								]);
+				NeoFrag()->db->ecrire_lang('nf_articles_lang', ['article_id' => $article['article_id'], 'lang' => $lang], [
+					'title'   => $post['title'],
+					'excerpt' => $post['excerpt'] ?? '',
+					'content' => $post['content'],
+					'tags'    => $post['tags'] ?? ''
+				]);
 
 				$this->_snapshot($article['article_id'], $post, $this->lang('Édition'));
 
@@ -399,14 +397,12 @@ class Admin extends Controller_Module
 				$fields = $revision['fields'];
 				$lang   = $revision['lang'] ?: $this->config->lang->info()->name;
 
-				NeoFrag()->db	->where('article_id', $article['article_id'])
-								->where('lang', $lang)
-								->update('nf_articles_lang', [
-									'title'   => $fields['title']   ?? '',
-									'excerpt' => $fields['excerpt'] ?? '',
-									'content' => $fields['content'] ?? '',
-									'tags'    => $fields['tags']    ?? ''
-								]);
+				NeoFrag()->db->ecrire_lang('nf_articles_lang', ['article_id' => $article['article_id'], 'lang' => $lang], [
+					'title'   => $fields['title']   ?? '',
+					'excerpt' => $fields['excerpt'] ?? '',
+					'content' => $fields['content'] ?? '',
+					'tags'    => $fields['tags']    ?? ''
+				]);
 
 				$this->_snapshot($article['article_id'], $fields, $this->lang('Restauration depuis #%d', (int)$revision_id));
 
@@ -472,9 +468,9 @@ class Admin extends Controller_Module
 			NeoFrag()->db	->where('category_id', $category['category_id'])
 							->update('nf_articles_categories', ['name' => $post['name']]);
 
-			NeoFrag()->db	->where('category_id', $category['category_id'])
-							->where('lang', $this->config->lang->info()->name)
-							->update('nf_articles_categories_lang', ['title' => $post['title']]);
+			NeoFrag()->db->ecrire_lang('nf_articles_categories_lang',
+				['category_id' => $category['category_id'], 'lang' => $this->config->lang->info()->name],
+				['title' => $post['title']]);
 
 			notify($this->lang('Catégorie modifiée.'));
 			redirect('admin/articles/categories');

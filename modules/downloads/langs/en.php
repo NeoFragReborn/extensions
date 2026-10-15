@@ -69,4 +69,6 @@ return [
 	'b2656c03' => 'Edit category: %s',
 	'0aac9844' => 'Date',
 	'42c9cea8' => 'Popular downloads',
+	'861a00a4' => 'Written for %s. Switch the admin language to translate this file; the other languages keep their text.',
+	'40698b8f' => 'Written for %s. Switch the admin language to translate this category; the other languages keep their text.',
 ];

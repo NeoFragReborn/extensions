@@ -166,7 +166,7 @@ class Index extends Controller_Module
 			$body .= '<div class="alert alert-info mt-3">'.$this->lang('Connecte-toi pour commenter.').'</div>';
 		}
 
-		return $this->panel()->title('Ticket #'.$ticket['id'], 'fas fa-bug')->body($body);
+		return $this->panel()->title($this->lang('Ticket #').$ticket['id'], 'fas fa-bug')->body($body);
 	}
 
 	public function _comment($ticket)

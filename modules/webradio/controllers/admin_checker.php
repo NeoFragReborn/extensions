@@ -16,13 +16,15 @@ class Admin_Checker extends Module_Checker
 			'status' => isset($_GET['status']) && in_array($_GET['status'], ['published', 'draft'], TRUE) ? $_GET['status'] : ''
 		];
 
-		$db = NeoFrag()->db	->select('id', 'title', 'host', 'description', 'day', 'start_time', 'end_time', 'published')
-							->from('nf_webradio_shows');
+		// La LISTE montre la meilleure traduction ; l'écran d'ÉDITION ouvre la langue où l'on travaille.
+		$db = NeoFrag()->db	->select('s.id', 'sl.title', 's.host', 'sl.description', 's.day', 's.start_time', 's.end_time', 's.published')
+							->from('nf_webradio_shows s')
+							->join_lang('nf_webradio_shows_lang sl', 'show_id', 's.id', NULL, 'LEFT');
 
 		if ($filtres['q'] !== '')
 		{
 			$comme = '%'.$filtres['q'].'%';
-			$db->where('title LIKE', $comme, 'OR', 'host LIKE', $comme, 'OR', 'description LIKE', $comme);
+			$db->where('sl.title LIKE', $comme, 'OR', 's.host LIKE', $comme, 'OR', 'sl.description LIKE', $comme);
 		}
 		if ($filtres['day'])
 		{
@@ -74,12 +76,39 @@ class Admin_Checker extends Module_Checker
 	public function _s_edit($id, $title)
 	{
 		$s = NeoFrag()->db->select('*')->from('nf_webradio_shows')->where('id', $id)->row();
+
+		if ($s)
+		{
+			$ecrit = NeoFrag()->db	->select('title', 'description')
+									->from('nf_webradio_shows_lang')
+									->where('show_id', (int) $s['id'])
+									->where('lang', (string) $this->config->lang->info()->name)
+									->row();
+
+			$lu = NeoFrag()->db	->select('title')
+								->from('nf_webradio_shows_lang')
+								->where('show_id', (int) $s['id'])
+								->order_by("lang = 'fr' DESC, lang ASC")
+								->row();
+
+			// Le texte TEL QU'IL EST ÉCRIT dans la langue de l'administration (vide si rien n'y est
+			// encore écrit), et le titre LU pour l'en-tête.
+			$s = $s + [
+				'title'       => is_array($ecrit) ? (string) ($ecrit['title'] ?? '') : '',
+				'description' => is_array($ecrit) ? (string) ($ecrit['description'] ?? '') : '',
+				'title_lu'    => is_string($lu) ? $lu : (is_array($ecrit) ? (string) ($ecrit['title'] ?? '') : '')
+			];
+		}
 		return $s ? [$s] : NULL;
 	}
 
 	public function _s_delete($id, $title)
 	{
-		$s = NeoFrag()->db->select('id', 'title')->from('nf_webradio_shows')->where('id', $id)->row();
+		$s = NeoFrag()->db	->select('s.id', 'sl.title')
+							->from('nf_webradio_shows s')
+							->join_lang('nf_webradio_shows_lang sl', 'show_id', 's.id', NULL, 'LEFT')
+							->where('s.id', $id)
+							->row();
 		return $s ? [$s] : NULL;
 	}
 }

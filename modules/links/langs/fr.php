@@ -59,4 +59,6 @@ return [
 	'b2656c03' => 'Éditer catégorie : %s',
 	'0aac9844' => 'Date',
 	'287e1fcc' => 'Le lien doit être une adresse web (http ou https) ou une page du site.',
+	'bff00c60' => 'Écrit pour %s. Change la langue de l\'administration pour traduire ce lien ; les autres langues gardent leur texte.',
+	'40698b8f' => 'Écrit pour %s. Change la langue de l\'administration pour traduire cette catégorie ; les autres langues gardent leur texte.',
 ];

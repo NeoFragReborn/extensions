@@ -60,7 +60,7 @@ return [
 	'f9b6730f' => 'Ir para o conteúdo',
 	'0f93a62c' => 'Entrar no Discord',
 	'bc1054ac' => 'Imagem da vitrine',
-	'de55c140' => 'Atrás do nome do site na página inicial (quando não há apresentação), atrás do título das outras páginas e como banner da área de membros. Deixe vazio: uma paisagem noturna desenhada pelo tema.',
+	'de55c140' => 'Atrás do nome do site na página inicial (quando não há apresentação), atrás do título das outras páginas e como banner da área de membros. Deixe vazio: uma paisagem noturna depalavra-passeda pelo tema.',
 	'dcff4af2' => 'Na barra, antes do nome do site. Se ficar vazio: o logótipo do site (definições gerais), se existir; caso contrário, um emblema com as suas iniciais.',
 	'17a68e22' => 'Barra e vitrine atualizadas!',
 	'540367d9' => 'Tema «Extend», o site como o lançador de um jogo online: uma barra de separadores, uma grande vitrine na página inicial, os membros online e o chat sempre abertos à direita, uma barra de estado em baixo (servidor de jogo, canal de voz, idioma); no telemóvel, os separadores no fundo do ecrã. Azul-aço sobre azul-marinho, noite por predefinição; logótipo, imagem da vitrine, fundo e cores ajustáveis.',

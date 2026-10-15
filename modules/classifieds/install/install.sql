@@ -27,9 +27,17 @@ CREATE TABLE IF NOT EXISTS `nf_classifieds` (
 
 CREATE TABLE IF NOT EXISTS `nf_classifieds_categories` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `nf_classifieds_categories_lang` (
+  `category_id` int(11) unsigned NOT NULL,
+  `lang` varchar(5) NOT NULL,
+  `title` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`category_id`,`lang`),
+  KEY `lang` (`lang`),
+  CONSTRAINT `nf_classifieds_categories_lang_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `nf_classifieds_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

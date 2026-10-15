@@ -333,20 +333,22 @@ a:hover { color: var(--ex-fort); }
 
 /* Qui est en ligne (la liste) */
 .ex-panneau .widget-members .card > .card-header::after { content: ""; width: 8px; height: 8px; margin-left: auto; border-radius: 50%; background: var(--ex-vert); box-shadow: 0 0 10px var(--ex-vert); animation: ex-pouls 2s ease-in-out infinite; }
-.nf-en-ligne-chiffres span { background: var(--ex-panneau-2); border-radius: 8px; color: var(--ex-doux); }
-.nf-en-ligne-chiffres b { color: var(--ex-fort); font: 700 18px/1.15 var(--ex-chiffre); }
-.nf-en-ligne-groupe { color: var(--ex-doux); font: 700 11px/1 var(--ex-chiffre); letter-spacing: 0.12em; }
-.nf-en-ligne-liste li { margin: 0 -8px; padding: 6px 8px; border-radius: 8px; transition: background-color 150ms ease; }
-.nf-en-ligne-liste li:hover { background: var(--ex-panneau-2); }
-.nf-en-ligne-avatar .avatar { border-radius: 50%; }
-.nf-en-ligne-avatar::after { background: var(--ex-vert); box-shadow: 0 0 0 2px var(--ex-panneau); }
-.nf-en-ligne-qui > a { color: var(--ex-fort); }
-.nf-en-ligne-qui > a:hover { color: var(--ex-vif); }
+/* L'enveloppe .ex-panneau n'est pas decorative : la feuille d'un widget est servie APRES celle du theme, donc
+   une regle nue (.nf-en-ligne-groupe) perd a egalite de specificite et ne s'applique jamais (m29, 2026-10-15). */
+.ex-panneau .nf-en-ligne-chiffres span { background: var(--ex-panneau-2); border-radius: 8px; color: var(--ex-doux); }
+.ex-panneau .nf-en-ligne-chiffres b { color: var(--ex-fort); font: 700 18px/1.15 var(--ex-chiffre); }
+.ex-panneau .nf-en-ligne-groupe { color: var(--ex-doux); font: 700 11px/1 var(--ex-chiffre); letter-spacing: 0.12em; }
+.ex-panneau .nf-en-ligne-liste li { margin: 0 -8px; padding: 6px 8px; border-radius: 8px; transition: background-color 150ms ease; }
+.ex-panneau .nf-en-ligne-liste li:hover { background: var(--ex-panneau-2); }
+.ex-panneau .nf-en-ligne-avatar .avatar { border-radius: 50%; }
+.ex-panneau .nf-en-ligne-avatar::after { background: var(--ex-vert); box-shadow: 0 0 0 2px var(--ex-panneau); }
+.ex-panneau .nf-en-ligne-qui > a { color: var(--ex-fort); }
+.ex-panneau .nf-en-ligne-qui > a:hover { color: var(--ex-vif); }
 /* Le salon */
-.nf-salon-auteur > a { color: var(--ex-fort); }
-.nf-salon-rejoindre { border-radius: 9px; background: var(--ex-panneau-2); color: var(--ex-doux); }
-.nf-salon-rejoindre .icon, .nf-salon-rejoindre i { color: var(--ex-vif); }
-.nf-salon-rejoindre:hover { background: var(--ex-panneau-3); color: var(--ex-fort); }
+.ex-panneau .nf-salon-auteur > a { color: var(--ex-fort); }
+.ex-panneau .nf-salon-rejoindre { border-radius: 9px; background: var(--ex-panneau-2); color: var(--ex-doux); }
+.ex-panneau .nf-salon-rejoindre .icon, .ex-panneau .nf-salon-rejoindre i { color: var(--ex-vif); }
+.ex-panneau .nf-salon-rejoindre:hover { background: var(--ex-panneau-3); color: var(--ex-fort); }
 @keyframes ex-pouls { 50% { opacity: 0.35; } }
 
 /* =========================================================================
@@ -581,8 +583,8 @@ a:hover { color: var(--ex-fort); }
 
 /* Le prochain rendez-vous, le site en chiffres, les dernières photos (si on les pose) */
 .ex-principal .nf-prochain-date { border-radius: 10px; background: var(--ex-accent); color: var(--ex-sur-accent); }
-.nf-chiffre-valeur { color: var(--ex-fort); font-family: var(--ex-chiffre); }
-.nf-chiffre-libelle { color: var(--ex-doux); }
+.ex-principal .nf-chiffre-valeur { color: var(--ex-fort); font-family: var(--ex-chiffre); }
+.ex-principal .nf-chiffre-libelle { color: var(--ex-doux); }
 .ex-principal .nf-photo { border-radius: 10px; }
 
 /* Les dernières discussions du forum */
@@ -648,7 +650,7 @@ a:hover { color: var(--ex-fort); }
 .form-control::placeholder { color: var(--ex-doux); }
 .form-control:focus, .form-select:focus { background-color: var(--ex-panneau-2); border-color: var(--ex-vif); box-shadow: 0 0 0 3px var(--ex-accent-doux); color: var(--ex-fort); }
 .input-group-text { background: var(--ex-panneau-3); border: 1px solid var(--ex-trait-fort); color: var(--ex-doux); }
-.form-text, .text-muted { color: var(--ex-doux) !important; }
+.form-text, .text-muted { color: var(--ex-doux); }
 .col-form-label, .form-label { color: var(--ex-fort); font-weight: 600; }
 
 .nav-pills .nav-link { border-radius: 8px; color: var(--ex-texte); }
@@ -684,7 +686,7 @@ a:hover { color: var(--ex-fort); }
 .avatar { display: inline-block; position: relative; width: 40px; height: 40px; flex: 0 0 auto; border-radius: 50%; background: var(--ex-panneau-3); vertical-align: middle; object-fit: cover; }
 .module-user .user-profile .avatar, .module-user .user-profile img.avatar { width: 128px; height: 128px; margin: 0 auto 12px; border-radius: 26px; box-shadow: 0 0 0 5px var(--ex-panneau), 0 0 0 7px var(--ex-vif); }
 .module-members .card .avatar, .module-members .user-profile .avatar { width: 96px; height: 96px; }
-body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important; height: 64px !important; margin: 0 auto 10px !important; }
+body .widget-user .avatar, body .widget-user img.avatar { width: 64px; height: 64px; margin: 0 auto 10px; }
 
 /* =========================================================================
    §10 — Les modules : actualités, forum en bibliothèque, espace membre en fiche de joueur
@@ -696,7 +698,7 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 .module-news .card-title a { color: var(--ex-fort); }
 .module-news .card-title a:hover { color: var(--ex-vif); }
 .module-news .card-img-top { border-radius: 11px 11px 0 0; }
-.module-news .nf-news-meta { color: var(--ex-doux) !important; font: 500 13px var(--nf-font); }
+.module-news .nf-news-meta { color: var(--ex-doux); font: 500 13px var(--nf-font); }
 .ex-principal .news-article { padding: 28px 32px 26px; }
 .ex-principal .news-article-cover img { border-radius: 12px; }
 .ex-principal .news-article-cat { padding: 0; background: none; color: var(--ex-vif); font: 700 12px/1.3 var(--ex-chiffre); letter-spacing: 0.1em; text-transform: uppercase; }
@@ -709,8 +711,8 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
    non lus a sa case allumée. Les sujets : un état, le titre, les réponses, le dernier message. */
 .module-forum table[data-forum-view] { margin: 0; }
 .module-forum table[data-forum-view] > thead > tr > th { padding: 14px 16px 10px; border-bottom: 1px solid var(--ex-trait); background: none; }
-.module-forum table[data-forum-view] > thead h5 { color: var(--ex-doux) !important; font: 700 11.5px/1.3 var(--ex-chiffre) !important; letter-spacing: 0.12em; text-transform: uppercase; }
-.module-forum table[data-forum-view] > thead > tr > th:first-child h5 { color: var(--ex-fort) !important; font: 800 21px/1 var(--ex-titre) !important; letter-spacing: 0.05em; }
+.module-forum table[data-forum-view] > thead h5 { color: var(--ex-doux); font: 700 11.5px/1.3 var(--ex-chiffre); letter-spacing: 0.12em; text-transform: uppercase; }
+.module-forum table[data-forum-view] > thead > tr > th:first-child h5 { color: var(--ex-fort); font: 800 21px/1 var(--ex-titre); letter-spacing: 0.05em; }
 .module-forum table[data-forum-view] > thead .icon { color: var(--ex-vif); }
 .module-forum table[data-forum-view] > thead > tr > th:first-child h5 .forum-category-img { max-height: 24px; border-radius: 6px; }
 .module-forum table[data-forum-view] > tbody > tr > td { padding: 13px 14px; border-top: 0; border-bottom: 1px solid var(--ex-trait); background: none; vertical-align: middle; }
@@ -723,9 +725,9 @@ body .widget-user .avatar, body .widget-user img.avatar { width: 64px !important
 	background: var(--ex-panneau-3);
 	color: var(--ex-vif);
 }
-.module-forum .forum-icone .icon, .module-forum .forum-icone i { font-size: 16px !important; }
+.module-forum .forum-icone .icon, .module-forum .forum-icone i { font-size: 16px; }
 .module-forum .forum-icone.forum-non-lu { background: var(--ex-accent); color: var(--ex-sur-accent); box-shadow: 0 0 16px -4px var(--ex-accent); }
-.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 600 16px/1.3 var(--nf-font); margin-bottom: 3px !important; }
+.module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 { font: 600 16px/1.3 var(--nf-font); margin-bottom: 3px; }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a { color: var(--ex-fort); }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) h5 a:hover { color: var(--ex-vif); }
 .module-forum table[data-forum-view] > tbody > tr > td:nth-child(2) > div { color: var(--ex-doux); font-size: 13.5px; }

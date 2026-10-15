@@ -86,4 +86,5 @@ return [
 	'ab489e05' => 'Gratuit',
 	'18755269' => 'La validation ou le refus de mes annonces',
 	'fdd78d66' => 'Un membre intéressé par l’une de mes annonces',
+	'40698b8f' => 'Écrit pour %s. Change la langue de l\'administration pour traduire cette catégorie ; les autres langues gardent leur texte.',
 ];

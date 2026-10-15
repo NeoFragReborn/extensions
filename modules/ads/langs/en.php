@@ -30,4 +30,5 @@ return [
 	'ca1ec941' => 'Image URL',
 	'e1748a2d' => 'HTML code',
 	'8fd9c7ef' => 'Save',
+	'4c55b8fc' => 'Written for %s. Switch the admin language to translate this ad; the other languages keep their text.',
 ];

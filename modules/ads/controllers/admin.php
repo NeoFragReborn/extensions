@@ -16,7 +16,11 @@ class Admin extends Controller_Module
 		$this->subtitle($this->lang('Annonces'))->icon('fas fa-rectangle-ad');
 		$nouveau = $this->admin_create('admin/ads/new', $this->lang('Nouvelle annonce'));
 
-		$ads = $this->db->select('*')->from('nf_ads')->order_by('placement', 'position', 'id')->get(FALSE);
+		$ads = $this->db	->select('*')
+							->from('nf_ads')
+							->join_lang('nf_ads_lang al', 'ad_id', 'nf_ads.id', NULL, 'LEFT')
+							->order_by('placement', 'position', 'id')
+							->get(FALSE);
 
 		if (!$ads)
 		{
@@ -67,12 +71,23 @@ class Admin extends Controller_Module
 			return;
 		}
 
+		$langue = (string) $this->config->lang->info()->name;
+
+		if ($ad)
+		{
+			// Le titre TEL QU'IL EST ÉCRIT dans la langue de l'administration, vide si rien n'y est encore écrit
+			// (m32, 2026-10-15) : on traduit une annonce en changeant de langue.
+			$titre       = $this->db->select('title')->from('nf_ads_lang')->where('ad_id', $id)->where('lang', $langue)->row();
+			$ad['title'] = is_string($titre) ? $titre : '';
+		}
+
 		$this->subtitle($id ? $this->lang('Modifier l\'annonce') : $this->lang('Nouvelle annonce'))->icon('fas fa-rectangle-ad');
 		$this->breadcrumb($this->lang('Régie publicitaire'), 'admin/ads');
 
 		$form = $this->form()
 			->add_rules([
-				'title'     => ['label' => $this->lang('Titre'),       'value' => $ad['title'] ?? '',           'rules' => 'required'],
+				'title'     => ['label' => $this->lang('Titre'),       'value' => $ad['title'] ?? '',           'rules' => 'required',
+				                'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire cette annonce ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'placement' => ['label' => $this->lang('Emplacement (slot du widget)'), 'value' => $ad['placement'] ?? 'sidebar', 'rules' => 'required', 'description' => $this->lang('Doit correspondre au champ « Emplacement » du widget Publicité (ex. sidebar, footer, header).')],
 				'format'    => ['label' => $this->lang('Format'),      'value' => $ad['format'] ?? 'image',     'type'  => 'select', 'values' => ['image' => $this->lang('Image (bannière)'), 'html' => $this->lang('HTML / AdSense')]],
 				'image_url' => ['label' => $this->lang('URL de l\'image'), 'value' => $ad['image_url'] ?? '',   'description' => $this->lang('Format image : URL de la bannière.')],
@@ -89,7 +104,6 @@ class Admin extends Controller_Module
 		if ($form->is_valid($post))
 		{
 			$data = [
-				'title'     => $post['title'],
 				'placement' => preg_replace('/[^a-z0-9_-]/i', '', $post['placement']) ?: 'sidebar',
 				'format'    => in_array($post['format'], ['image', 'html'], TRUE) ? $post['format'] : 'image',
 				'image_url' => $post['image_url'],
@@ -107,8 +121,11 @@ class Admin extends Controller_Module
 			}
 			else
 			{
-				$this->db->insert('nf_ads', $data);
+				$id = (int) $this->db->insert('nf_ads', $data);
 			}
+
+			// `ecrire_lang` CRÉE la ligne quand elle manque (leçon de m30).
+			$this->db->ecrire_lang('nf_ads_lang', ['ad_id' => $id, 'lang' => $langue], ['title' => $post['title']]);
 
 			notify($this->lang($id ? 'Annonce modifiée' : 'Annonce créée'));
 			redirect('admin/ads');

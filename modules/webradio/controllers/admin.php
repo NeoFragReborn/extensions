@@ -172,7 +172,9 @@ class Admin extends Controller_Module
 
 		$this->form()
 			 ->add_rules([
-				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $nouvelle ? '' : $s['title'], 'rules' => 'required'],
+				// Le texte d'une émission s'écrit dans la langue où l'on travaille (m32, 2026-10-15) : on le dit.
+				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $nouvelle ? '' : $s['title'], 'rules' => 'required',
+				                   'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire cette émission ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'host'        => ['label' => $this->lang('Animateur'), 'type' => 'text', 'value' => $nouvelle ? '' : $s['host']],
 				'description' => ['label' => $this->lang('Description'), 'type' => 'textarea', 'value' => $nouvelle ? '' : $s['description']],
 				'day'         => ['label' => $this->lang('Jour'), 'type' => 'select', 'values' => $jours, 'value' => $nouvelle ? 1 : Schedule::jour($s['day']), 'rules' => 'required'],
@@ -196,17 +198,20 @@ class Admin extends Controller_Module
 			else
 			{
 				$donnees = [
-					'title'       => $post['title'],
 					'host'        => $post['host'],
-					'description' => $post['description'],
 					'day'         => Schedule::jour($post['day']),
 					'start_time'  => $debut,
 					'end_time'    => $fin,
 					'published'   => in_array('1', $post['published'] ?? []) ? 1 : 0
 				];
 
-				if ($nouvelle) NeoFrag()->db->insert('nf_webradio_shows', $donnees);
-				else           NeoFrag()->db->where('id', $s['id'])->update('nf_webradio_shows', $donnees);
+				if ($nouvelle) $id = (int) NeoFrag()->db->insert('nf_webradio_shows', $donnees);
+				else           NeoFrag()->db->where('id', $id = (int) $s['id'])->update('nf_webradio_shows', $donnees);
+
+				// `ecrire_lang` CRÉE la ligne quand elle manque (leçon de m30).
+				NeoFrag()->db->ecrire_lang('nf_webradio_shows_lang',
+					['show_id' => $id, 'lang' => (string) $this->config->lang->info()->name],
+					['title' => $post['title'], 'description' => $post['description']]);
 
 				notify($nouvelle ? $this->lang('Émission créée.') : $this->lang('Émission modifiée.'));
 				redirect('admin/webradio');

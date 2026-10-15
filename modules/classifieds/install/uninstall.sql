@@ -8,4 +8,6 @@ SET NAMES utf8mb4;
 DROP TABLE IF EXISTS `nf_classifieds_categories`;
 DROP TABLE IF EXISTS `nf_classifieds`;
 
+DROP TABLE IF EXISTS `nf_classifieds_categories_lang`;
+
 SET FOREIGN_KEY_CHECKS = 1;

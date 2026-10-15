@@ -45,4 +45,5 @@ return [
 	'4539b307' => 'VIP (payload = days)',
 	'5a7a9517' => 'Physical product (merch)',
 	'e0c070fd' => 'The page has expired: reload it, then try again.',
+	'48cead6e' => 'Written for %s. Switch the admin language to translate this item; the other languages keep their text.',
 ];

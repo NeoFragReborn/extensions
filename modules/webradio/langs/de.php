@@ -62,4 +62,5 @@ return [
 	'8115302b' => 'Eine Sendung darf Mitternacht überspannen: « 22:00 → 02:00 » endet am nächsten Tag und bleibt dem Starttag zugeordnet.',
 	'd3fe1369' => 'Programm',
 	'e2c8f589' => 'Status',
+	'd436c4a9' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Sendung zu übersetzen; die anderen Sprachen behalten ihren Text.',
 ];

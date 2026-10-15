@@ -70,4 +70,9 @@ return [
 	'01730157' => 'This survey is closed.',
 	'38441190' => 'The results will be visible when the survey closes.',
 	'afd2aa15' => 'The results of this survey are not public.',
+	'881485c2' => 'Edit: %s',
+	'a685a944' => 'Written for %s. Switch the admin language to translate this poll; the other languages keep their text.',
+	'5b864585' => 'One choice per line. An answer keeps its votes as long as it stays in the list, even corrected, moved or translated; only a REMOVED answer loses them.',
+	'960775de' => 'Poll updated. %d answer removed, along with its votes.|Poll updated. %d answers removed, along with their votes.',
+	'31e39bcc' => 'Poll updated. The votes are kept.',
 ];

@@ -60,4 +60,6 @@ return [
 	'b2656c03' => 'Modifica categoria: %s',
 	'0aac9844' => 'Data',
 	'287e1fcc' => 'Il link deve essere un indirizzo web (http o https) o una pagina del sito.',
+	'bff00c60' => 'Scritto per %s. Cambia la lingua dell\'amministrazione per tradurre questo link; le altre lingue mantengono il loro testo.',
+	'40698b8f' => 'Scritto per %s. Cambia la lingua dell\'amministrazione per tradurre questa categoria; le altre lingue mantengono il loro testo.',
 ];

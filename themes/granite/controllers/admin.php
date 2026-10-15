@@ -149,6 +149,13 @@ class Admin extends Controller
 				'color' => [
 					'label' => $this->lang('Couleur de fond'),
 					'value' => $this->config->granite_background_color,
+					// Le fond se juge contre les deux couleurs déjà enregistrées : elles vivent dans
+					// l'autre formulaire, qui s'enregistre séparément.
+					'check' => function($couleur){
+						$verdict = couleur_refus_si_illisible($this->config->granite_text_color ?: '#1e1c19', $couleur);
+
+						return $verdict === TRUE ? couleur_refus_si_illisible($this->config->granite_theme_color ?: '#9b2c1f', $couleur, 3.0) : $verdict;
+					},
 					'type'  => 'colorpicker',
 					'rules' => 'required',
 					'size'  => 'col-3'
@@ -164,6 +171,11 @@ class Admin extends Controller
 				'theme_color' => [
 					'label'       => $this->lang('Couleur d\'accent'),
 					'value'       => $this->config->granite_theme_color,
+					// Un accent qui ne se détache pas du fond rend les liens et les boutons illisibles,
+					// et rien ne le disait (d10, 2026-10-15). Seuil 3 : c'est de l'interface, pas du texte.
+					'check'       => function($couleur){
+						return couleur_refus_si_illisible($couleur, $this->config->granite_background_color ?: '#f4efe4', 3.0);
+					},
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur principale du thème (boutons, liens, accents)'),
 					'rules'       => 'required',
@@ -172,6 +184,9 @@ class Admin extends Controller
 				'text_color' => [
 					'label'       => $this->lang('Couleur du texte'),
 					'value'       => $this->config->granite_text_color,
+					'check'       => function($couleur){
+						return couleur_refus_si_illisible($couleur, $this->config->granite_background_color ?: '#f4efe4');
+					},
 					'type'        => 'colorpicker',
 					'description' => $this->lang('Couleur appliquée au texte principal'),
 					'rules'       => 'required',
@@ -293,7 +308,7 @@ class Admin extends Controller
 									'form_background' => $form_background->display(),
 									'form_settings'   => $form_settings->display(),
 									'form_socials'    => $form_socials->display()
-								]))
+								]).nf_apercu_couleurs($this->__caller, ['theme_color' => '#9b2c1f', 'background_color' => '#f4efe4', 'text_color' => '#1e1c19']))
 					)
 					->size('col-12 col-md-8 col-lg-9')
 		);

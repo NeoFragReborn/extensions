@@ -73,4 +73,5 @@ return [
 	'680a5f7e' => 'These open tickets look like yours: if it is the same issue, add a comment there instead.',
 	'bde466c1' => 'All',
 	'8f685755' => 'Ticket updated, but not its status: “Duplicate” needs the number of another existing ticket.',
+	'a20182a6' => 'Ticket #',
 ];

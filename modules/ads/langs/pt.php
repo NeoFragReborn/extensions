@@ -30,4 +30,5 @@ return [
 	'ca1ec941' => 'URL da imagem',
 	'e1748a2d' => 'Código HTML',
 	'8fd9c7ef' => 'Guardar',
+	'4c55b8fc' => 'Escrito para %s. Muda a língua da administração para traduzir este anúncio; as outras línguas mantêm o seu texto.',
 ];

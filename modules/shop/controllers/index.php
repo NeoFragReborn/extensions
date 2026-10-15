@@ -26,6 +26,7 @@ class Index extends Controller_Module
 
 		$items = $this->db	->select('*')
 							->from('nf_shop_items')
+							->join_lang('nf_shop_items_lang il', 'item_id', 'nf_shop_items.id', NULL, 'LEFT')
 							->where('active', 1)
 							->order_by('position', 'id')
 							->get(FALSE);

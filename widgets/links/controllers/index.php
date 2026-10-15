@@ -14,10 +14,11 @@ class Index extends Controller_Widget
 	{
 		$count = max(1, min(20, (int)($config['count'] ?? 5)));
 
-		$links = NeoFrag()->db	->select('id', 'title', 'clicks')
-								->from('nf_links')
-								->where('published', '1')
-								->order_by('clicks DESC, sort_order ASC')
+		$links = NeoFrag()->db	->select('l.id', 'll.title', 'l.clicks')
+								->from('nf_links l')
+								->join_lang('nf_links_lang ll', 'link_id', 'l.id', NULL, 'LEFT')
+								->where('l.published', '1')
+								->order_by('l.clicks DESC, l.sort_order ASC')
 								->limit($count)
 								->get();
 

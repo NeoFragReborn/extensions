@@ -73,4 +73,5 @@ return [
 	'680a5f7e' => 'Diese offenen Tickets ähneln deinem: Wenn es dasselbe Thema ist, kommentiere lieber dort.',
 	'bde466c1' => 'Alle',
 	'8f685755' => 'Ticket aktualisiert, sein Status jedoch nicht: „Duplikat“ erfordert die Nummer eines anderen vorhandenen Tickets.',
+	'a20182a6' => 'Ticket #',
 ];

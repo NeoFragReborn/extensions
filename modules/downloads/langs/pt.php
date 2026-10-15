@@ -55,7 +55,7 @@ return [
 	'ef99d01b' => 'Categoria criada.',
 	'f126e15d' => 'rascunho|rascunhos',
 	'fb9e1051' => 'Sem categoria.',
-	'b9392ae8' => 'Biblioteca de arquivos para download com categorias, versão e contador.',
+	'b9392ae8' => 'Biblioteca de ficheiros para descarregar, com categorias, versão e contador.',
 	// i18n 2026-06-11
 	'a0dbcbc7' => 'Nenhum ficheiro corresponde a estes critérios.',
 	'48bdcf79' => 'Procurar um título…',
@@ -70,4 +70,6 @@ return [
 	'b2656c03' => 'Editar categoria: %s',
 	'0aac9844' => 'Data',
 	'42c9cea8' => 'Transferências populares',
+	'861a00a4' => 'Escrito para %s. Muda a língua da administração para traduzir este ficheiro; as outras línguas mantêm o seu texto.',
+	'40698b8f' => 'Escrito para %s. Muda a língua da administração para traduzir esta categoria; as outras línguas mantêm o seu texto.',
 ];

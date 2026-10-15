@@ -64,6 +64,7 @@ class Shop extends Module
 	{
 		return $this->db	->select('*')
 							->from('nf_shop_items')
+							->join_lang('nf_shop_items_lang il', 'item_id', 'nf_shop_items.id', NULL, 'LEFT')
 							->where('active', 1)
 							->order_by('position', 'id')
 							->get(FALSE);
@@ -72,7 +73,7 @@ class Shop extends Module
 	/** Un item par id. */
 	public function item($id)
 	{
-		return $this->db->select('*')->from('nf_shop_items')->where('id', (int)$id)->row(FALSE);
+		return $this->db->select('*')->from('nf_shop_items')->join_lang('nf_shop_items_lang il', 'item_id', 'nf_shop_items.id', NULL, 'LEFT')->where('id', (int)$id)->row(FALSE);
 	}
 
 	/** L'utilisateur possède-t-il déjà cet item ? */

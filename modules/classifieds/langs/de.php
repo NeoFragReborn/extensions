@@ -83,4 +83,5 @@ return [
 	'0070e5d9' => 'Veröffentlicht',
 	'18755269' => 'Freigabe oder Ablehnung meiner Anzeigen',
 	'fdd78d66' => 'Ein Mitglied, das sich für eine meiner Anzeigen interessiert',
+	'40698b8f' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Kategorie zu übersetzen; die anderen Sprachen behalten ihren Text.',
 ];

@@ -9,8 +9,13 @@ class Admin_Checker extends Module_Checker
 
 	public function index($page = '')
 	{
-		$cats = NeoFrag()->db	->select('c.id', 'c.title', 'c.sort_order', 'COUNT(l.id) AS nb')
+		/*
+		 * Les LISTES montrent la meilleure traduction (`join_lang`), jamais le vide ; l'écran
+		 * d'ÉDITION ouvre la langue où l'on travaille, et elle seule (m32, 2026-10-15).
+		 */
+		$cats = NeoFrag()->db	->select('c.id', 'cl.title', 'c.sort_order', 'COUNT(l.id) AS nb')
 								->from('nf_links_categories c')
+								->join_lang('nf_links_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 								->join('nf_links l', 'c.id = l.category_id', 'LEFT')
 								->group_by('c.id')
 								->order_by('c.sort_order ASC')
@@ -25,14 +30,16 @@ class Admin_Checker extends Module_Checker
 			'status'   => isset($_GET['status']) && in_array($_GET['status'], ['published', 'draft'], TRUE) ? $_GET['status'] : ''
 		];
 
-		$db = NeoFrag()->db	->select('l.*', 'c.title AS cat_title')
+		$db = NeoFrag()->db	->select('l.*', 'll.title', 'll.description', 'cl.title AS cat_title')
 							->from('nf_links l')
-							->join('nf_links_categories c', 'l.category_id = c.id');
+							->join_lang('nf_links_lang ll', 'link_id', 'l.id', NULL, 'LEFT')
+							->join('nf_links_categories c', 'l.category_id = c.id')
+							->join_lang('nf_links_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT');
 
 		if ($filters['q'] !== '')
 		{
 			$like = '%'.$filters['q'].'%';
-			$db->where('l.title LIKE', $like, 'OR', 'l.url LIKE', $like);
+			$db->where('ll.title LIKE', $like, 'OR', 'l.url LIKE', $like);
 		}
 		if ($filters['category'])
 		{
@@ -75,22 +82,66 @@ class Admin_Checker extends Module_Checker
 	public function _link_edit($id, $title)
 	{
 		$l = NeoFrag()->db->select('*')->from('nf_links')->where('id', $id)->row();
-		return $l ? [$l] : NULL;
+		return $l ? [$this->avec_texte($l, 'nf_links_lang', 'link_id', (int) $l['id'])] : NULL;
 	}
 	public function _link_delete($id, $title)
 	{
-		$l = NeoFrag()->db->select('id', 'title')->from('nf_links')->where('id', $id)->row();
+		$l = NeoFrag()->db	->select('l.id', 'll.title')
+							->from('nf_links l')
+							->join_lang('nf_links_lang ll', 'link_id', 'l.id', NULL, 'LEFT')
+							->where('l.id', $id)
+							->row();
 		return $l ? [$l] : NULL;
 	}
 	public function _cat_add() { return [NULL]; }
 	public function _cat_edit($id, $title)
 	{
 		$c = NeoFrag()->db->select('*')->from('nf_links_categories')->where('id', $id)->row();
-		return $c ? [$c] : NULL;
+		return $c ? [$this->avec_texte($c, 'nf_links_categories_lang', 'category_id', (int) $c['id'])] : NULL;
 	}
 	public function _cat_delete($id, $title)
 	{
-		$c = NeoFrag()->db->select('id', 'title')->from('nf_links_categories')->where('id', $id)->row();
+		$c = NeoFrag()->db	->select('c.id', 'cl.title')
+							->from('nf_links_categories c')
+							->join_lang('nf_links_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+							->where('c.id', $id)
+							->row();
 		return $c ? [$c] : NULL;
+	}
+
+	/**
+	 * La ligne de base, augmentée du texte TEL QU'IL EST ÉCRIT dans la langue de l'administration
+	 * (vide si rien n'y est encore écrit) et du titre LU pour les en-têtes (`title_lu`, la meilleure
+	 * traduction) — sinon l'écran s'intitulerait « Éditer : ».
+	 *
+	 * @param array<string, mixed> $ligne
+	 * @return array<string, mixed>
+	 */
+	private function avec_texte(array $ligne, string $table, string $cle, int $id): array
+	{
+		$colonnes = $table === 'nf_links_lang' ? ['title', 'description'] : ['title'];
+
+		$ecrit = NeoFrag()->db	->select(...$colonnes)
+								->from($table)
+								->where($cle, $id)
+								->where('lang', (string) $this->config->lang->info()->name)
+								->row();
+
+		$lu = NeoFrag()->db	->select('title')
+							->from($table)
+							->where($cle, $id)
+							->order_by("lang = 'fr' DESC, lang ASC")
+							->row();
+
+		$texte = ['title' => is_array($ecrit) ? (string) ($ecrit['title'] ?? '') : ''];
+
+		if (in_array('description', $colonnes, TRUE))
+		{
+			$texte['description'] = is_array($ecrit) ? (string) ($ecrit['description'] ?? '') : '';
+		}
+
+		$texte['title_lu'] = is_string($lu) ? $lu : $texte['title'];
+
+		return $ligne + $texte;
 	}
 }

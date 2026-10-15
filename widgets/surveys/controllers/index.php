@@ -19,11 +19,12 @@ class Index extends Controller_Widget
 		}
 
 		// Le sondage le plus récent ouvert (non fermé)
-		$survey = NeoFrag()->db	->select('id', 'title', 'show_results')
-								->from('nf_surveys')
-								->where('published', '1')
-								->where('closed_at', NULL, 'OR', 'closed_at >', NeoFrag()->date()->sql())
-								->order_by('created_at DESC')
+		$survey = NeoFrag()->db	->select('s.id', 'sl.title', 's.show_results')
+								->from('nf_surveys s')
+								->join_lang('nf_surveys_lang sl', 'survey_id', 's.id', NULL, 'LEFT')
+								->where('s.published', '1')
+								->where('s.closed_at', NULL, 'OR', 's.closed_at >', NeoFrag()->date()->sql())
+								->order_by('s.created_at DESC')
 								->row();
 
 		if (empty($survey))
@@ -33,8 +34,9 @@ class Index extends Controller_Widget
 						->body('<div class="text-center text-muted py-2"><small>'.$this->lang('Aucun sondage en cours').'</small></div>');
 		}
 
-		$options = NeoFrag()->db	->select('o.id', 'o.label', 'COUNT(v.id) AS votes')
+		$options = NeoFrag()->db	->select('o.id', 'ol.label', 'COUNT(v.id) AS votes')
 									->from('nf_surveys_options o')
+									->join_lang('nf_surveys_options_lang ol', 'option_id', 'o.id', NULL, 'LEFT')
 									->join('nf_surveys_votes v', 'o.id = v.option_id', 'LEFT')
 									->where('o.survey_id', $survey['id'])
 									->group_by('o.id')

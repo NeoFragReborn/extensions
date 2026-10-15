@@ -19,10 +19,11 @@ class Block extends Controller_Module
 					'count' => ['type' => 'int', 'default' => 5, 'min' => 1, 'max' => 20],
 				],
 				'render' => function($settings = []){
-					$rows = $this->db	->select('id', 'title')
-										->from('nf_downloads')
-										->where('published', '1')
-										->order_by('downloads_count DESC, title ASC')
+					$rows = $this->db	->select('d.id', 'dl.title')
+										->from('nf_downloads d')
+										->join_lang('nf_downloads_lang dl', 'download_id', 'd.id', NULL, 'LEFT')
+										->where('d.published', '1')
+										->order_by('d.downloads_count DESC, dl.title ASC')
 										->limit((int) ($settings['count'] ?? 5))
 										->get();
 

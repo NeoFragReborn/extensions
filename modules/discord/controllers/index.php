@@ -18,6 +18,15 @@ class Index extends Controller_Module
 	 * membre un lien à usage unique, valable quinze minutes. Il l'ouvre connecté — ou se connecte, ou
 	 * crée son compte, puis revient —, voit les deux comptes, et confirme. Ce qu'il avait publié
 	 * depuis Discord sous son pseudo peut, s'il le veut, revenir à son compte.
+	 *
+	 * LA PREUVE VIENT DE DISCORD, PAS DU LIEN (s07, 2026-10-14). Le jeton disait quel compte Discord
+	 * relier ; il suffisait donc de donner SON lien à quelqu'un pour que SON compte Discord se relie
+	 * au compte du site de l'autre. Et comme la liaison s'écrit dans `nf_user_auth` — la table des
+	 * connexions —, celui qui avait envoyé le lien pouvait ensuite se connecter au compte de sa
+	 * victime par « Se connecter avec Discord ». Un avertissement en gras ne suffit pas contre ça.
+	 *
+	 * Le membre passe donc par Discord lui-même (`user/auth/discord`), qui rend l'identifiant du
+	 * compte connecté. La liaison n'a lieu que si cet identifiant est EXACTEMENT celui du jeton.
 	 */
 	public function _lier($jeton, $liaison)
 	{
@@ -39,16 +48,23 @@ class Index extends Controller_Module
 		}
 
 		$messages = $this->_messages_publies($liaison['discord_id']);
+		$prouve   = $this->_prouve_par_discord((string) $liaison['discord_id']);
 
 		return $this->panel()->heading($this->lang('Relier mon compte Discord'), 'fab fa-discord')->body($this->view('lier', [
 			'liaison'   => $liaison,
 			'connecte'  => TRUE,
 			'membre'    => (string) $this->user->username,
 			'messages'  => $messages,
+			'prouve'    => $prouve,
+			// « Mes comptes liés », et non un aller-retour direct vers Discord : y relier un service
+			// demande d'abord de confirmer son identité (audit du 2026-10-09 — sinon une session volée
+			// y liait le Discord du voleur). Ce chemin-là est déjà éprouvé ; on y envoie, et le membre
+			// revient ensuite sur le lien du bot.
+			'preuve'    => url('user/auth'),
 			// Deux liens protégés plutôt qu'un formulaire : sans message à reprendre, il n'aurait aucun
 			// champ, et le site ne saurait pas qu'il a été envoyé.
-			'relier'    => $this->csrf_url('discord/lier/'.$jeton.'/confirmer/0'),
-			'reprendre' => $messages ? $this->csrf_url('discord/lier/'.$jeton.'/confirmer/1') : '',
+			'relier'    => $prouve ? $this->csrf_url('discord/lier/'.$jeton.'/confirmer/0') : '',
+			'reprendre' => $prouve && $messages ? $this->csrf_url('discord/lier/'.$jeton.'/confirmer/1') : '',
 		]));
 	}
 
@@ -56,6 +72,13 @@ class Index extends Controller_Module
 	public function _confirmer($jeton, $liaison, $reprendre)
 	{
 		$this->check_csrf('discord/lier/'.$jeton);
+
+		// La vue n'est pas une garde : on revérifie ici, où la liaison s'écrit.
+		if (!$this->_prouve_par_discord((string) $liaison['discord_id']))
+		{
+			notify($this->lang('Confirmez d’abord avec Discord que ce compte est le vôtre.'), 'danger');
+			redirect('discord/lier/'.$jeton);
+		}
 
 		$modele   = $this->_modele();
 		$resultat = $modele->lier_compte((int) $this->user->id, $liaison['discord_id'], $liaison['username']);
@@ -80,6 +103,20 @@ class Index extends Controller_Module
 			? $this->lang('Votre compte Discord est relié, et vos %d message(s) sont maintenant à votre nom.', $repris)
 			: $this->lang('Votre compte Discord est relié : vos messages sur Discord paraîtront sous votre compte du site.'));
 		redirect('user/auth');
+	}
+
+	/**
+	 * Le membre connecté s'est-il identifié auprès de DISCORD comme étant bien ce compte-là ?
+	 *
+	 * La preuve est la ligne que le passage par `user/auth/discord` écrit ou confirme dans
+	 * `nf_user_auth` : son `key` est l'identifiant rendu par Discord, que personne ne peut choisir.
+	 * Elle vaut donc aussi quand le membre avait déjà relié son Discord par « Mes comptes liés ».
+	 */
+	private function _prouve_par_discord(string $discord_id): bool
+	{
+		$membre = $this->_modele()->membre_lie($discord_id);
+
+		return $membre !== NULL && $membre['user_id'] === (int) $this->user->id;
 	}
 
 	/** Combien de messages du forum cette personne a publiés depuis Discord sous son pseudo. */

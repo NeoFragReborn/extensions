@@ -124,16 +124,22 @@ class Admin extends Controller_Module
 	protected function _link_form($l)
 	{
 		$is_new = $l === NULL;
-		$this->title($is_new ? $this->lang('Nouveau lien') : $this->lang('Éditer : %s', $l['title']))->icon('fas fa-link')->breadcrumb();
+		$this->title($is_new ? $this->lang('Nouveau lien') : $this->lang('Éditer : %s', $l['title_lu'] ?? $l['title']))->icon('fas fa-link')->breadcrumb();
 
-		$cats = NeoFrag()->db->select('id', 'title')->from('nf_links_categories')->order_by('sort_order ASC')->get();
+		$cats = NeoFrag()->db	->select('c.id', 'cl.title')
+								->from('nf_links_categories c')
+								->join_lang('nf_links_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->order_by('c.sort_order ASC')
+								->get();
 		$cats_array = [];
 		foreach ($cats as $c) { $cats_array[$c['id']] = $c['title']; }
 
 		$this->form()
 			 ->add_rules([
 				'category_id' => ['label' => $this->lang('Catégorie'), 'type' => 'select', 'values' => $cats_array, 'value' => $is_new ? key($cats_array) : $l['category_id'], 'rules' => 'required'],
-				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $l['title'], 'rules' => 'required'],
+				// Le texte d'un lien s'écrit dans la langue où l'on travaille (m32, 2026-10-15) : on le dit.
+				'title'       => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $l['title'], 'rules' => 'required',
+				                   'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire ce lien ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'url'         => ['label' => $this->lang('URL'), 'type' => 'text', 'value' => $is_new ? 'https://' : $l['url'], 'rules' => 'required'],
 				'description' => ['label' => $this->lang('Description'), 'type' => 'editor', 'value' => $is_new ? '' : $l['description']],
 				'sort_order'  => ['label' => $this->lang('Ordre tri'), 'type' => 'text', 'value' => $is_new ? '0' : $l['sort_order']],
@@ -149,15 +155,19 @@ class Admin extends Controller_Module
 		{
 			$data = [
 				'category_id' => (int)$post['category_id'],
-				'title'       => $post['title'],
 				'url'         => $post['url'],
-				'description' => $post['description'] ?? '',
 				'sort_order'  => (int)$post['sort_order'],
 				'published'   => in_array('1', $post['published'] ?? []) ? 1 : 0
 			];
 
-			if ($is_new) NeoFrag()->db->insert('nf_links', $data);
-			else         NeoFrag()->db->where('id', $l['id'])->update('nf_links', $data);
+			if ($is_new) $id = (int) NeoFrag()->db->insert('nf_links', $data);
+			else         NeoFrag()->db->where('id', $id = (int) $l['id'])->update('nf_links', $data);
+
+			// `ecrire_lang` CRÉE la ligne quand elle manque (leçon de m30).
+			NeoFrag()->db->ecrire_lang('nf_links_lang', ['link_id' => $id, 'lang' => (string) $this->config->lang->info()->name], [
+				'title'       => $post['title'],
+				'description' => $post['description'] ?? ''
+			]);
 
 			notify($is_new ? $this->lang('Lien créé.') : $this->lang('Lien modifié.'));
 			redirect('admin/links');
@@ -190,21 +200,27 @@ class Admin extends Controller_Module
 
 		$this->form()
 			 ->add_rules([
-				'title'      => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required'],
+				'title'      => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required',
+				                  'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire cette catégorie ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'sort_order' => ['label' => $this->lang('Ordre tri'), 'type' => 'text', 'value' => $is_new ? '0' : $c['sort_order']]
 			 ])
 			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'), $is_new ? 'fas fa-plus' : 'fas fa-check');
 
 		if ($this->form()->is_valid($post))
 		{
-			$data = ['title' => $post['title'], 'sort_order' => (int)$post['sort_order']];
-			if ($is_new) NeoFrag()->db->insert('nf_links_categories', $data);
-			else         NeoFrag()->db->where('id', $c['id'])->update('nf_links_categories', $data);
+			$data = ['sort_order' => (int)$post['sort_order']];
+
+			if ($is_new) $id = (int) NeoFrag()->db->insert('nf_links_categories', $data);
+			else         NeoFrag()->db->where('id', $id = (int) $c['id'])->update('nf_links_categories', $data);
+
+			NeoFrag()->db->ecrire_lang('nf_links_categories_lang', ['category_id' => $id, 'lang' => (string) $this->config->lang->info()->name], [
+				'title' => $post['title']
+			]);
 
 			notify($is_new ? $this->lang('Catégorie créée.') : $this->lang('Catégorie modifiée.'));
 			redirect('admin/links');
 		}
 
-		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title']), $this->form()->display());
+		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title_lu'] ?? $c['title']), $this->form()->display());
 	}
 }

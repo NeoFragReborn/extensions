@@ -62,4 +62,5 @@ return [
 	'8115302b' => 'Une émission peut enjamber minuit : « 22:00 → 02:00 » se termine le lendemain, et reste rattachée au jour où elle commence.',
 	'd3fe1369' => 'Grille',
 	'e2c8f589' => 'Statut',
+	'd436c4a9' => 'Écrit pour %s. Change la langue de l\'administration pour traduire cette émission ; les autres langues gardent leur texte.',
 ];

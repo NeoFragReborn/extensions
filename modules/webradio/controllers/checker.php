@@ -8,10 +8,11 @@ class Checker extends Module_Checker
 {
 	public function index()
 	{
-		$creneaux = NeoFrag()->db	->select('id', 'title', 'host', 'description', 'day', 'start_time', 'end_time')
-									->from('nf_webradio_shows')
-									->where('published', '1')
-									->order_by('day ASC, start_time ASC, id ASC')
+		$creneaux = NeoFrag()->db	->select('s.id', 'sl.title', 's.host', 'sl.description', 's.day', 's.start_time', 's.end_time')
+									->from('nf_webradio_shows s')
+									->join_lang('nf_webradio_shows_lang sl', 'show_id', 's.id', NULL, 'LEFT')
+									->where('s.published', '1')
+									->order_by('s.day ASC, s.start_time ASC, s.id ASC')
 									->get();
 
 		$station = [

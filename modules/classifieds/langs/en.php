@@ -83,4 +83,5 @@ return [
 	'0070e5d9' => 'Published',
 	'18755269' => 'When my ads are approved or rejected',
 	'fdd78d66' => 'A member interested in one of my ads',
+	'40698b8f' => 'Written for %s. Switch the admin language to translate this category; the other languages keep their text.',
 ];

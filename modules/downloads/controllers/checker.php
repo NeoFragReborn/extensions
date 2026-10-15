@@ -7,19 +7,21 @@ class Checker extends Module_Checker
 {
 	public function index()
 	{
-		$cats = NeoFrag()->db	->select('id', 'title', 'description')
-								->from('nf_downloads_categories')
-								->order_by('sort_order ASC, id ASC')
+		$cats = NeoFrag()->db	->select('c.id', 'cl.title', 'cl.description')
+								->from('nf_downloads_categories c')
+								->join_lang('nf_downloads_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->order_by('c.sort_order ASC, c.id ASC')
 								->get();
 
 		$groups = [];
 		foreach ($cats as $c)
 		{
-			$files = NeoFrag()->db	->select('id', 'title', 'description', 'file_url', 'file_size_bytes', 'file_type', 'version', 'downloads_count')
-									->from('nf_downloads')
-									->where('category_id', $c['id'])
-									->where('published', '1')
-									->order_by('title ASC')
+			$files = NeoFrag()->db	->select('d.id', 'dl.title', 'dl.description', 'd.file_url', 'd.file_size_bytes', 'd.file_type', 'd.version', 'd.downloads_count')
+									->from('nf_downloads d')
+									->join_lang('nf_downloads_lang dl', 'download_id', 'd.id', NULL, 'LEFT')
+									->where('d.category_id', $c['id'])
+									->where('d.published', '1')
+									->order_by('dl.title ASC')
 									->get();
 			if (!empty($files))
 			{

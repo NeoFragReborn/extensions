@@ -70,4 +70,6 @@ return [
 	'b2656c03' => 'Modifica categoria: %s',
 	'0aac9844' => 'Data',
 	'42c9cea8' => 'Download popolari',
+	'861a00a4' => 'Scritto per %s. Cambia la lingua dell\'amministrazione per tradurre questo file; le altre lingue mantengono il loro testo.',
+	'40698b8f' => 'Scritto per %s. Cambia la lingua dell\'amministrazione per tradurre questa categoria; le altre lingue mantengono il loro testo.',
 ];

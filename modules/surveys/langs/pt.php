@@ -71,4 +71,9 @@ return [
 	'01730157' => 'Esta sondagem está fechada.',
 	'38441190' => 'Os resultados ficarão visíveis quando a sondagem fechar.',
 	'afd2aa15' => 'Os resultados desta sondagem não são públicos.',
+	'881485c2' => 'Editar: %s',
+	'a685a944' => 'Escrito para %s. Muda a língua da administração para traduzir esta sondagem; as outras línguas mantêm o seu texto.',
+	'5b864585' => 'Uma escolha por linha. Uma resposta mantém os seus votos enquanto ficar na lista, mesmo corrigida, movida ou traduzida; só uma resposta RETIRADA os perde.',
+	'960775de' => 'Sondagem alterada. %d resposta retirada, com os seus votos.|Sondagem alterada. %d respostas retiradas, com os seus votos.',
+	'31e39bcc' => 'Sondagem alterada. Os votos são mantidos.',
 ];

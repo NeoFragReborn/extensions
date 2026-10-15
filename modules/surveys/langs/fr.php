@@ -69,4 +69,9 @@ return [
 	'01730157' => 'Ce sondage est fermé.',
 	'38441190' => 'Les résultats seront visibles à la fermeture du sondage.',
 	'afd2aa15' => 'Les résultats de ce sondage ne sont pas publics.',
+	'881485c2' => 'Éditer : %s',
+	'a685a944' => 'Écrit pour %s. Change la langue de l\'administration pour traduire ce sondage ; les autres langues gardent leur texte.',
+	'5b864585' => 'Un choix par ligne. Une réponse garde ses votes tant qu\'elle reste dans la liste, même corrigée, déplacée ou traduite ; seule une réponse RETIRÉE perd les siens.',
+	'960775de' => 'Sondage modifié. %d réponse retirée, et ses votes avec.|Sondage modifié. %d réponses retirées, et leurs votes avec.',
+	'31e39bcc' => 'Sondage modifié. Les votes sont conservés.',
 ];

@@ -70,4 +70,6 @@ return [
 	'b2656c03' => 'Editar categoría: %s',
 	'0aac9844' => 'Fecha',
 	'42c9cea8' => 'Descargas populares',
+	'861a00a4' => 'Escrito para %s. Cambia el idioma de la administración para traducir este archivo; los demás idiomas conservan su texto.',
+	'40698b8f' => 'Escrito para %s. Cambia el idioma de la administración para traducir esta categoría; los demás idiomas conservan su texto.',
 ];

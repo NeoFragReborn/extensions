@@ -46,7 +46,7 @@ installé « Cœur seul » les ajoute depuis le marketplace.
 Les tableaux suivent le catalogue du marketplace livré avec cette version.
 
 <!-- addons:début -->
-### Modules (19)
+### Modules (18)
 
 | Addon | Ce qu'il fait | Version | Auteur |
 |---|---|---|---|
@@ -61,7 +61,6 @@ Les tableaux suivent le catalogue du marketplace livré avec cette version.
 | [`glossary`](modules/glossary) | Dictionnaire — Lexique des termes de la communauté, rangé par lettre, avec ses synonymes. | 1.0 | NeoFrag Reborn |
 | [`guestbook`](modules/guestbook) | Livre d'or — Livre d'or ouvert aux visiteurs comme aux membres : chaque message attend l'accord d'un modérateur ; les envois répétés depuis une même adresse IP sont limités. | 1.0 | NeoFrag Reborn |
 | [`links`](modules/links) | Annuaire de liens — Annuaire de liens externes catégorisés avec redirection trackée et compteur de clics. | 1.0 | NeoFrag Reborn |
-| [`payments`](modules/payments) | Paiements — Packs de points ou de jours VIP (module Gamification) payés via Stripe Checkout, crédités après confirmation signée de Stripe, une seule fois par paiement. | 1.0 | NeoFrag Reborn |
 | [`places`](modules/places) | Carte des lieux — Des lieux situés sur une carte OpenStreetMap, avec leur adresse et leur description. | 1.0 | NeoFrag Reborn |
 | [`quotes`](modules/quotes) | Citations — Recueil de citations classées, avec leur auteur et leur source. | 1.0 | NeoFrag Reborn |
 | [`recipes`](modules/recipes) | Recettes — Recueil de recettes classées, avec leurs ingrédients, leurs étapes et leurs durées. | 1.0 | NeoFrag Reborn |
@@ -94,7 +93,7 @@ Les tableaux suivent le catalogue du marketplace livré avec cette version.
 | [`granite`](themes/granite) | Granite — Thème « Gazette », le journal de pierre des associations et des clubs : la date et le titre imprimés en tête, les rubriques entre deux filets, une ligne « En bref » qui défile, une une à colonnes avec ses capitales ornées, un pied en « ours » ; titres Playfair Display, texte Source Serif, nuit « à l’encre » au choix du visiteur ; couleurs, image du titre, logo et lettrines réglables. | 2.0.0 | NeoFrag Reborn |
 | [`pulse`](themes/pulse) | Pulse — Thème « Pulse », la maison commune des associations, des clubs et des communautés : une barre claire et l’appel « Adhérer » toujours en vue, un accueil en mosaïque de dalles (le prochain rendez-vous, le site en chiffres, les actualités, l’agenda, le sondage, les photos…), le forum en cartes, un pied sombre où bat le point du plan ; titres Bricolage Grotesque, texte Manrope, nuit « ardoise » au choix du visiteur ; couleurs, image d’accueil, logo et appel à adhérer réglables. | 1.0.0 | NeoFrag Reborn |
 
-### Posés d'office par les profils, dans le dépôt neofrag (34)
+### Posés d'office par les profils, dans le dépôt neofrag (36)
 
 Le marketplace les propose aussi, et leurs archives sont jointes aux versions de ce dépôt ; leur code
 vit avec le cœur, dans [neofrag](https://github.com/NeoFragReborn/neofrag).
@@ -104,8 +103,9 @@ vit avec le cœur, dans [neofrag](https://github.com/NeoFragReborn/neofrag).
 | [`api`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/api) | module | API — L’API REST du site : des clés d’accès pour les programmes (le bot Discord, une intégration), des adresses versionnées qui rendent du JSON. | 1.0 | NeoFrag Reborn |
 | [`awards`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/awards) | module | Palmarès — Le palmarès des équipes : rang obtenu, nombre d'équipes, date, lieu, jeu et plateforme de chaque compétition, et les podiums comptés par équipe et par jeu. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
 | [`calendar`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/calendar) | module | Calendrier — Calendrier des activités avec lieu et description, export iCal vers un agenda et rappel aux membres qui suivent un événement. Pour une association ou un club. | 1.0 | NeoFrag Reborn |
-| [`donations`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/donations) | module | Dons — Système de campagnes de dons avec objectif, barre de progression, liste de donateurs et bouton PayPal. | 1.0 | HiddenBlob (Donation v3), d’après majiid — portage NeoFrag Reborn |
-| [`events`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/events) | module | Événements — Événements et matchs d'une guilde ou d'une équipe eSport : invitations avec réponse présent, absent ou peut-être, scores par manche, récurrence, rappels. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`collectives`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/collectives) | module | Collectifs — Des équipes privées : chacune a sa section du forum, son rôle et son salon sur Discord, et un chef qui gère ses membres sans être administrateur. | 1.0 | NeoFrag Reborn |
+| [`donations`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/donations) | module | Dons — Campagnes de dons avec objectif, barre de progression et liste de donateurs. Les dons faits par PayPal, Ko-fi, HelloAsso ou TipeeeStream s’enregistrent d’eux-mêmes. | 1.0 | HiddenBlob (Donation v3), d’après majiid — portage NeoFrag Reborn |
+| [`events`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/events) | module | Événements — Les événements d'une communauté : invitations avec réponse présent, absent ou peut-être, récurrence, rappels ; et, avec les modules Jeux et Équipes, les matchs et leurs scores par manche. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
 | [`faq`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/faq) | module | FAQ — Foire aux questions catégorisée affichée en accordéon Bootstrap. | 1.0 | NeoFrag Reborn |
 | [`forum`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/forum) | module | Forum — Forum communautaire avec catégories, sous-forums, sujets épinglés et permissions. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
 | [`gallery`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/gallery) | module | Galeries — Galerie photos en catégories et albums ; chaque album a ses droits de consultation et de publication. Images avec titre, description et commentaires. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
@@ -114,6 +114,7 @@ vit avec le cœur, dans [neofrag](https://github.com/NeoFragReborn/neofrag).
 | [`news`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/news) | module | Actualités — Actualités classées par catégories et tags : publication programmée, commentaires, réactions, abonnement par catégorie et historique des modifications. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
 | [`newsletter`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/newsletter) | module | Newsletter — Inscription à la newsletter (double opt-in) et envoi de campagnes. | 1.0 | NeoFrag Reborn |
 | [`partners`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/partners) | module | Partenaires — Page des partenaires et sponsors : logo clair ou foncé, site, réseaux sociaux, code promo et présentation. Pour un club, une association ou une équipe. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
+| [`payments`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/payments) | module | Paiements — Packs de points ou de jours VIP (module Gamification) payés via Stripe Checkout, crédités après confirmation signée de Stripe, une seule fois par paiement. | 1.0 | NeoFrag Reborn |
 | [`recruits`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/recruits) | module | Recrutements — Offres de recrutement par équipe et par poste, avec leurs propres questions ; les recruteurs donnent leur avis, puis acceptent ou refusent la candidature. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
 | [`teams`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/teams) | module | Équipes — Une page par équipe : jeu, présentation, joueurs et rôles, résultats et recrutement selon les modules installés. Pour une guilde ou une équipe eSport. | 1.0 | Michaël BILCOT & Jérémy VALENTIN <contact@neofrag.com> |
 | [`wiki`](https://github.com/NeoFragReborn/neofrag/tree/main/modules/wiki) | module | Wiki — Pages collaboratives avec historique de révisions automatique. | 1.0 | NeoFrag Reborn |

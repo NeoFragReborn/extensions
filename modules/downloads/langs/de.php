@@ -70,4 +70,6 @@ return [
 	'b2656c03' => 'Kategorie bearbeiten: %s',
 	'0aac9844' => 'Datum',
 	'42c9cea8' => 'Beliebte Downloads',
+	'861a00a4' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Datei zu übersetzen; die anderen Sprachen behalten ihren Text.',
+	'40698b8f' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Kategorie zu übersetzen; die anderen Sprachen behalten ihren Text.',
 ];

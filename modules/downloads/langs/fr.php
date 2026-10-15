@@ -69,4 +69,6 @@ return [
 	'0aac9844' => 'Date',
 	'42c9cea8' => 'Téléchargements populaires',
 	'b9392ae8' => 'Bibliothèque de fichiers à télécharger avec catégories, version et compteur.',
+	'861a00a4' => 'Écrit pour %s. Change la langue de l\'administration pour traduire ce fichier ; les autres langues gardent leur texte.',
+	'40698b8f' => 'Écrit pour %s. Change la langue de l\'administration pour traduire cette catégorie ; les autres langues gardent leur texte.',
 ];

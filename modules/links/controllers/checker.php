@@ -7,19 +7,21 @@ class Checker extends Module_Checker
 {
 	public function index()
 	{
-		$cats = NeoFrag()->db	->select('id', 'title')
-								->from('nf_links_categories')
-								->order_by('sort_order ASC, id ASC')
+		$cats = NeoFrag()->db	->select('c.id', 'cl.title')
+								->from('nf_links_categories c')
+								->join_lang('nf_links_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->order_by('c.sort_order ASC, c.id ASC')
 								->get();
 
 		$groups = [];
 		foreach ($cats as $c)
 		{
-			$links = NeoFrag()->db	->select('id', 'title', 'url', 'description', 'clicks')
-									->from('nf_links')
-									->where('category_id', $c['id'])
-									->where('published', '1')
-									->order_by('sort_order ASC, title ASC')
+			$links = NeoFrag()->db	->select('l.id', 'll.title', 'l.url', 'll.description', 'l.clicks')
+									->from('nf_links l')
+									->join_lang('nf_links_lang ll', 'link_id', 'l.id', NULL, 'LEFT')
+									->where('l.category_id', $c['id'])
+									->where('l.published', '1')
+									->order_by('l.sort_order ASC, ll.title ASC')
 									->get();
 			if (!empty($links))
 			{

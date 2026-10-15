@@ -60,4 +60,6 @@ return [
 	'b2656c03' => 'Editar categoría: %s',
 	'0aac9844' => 'Fecha',
 	'287e1fcc' => 'El enlace debe ser una dirección web (http o https) o una página del sitio.',
+	'bff00c60' => 'Escrito para %s. Cambia el idioma de la administración para traducir este enlace; los demás idiomas conservan su texto.',
+	'40698b8f' => 'Escrito para %s. Cambia el idioma de la administración para traducir esta categoría; los demás idiomas conservan su texto.',
 ];

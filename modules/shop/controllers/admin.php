@@ -17,7 +17,7 @@ class Admin extends Controller_Module
 		$this->subtitle($this->lang('Catalogue'))->icon('fas fa-store')->css('shop');
 		$nouveau = $this->admin_create('admin/shop/new', $this->lang('Nouvel item'));
 
-		$items = $this->db->select('*')->from('nf_shop_items')->order_by('position', 'id')->get(FALSE);
+		$items = $this->db->select('*')->from('nf_shop_items')->join_lang('nf_shop_items_lang il', 'item_id', 'nf_shop_items.id', NULL, 'LEFT')->order_by('position', 'id')->get(FALSE);
 
 		if (!$items)
 		{
@@ -70,6 +70,19 @@ class Admin extends Controller_Module
 			return;
 		}
 
+		$langue = (string) $this->config->lang->info()->name;
+
+		if ($item)
+		{
+			// Le nom et la description TELS QU'ILS SONT ÉCRITS dans la langue de l'administration, vides si rien n'y
+			// est encore écrit (m32, 2026-10-15) : on traduit un article en changeant de langue.
+			$ecrit = $this->db->select('title', 'description')->from('nf_shop_items_lang')->where('item_id', $id)->where('lang', $langue)->row(FALSE);
+			$item  = array_merge($item, [
+				'title'       => (string) ($ecrit['title'] ?? ''),
+				'description' => (string) ($ecrit['description'] ?? '')
+			]);
+		}
+
 		$this->subtitle($id ? $this->lang('Modifier l\'item') : $this->lang('Nouvel item'))->icon('fas fa-store');
 		$this->breadcrumb($this->lang('Boutique'), 'admin/shop');
 
@@ -77,7 +90,8 @@ class Admin extends Controller_Module
 
 		$form = $this->form()
 			->add_rules([
-				'title'       => ['label' => $this->lang('Titre'),            'value' => $item['title'] ?? '',             'rules' => 'required'],
+				'title'       => ['label' => $this->lang('Titre'),            'value' => $item['title'] ?? '',             'rules' => 'required',
+				                  'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire cet article ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'description' => ['label' => $this->lang('Description'),      'value' => $item['description'] ?? '',       'type'  => 'textarea'],
 				'icon'        => ['label' => $this->lang('Icône (classe FontAwesome)'), 'value' => $item['icon'] ?? 'fas fa-gift'],
 				'price'       => ['label' => $this->lang('Prix (points)'),    'value' => $item['price'] ?? 0,             'type'  => 'number', 'rules' => 'required', 'size' => 'col-3'],
@@ -94,8 +108,6 @@ class Admin extends Controller_Module
 		if ($form->is_valid($post))
 		{
 			$data = [
-				'title'           => $post['title'],
-				'description'     => $post['description'],
 				'icon'            => $post['icon'] ?: 'fas fa-gift',
 				'price'           => max(0, (int)$post['price']),
 				'type'            => in_array($post['type'], Shop::TYPES, TRUE) ? $post['type'] : 'perk',
@@ -112,8 +124,12 @@ class Admin extends Controller_Module
 			}
 			else
 			{
-				$this->db->insert('nf_shop_items', $data);
+				$id = (int) $this->db->insert('nf_shop_items', $data);
 			}
+
+			// `ecrire_lang` CRÉE la ligne quand elle manque (leçon de m30).
+			$this->db->ecrire_lang('nf_shop_items_lang', ['item_id' => $id, 'lang' => $langue],
+				['title' => $post['title'], 'description' => $post['description']]);
 
 			notify($this->lang($id ? 'Item modifié' : 'Item créé'));
 			redirect('admin/shop');

@@ -44,7 +44,7 @@ return [
 	'a4c3a1b7' => 'Margem superior',
 	'070df144' => 'Aparência do widget',
 	'c659d2be' => 'Imagem de boas-vindas',
-	'622d68c0' => 'Cobre a grande laje de boas-vindas, escurecida em baixo para que o nome e o lema continuem legíveis. Deixar vazio: uma paisagem desenhada.',
+	'622d68c0' => 'Cobre a grande laje de boas-vindas, escurecida em baixo para que o nome e o lema continuem legíveis. Deixar vazio: uma paisagem depalavra-passeda.',
 	'723b898a' => 'Na barra, antes do nome do site. Deixado vazio: o logótipo do site (definições gerais), se houver, senão as suas iniciais.',
 	'9ffe549b' => 'Cor principal do tema (botões, ligações, secção ativa, lajes de ardósia)',
 	'b673ddc7' => 'Boas-vindas atualizadas!',

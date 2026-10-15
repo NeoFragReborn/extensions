@@ -62,4 +62,5 @@ return [
 	'8115302b' => 'Um programa pode atravessar a meia-noite: « 22:00 → 02:00 » termina no dia seguinte, e continua ligado ao dia em que começa.',
 	'd3fe1369' => 'Grelha',
 	'e2c8f589' => 'Estado',
+	'd436c4a9' => 'Escrito para %s. Muda a língua da administração para traduzir este programa; as outras línguas mantêm o seu texto.',
 ];

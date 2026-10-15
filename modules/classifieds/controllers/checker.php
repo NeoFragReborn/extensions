@@ -12,7 +12,11 @@ class Checker extends Module_Checker
 
 	public function _category($id, $title)
 	{
-		$cat = NeoFrag()->db->select('id', 'title')->from('nf_classifieds_categories')->where('id', $id)->row(FALSE);
+		$cat = NeoFrag()->db	->select('c.id', 'cl.title')
+								->from('nf_classifieds_categories c')
+								->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->where('c.id', $id)
+								->row(FALSE);
 		if (empty($cat))
 		{
 			return;
@@ -32,9 +36,10 @@ class Checker extends Module_Checker
 
 	public function _show($id, $title)
 	{
-		$ad = NeoFrag()->db	->select('a.*', 'c.title AS cat_title', 'u.username AS author', 'u.id AS author_id', 'UNIX_TIMESTAMP(a.created_at) AS created_ts')
+		$ad = NeoFrag()->db	->select('a.*', 'cl.title AS cat_title', 'u.username AS author', 'u.id AS author_id', 'UNIX_TIMESTAMP(a.created_at) AS created_ts')
 							->from('nf_classifieds a')
 							->join('nf_classifieds_categories c', 'a.category_id = c.id', 'LEFT')
+							->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 							->join('nf_user u', 'a.user_id = u.id', 'LEFT')
 							->where('a.id', $id)
 							->row(FALSE);
@@ -105,18 +110,23 @@ class Checker extends Module_Checker
 
 	private function _categories()
 	{
-		return NeoFrag()->db	->select('c.id', 'c.title', 'COUNT(a.id) AS nb')
+		return NeoFrag()->db	->select('c.id', 'cl.title', 'COUNT(a.id) AS nb')
 								->from('nf_classifieds_categories c')
+								->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 								->join('nf_classifieds a', "c.id = a.category_id AND a.status = 'published'", 'LEFT')
 								->group_by('c.id')
-								->order_by('c.sort_order ASC, c.title ASC')
+								->order_by('c.sort_order ASC, cl.title ASC')
 								->get();
 	}
 
 	private function _cats_list()
 	{
 		$out = [];
-		foreach (NeoFrag()->db->select('id', 'title')->from('nf_classifieds_categories')->order_by('sort_order ASC, title ASC')->get() as $c)
+		foreach (NeoFrag()->db	->select('c.id', 'cl.title')
+								->from('nf_classifieds_categories c')
+								->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->order_by('c.sort_order ASC, cl.title ASC')
+								->get() as $c)
 		{
 			$out[(int)$c['id']] = $c['title'];
 		}
@@ -125,9 +135,11 @@ class Checker extends Module_Checker
 
 	private function _ads($category_id = 0)
 	{
-		$db = NeoFrag()->db	->select('a.id', 'a.title', 'a.ad_type', 'a.price', 'a.image', 'a.views', 'c.title AS cat_title', 'u.username AS author', 'u.id AS author_id', 'UNIX_TIMESTAMP(a.created_at) AS created_ts')
+		// Le nom d'une rubrique vit dans nf_classifieds_categories_lang depuis m32 : la meilleure traduction.
+		$db = NeoFrag()->db	->select('a.id', 'a.title', 'a.ad_type', 'a.price', 'a.image', 'a.views', 'cl.title AS cat_title', 'u.username AS author', 'u.id AS author_id', 'UNIX_TIMESTAMP(a.created_at) AS created_ts')
 							->from('nf_classifieds a')
 							->join('nf_classifieds_categories c', 'a.category_id = c.id', 'LEFT')
+							->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 							->join('nf_user u', 'a.user_id = u.id', 'LEFT')
 							->where('a.status', 'published');
 

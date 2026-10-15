@@ -59,4 +59,6 @@ return [
 	'b2656c03' => 'Edit category: %s',
 	'0aac9844' => 'Date',
 	'287e1fcc' => 'The link must be a web address (http or https) or a page of the site.',
+	'bff00c60' => 'Written for %s. Switch the admin language to translate this link; the other languages keep their text.',
+	'40698b8f' => 'Written for %s. Switch the admin language to translate this category; the other languages keep their text.',
 ];

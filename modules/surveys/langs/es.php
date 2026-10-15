@@ -71,4 +71,9 @@ return [
 	'01730157' => 'Esta encuesta está cerrada.',
 	'38441190' => 'Los resultados serán visibles cuando se cierre la encuesta.',
 	'afd2aa15' => 'Los resultados de esta encuesta no son públicos.',
+	'881485c2' => 'Editar: %s',
+	'a685a944' => 'Escrito para %s. Cambia el idioma de la administración para traducir esta encuesta; los demás idiomas conservan su texto.',
+	'5b864585' => 'Una opción por línea. Una respuesta conserva sus votos mientras siga en la lista, aunque se corrija, se mueva o se traduzca; solo una respuesta RETIRADA los pierde.',
+	'960775de' => 'Encuesta modificada. %d respuesta retirada, con sus votos.|Encuesta modificada. %d respuestas retiradas, con sus votos.',
+	'31e39bcc' => 'Encuesta modificada. Se conservan los votos.',
 ];

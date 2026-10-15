@@ -57,7 +57,7 @@ return [
 	'52c9bbab' => 'Modificar',
 	'3bf7b6cb' => 'Categorias — Adicionar',
 	'5c4d415d' => 'Categorias — Modificar',
-	'd94e2477' => 'Categorias — Excluir',
+	'd94e2477' => 'Categorias — Eliminar',
 	// i18n 2026-06-11
 	'12afb0ca' => 'Nenhum artigo corresponde a estes critérios.',
 	'48bdcf79' => 'Procurar um título…',

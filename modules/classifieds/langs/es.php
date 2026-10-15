@@ -83,4 +83,5 @@ return [
 	'0070e5d9' => 'Publicada',
 	'18755269' => 'La aprobación o el rechazo de mis anuncios',
 	'fdd78d66' => 'Un miembro interesado en uno de mis anuncios',
+	'40698b8f' => 'Escrito para %s. Cambia el idioma de la administración para traducir esta categoría; los demás idiomas conservan su texto.',
 ];

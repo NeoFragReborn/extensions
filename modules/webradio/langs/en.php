@@ -62,4 +62,5 @@ return [
 	'8115302b' => 'A show may span midnight: « 22:00 → 02:00 » ends the next day, and stays attached to the day it starts on.',
 	'd3fe1369' => 'Schedule',
 	'e2c8f589' => 'Status',
+	'd436c4a9' => 'Written for %s. Switch the admin language to translate this show; the other languages keep their text.',
 ];

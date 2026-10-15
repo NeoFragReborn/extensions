@@ -62,4 +62,5 @@ return [
 	'8115302b' => 'Un programa puede cruzar la medianoche: « 22:00 → 02:00 » termina al día siguiente, y sigue vinculado al día en que empieza.',
 	'd3fe1369' => 'Parrilla',
 	'e2c8f589' => 'Estado',
+	'd436c4a9' => 'Escrito para %s. Cambia el idioma de la administración para traducir este programa; los demás idiomas conservan su texto.',
 ];

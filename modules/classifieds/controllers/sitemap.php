@@ -32,7 +32,13 @@ class Sitemap extends Controller_Module
 
 		if ($categories)
 		{
-			foreach ($this->db->select('id', 'title')->from('nf_classifieds_categories')->where('id', array_keys($categories))->get() as $categorie)
+			// Le nom vit dans la table des traductions depuis m32 : le lire ici rendrait NULL, et le plan
+			// du site tomberait en avertissement PHP à chaque passage d'un robot.
+			foreach ($this->db	->select('c.id', 'cl.title')
+								->from('nf_classifieds_categories c')
+								->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
+								->where('c.id', array_keys($categories))
+								->get() as $categorie)
 			{
 				$adresses[] = ['adresse' => 'classifieds/category/'.$categorie['id'].'/'.url_title($categorie['title']), 'date' => $categories[(int) $categorie['id']]];
 			}

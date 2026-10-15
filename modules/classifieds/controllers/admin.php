@@ -156,22 +156,30 @@ class Admin extends Controller_Module
 
 		$this->form()
 			 ->add_rules([
-				'title'      => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required'],
+				// Le nom d'une rubrique s'écrit dans la langue où l'on travaille (m32, 2026-10-15) : on le dit.
+				'title'      => ['label' => $this->lang('Titre'), 'type' => 'text', 'value' => $is_new ? '' : $c['title'], 'rules' => 'required',
+				                  'description' => $this->lang('Écrit pour %s. Change la langue de l\'administration pour traduire cette catégorie ; les autres langues gardent leur texte.', $this->config->lang->info()->title)],
 				'sort_order' => ['label' => $this->lang('Ordre tri'), 'type' => 'text', 'value' => $is_new ? '0' : $c['sort_order']]
 			 ])
 			 ->add_submit($is_new ? $this->lang('Créer') : $this->lang('Enregistrer'), $is_new ? 'fas fa-plus' : 'fas fa-check');
 
 		if ($this->form()->is_valid($post))
 		{
-			$data = ['title' => $post['title'], 'sort_order' => (int)$post['sort_order']];
-			if ($is_new) NeoFrag()->db->insert('nf_classifieds_categories', $data);
-			else         NeoFrag()->db->where('id', $c['id'])->update('nf_classifieds_categories', $data);
+			$data = ['sort_order' => (int)$post['sort_order']];
+
+			if ($is_new) $id = (int) NeoFrag()->db->insert('nf_classifieds_categories', $data);
+			else         NeoFrag()->db->where('id', $id = (int) $c['id'])->update('nf_classifieds_categories', $data);
+
+			// `ecrire_lang` CRÉE la ligne quand elle manque (leçon de m30).
+			NeoFrag()->db->ecrire_lang('nf_classifieds_categories_lang',
+				['category_id' => $id, 'lang' => (string) $this->config->lang->info()->name],
+				['title' => $post['title']]);
 
 			notify($is_new ? $this->lang('Catégorie créée.') : $this->lang('Catégorie modifiée.'));
 			redirect('admin/classifieds');
 		}
 
-		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title']), $this->form()->display());
+		return $this->admin_card($is_new ? 'fas fa-folder-plus' : 'fas fa-folder-open', $is_new ? $this->lang('Nouvelle catégorie') : $this->lang('Éditer catégorie : %s', $c['title_lu'] ?? $c['title']), $this->form()->display());
 	}
 
 	public function _approve($ad)

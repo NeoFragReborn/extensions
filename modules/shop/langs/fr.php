@@ -48,4 +48,5 @@ return [
 	'4539b307' => 'VIP (payload = jours)',
 	'5a7a9517' => 'Produit physique (merch)',
 	'e0c070fd' => 'La page a expiré : recharge-la, puis réessaie.',
+	'48cead6e' => 'Écrit pour %s. Change la langue de l\'administration pour traduire cet article ; les autres langues gardent leur texte.',
 ];

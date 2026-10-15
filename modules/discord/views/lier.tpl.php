@@ -4,8 +4,10 @@ $liaison   = $liaison ?? [];
 $connecte  = $connecte ?? FALSE;
 $membre    = $membre ?? '';
 $messages  = $messages ?? 0;
-$relier    = $relier ?? '#';
+$relier    = $relier ?? '';
 $reprendre = $reprendre ?? '';
+$prouve    = $prouve ?? FALSE;
+$preuve    = $preuve ?? '';
 ?>
 <div class="d-flex align-items-center gap-3 mb-3">
 	<?php if (!empty($liaison['avatar'])): ?>
@@ -27,9 +29,14 @@ $reprendre = $reprendre ?? '';
 </div>
 <?php if ($connecte): ?>
 <p><?php echo $this->lang('Une fois vos comptes reliés, ce que vous écrivez depuis Discord paraît sur le forum sous votre compte du site, et le serveur Discord vous donne les rôles de vos groupes.') ?></p>
-<?php /* Un lien de liaison qu'un autre a obtenu par /forum account link relierait SON compte Discord au vôtre (audit du
-         2026-10-09) : on le dit avant le bouton. */ ?>
-<div class="alert alert-warning"><?php echo icon('fas fa-triangle-exclamation').' '.$this->lang('Ne reliez que VOTRE compte Discord. Si quelqu’un vous a envoyé ce lien, ce compte Discord est le sien : il publierait sous votre nom et recevrait les rôles de vos groupes.') ?></div>
+<?php if (!$prouve): ?>
+<?php /* La preuve vient de Discord, jamais du lien : qui reçoit le lien d'un autre relierait sinon le compte Discord
+         de cet autre au sien, et pourrait ensuite se connecter à sa place (s07, 2026-10-14). */ ?>
+<div class="alert alert-info"><?php echo icon('fas fa-shield-halved').' '.$this->lang('C’est Discord qui nous dit à qui appartient ce compte, jamais le lien : reliez-le depuis « Mes comptes liés » en vous connectant une fois avec lui, puis revenez ici. Un lien reçu de quelqu’un d’autre ne reliera rien.') ?></div>
+<div class="d-flex flex-wrap gap-2">
+	<a class="btn btn-primary" href="<?php echo nf_texte($preuve) ?>"><?php echo icon('fab fa-discord').' '.$this->lang('Relier mon compte Discord') ?></a>
+</div>
+<?php else: ?>
 <div class="d-flex flex-wrap gap-2">
 	<?php if ($reprendre !== ''): ?>
 	<a class="btn btn-primary" href="<?php echo $reprendre ?>"><?php echo icon('fas fa-link').' '.$this->lang('Relier, et reprendre à mon nom mes %d message(s) publiés depuis Discord', $messages) ?></a>
@@ -38,6 +45,7 @@ $reprendre = $reprendre ?? '';
 	<a class="btn btn-primary" href="<?php echo $relier ?>"><?php echo icon('fas fa-link').' '.$this->lang('Relier mes comptes') ?></a>
 	<?php endif ?>
 </div>
+<?php endif ?>
 <?php else: ?>
 <p><?php echo $this->lang('Pour relier ce compte Discord, connectez-vous à votre compte du site — ou créez-en un —, puis revenez sur ce lien.') ?></p>
 <div class="d-flex flex-wrap gap-2">

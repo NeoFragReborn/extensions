@@ -30,4 +30,5 @@ return [
 	'ca1ec941' => 'Bild-URL',
 	'e1748a2d' => 'HTML-Code',
 	'8fd9c7ef' => 'Speichern',
+	'4c55b8fc' => 'Für %s geschrieben. Wechsle die Sprache der Verwaltung, um diese Anzeige zu übersetzen; die anderen Sprachen behalten ihren Text.',
 ];

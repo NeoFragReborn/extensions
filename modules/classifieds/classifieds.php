@@ -114,9 +114,10 @@ class Classifieds extends Module
 			return [];
 		}
 
-		$annonces = (array) $this->db	->select('a.id', 'a.title', 'a.ad_type', 'a.price', 'a.created_at', 'c.title AS categorie')
+		$annonces = (array) $this->db	->select('a.id', 'a.title', 'a.ad_type', 'a.price', 'a.created_at', 'cl.title AS categorie')
 										->from('nf_classifieds a')
 										->join('nf_classifieds_categories c', 'c.id = a.category_id')
+										->join_lang('nf_classifieds_categories_lang cl', 'category_id', 'c.id', NULL, 'LEFT')
 										->where('a.user_id', (int) $membre->id)
 										->where('a.status', 'published')
 										->order_by('a.created_at DESC')

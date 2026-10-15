@@ -57,7 +57,7 @@ class Admin extends Controller_Module
 
 	public function _edit($t)
 	{
-		$this->title('Ticket #'.$t['id'])->icon('fas fa-edit')->breadcrumb();
+		$this->title($this->lang('Ticket #').$t['id'])->icon('fas fa-edit')->breadcrumb();
 
 		$users = NeoFrag()->db->select('id', 'username')->from('nf_user')->where('admin', '1')->where('deleted', '0')->order_by('username ASC')->get();
 		$users_array = ['' => $this->lang('— Non assigné —')];
