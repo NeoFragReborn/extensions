@@ -82,6 +82,8 @@ class Blockcraft extends Theme
 
 	public function install($dispositions = [])
 	{
+		// Les titres des liens s'écrivent dans la langue SOURCE (->source()) : le widget Navigation les traduit à chaque
+		// affichage. Traduits ici, ils restaient dans la langue de l'administrateur qui activait le thème (m34).
 		$this	->config('blockcraft_background',            0,             'int')
 				->config('blockcraft_background_repeat',     'repeat')
 				->config('blockcraft_background_attachment', 'scroll')
@@ -120,13 +122,13 @@ class Blockcraft extends Theme
 		// choisit d'après l'adresse : le livre pour les nouvelles, la carte pour le forum…).
 		$dispositions->set('*', 'Barre d’objets', $this->array([
 			$this->row($this->col($bloc('navigation', 'index', NULL, ['links' => $liens([
-				[$this->lang('Accueil'),    ''],
-				[$this->lang('Nouvelles'),  'news'],
-				[$this->lang('Forum'),      'forum'],
-				[$this->lang('Agenda'),     'calendar'],
-				[$this->lang('Galerie'),    'gallery'],
-				[$this->lang('Membres'),    'members'],
-				[$this->lang('Mon espace'), 'user']
+				[$this->lang('Accueil')->source(),    ''],
+				[$this->lang('Nouvelles')->source(),  'news'],
+				[$this->lang('Forum')->source(),      'forum'],
+				[$this->lang('Agenda')->source(),     'calendar'],
+				[$this->lang('Galerie')->source(),    'gallery'],
+				[$this->lang('Membres')->source(),    'members'],
+				[$this->lang('Mon espace')->source(), 'user']
 			]), 'panel' => 0])))->style('row-default')
 		]));
 
@@ -204,10 +206,10 @@ class Blockcraft extends Theme
 		// Le pied : quelques chemins.
 		$dispositions->set('*', 'Pied de page', $this->array([
 			$this->row($this->col($bloc('navigation', 'vertical', NULL, ['links' => $liens([
-				[$this->lang('Nouvelles'), 'news'],
-				[$this->lang('Forum'),     'forum'],
-				[$this->lang('Membres'),   'members'],
-				[$this->lang('Contact'),   'contact']
+				[$this->lang('Nouvelles')->source(), 'news'],
+				[$this->lang('Forum')->source(),     'forum'],
+				[$this->lang('Membres')->source(),   'members'],
+				[$this->lang('Contact')->source(),   'contact']
 			]), 'panel' => 0])))->style('row-default')
 		]));
 

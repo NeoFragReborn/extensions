@@ -29,7 +29,7 @@ class Sitemap extends Controller_Module
 			return [];
 		}
 
-		array_unshift($adresses, ['adresse' => 'recipes', 'date' => $adresses ? max(array_column($adresses, 'date')) : NULL]);
+		array_unshift($adresses, ['adresse' => 'recipes', 'date' => $adresses ? max(array_column($adresses, 'date')) : NULL, 'sans_langue' => TRUE]);
 
 		return $adresses;
 	}

@@ -15,6 +15,10 @@ class Index extends Controller_Module
 {
 	public function index($groupes)
 	{
+		// Comme ses recettes : la liste n'a pas de langue à elle, une seule canonique, dans la langue première du site
+		// (check-seo sur la démo, 2026-10-15 : deux canoniques d'un même texte).
+		nf_seo_sans_langue();
+
 		$this	->title($this->lang('Recettes'))
 				->icon('fas fa-utensils')
 				->breadcrumb();

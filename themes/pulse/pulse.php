@@ -83,6 +83,8 @@ class Pulse extends Theme
 
 	public function install($dispositions = [])
 	{
+		// Les titres des liens s'écrivent dans la langue SOURCE (->source()) : le widget Navigation les traduit à chaque
+		// affichage. Traduits ici, ils restaient dans la langue de l'administrateur qui activait le thème (m34).
 		$this	->config('pulse_background',            0,             'int')
 				->config('pulse_background_repeat',     'repeat')
 				->config('pulse_background_attachment', 'scroll')
@@ -121,13 +123,13 @@ class Pulse extends Theme
 		// La barre : les rubriques du site, en pastilles.
 		$dispositions->set('*', 'Barre de navigation', $this->array([
 			$this->row($this->col($bloc('navigation', 'index', NULL, ['links' => $liens([
-				[$this->lang('Accueil'),    ''],
-				[$this->lang('Actualités'), 'news'],
-				[$this->lang('Agenda'),     'calendar'],
-				[$this->lang('Forum'),      'forum'],
-				[$this->lang('Galerie'),    'gallery'],
-				[$this->lang('Documents'),  'downloads'],
-				[$this->lang('Contact'),    'contact']
+				[$this->lang('Accueil')->source(),    ''],
+				[$this->lang('Actualités')->source(), 'news'],
+				[$this->lang('Agenda')->source(),     'calendar'],
+				[$this->lang('Forum')->source(),      'forum'],
+				[$this->lang('Galerie')->source(),    'gallery'],
+				[$this->lang('Documents')->source(),  'downloads'],
+				[$this->lang('Contact')->source(),    'contact']
 			]), 'panel' => 0])))->style('row-default')
 		]));
 
@@ -244,10 +246,10 @@ class Pulse extends Theme
 		// Le pied : quelques chemins.
 		$dispositions->set('*', 'Pied de page', $this->array([
 			$this->row($this->col($bloc('navigation', 'vertical', NULL, ['links' => $liens([
-				[$this->lang('Agenda'),    'calendar'],
-				[$this->lang('Documents'), 'downloads'],
-				[$this->lang('Membres'),   'members'],
-				[$this->lang('Contact'),   'contact']
+				[$this->lang('Agenda')->source(),    'calendar'],
+				[$this->lang('Documents')->source(), 'downloads'],
+				[$this->lang('Membres')->source(),   'members'],
+				[$this->lang('Contact')->source(),   'contact']
 			]), 'panel' => 0])))->style('row-default')
 		]));
 

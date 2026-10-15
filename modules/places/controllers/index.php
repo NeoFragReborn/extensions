@@ -16,6 +16,10 @@ class Index extends Controller_Module
 {
 	public function index($lieux, $cadrage)
 	{
+		// Les lieux n'ont pas de langue à eux : la carte a le même texte dans chaque langue, une seule canonique, dans la
+		// langue première du site (check-seo sur la démo, 2026-10-15 : deux canoniques d'un même texte).
+		nf_seo_sans_langue();
+
 		$this	->title($this->lang('Carte des lieux'))
 				->icon('fas fa-map-marked-alt')
 				->breadcrumb();

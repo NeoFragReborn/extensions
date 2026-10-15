@@ -27,8 +27,10 @@ class Index extends Controller_Module
 
 	public function _article($article, $autour = [], $serie = [])
 	{
-		// Le titre et la description que le billet donne aux moteurs, s'il en donne.
+		// Le titre et la description que le billet donne aux moteurs, s'il en donne ; ses autres langues annoncées
+		// chacune à l'adresse de SON titre — la même pour toutes y redirigeait (m33).
 		nf_seo_contenu('articles', (int) $article['article_id']);
+		nf_seo_traduit_contenu('nf_articles_lang', 'article_id', (int) $article['article_id']);
 
 		$this->css('blog');
 		$this->js('blog');

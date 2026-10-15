@@ -8,9 +8,8 @@ class Index extends Controller_Module
 {
 	public function index($groups)
 	{
-		// La page est faite des fichiers, qui n'ont pas de langue à eux : sa canonique est dans la langue
-		// première du site.
-		nf_seo_sans_langue();
+		// Annoncée dans les langues où des fichiers sont décrits ; ailleurs, sa canonique va à la première (m33).
+		nf_seo_traduit(array_keys(nf_textes_ecrits('nf_downloads_lang', 'download_id')));
 
 		$this	->title($this->lang('Téléchargements'))
 				->icon('fas fa-download')

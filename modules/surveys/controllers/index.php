@@ -47,8 +47,8 @@ class Index extends Controller_Module
 
 	public function _show($survey, $options, $user_voted)
 	{
-		// Un sondage n'a pas de langue à lui : sa canonique est dans la langue première du site.
-		nf_seo_sans_langue();
+		// Annoncé dans les langues où il est écrit, chacune à l'adresse de son titre (m33).
+		nf_seo_traduit_contenu('nf_surveys_lang', 'survey_id', (int) $survey['id']);
 
 		$this->title($survey['title'])->icon('fas fa-poll')->breadcrumb();
 

@@ -27,7 +27,7 @@ class Sitemap extends Controller_Module
 							->order_by('s.created_at DESC')
 							->get() as $sondage)
 		{
-			$adresses[] = ['adresse' => 'surveys/'.$sondage['id'].'/'.url_title($sondage['title']), 'date' => $sondage['created_at'], 'sans_langue' => TRUE];
+			$adresses[] = ['adresse' => 'surveys/'.$sondage['id'].'/'.url_title($sondage['title']), 'date' => $sondage['created_at'], 'langues' => array_keys(nf_textes_ecrits('nf_surveys_lang', 'survey_id', (int) $sondage['id']))];
 		}
 
 		// Une rubrique vide n'est pas annoncée aux moteurs : sa page ne dirait que « rien pour l'instant ».

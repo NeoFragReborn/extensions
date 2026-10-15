@@ -79,6 +79,8 @@ class Granite extends Theme
 
 	public function install($dispositions = [])
 	{
+		// Les titres des liens s'écrivent dans la langue SOURCE (->source()) : le widget Navigation les traduit à chaque
+		// affichage. Traduits ici, ils restaient dans la langue de l'administrateur qui activait le thème (m34).
 		$this	->config('granite_background',            0,             'int')
 				->config('granite_background_repeat',     'repeat')
 				->config('granite_background_attachment', 'scroll')
@@ -117,14 +119,14 @@ class Granite extends Theme
 		$liens = [];
 
 		foreach ([
-			[$this->lang('À la une'),   ''],
-			[$this->lang('Actualités'), 'news'],
-			[$this->lang('Agenda'),     'calendar'],
-			[$this->lang('Forum'),      'forum'],
-			[$this->lang('Galerie'),    'gallery'],
-			[$this->lang('Documents'),  'downloads'],
-			[$this->lang('Membres'),    'members'],
-			[$this->lang('Contact'),    'contact']
+			[$this->lang('À la une')->source(),   ''],
+			[$this->lang('Actualités')->source(), 'news'],
+			[$this->lang('Agenda')->source(),     'calendar'],
+			[$this->lang('Forum')->source(),      'forum'],
+			[$this->lang('Galerie')->source(),    'gallery'],
+			[$this->lang('Documents')->source(),  'downloads'],
+			[$this->lang('Membres')->source(),    'members'],
+			[$this->lang('Contact')->source(),    'contact']
 		] as [$titre, $url])
 		{
 			$liens[] = [

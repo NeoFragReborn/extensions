@@ -17,6 +17,9 @@ class Index extends Controller_Module
 
 	public function _category($cat, $categories, $ads)
 	{
+		// La rubrique annoncée dans les langues où son nom est écrit, chacune à l'adresse de SON nom (m33).
+		nf_seo_traduit_contenu('nf_classifieds_categories_lang', 'category_id', (int) $cat['id']);
+
 		$this->title($cat['title'])->icon('fas fa-bullhorn')->breadcrumb();
 
 		return $this->panel()->title($cat['title'], 'fas fa-folder-open')->body(

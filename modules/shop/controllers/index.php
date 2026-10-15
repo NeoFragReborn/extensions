@@ -13,9 +13,8 @@ class Index extends Controller_Module
 {
 	public function index()
 	{
-		// La page est faite des articles de la boutique, qui n'ont pas de langue à eux : sa canonique est
-		// dans la langue première du site.
-		nf_seo_sans_langue();
+		// Annoncée dans les langues où des articles sont décrits ; ailleurs, sa canonique va à la première (m33).
+		nf_seo_traduit(array_keys(nf_textes_ecrits('nf_shop_items_lang', 'item_id')));
 
 		$this->css('shop')->js('shop');
 

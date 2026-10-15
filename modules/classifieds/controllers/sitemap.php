@@ -40,7 +40,8 @@ class Sitemap extends Controller_Module
 								->where('c.id', array_keys($categories))
 								->get() as $categorie)
 			{
-				$adresses[] = ['adresse' => 'classifieds/category/'.$categorie['id'].'/'.url_title($categorie['title']), 'date' => $categories[(int) $categorie['id']]];
+				// Une rubrique n'est annoncée que dans les langues où son nom est écrit (m33).
+				$adresses[] = ['adresse' => 'classifieds/category/'.$categorie['id'].'/'.url_title($categorie['title']), 'date' => $categories[(int) $categorie['id']], 'langues' => array_keys(nf_textes_ecrits('nf_classifieds_categories_lang', 'category_id', (int) $categorie['id']))];
 			}
 		}
 

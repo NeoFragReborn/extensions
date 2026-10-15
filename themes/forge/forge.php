@@ -84,6 +84,8 @@ class Forge extends Theme
 
 	public function install($dispositions = [])
 	{
+		// Les titres des liens s'écrivent dans la langue SOURCE (->source()) : le widget Navigation les traduit à chaque
+		// affichage. Traduits ici, ils restaient dans la langue de l'administrateur qui activait le thème (m34).
 		$this	->config('forge_background',            0,             'int')
 				->config('forge_background_repeat',     'repeat')
 				->config('forge_background_attachment', 'scroll')
@@ -121,14 +123,14 @@ class Forge extends Theme
 		$liens = [];
 
 		foreach ([
-			[$this->lang('Accueil'),        '',               'fas fa-house'],
-			[$this->lang('Actualités'),     'news',           'far fa-newspaper'],
-			[$this->lang('Forum'),          'forum',          'far fa-comments'],
-			[$this->lang('Matchs'),         'events/matches', 'fas fa-crosshairs'],
-			[$this->lang('Équipes'),        'teams',          'fas fa-users'],
-			[$this->lang('Galerie'),        'gallery',        'far fa-images'],
-			[$this->lang('Nous rejoindre'), 'recruits',       'fas fa-user-plus'],
-			[$this->lang('Contact'),        'contact',        'far fa-envelope']
+			[$this->lang('Accueil')->source(),        '',               'fas fa-house'],
+			[$this->lang('Actualités')->source(),     'news',           'far fa-newspaper'],
+			[$this->lang('Forum')->source(),          'forum',          'far fa-comments'],
+			[$this->lang('Matchs')->source(),         'events/matches', 'fas fa-crosshairs'],
+			[$this->lang('Équipes')->source(),        'teams',          'fas fa-users'],
+			[$this->lang('Galerie')->source(),        'gallery',        'far fa-images'],
+			[$this->lang('Nous rejoindre')->source(), 'recruits',       'fas fa-user-plus'],
+			[$this->lang('Contact')->source(),        'contact',        'far fa-envelope']
 		] as [$titre, $url, $icone])
 		{
 			$liens[] = [

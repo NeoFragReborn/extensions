@@ -23,6 +23,6 @@ class Sitemap extends Controller_Module
 			return [];
 		}
 
-		return [['adresse' => 'downloads', 'date' => $this->db->select('MAX(created_at)')->from('nf_downloads')->where('published', '1')->row(), 'sans_langue' => TRUE]];
+		return [['adresse' => 'downloads', 'date' => $this->db->select('MAX(created_at)')->from('nf_downloads')->where('published', '1')->row(), 'langues' => array_keys(nf_textes_ecrits('nf_downloads_lang', 'download_id'))]];
 	}
 }

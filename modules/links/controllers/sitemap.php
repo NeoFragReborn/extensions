@@ -22,6 +22,6 @@ class Sitemap extends Controller_Module
 			return [];
 		}
 
-		return [['adresse' => 'links', 'date' => $this->db->select('MAX(created_at)')->from('nf_links')->where('published', '1')->row(), 'sans_langue' => TRUE]];
+		return [['adresse' => 'links', 'date' => $this->db->select('MAX(created_at)')->from('nf_links')->where('published', '1')->row(), 'langues' => array_keys(nf_textes_ecrits('nf_links_lang', 'link_id'))]];
 	}
 }
